@@ -1,11 +1,10 @@
-@extends('layouts.app_base_horizontal')
-@section('css')
-    <link href="{{ asset('public') }}/dashboard/vendors/glightbox/glightbox.min.css" rel="stylesheet">
-    <link href="{{ asset('public') }}/dashboard/vendors/prism/prism-okaidia.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('public/') }}/filepond/dist/filepond.css">
-    <link rel="stylesheet" href="{{ asset('public/') }}/filepond/dist/filepond-plugin-image-preview.css">
-    <link rel="stylesheet" href="{{ asset('public/assets') }}/restrictions.css">
-    <script src="{{ asset('public/assets/three/build/three.js') }}"></script>
+<?php $__env->startSection('css'); ?>
+    <link href="<?php echo e(asset('public')); ?>/dashboard/vendors/glightbox/glightbox.min.css" rel="stylesheet">
+    <link href="<?php echo e(asset('public')); ?>/dashboard/vendors/prism/prism-okaidia.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo e(asset('public/')); ?>/filepond/dist/filepond.css">
+    <link rel="stylesheet" href="<?php echo e(asset('public/')); ?>/filepond/dist/filepond-plugin-image-preview.css">
+    <link rel="stylesheet" href="<?php echo e(asset('public/assets')); ?>/restrictions.css">
+    <script src="<?php echo e(asset('public/assets/three/build/three.js')); ?>"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
     <!-- Lightbox JS -->
@@ -13,8 +12,8 @@
     <script type="importmap">
         {
             "imports": {
-                "three": "{{asset('public/assets/three/build/three.module.js')}}",
-                "OrbitControls": "{{asset('public/assets/three/examples/jsm/controls/OrbitControls.js')}}"
+                "three": "<?php echo e(asset('public/assets/three/build/three.module.js')); ?>",
+                "OrbitControls": "<?php echo e(asset('public/assets/three/examples/jsm/controls/OrbitControls.js')); ?>"
             }
         }
     </script>
@@ -99,30 +98,30 @@
     }
     </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-@stop
-@section('content')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
     <div class="page-content">
-        @if (@$_GET['i'] != 'true')
+        <?php if(@$_GET['i'] != 'true'): ?>
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex flex-column mt-3">
                         <h4 class="page-title mb-0 font-size-18">Manage Patients</h4>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ url('/patients') }}">Patients</a></li>
+                                <li class="breadcrumb-item"><a href="<?php echo e(url('/patients')); ?>">Patients</a></li>
                                 <li class="breadcrumb-item active">Case Overview</li>
                             </ol>
                         </div>
                     </div>
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @include('patients.case_overview_el')
-        @if (Auth::user()->role == 'superadmin')
-            <form method="POST" action="{{ url('/pateint/treatment-plan/cancel-request') }}">
-                @csrf
-                <input type="hidden" name="treatment_plan_id" value="{{ $patient->id }}">
+        <?php echo $__env->make('patients.case_overview_el', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+        <?php if(Auth::user()->role == 'superadmin'): ?>
+            <form method="POST" action="<?php echo e(url('/pateint/treatment-plan/cancel-request')); ?>">
+                <?php echo csrf_field(); ?>
+                <input type="hidden" name="treatment_plan_id" value="<?php echo e($patient->id); ?>">
                 <div class="modal fade bs-example-modal-center" id="cancelPlan" tabindex="-1" role="dialog"
                     aria-labelledby="mySmallModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -152,23 +151,23 @@
                 </div>
                 <!-- /.modal -->
             </form>
-        @endif
+        <?php endif; ?>
 
-        @php
+        <?php
             $upper_arch_stl = asset('/storage/PatientFiles/Patient' . $patient->patient_id . '/' . $patient->fl_upper_arch);
             $lower_arch_stl = asset('/storage/PatientFiles/Patient' . $patient->patient_id . '/' . $patient->fl_lower_arch);
-        @endphp
+        ?>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('javascript')
-    <script src="{{ asset('public') }}/dashboard/vendors/glightbox/glightbox.min.js"></script>
-    <script src="{{ asset('public') }}/dashboard/vendors/prism/prism.js"></script>
+<?php $__env->startSection('javascript'); ?>
+    <script src="<?php echo e(asset('public')); ?>/dashboard/vendors/glightbox/glightbox.min.js"></script>
+    <script src="<?php echo e(asset('public')); ?>/dashboard/vendors/prism/prism.js"></script>
     <script>
         $('.mySelect2').select2({
             closeOnSelect: false
         });
-        const PHASE = '{{ $patient->phase }}'
+        const PHASE = '<?php echo e($patient->phase); ?>'
         var link_regex =
             /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/
         $(document).ready(function() {
@@ -194,10 +193,10 @@
             $(document).on('click', '#updatePackageAdminBtn', function () {
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('/patient/case-overview/change-pricing-package-admin') }}",
+                    url: "<?php echo e(url('/patient/case-overview/change-pricing-package-admin')); ?>",
                     data: {
-                        _token: "{{ csrf_token() }}",
-                        treatment_plan_id: "{{ $patient->id }}", // treatment plan ID
+                        _token: "<?php echo e(csrf_token()); ?>",
+                        treatment_plan_id: "<?php echo e($patient->id); ?>", // treatment plan ID
                     },
                     beforeSend: function () {
                         $("#updatePackageAdminBtn").prop("disabled", true).text("Updating...");
@@ -235,10 +234,10 @@
                 if (c) {
                     $.ajax({
                         type: "POST",
-                        url: "{{ url('/patient/case-overview/chane-pricing-package') }}",
+                        url: "<?php echo e(url('/patient/case-overview/chane-pricing-package')); ?>",
                         data: {
-                            "_token": "{{ csrf_token() }}",
-                            "treatment_plan_id": "{{ $patient->id }}", //treatment plan id
+                            "_token": "<?php echo e(csrf_token()); ?>",
+                            "treatment_plan_id": "<?php echo e($patient->id); ?>", //treatment plan id
                         }
                     }).done(function(response) {
                         if (response.status == 200) {
@@ -263,10 +262,10 @@
                 }
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('/patient/case/allow-user-to-edit') }}",
+                    url: "<?php echo e(url('/patient/case/allow-user-to-edit')); ?>",
                     data: {
-                        "_token": "{{ csrf_token() }}",
-                        "treatment_plan_id": "{{ $patient->id }}", //treatment plan id
+                        "_token": "<?php echo e(csrf_token()); ?>",
+                        "treatment_plan_id": "<?php echo e($patient->id); ?>", //treatment plan id
                     }
                 }).done(function(response) {
                     $this.html(html);
@@ -289,7 +288,7 @@
                 var nextPage = (parseInt(page) + 1);
                 $.ajax({
                     type: "GET",
-                    url: "{{ url('/patient/case-overview/load-comments/' . $patient->id) }}?page=" +
+                    url: "<?php echo e(url('/patient/case-overview/load-comments/' . $patient->id)); ?>?page=" +
                         nextPage,
                 }).done(function(response) {
                     $("#case-overview-comments").append(response);
@@ -361,10 +360,10 @@
                 var reminderDatetime = $('#reminder-datetime').val();
 
                 var formData = new FormData();
-                formData.append('treatment_plan_id', '{{ $patient->id }}');
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>');
                 formData.append('comment', comment);
                 formData.append('reminderDatetime', reminderDatetime);
-                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('_token', '<?php echo e(csrf_token()); ?>');
 
                 var fileInput = document.getElementById('setreminderAttachments');
                 for (var i = 0; i < fileInput.files.length; i++) {
@@ -375,7 +374,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('set-reminder-for-doctoer') }}",
+                    url: "<?php echo e(route('set-reminder-for-doctoer')); ?>",
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -421,18 +420,18 @@
                 }
                 $($this).prop("disabled", true);
                 var formData = new FormData();
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                 formData.append('comment', comment)
                 var fileInput = document.getElementById('attachments');
 
-                formData.append('_token', '{{ csrf_token() }}')
+                formData.append('_token', '<?php echo e(csrf_token()); ?>')
                 for (var i = 0; i < fileInput.files.length; i++) {
                     formData.append('attachments[]', fileInput.files[i]);
                 }
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('/patient/case-overview/case/approve') }}",
+                    url: "<?php echo e(url('/patient/case-overview/case/approve')); ?>",
                     data: formData,
                     processData: false, // Required for FormData
                     contentType: false, // Required for FormData
@@ -462,11 +461,11 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('reject-treatment') }}",
+                    url: "<?php echo e(route('reject-treatment')); ?>",
                     data: {
-                        "_token": "{{ csrf_token() }}",
+                        "_token": "<?php echo e(csrf_token()); ?>",
                         "comment": comment,
-                        "treatment_plan_id": "{{ $patient->id }}", // treatment plan id
+                        "treatment_plan_id": "<?php echo e($patient->id); ?>", // treatment plan id
                     }
                 }).done(function (response) {
                     $("#comment").val('');
@@ -489,11 +488,11 @@
             //         $($this).prop("disabled", true);
             //         $.ajax({
             //             type: "POST",
-            //             url: "{{ route('reject-treatment') }}",
+            //             url: "<?php echo e(route('reject-treatment')); ?>",
             //             data: {
-            //                 "_token": "{{ csrf_token() }}",
+            //                 "_token": "<?php echo e(csrf_token()); ?>",
             //                 "comment": comment,
-            //                 "treatment_plan_id": "{{ $patient->id }}", //treatment plan id
+            //                 "treatment_plan_id": "<?php echo e($patient->id); ?>", //treatment plan id
             //             }
             //         }).done(function(response) {
             //             $("#comment").val('');
@@ -519,20 +518,20 @@
                     $submitButton.prop('disabled', true);
 
                     const formData = new FormData();
-                    formData.append('treatment_plan_id', '{{ $patient->id }}');
+                    formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>');
                     formData.append('comment', comment);
-                    formData.append('_token', '{{ csrf_token() }}');
+                    formData.append('_token', '<?php echo e(csrf_token()); ?>');
                     formData.append('tracking_id', tracking_id)
                     var fileInput = document.getElementById('attachments');
 
-                    formData.append('_token', '{{ csrf_token() }}')
+                    formData.append('_token', '<?php echo e(csrf_token()); ?>')
                     for (var i = 0; i < fileInput.files.length; i++) {
                         formData.append('attachments[]', fileInput.files[i]);
                     }
 
                     $.ajax({
                         type: "POST",
-                        url: "{{ url('/patient/case-overview/submit/send-to-doctor-for-modification') }}",
+                        url: "<?php echo e(url('/patient/case-overview/submit/send-to-doctor-for-modification')); ?>",
                         data: formData,
                         cache: false,
                         processData: false,
@@ -561,12 +560,12 @@
                 $this.prop("disabled", true);
 
                 var formData = new FormData();
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                 formData.append('comment', comment)
                 formData.append('tracking_id', tracking_id)
                 var fileInput = document.getElementById('attachments');
 
-                formData.append('_token', '{{ csrf_token() }}')
+                formData.append('_token', '<?php echo e(csrf_token()); ?>')
                 for (var i = 0; i < fileInput.files.length; i++) {
                     formData.append('attachments[]', fileInput.files[i]);
                 }
@@ -575,7 +574,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('/patient/case-overview/submit/tracking-id') }}",
+                    url: "<?php echo e(url('/patient/case-overview/submit/tracking-id')); ?>",
                     data: formData,
                     cache: false,
                     processData: false,
@@ -599,10 +598,10 @@
 
 
                 var formData = new FormData();
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                 formData.append('comment', comment)
 
-                formData.append('_token', '{{ csrf_token() }}')
+                formData.append('_token', '<?php echo e(csrf_token()); ?>')
                 var fileInput = document.getElementById('attachments');
 
                 for (var i = 0; i < fileInput.files.length; i++) {
@@ -612,7 +611,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('/patient/case-overview/request-setup-files-from-lab') }}",
+                    url: "<?php echo e(url('/patient/case-overview/request-setup-files-from-lab')); ?>",
                     data: formData,
                     cache: false,
                     processData: false,
@@ -634,18 +633,18 @@
                 $($this).prop("disabled", true);
 
                 var formData = new FormData();
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                 formData.append('comment', comment)
                 var fileInput = document.getElementById('attachments');
 
-                formData.append('_token', '{{ csrf_token() }}')
+                formData.append('_token', '<?php echo e(csrf_token()); ?>')
                 for (var i = 0; i < fileInput.files.length; i++) {
                     formData.append('attachments[]', fileInput.files[i]);
                 }
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('/patient/case-overview/send-from-lab-to-staff') }}",
+                    url: "<?php echo e(url('/patient/case-overview/send-from-lab-to-staff')); ?>",
                     data: formData,
                     cache: false,
                     processData: false,
@@ -675,11 +674,11 @@
                 $this.prop("disabled", true);
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('cancel-treatment') }}",
+                    url: "<?php echo e(route('cancel-treatment')); ?>",
                     data: {
-                        "_token": "{{ csrf_token() }}",
+                        "_token": "<?php echo e(csrf_token()); ?>",
                         "comment": comment,
-                        "treatment_plan_id": "{{ $patient->id }}",
+                        "treatment_plan_id": "<?php echo e($patient->id); ?>",
                     }
                 }).done(function(response) {
                     $("#comment").val('');
@@ -702,11 +701,11 @@
             //         $($this).prop("disabled", true);
             //         $.ajax({
             //             type: "POST",
-            //             url: "{{ route('cancel-treatment') }}",
+            //             url: "<?php echo e(route('cancel-treatment')); ?>",
             //             data: {
-            //                 "_token": "{{ csrf_token() }}",
+            //                 "_token": "<?php echo e(csrf_token()); ?>",
             //                 "comment": comment,
-            //                 "treatment_plan_id": "{{ $patient->id }}",
+            //                 "treatment_plan_id": "<?php echo e($patient->id); ?>",
             //             }
             //         }).done(function(response) {
             //             $("#comment").val('');
@@ -737,12 +736,12 @@
                 } else {
                     var formData = new FormData();
                     $($this).prop("disabled", true);
-                    formData.append('treatment_plan_id', '{{ $patient->id }}')
+                    formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                     formData.append('comment', comment)
                     formData.append('treatment_link', treatment_link)
                     formData.append('iframe_link', iframe_link)
                     formData.append('patient_link', patient_link)
-                    formData.append('_token', '{{ csrf_token() }}')
+                    formData.append('_token', '<?php echo e(csrf_token()); ?>')
                     var fileInput = document.getElementById('attachments');
 
                     for (var i = 0; i < fileInput.files.length; i++) {
@@ -752,7 +751,7 @@
                     $($this).prop("disabled", true);
                     $.ajax({
                         type: "POST",
-                        url: "{{ route('submit-treatment') }}",
+                        url: "<?php echo e(route('submit-treatment')); ?>",
                         data: formData,
                         cache: false,
                         processData: false,
@@ -803,12 +802,12 @@
                 } else {
                     var formData = new FormData();
                     $($this).prop("disabled", true);
-                    formData.append('treatment_plan_id', '{{ $patient->id }}')
+                    formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                     formData.append('comment', comment)
                     formData.append('treatment_link', treatment_link)
                     formData.append('iframe_link', iframe_link)
                     formData.append('patient_link', patient_link)
-                    formData.append('_token', '{{ csrf_token() }}')
+                    formData.append('_token', '<?php echo e(csrf_token()); ?>')
                     var fileInput = document.getElementById('attachments');
 
                     for (var i = 0; i < fileInput.files.length; i++) {
@@ -818,7 +817,7 @@
                     $($this).prop("disabled", true);
                     $.ajax({
                         type: "POST",
-                        url: "{{ route('submit-files') }}",
+                        url: "<?php echo e(route('submit-files')); ?>",
                         data: formData,
                         cache: false,
                         processData: false,
@@ -861,12 +860,12 @@
                 $($this).prop("disabled", true);
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('/patient/case-overview/submit-setup-files') }}",
+                    url: "<?php echo e(url('/patient/case-overview/submit-setup-files')); ?>",
                     data: {
-                        "_token": "{{ csrf_token() }}",
+                        "_token": "<?php echo e(csrf_token()); ?>",
                         "comment": comment,
                         "setup_files_link": setup_files_link,
-                        "treatment_plan_id": "{{ $patient->id }}", //treatment plan id
+                        "treatment_plan_id": "<?php echo e($patient->id); ?>", //treatment plan id
                     }
                 }).done(function(response) {
                     $("#comment").val('');
@@ -884,9 +883,9 @@
                 var comment = window.commentEditor.getData();
                 var formData = new FormData();
                 $($this).prop("disabled", true);
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                 formData.append('comment', comment)
-                formData.append('_token', '{{ csrf_token() }}')
+                formData.append('_token', '<?php echo e(csrf_token()); ?>')
                 var fileInput = document.getElementById('attachments');
 
                 // Loop through each file selected and append them to FormData
@@ -896,7 +895,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('send-to-advisor') }}",
+                    url: "<?php echo e(route('send-to-advisor')); ?>",
                     data: formData,
                     cache: false,
                     processData: false,
@@ -927,10 +926,10 @@
                 }
                 var formData = new FormData();
                 $($this).prop("disabled", true);
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                 formData.append('comment', comment)
                 formData.append('lab', lab)
-                formData.append('_token', '{{ csrf_token() }}')
+                formData.append('_token', '<?php echo e(csrf_token()); ?>')
                 var fileInput = document.getElementById('attachments');
 
                 // Loop through each file selected and append them to FormData
@@ -939,7 +938,7 @@
                 }
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('request-treatment') }}",
+                    url: "<?php echo e(route('request-treatment')); ?>",
                     data: formData,
                     cache: false,
                     processData: false,
@@ -963,9 +962,9 @@
                 var comment = window.commentEditor.getData();
                 var formData = new FormData();
                 $($this).prop("disabled", true);
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                 formData.append('comment', comment)
-                formData.append('_token', '{{ csrf_token() }}')
+                formData.append('_token', '<?php echo e(csrf_token()); ?>')
                 var fileInput = document.getElementById('attachments');
 
                 // Loop through each file selected and append them to FormData
@@ -974,7 +973,7 @@
                 }
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('request.modification') }}",
+                    url: "<?php echo e(route('request.modification')); ?>",
                     data: formData,
                     cache: false,
                     processData: false,
@@ -1001,9 +1000,9 @@
                 $($this).prop("disabled", true);
 
                 // Append necessary data to FormData
-                formData.append('treatment_plan_id', '{{ $patient->id }}');
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>');
                 formData.append('comment', comment);
-                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('_token', '<?php echo e(csrf_token()); ?>');
 
                 // Add file attachments to FormData
                 var fileInput = document.getElementById('attachments');
@@ -1016,7 +1015,7 @@
                 // Perform the AJAX request
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('/patient/case-overview/send-to-lab') }}",
+                    url: "<?php echo e(url('/patient/case-overview/send-to-lab')); ?>",
                     data: formData,
                     processData: false, // Required for FormData
                     contentType: false, // Required for FormData
@@ -1043,11 +1042,11 @@
                 var staff_send_to_doctor_for_approval = $(this).attr('data-staff-send-to-doctor-for-approval');
                 $(this).prop("disabled", true);
                 var formData = new FormData();
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                 formData.append('comment', comment)
                 formData.append('action', 'send-from-staff-to-doctor')
                 // formData.append('staff_send_to_doctor_for_approval', staff_send_to_doctor_for_approval)
-                formData.append('_token', '{{ csrf_token() }}')
+                formData.append('_token', '<?php echo e(csrf_token()); ?>')
                 var fileInput = document.getElementById('attachments');
 
                 // Loop through each file selected and append them to FormData
@@ -1056,7 +1055,7 @@
                 }
                 $.ajax({
                     "type": "POST",
-                    "url": "{{ url('/patient/case-overview/send-from-staff-to-doctor') }}",
+                    "url": "<?php echo e(url('/patient/case-overview/send-from-staff-to-doctor')); ?>",
                     data: formData,
                     cache: false,
                     processData: false,
@@ -1087,11 +1086,11 @@
                 $($this).prop("disabled", true);
 
                 var formData = new FormData();
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                 formData.append('comment', comment)
                 formData.append('action', 'send-for-approval')
                 formData.append('steps', steps)
-                formData.append('_token', '{{ csrf_token() }}')
+                formData.append('_token', '<?php echo e(csrf_token()); ?>')
                 var fileInput = document.getElementById('attachments');
 
                 // Loop through each file selected and append them to FormData
@@ -1100,7 +1099,7 @@
                 }
                 $.ajax({
                     "type": "POST",
-                    "url": "{{ url('/patient/case-overview/send-from-staff-to-doctor') }}",
+                    "url": "<?php echo e(url('/patient/case-overview/send-from-staff-to-doctor')); ?>",
                     data: formData,
                     cache: false,
                     processData: false,
@@ -1129,8 +1128,8 @@
                 var comment = window.commentEditor.getData();
                 $($this).prop("disabled", true);
                 var formData = new FormData();
-                formData.append('_token', '{{ csrf_token() }}')
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('_token', '<?php echo e(csrf_token()); ?>')
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                 formData.append('comment', comment)
                 // Loop through each file selected and append them to FormData
                 var fileInput = document.getElementById('attachments');
@@ -1140,7 +1139,7 @@
                 }
                 $.ajax({
                     "type": "POST",
-                    "url": "{{ url('/patient/case-overview/send-from-doctor-to-staff') }}",
+                    "url": "<?php echo e(url('/patient/case-overview/send-from-doctor-to-staff')); ?>",
                     data: formData,
                     cache: false,
                     processData: false,
@@ -1163,8 +1162,8 @@
                 var comment = window.commentEditor.getData();
                 $($this).prop("disabled", true);
                 var formData = new FormData();
-                formData.append('_token', '{{ csrf_token() }}')
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('_token', '<?php echo e(csrf_token()); ?>')
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                 formData.append('comment', comment)
                 // Loop through each file selected and append them to FormData
                 var fileInput = document.getElementById('attachments');
@@ -1174,7 +1173,7 @@
                 }
                 $.ajax({
                     "type": "POST",
-                    "url": "{{ url('/patient/case-overview/doctor-send-to-staff-request-modification') }}",
+                    "url": "<?php echo e(url('/patient/case-overview/doctor-send-to-staff-request-modification')); ?>",
                     data: formData,
                     cache: false,
                     processData: false,
@@ -1196,8 +1195,8 @@
                 var comment = window.commentEditor.getData();
                 $($this).prop("disabled", true);
                 var formData = new FormData();
-                formData.append('_token', '{{ csrf_token() }}')
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('_token', '<?php echo e(csrf_token()); ?>')
+                formData.append('treatment_plan_id', '<?php echo e($patient->id); ?>')
                 formData.append('comment', comment)
                 var fileInput = document.getElementById('attachments');
 
@@ -1206,7 +1205,7 @@
                 }
                 $.ajax({
                     "type": "POST",
-                    "url": "{{ url('/patient/case-overview/send-from-advisor-to-doctor') }}",
+                    "url": "<?php echo e(url('/patient/case-overview/send-from-advisor-to-doctor')); ?>",
                     data: formData,
                     cache: false,
                     processData: false,
@@ -1231,10 +1230,10 @@
                 $($this).prop("disabled", true);
                 $.ajax({
                     "type": "POST",
-                    "url": "{{ url('/patient/case-overview/case/reopen') }}",
+                    "url": "<?php echo e(url('/patient/case-overview/case/reopen')); ?>",
                     data: {
-                        "_token": "{{ csrf_token() }}",
-                        "treatment_plan_id": "{{ $patient->id }}", //treatment plan id
+                        "_token": "<?php echo e(csrf_token()); ?>",
+                        "treatment_plan_id": "<?php echo e($patient->id); ?>", //treatment plan id
                     }
                 }).done(function(response) {
                     $($this).remove();
@@ -1298,17 +1297,17 @@
             CKEDITOR.instances[instance].updateElement();
     </script>
 
-    @if ($patient->fl_upper_arch && $patient->fl_lower_arch && $patient->is_treatment_submitted == 0)
+    <?php if($patient->fl_upper_arch && $patient->fl_lower_arch && $patient->is_treatment_submitted == 0): ?>
         <script type="module">
             import {
                 STLLoader
-            } from "{{ asset('public/assets/three/examples/jsm/loaders/STLLoader.js') }}";
+            } from "<?php echo e(asset('public/assets/three/examples/jsm/loaders/STLLoader.js')); ?>";
             import {
                 PLYLoader
-            } from "{{ asset('public/assets/three/examples/jsm/loaders/PLYLoader.js') }}";
+            } from "<?php echo e(asset('public/assets/three/examples/jsm/loaders/PLYLoader.js')); ?>";
             import {
                 OrbitControls
-            } from '{{ asset('public/assets/three/examples/jsm/controls/OrbitControls.js') }}';
+            } from '<?php echo e(asset('public/assets/three/examples/jsm/controls/OrbitControls.js')); ?>';
 
             //initial setup (scene, camera, renderer, material, controls, etc)
             const container = document.getElementById('canvas');
@@ -1319,16 +1318,16 @@
             const renderer = new THREE.WebGLRenderer({
                 antialias: true
             });
-            @if (@$patient->fl_upper_arch)
-                @if (explode('.', @$patient->fl_upper_arch)[1] == 'stl')
+            <?php if(@$patient->fl_upper_arch): ?>
+                <?php if(explode('.', @$patient->fl_upper_arch)[1] == 'stl'): ?>
                     const material = new THREE.MeshNormalMaterial();
-                @else
+                <?php else: ?>
                     const material = new THREE.MeshStandardMaterial({
                         vertexColors: THREE.VertexColors,
                         flatShading: true
                     });
-                @endif
-            @endif
+                <?php endif; ?>
+            <?php endif; ?>
             const controls = new OrbitControls(camera, renderer.domElement, {
                 enableRotate: true
             });
@@ -1363,22 +1362,22 @@
 
             //prepare STL Loader
 
-            @if (@$patient->fl_upper_arch)
-                @if (explode('.', $patient->fl_upper_arch)[1] == 'stl')
+            <?php if(@$patient->fl_upper_arch): ?>
+                <?php if(explode('.', $patient->fl_upper_arch)[1] == 'stl'): ?>
                     const loader = new STLLoader()
-                @else
+                <?php else: ?>
                     const loader = new PLYLoader()
-                @endif
-            @endif
+                <?php endif; ?>
+            <?php endif; ?>
 
             //load upper arch STL file
             loader.load('<?php echo $upper_arch_stl; ?>',
                 function(geometry) {
-                    @if (@$patient->fl_upper_arch)
-                        @if (explode('.', @$patient->fl_upper_arch)[1] == 'ply')
+                    <?php if(@$patient->fl_upper_arch): ?>
+                        <?php if(explode('.', @$patient->fl_upper_arch)[1] == 'ply'): ?>
                             geometry.computeVertexNormals();
-                        @endif
-                    @endif
+                        <?php endif; ?>
+                    <?php endif; ?>
                     const mesh = new THREE.Mesh(geometry, material)
                     mesh.name = 'maxillary';
                     mesh.tag = 'base';
@@ -1398,11 +1397,11 @@
                 })
             loader.load('<?php echo $lower_arch_stl; ?>',
                 function(geometry) {
-                    @if (@$patient->fl_upper_arch)
-                        @if (explode('.', @$patient->fl_upper_arch)[1] == 'ply')
+                    <?php if(@$patient->fl_upper_arch): ?>
+                        <?php if(explode('.', @$patient->fl_upper_arch)[1] == 'ply'): ?>
                             geometry.computeVertexNormals();
-                        @endif
-                    @endif
+                        <?php endif; ?>
+                    <?php endif; ?>
                     const mesh = new THREE.Mesh(geometry, material)
                     mesh.name = 'mandibular';
                     mesh.tag = 'base'
@@ -1765,5 +1764,7 @@
             this.setAttribute('href', `${baseUrl}?option=${dropdownValue}`);
         });
         </script>
-    @endif
-@stop
+    <?php endif; ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app_base_horizontal', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp\htdocs\secretalign\resources\views/patients/case_overview.blade.php ENDPATH**/ ?>
