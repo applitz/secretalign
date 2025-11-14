@@ -1,0 +1,226 @@
+<script type="module">
+    import { STLLoader } from "{{asset('public/assets/three/examples/jsm/loaders/STLLoader.js')}}";
+                import { OrbitControls } from '{{asset("public/assets/three/examples/jsm/controls/OrbitControls.js")}}';
+
+
+
+
+    var container1, scene1, camera1, renderer1, material1, controls1,
+    container2, scene2, camera2, renderer2, material2, controls2;
+
+
+    function animate1() {
+                    requestAnimationFrame( animate1 );
+                    container1.appendChild( renderer1.domElement );
+                    controls1.update();
+                    renderer1.render( scene1, camera1 );
+
+                };
+                function animate2() {
+                    requestAnimationFrame( animate2 );
+                    container2.appendChild( renderer2.domElement );
+                    controls2.update();
+                    renderer2.render( scene2, camera2 );
+
+                };
+
+            function previewUpperStlFile(file_upper)
+            {
+                container1 = document.getElementById( 'stl-upper-arch-preview' );
+                scene1 = new THREE.Scene();
+                scene1.name = 'myscene1';
+                scene1.background = new THREE.Color( 0xf2f2f2 );
+                camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+                renderer1 = new THREE.WebGLRenderer();
+            material1 = new THREE.MeshNormalMaterial();
+                controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
+
+                THREE.Cache.enabled = true;
+
+    //modify renderer
+    renderer1.setSize( window.innerWidth, window.innerHeight );
+
+    //append renderer to body
+    document.body.appendChild( renderer1.domElement );
+    //prepare STL Loader
+    const loader1 = new STLLoader()
+
+    //load upper arch STL file
+    loader1.load(file_upper,
+    function (geometry) {
+        const mesh = new THREE.Mesh(geometry, material1)
+
+        mesh.tag = 'base';
+        scene1.add(mesh);
+
+         console.log('scene updated');
+        // Output the axis of the model
+    },
+    (xhr) => {
+        // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+    },
+    (error) => {
+        console.log(error)
+    })
+    camera1.position.z = 10;
+                camera1.position.x = 0;
+                camera1.position.y = -6;
+                scene1.scale.set(0.02,0.02,0.02);
+
+                    controls1.update();
+                    animate1();
+            }
+
+
+
+
+            function previewLowerStlFile(file_lower)
+            {
+                console.log('preview lower')
+                container2 = document.getElementById( 'stl-lower-arch-preview' );
+                scene2 = new THREE.Scene();
+                scene2.name = 'myscene2';
+                scene2.background = new THREE.Color( 0xf2f2f2 );
+                camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+                renderer2 = new THREE.WebGLRenderer();
+            material2 = new THREE.MeshNormalMaterial();
+                controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
+
+                THREE.Cache.enabled = true;
+
+    //modify renderer
+    renderer2.setSize( window.innerWidth, window.innerHeight );
+
+    //append renderer to body
+    document.body.appendChild( renderer2.domElement );
+    //prepare STL Loader
+    const loader2 = new STLLoader()
+
+    //load upper arch STL file
+    loader2.load(file_lower,
+    function (geometry) {
+        const mesh = new THREE.Mesh(geometry, material2)
+
+        mesh.tag = 'base';
+        scene2.add(mesh);
+
+         console.log('scene updated');
+        // Output the axis of the model
+    },
+    (xhr) => {
+        // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+    },
+    (error) => {
+        console.log(error)
+    })
+    camera2.position.z = 10;
+                camera2.position.x = 0;
+                camera2.position.y = -6;
+                scene2.scale.set(0.02,0.02,0.02);
+
+                    controls2.update();
+                    animate2();
+            }
+            @if(@$patient->fl_upper_arch)
+            previewUpperStlFile("{{asset("/storage/PatientFiles/Patient" . $patient->patient_id)}}/{{@$patient->fl_upper_arch}}")
+            @endif
+            @if(@$patient->fl_lower_arch)
+            previewLowerStlFile("{{asset("/storage/PatientFiles/Patient" . $patient->patient_id)}}/{{@$patient->fl_lower_arch}}")
+            @endif
+
+            function downloadStlFiles($case_id, $hash_upper, $hash_lower)
+        {
+            $.ajax({
+                type: "POST",
+                url: "{{url('/patient/file/download-3shape')}}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "patient_id" : "{{ $patient->patient_id }}",
+                    "treatment_plan_id" : "{{ $patient->id }}",
+                    "case_id" : $case_id,
+                    "hash_upper" : $hash_upper,
+                    "hash_lower" : $hash_lower,
+                },
+                beforeSend: function () {
+                    showLoader();
+                }
+            }).done(function (response) {
+
+                if(response.upper || response.lower) {
+                    if(response.upper) {
+                        $('#key1').attr('file', response.upper);
+                        previewUpperStlFile('{{asset("/storage/PatientFiles/Patient" . $patient->patient_id)}}/'+response.upper)
+                    }
+                    if(response.lower) {
+                        $('#key2').attr('file', response.lower);
+                        previewLowerStlFile('{{asset("/storage/PatientFiles/Patient" . $patient->patient_id)}}/'+response.lower)
+                    }
+                    $("#3shape-section").addClass('d-none');
+                    $("#patient-wizard").removeClass('d-none');
+                    hideLoader();
+                }
+                else {
+                    hideLoader();
+                    toastError("Error while downloading files.");
+                }
+            });
+        }
+
+$(document).ready(function () {
+    $("#select-from-3shape").on('click', function () {
+                $("#3shape-section").removeClass('d-none');
+                $("#patient-wizard").addClass('d-none');
+            });
+
+            $("#cancel-3shape-select").on('click', function () {
+                $("#3shape-section").addClass('d-none');
+                $("#patient-wizard").removeClass('d-none');
+            });
+
+            $(document).on('click', '.download-3shape-stl-files',function () {
+                const hash_upper = $(this).attr('hash-upper'),
+                hash_lower = $(this).attr('hash-lower'),
+                case_id = $(this).attr('case-id');
+                downloadStlFiles(case_id, hash_upper, hash_lower);
+            });
+
+            $("#3shape-search").on('submit', function (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                const case_id = $("#3shape-search input[name=_case_id]").val(),
+                patient_id = $("#3shape-search input[name=_patient_id]").val(),
+                three_shape_case_id = $("#3shape-search input[name=_three_shape_case_id]").val(),
+                three_shape_search_for_case = $("#3shape-search input[name=_three_shape_search_for_case]").val();
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('/integrations/3shape-search-cases') }}",
+                    data: {
+                        "_token" : "{{ csrf_token() }}",
+                        "case_id" : case_id,
+                        "patient_id" : patient_id,
+                        "three_shape_case_id" : three_shape_case_id,
+                        "three_shape_search_for_patient" : three_shape_search_for_case,
+                    },
+                    beforeSend: function () {
+                        showLoader();
+                    }
+                }).done(function (response) {
+                    $("#3shape-search-result").html(response);
+                    hideLoader();
+                });
+            });
+
+            $(document).on('click', '.previous-tab', function () {
+                $(`${$(this).attr('data-target')}`).click();
+            });
+
+            $(document).on('click', '#final-confirm-and-submit-btn', function () {
+                if($("input[name=terms_and_conditions]").is(":checked")) {
+                    $("#final-submit-form").submit();
+                } else {
+                    toastError("You must accept Packages and Terms & conditions agreement");
+                }
+            });
+});
+
+    </script>

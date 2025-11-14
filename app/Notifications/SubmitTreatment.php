@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Notifications;
+
+use Google\Service\ServiceControl\Auth;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+class SubmitTreatment extends Notification
+{
+    use Queueable;
+    public $details, $staff;
+    /**
+     * Create a new notification instance.
+     *
+     * @return void
+     */
+    public function __construct($details, $staff)
+    {
+        $this->details = $details;
+        $this->staff = $staff;
+    }
+
+
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function via($notifiable)
+    {
+        return ['mail'];
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+         $mail = (new MailMessage)
+            ->subject($this->details['subject'])
+            ->markdown('emails.submit-treatment', [
+                'lab_name' => $this->details['lab_name'],
+                'patient_name' => $this->details['patient_name'],
+                'staff_name' => $this->staff->first_name . ' ' . $this->staff->last_name,
+                'title' => $this->details['title'],
+                'comment' => $this->details['comment'],
+                'patient_link' => $this->details['patient_link'],
+                'iframe_link' => $this->details['iframe_link'],
+            ]);
+
+             // Handle attachments
+            if (!empty($this->details['attachments'])) {
+                $files = explode(',', $this->details['attachments']);
+
+                foreach ($files as $file) {
+                    $file = trim($file);
+
+                    // adjust path as per your app (example assumes files stored in /storage/app/public/attachments/)
+                    // $path = storage_path("app/public/attachments/{$file}");
+                    $path = Storage::path('public/attachments/' . $file);
+                    if (file_exists($path)) {
+                        $mail->attach($path);
+                    }
+                }
+            }
+            return $mail;
+
+    }
+
+    /**
+     * Get the array representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toArray($notifiable)
+    {
+        return [
+            //
+        ];
+    }
+}

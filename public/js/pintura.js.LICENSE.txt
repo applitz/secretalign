@@ -1,0 +1,20 @@
+/*!
+ * FilePond 4.32.7
+ * Licensed under MIT, https://opensource.org/licenses/MIT/
+ * Please visit https://pqina.nl/filepond/ for details.
+ */
+
+/*!
+ * FilePondPluginFilePoster 2.5.2
+ * Licensed under MIT, https://opensource.org/licenses/MIT/
+ * Please visit https://pqina.nl/filepond/ for details.
+ */
+
+/*!
+ * Pintura v8.92.12 - Test version
+ * (c) 2018-2025 PQINA Inc. - All Rights Reserved
+ * License: https://pqina.nl/pintura/license/
+ * 
+ * This version of Pintura is for testing purposes only.
+ * Visit https://pqina.nl/pintura/ to obtain a commercial license.
+ */

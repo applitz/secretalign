@@ -1,0 +1,18 @@
+<?php
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+
+use App\Http\Controllers\Doctor\PatientsController;
+
+Route::middleware(['auth', 'auth.doctor'])->group(function () {
+    Route::resource('patients', PatientsController::class);
+    Route::get('update-shiping-date', [PatientsController::class, 'updateShipingDate'])->name('update-shiping-date');
+
+    Route::post('order-from-dental-monitoring', [PatientsController::class, 'orderFromDentalMonitoring'])->name('order-from-dental-monitoring');
+    Route::post('update-order-from-dental-monitoring', [PatientsController::class, 'updateOrderFromDentalMonitoring'])->name('update-order-from-dental-monitoring');
+    Route::post('cancel-order-from-dental-monitoring', [PatientsController::class, 'cancelOrderFromDentalMonitoring'])->name('cancel-order-from-dental-monitoring');
+});
+
+?>
