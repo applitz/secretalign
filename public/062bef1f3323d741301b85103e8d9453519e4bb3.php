@@ -35,6 +35,13 @@
         $fn4 = 1;
     }
 ?>
+<style>
+
+        canvas{
+			max-width: 720px;
+			max-height: 480px;
+		}
+        </style>
 <?php echo $__env->make('patients.case-overview.case_overview_header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
 <?php echo $__env->make('patients.case-overview.card_body_for_iframe', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
@@ -564,12 +571,12 @@
         });
     </script>
 <?php endif; ?>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const inputField = document.getElementById('patient-iframe');
-        
+
         if (inputField) {
             inputField.addEventListener('input', function() {
                 const newLink = inputField.value;
@@ -647,20 +654,20 @@
     });
 
 </script>
-<script type="text/javascript">     
-    function authenticate(auth, url) {       
-        var iframe = document.getElementById('nemoPortal');       
-        iframe.contentWindow.postMessage(auth, url);     
-    }     
-    window.onmessage = function (event) {       
-        console.log(event.data);     
-    }   
+<script type="text/javascript">
+    function authenticate(auth, url) {
+        var iframe = document.getElementById('nemoPortal');
+        iframe.contentWindow.postMessage(auth, url);
+    }
+    window.onmessage = function (event) {
+        console.log(event.data);
+    }
 </script>
 <script>
     function syncNemoLink(selectEl) {
         const option = selectEl.value.trim();
         selectEl.classList.remove('dropdown-error');
-    
+
         if (!option) {
             selectEl.classList.add('dropdown-error');
             return;

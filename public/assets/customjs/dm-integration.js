@@ -30,7 +30,9 @@ var DmIntegration = function() {
             }).done(function(response) {
                 $("#cancel-order-from-dental-sure").prop("disabled", false);
                 $("#cancel-order-from-dental-sure").text("Yes, Cancel Order");
-                $("#cancel-order-from-dental-monitoring-modal").modal('hide');
+                const modalEl2 = document.getElementById('cancel-order-from-dental-monitoring-modal');
+                const modal2 = bootstrap.Modal.getOrCreateInstance(modalEl2);
+                modal2.hide();
                 $(".my-loader").hide();
                 toastSuccess(response.message);
                 setTimeout(() => {
@@ -40,7 +42,9 @@ var DmIntegration = function() {
             }).fail(function(response) {
                 $("#cancel-order-from-dental-sure").prop("disabled", false);
                  $("#cancel-order-from-dental-sure").text("Yes, Cancel Order");
-                $("#cancel-order-from-dental-monitoring-modal").modal('hide');
+                const modalEl2 = document.getElementById('cancel-order-from-dental-monitoring-modal');
+                const modal2 = bootstrap.Modal.getOrCreateInstance(modalEl2);
+                modal2.hide();
                 $(".my-loader").hide();
                 toastError(response.responseJSON.message);
 
@@ -132,7 +136,9 @@ var DmIntegration = function() {
             .done(function(response) {
                 $("#confirm-order-from-dental-monitoring").prop("disabled", true);
                 $("#dental-monitoring-alert").addClass("d-none");
-                $("#order-from-dental-monitoring-modal").modal('hide');
+                const modalEl = document.getElementById('order-from-dental-monitoring-modal');
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modal.hide();
                 $(".my-loader").hide();
                 toastSuccess(response.message);
                 setTimeout(() => {
@@ -219,7 +225,9 @@ var DmIntegration = function() {
             // Invalid / unexpected status
             else {
                 $(".my-loader").hide();
-                $("#reupload-from-dental-monitoring-modal").modal('hide');
+                const modalEl = document.getElementById('reupload-from-dental-monitoring-modal');
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modal.hide();
                 toastError('Invalid or unsupported Dental Monitoring status.');
                 return false;
             }
@@ -262,14 +270,18 @@ var DmIntegration = function() {
                         if (statusCode >= 200 && statusCode < 300) {
                             // Success from DM API
                             $("#reupload-from-dental-monitoring-modal").prop("disabled", true);
-                            $("#reupload-from-dental-monitoring-modal").modal('hide');
+                            const modalEl = document.getElementById('reupload-from-dental-monitoring-modal');
+                            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                            modal.hide();
                             $(".my-loader").hide();
                             toastSuccess(response.message ?? "Order updated successfully!");
                             setTimeout(() => location.reload(), 2000);
                         } else {
                             // Non-2xx returned but still enters success due to jQuery AJAX
                             $("#reupload-from-dental-monitoring-modal").prop("disabled", false).text("Order Now");
-                            $("#reupload-from-dental-monitoring-modal").modal('hide');
+                            const modalEl = document.getElementById('reupload-from-dental-monitoring-modal');
+                            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                            modal.hide();
                             $(".my-loader").hide();
                             let msg = response.details?.message ?? response.message ?? "Something went wrong!";
                             toastError(msg);
@@ -277,7 +289,9 @@ var DmIntegration = function() {
                     },
                     error: function(xhr) {
                         $("#reupload-from-dental-monitoring-modal").prop("disabled", false).text("Order Now");
-                        $("#reupload-from-dental-monitoring-modal").modal('hide');
+                        const modalEl = document.getElementById('reupload-from-dental-monitoring-modal');
+                        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                        modal.hide();
                         $(".my-loader").hide();
                         let msg;
                         if (xhr.responseJSON) {
