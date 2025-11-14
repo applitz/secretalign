@@ -14,6 +14,11 @@
 <link rel="stylesheet" href="{{ asset('public/assets') }}/restrictions.css">
 <link rel="stylesheet" href="{{asset('public/css/cropper.css')}}">
 <style>
+
+    /* canvas{
+			max-width: 720px;
+			max-height: 480px;
+		} */
     ._dropzone {
         width: 225px;
         min-height: 225px;
@@ -4716,10 +4721,16 @@ async function previewUpperStlFile(file_upper)
                     });
 
                     $(document).on('click', '.previous-tab', function () {
-                        $(`${$(this).attr('data-target')}`).click();
+                        let target = $(this).attr('data-target'); // ex: '#pill-tab-li5'
+                        let tabEl = document.querySelector(target);
+                        let tab = new bootstrap.Tab(tabEl);
+                        tab.show();
                     });
                     $(document).on('click', '.next-tab', function () {
-                        $(`${$(this).attr('data-target')}`).click();
+                        let target = $(this).attr('data-target'); // ex: '#pill-tab-li5'
+                        let tabEl = document.querySelector(target);
+                        let tab = new bootstrap.Tab(tabEl);
+                        tab.show();
                     });
 
 
@@ -6457,7 +6468,10 @@ async function previewUpperStlFile(file_upper)
                             $(".finish").fadeIn();
                         }
                         // Activate the clicked tab
-                        $('ul.nav-pills a[href="' + targetTab + '"]').tab('show');
+                        // $('ul.nav-pills a[href="' + targetTab + '"]').tab('show');
+                            let tabElement = document.querySelector('ul.nav-pills a[href="#pill-tab-li4"]');
+                            new bootstrap.Tab(tabElement).show();
+
 
                                 hideLoader();
                         }).fail(function(response) {
@@ -6465,8 +6479,9 @@ async function previewUpperStlFile(file_upper)
                             hideLoader();
                         });
                 } else {
-                    // Activate the clicked tab
-                    $('ul.nav-pills a[href="' + targetTab + '"]').tab('show');
+                    let tab = document.querySelector('ul.nav-pills a[href="' + targetTab + '"]');
+                    let tabObj = new bootstrap.Tab(tab);
+                    tabObj.show();
                 }
 
 
@@ -6475,7 +6490,13 @@ async function previewUpperStlFile(file_upper)
 
                 @if(@$_GET['tab'])
                 fetchOverview()
-                 $('ul.nav-pills a[href="#{{$_GET['tab']}}"]').tab('show');
+                    let tabSelector = 'ul.nav-pills a[href="#{{ $_GET["tab"] }}"]';
+                    let tabEl = document.querySelector(tabSelector);
+
+                    if (tabEl) {
+                        let tab = new bootstrap.Tab(tabEl);
+                        tab.show();
+                    }
                 @endif
 
 
@@ -6578,7 +6599,9 @@ async function previewUpperStlFile(file_upper)
                     },
                 }).done(function(response) {
                     $("#submit-treatment-plan").attr('disabled', false);
-                    $("#pill-tab-li2").click();
+                    let tabEl = document.querySelector('#pill-tab-li2');
+                    let tab = new bootstrap.Tab(tabEl);
+                    tab.show();
                     toastSuccess("Patient treatment plan info saved");
                 }).fail(function(response) {
                     $("#submit-treatment-plan").attr('disabled', true);
@@ -6617,7 +6640,9 @@ async function previewUpperStlFile(file_upper)
                     },
                 }).done(function(response) {
                     $("#submit-prescription").attr('fn', 1);
-                    $("#pill-tab-li-treatment-type").click();
+                    let tabEl = document.querySelector('#pill-tab-li-treatment-type');
+                    let tab = new bootstrap.Tab(tabEl);
+                    tab.show();
                     toastSuccess("Patient Info Saved");
                 }).fail(function(response) {
                     $("#submit-prescription").attr('fn', 0);
@@ -6634,7 +6659,10 @@ async function previewUpperStlFile(file_upper)
                     return false;
                 }
                 $("#submit-prescription").attr('fn', 1);
-                $("#pill-tab-li3").click();
+                let tabEl = document.querySelector('#pill-tab-li3');
+                let tab = new bootstrap.Tab(tabEl);
+                tab.show();
+
                 toastSuccess("Scan data Saved");
                 // $.ajax({
                 //     type: "POST",
@@ -6664,26 +6692,29 @@ async function previewUpperStlFile(file_upper)
                     const hyperlink = $("#general_upload_hyperlink").val();
                     if(hyperlink == '') {
                         $("#submit-images").attr('fn', 1);
-                    $("#pill-tab-li4").click();
-                    toastSuccess("Images / X-Rays saved");
+                        let tabTrigger = new bootstrap.Tab(document.querySelector('#pill-tab-li4'));
+                        tabTrigger.show();
+                        toastSuccess("Images / X-Rays saved");
                     } else {
                         $.ajax({
-                    type: "POST",
-                    url: "{{ url('/patient/images/save') }}",
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        "hyperlink": hyperlink,
-                        "treatment_plan_id": "{{ $patient->id }}",
-                        "patient_id": "{{ $patient->patient_id }}"
-                    },
-                }).done(function(response) {
-                    $("#submit-images").attr('fn', 1);
-                    $("#pill-tab-li4").click();
-                    toastSuccess("Images / X-Rays saved");
-                }).fail(function(response) {
-                    $("#submit-images").attr('fn', 0);
-                    toastError("Enable to save X-Ray/Images");
-                });
+                            type: "POST",
+                            url: "{{ url('/patient/images/save') }}",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                "hyperlink": hyperlink,
+                                "treatment_plan_id": "{{ $patient->id }}",
+                                "patient_id": "{{ $patient->patient_id }}"
+                            },
+                        }).done(function(response) {
+                            $("#submit-images").attr('fn', 1);
+                            let tabEl = document.querySelector('#pill-tab-li4');
+                            let tab = new bootstrap.Tab(tabEl);
+                            tab.show();
+                            toastSuccess("Images / X-Rays saved");
+                        }).fail(function(response) {
+                            $("#submit-images").attr('fn', 0);
+                            toastError("Enable to save X-Ray/Images");
+                        });
                     }
 
                 }
@@ -7043,7 +7074,9 @@ async function previewUpperStlFile(file_upper)
                     contentType: false,
                 }).done(function(response) {
                     $("#submit-prescription").attr('fn', 1);
-                    $("#pill-tab-li5").click();
+                    let tabEl = document.querySelector('#pill-tab-li5');
+                    let tab = new bootstrap.Tab(tabEl);
+                    tab.show();
                     toastSuccess("Prescription Saved");
                 }).fail(function(response) {
                     $("#submit-prescription").attr('fn', 0);
