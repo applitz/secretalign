@@ -6877,7 +6877,6 @@ async function previewUpperStlFile(file_upper)
                 });
             });
 
-
             $("#submit-patient-info").on('click', function() {
                 var first_name = $("#first_name").val();
                 var last_name = $("#last_name").val();
@@ -7341,9 +7340,6 @@ async function previewUpperStlFile(file_upper)
                     toastError("Enable to save prescription");
                 });
             });
-
-
-
         });
 
 

@@ -426,12 +426,12 @@
     </head>
 
     <body data-layout="detached" data-topbar="colored" >
-        {{-- <div id="loader" class="loader d-none" style="position: fixed;left: 55%;top:50%;z-index: 1000">
+        <div id="loader" class="loader d-none" style="position: fixed;left: 55%;top:50%;z-index: 1000">
             <div class="spinner-border " style="--falcon-text-opacity: 1;color: #1C8484;" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-        </div> --}}
-        {{-- <div id="loader-overlay" class="loader-overlay d-none" style="position: fixed;width: 100%;height: 100%;background: rgba(28, 132, 132, 0.1);top: 0;z-index: 500"></div> --}}
+        </div>
+        <div id="loader-overlay" class="loader-overlay d-none" style="position: fixed;width: 100%;height: 100%;background: rgba(28, 132, 132, 0.1);top: 0;z-index: 500"></div>
 
         @include('cookie-consent::index')
 
