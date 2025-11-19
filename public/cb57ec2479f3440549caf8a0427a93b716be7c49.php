@@ -6,7 +6,7 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Nemolink</label>
-                            <inpu type="text" class="form-control <?php $__errorArgs = ['nemolink'];
+                            <input type="text" class="form-control <?php $__errorArgs = ['nemolink'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -20,7 +20,7 @@ $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                                <div class="invalid-feedback d-blcok"><?php echo e($message); ?></div>
+                                <div class="invalid-feedback d-blcok">jhgjhgjh <?php echo e($message); ?></div>
                             <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
@@ -81,7 +81,7 @@ unset($__errorArgs, $__bag); ?>
                         </div>
                     <?php endif; ?>
                 <?php endif; ?>
-                            
+
 
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingl13234">
@@ -2782,12 +2782,12 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                         <!--   <div class="mb-3 d-flex align-items-center gap-3">-->
                         <!--    <label for="patientOption" class="me-2 mb-0">Select Option:</label>-->
-                            
+
                         <!--    <select id="patientOption" name="patient_option" class="form-select w-auto">-->
                         <!--        <option value="view" <?php echo e($patient->link_type == 'view' ? 'selected' : ''); ?>>Advanced Viewer</option>-->
                         <!--        <option value="edit" <?php echo e($patient->link_type == 'edit' ? 'selected' : ''); ?>>Editor</option>-->
                         <!--    </select>-->
-                        
+
                         <!--    <a href="<?php echo e(route('patient.nemo.link', $hashids->encode($patient->patient_id))); ?>"-->
                         <!--       class="btn btn-primary rounded-pill px-2 py-2 shadow-sm"-->
                         <!--       id="patientNemoBtn">-->
@@ -2798,7 +2798,7 @@ unset($__errorArgs, $__bag); ?>
                             <label for="patientOption" class="me-2 mb-0 fw-semibold">
                                 Select Nemo Sync Option
                             </label>
-                        
+
                             <select id="patientOption" name="patient_option"
                                 class="form-select stylish-dropdown-half fw-medium border-0 shadow-sm"
                                 onchange="syncNemoLink(this)">
@@ -2809,7 +2809,7 @@ unset($__errorArgs, $__bag); ?>
                         </div>
 
 
-                            
+
                         <?php endif; ?>
 
                         <?php if(Auth::user()->role == 'staff' && $patient->case_holder == 'staff'): ?>

@@ -159,104 +159,99 @@ class CasePhaseController extends Controller
         if(Auth::user()->role != 'doctor'){
             abort(403, "Unauthorized Request | Can no longer request new cases");
         }
-            if (DB::table('patients')
-                ->where('id', $request->input('patient_id'))
-                ->where('is_deleted', 0)->where('user_id', Auth::user()->id)
-                ->whereNotNull('first_name')
-                ->exists()
-            ) {
-                $treatment_plan = DB::table('p_treatment_plans')
+        if (DB::table('patients')
+            ->where('id', $request->input('patient_id'))
+            ->where('is_deleted', 0)->where('user_id', Auth::user()->id)
+            ->whereNotNull('first_name')
+            ->exists()
+        ) {
+            $treatment_plan = DB::table('p_treatment_plans')
                     ->where('is_deleted', 0)
                     ->where('patient_id', $request->input('patient_id'))
                     ->orderByDesc('phase')
                     ->first();
+            // dd($treatment_plan);
 
-                $treatment_plan = DB::table('p_treatment_plans as tp')
-                                    ->where('tp.patient_id', $request->input('patient_id'))
-                                    ->Join("patients as p", function ($join) {
-                                        $join->on("tp.patient_id", "=", "p.id")
-                                            ->where("p.is_deleted", 0);
-                                    })
-                                    ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package")
-                                    ->first();
+            $treatment_plan = DB::table('p_treatment_plans as tp')
+                                ->where('tp.patient_id', $request->input('patient_id'))
+                                ->Join("patients as p", function ($join) {
+                                    $join->on("tp.patient_id", "=", "p.id")
+                                        ->where("p.is_deleted", 0);
+                                })
+                                ->orderByDesc('phase')
+                                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package")
+                                ->first();
 
-                $comment = 'PLEASE SEND ME: '.$request->post('comment');
-                $staff = DB::table('users')
-                                ->where('role', 'staff')
-                                ->get(['first_name', 'last_name', 'email'])
-                                ->toArray();
-                $details = [
-                    'subject' => 'Order Received - Review in Progress',
-                    'doctor_name' => Auth::user()->first_name." ".Auth::user()->last_name,
-                    'patient_name' => $treatment_plan->first_name." " . $treatment_plan->last_name,
-                    'email' => Auth::user()->email,
-                ];
-                // $details = [
-                //     'subject' => 'Order Received - Review in Progress',
-                //     'doctor_name' => Auth::user()->first_name." ".Auth::user()->last_name,
-                //     'patient_name' => $patient->first_name." ".$patient->last_name,
-                //     'email' => Auth::user()->email,
-                // ];
+            $comment = 'PLEASE SEND ME: '.$request->post('comment');
+            $staff = DB::table('users')
+                            ->where('role', 'staff')
+                            ->get(['first_name', 'last_name', 'email'])
+                            ->toArray();
+            $details = [
+                'subject' => 'Order Received - Review in Progress',
+                'doctor_name' => Auth::user()->first_name." ".Auth::user()->last_name,
+                'patient_name' => $treatment_plan->first_name." " . $treatment_plan->last_name,
+                'email' => Auth::user()->email,
+            ];
 
+            SubmitCaseMailJob::dispatch($details);
+            SubmitCaseMailStaffJob::dispatch($staff, $details);
 
-                SubmitCaseMailJob::dispatch($details);
-                SubmitCaseMailStaffJob::dispatch($staff, $details);
+            // $task = (new TaskService($treatment_plan->id));
+            $latest = DB::table('tasks')->insert([
+                "treatment_plan_id" => $treatment_plan->id,
+                "task" => 'Continue an old case',
+                "type" => 'staff',
+                "user_id" => null,
+                "status" => "pending",
+            ]);
+                //  dd($latest);
+            $task_id= DB::table('tasks')->where('treatment_plan_id',$treatment_plan->id)->orderBy('id','desc')->first();
 
-                    // $task = (new TaskService($treatment_plan->id));
-                $latest = DB::table('tasks')->insert([
+            if ($comment) {
+
+                DB::table('comments')->insert([
                     "treatment_plan_id" => $treatment_plan->id,
-                    "task" => 'Continue an old case',
-                    "type" => 'staff',
-                    "user_id" => null,
-                    "status" => "pending",
+                    "task_id" => $task_id->id,
+                    "added_by" => Auth::user()->id,
+                    "from_role" => 'doctor',
+                    "to_role" => 'staff',
+                    "comment" => $comment,
+
+                    "created_at" => date("Y-m-d H:i:s"),
                 ]);
-                    //  dd($latest);
-                $task_id= DB::table('tasks')->where('treatment_plan_id',$treatment_plan->id)->orderBy('id','desc')->first();
-
-                if ($comment) {
-
-                    DB::table('comments')->insert([
-                        "treatment_plan_id" => $treatment_plan->id,
-                        "task_id" => $task_id->id,
-                        "added_by" => Auth::user()->id,
-                        "from_role" => 'doctor',
-                        "to_role" => 'staff',
-                        "comment" => $comment,
-
-                        "created_at" => date("Y-m-d H:i:s"),
-                    ]);
-                }
-
-                $tasks = DB::table('tasks')
-                    ->where('treatment_plan_id', $treatment_plan->id)
-                    ->where('type','doctor')
-                    // ->where('status', '!=', 'completed')
-                    ->orderByDesc('id')
-                    ->get();
-                // dd($tasks);
-                foreach ($tasks as $task) {
-                    DB::table('tasks')->where('id', $task->id)->update([
-                        "status" => 'completed',
-                        "user_id" => Auth::id(),
-                    ]);
-                }
-                if ($task_id != null) {
-                    DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
-                        "case_holder" => "staff",
-                        "previous_case_holder" => "doctor",
-                        "status" => "Waiting Staff Review",
-                        "is_completed" => 0,
-                        "is_submitted" => 1,
-                        "is_continue" => 1,
-                        "tracking_id"=> null,
-                        "is_treatment_submitted"=> 0,
-                        "is_sent_to_lab"=> 1,
-
-                    ]);
-                }
-
-               // dd($request, $treatment_plan, $task, $task_id);
-               return redirect('/patients')->with('success', 'Patient case continue');
             }
+
+            $tasks = DB::table('tasks')
+                ->where('treatment_plan_id', $treatment_plan->id)
+                ->where('type','doctor')
+                // ->where('status', '!=', 'completed')
+                ->orderByDesc('id')
+                ->get();
+            // dd($tasks);
+            foreach ($tasks as $task) {
+                DB::table('tasks')->where('id', $task->id)->update([
+                    "status" => 'completed',
+                    "user_id" => Auth::id(),
+                ]);
+            }
+            if ($task_id != null) {
+                DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
+                    "case_holder" => "staff",
+                    "previous_case_holder" => "doctor",
+                    "status" => "Waiting Staff Review",
+                    "is_completed" => 0,
+                    "is_submitted" => 1,
+                    "is_continue" => 1,
+                    "tracking_id"=> null,
+                    "is_treatment_submitted"=> 0,
+                    "is_sent_to_lab"=> 1,
+
+                ]);
+            }
+
+            // dd($request, $treatment_plan, $task, $task_id);
+            return redirect('/patients')->with('success', 'Patient case continue');
+        }
     }
 }
