@@ -92,7 +92,6 @@ var Patients = function() {
         $('#submitTreatmentBtn').on('click', function () {
             const alignerValue = $('#alignerInput').val().trim();
             const loopIteration = $('#confirmLoopIteration').val();
-
             if (alignerValue !== '') {
                 const $form = $(`#continue-plan-${loopIteration}`);
 
