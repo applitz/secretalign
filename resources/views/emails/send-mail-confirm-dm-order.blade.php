@@ -75,17 +75,12 @@
                 <h1 style="font-size: 20px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 600; text-decoration: none; color: #000000;">Dear {{ $doctor_name }}</h1>
 
                 <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #919293;">
-                    Your Dental Monitoring order has been successfully created and is now ready for processing.
+                    Your Smart STL Order for your Patient {{ $patient_name }} has been successfully submitted to DM.
                 </p>
 
                 <h1 style="font-size: 20px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 600; text-decoration: none; color: #000000;">
                     Patient Name: {{ $patient_name }}
                 </h1>
-
-                <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #919293;">
-                    Order Id : {{ $orderId }}
-                </p>
-
 
                 <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #919293 !important;">
                     Thank you for choosing Secret Clear Aligner System!

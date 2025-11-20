@@ -75,7 +75,7 @@
                 <h1 style="font-size: 20px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 600; text-decoration: none; color: #000000;">Dear {{ $doctor_name }}</h1>
 
                 <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #919293;">
-                    STL files uploaded - please check and process further treatment for patient {{ $patient_name }}
+                   The Smart STL files for your Patient {{ $patient_name }} are ready and have been uploaded automatically into SECRET Navigator. Please login into the SECRET Navigator and complete submitting your order.
                 </p>
 
                 <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #919293;">
