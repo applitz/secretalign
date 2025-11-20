@@ -1994,7 +1994,7 @@ class PatientOverview extends Controller
         // use Carbon\Carbon;
 
         public function setReminderForDoctor(Request $request)
-        {dd($request->all());
+        {
             $treatment_plan = DB::table('p_treatment_plans as tp')
                 ->where('tp.id', $request->treatment_plan_id)
                 ->join('patients as p', function ($join) {
