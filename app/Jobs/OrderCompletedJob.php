@@ -49,8 +49,8 @@ class OrderCompletedJob implements ShouldQueue
             }
 
             $mailDetails = [
-                'subject' => 'Action Required: STL files uploaded - please check and process further treatment for patient '. $patientDetails->first_name . ' ' . $patientDetails->last_name,
-                'title' => 'Action Required: STL files uploaded - please check and process further treatment for patient '. $patientDetails->first_name . ' ' . $patientDetails->last_name,
+                'subject' => 'Action Required: SMART STL files are ready!',
+                'title' => 'Action Required: SMART STL files are ready!',
                 'doctor_email' => $patientDetails->doctor_email,
                 'doctor_name' => $patientDetails->doctor_first_name . ' ' . $patientDetails->doctor_last_name,
                 'patient_name' => $patientDetails->first_name . ' ' . $patientDetails->last_name,

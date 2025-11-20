@@ -278,8 +278,8 @@ class PatientsController extends Controller
                 "dm_order_status" => 'orderPlaced',
             ]);
             $details = [
-                'subject' => 'Dental Monitoring Order Created : New DM Order Created for Patient ' . $previousPlan->first_name . ' ' . $previousPlan->last_name,
-                'title' => 'Dental Monitoring Order Created : New DM Order Created for Patient ' . $previousPlan->first_name . ' ' . $previousPlan->last_name,
+                'subject' => 'Smart STLs Request sent to DM.',
+                'title' => 'Smart STLs Request sent to DM.',
                 'doctor_name' => Auth::user()->first_name." ".Auth::user()->last_name,
                 'patient_name' => $previousPlan->first_name." ".$previousPlan->last_name,
                 'email' => Auth::user()->email,

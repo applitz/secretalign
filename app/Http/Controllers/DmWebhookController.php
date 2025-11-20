@@ -395,12 +395,12 @@ class DmWebhookController extends Controller
     public function sendMessageGeneratingFiles($patientDetails, $eventType)
     {
         $details = [
-            'subject' => 'Information: Your patient’s treatment plan is currently being processed for '. $patientDetails->first_name . ' ' . $patientDetails->last_name,
-            'title' => 'Information: Your patient’s treatment plan is currently being processed for '. $patientDetails->first_name . ' ' . $patientDetails->last_name,
+            'subject' => ' DM Order Confirmation: DM successfully recieved your Smart STLs Order.',
+            'title' => ' DM Order Confirmation: DM successfully recieved your Smart STLs Order.',
             'doctor_email' => $patientDetails->doctor_email,
             'doctor_name' => $patientDetails->doctor_first_name . ' ' . $patientDetails->doctor_last_name,
             'patient_name' => $patientDetails->first_name . ' ' . $patientDetails->last_name,
-            'message' => "Your patient’s treatment plan is currently being processed. We’ll notify you once your order is ready.",
+            'message' => "Your Smart STLs order for your Patient ". $patientDetails->first_name . ' ' . $patientDetails->last_name ." is currently being processed. We’ll notify you once the SMART STLs are ready.",
             'patient_id' => $patientDetails->patinetId ?? $patientDetails->patient_id ?? null,
             'pTreatmentPlanId' => $patientDetails->id,
         ];
@@ -732,8 +732,8 @@ class DmWebhookController extends Controller
             }
 
             $mailDetails = [
-                'subject' => 'Action Required: STL files uploaded - please check and process further treatment for patient '. $patientDetails->first_name . ' ' . $patientDetails->last_name,
-                'title' => 'Action Required: STL files uploaded - please check and process further treatment for patient '. $patientDetails->first_name . ' ' . $patientDetails->last_name,
+                'subject' => 'Action Required: SMART STL files are ready!',
+                'title' => 'Action Required: SMART STL files are ready!',
                 'doctor_email' => $patientDetails->doctor_email,
                 'doctor_name' => $patientDetails->doctor_first_name . ' ' . $patientDetails->doctor_last_name,
                 'patient_name' => $patientDetails->first_name . ' ' . $patientDetails->last_name,
