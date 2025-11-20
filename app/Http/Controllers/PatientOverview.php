@@ -114,13 +114,13 @@ class PatientOverview extends Controller
     }
     public function overview(Request $request, $phase)
     {
-        
+
         $whereClauses = [["tp.id", $this->hashids->decode($phase)], ["tp.is_deleted", 0],];
 
         if (Auth::user()->role == 'lab') {
             array_push($whereClauses, ["tp.lab", Auth::user()->id]);
         }
-        
+
         $patient = DB::table('p_treatment_plans as tp')
             ->where($whereClauses)
             //->where('tp.is_submitted', 1)
@@ -147,7 +147,7 @@ class PatientOverview extends Controller
                 ->select("c.*", "u.first_name", "u.last_name")
                 ->orderByDesc('c.id')
                 ->get();
-            
+
             $labs = DB::table('users')->where('role', 'lab')->get();
             $advisors = DB::table('users')->where('role', 'advisor')->get();
             // dd($advisors);
@@ -178,7 +178,7 @@ class PatientOverview extends Controller
 
     public function iframe(Request $request, $phase)
     {
-        
+
         $whereClauses = [["tp.id", $this->hashids->decode($phase)], ["tp.is_deleted", 0],];
 
         if (Auth::user()->role == 'lab') {
@@ -1994,7 +1994,7 @@ class PatientOverview extends Controller
         // use Carbon\Carbon;
 
         public function setReminderForDoctor(Request $request)
-        {
+        {dd($request->all());
             $treatment_plan = DB::table('p_treatment_plans as tp')
                 ->where('tp.id', $request->treatment_plan_id)
                 ->join('patients as p', function ($join) {
@@ -2648,7 +2648,7 @@ class PatientOverview extends Controller
             }
         }
     }
-    
+
      public function openNemoLink(Request $request, $id)
     {
 
