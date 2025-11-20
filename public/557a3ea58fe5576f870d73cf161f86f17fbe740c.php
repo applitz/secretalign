@@ -125,7 +125,7 @@
         </div>
         <div class="mb-3">
           <label for="reminder-note" class="form-label">Note</label>
-          <textarea class="form-control classicEditor" id="reminder-note" name="reminder_note" rows="3" placeholder="Add a note..."></textarea>
+          <textarea class="form-control" id="reminder-note" name="reminder_note" rows="3" placeholder="Add a note..."></textarea>
         </div>
         <div class="mb-3">
           <label for="reminder-note" class="form-label">Attachments</label>

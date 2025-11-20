@@ -334,30 +334,37 @@
             //     }
             // })
 
+            // ClassicEditor
+            // .create(document.querySelector('#reminder-note'))
+            // .then(editor => {
+            //     window.reminderEditor = editor;   // <-- IMPORTANT
+            // })
+            // .catch(error => {
+            //     console.error(error);
+            // });
+
+
             $('#doctor-reminder-modal').on('shown.bs.modal', function () {
-                // 1️⃣ Clear normal inputs
+
+                // Clear normal inputs
                 $(this).find('input[type="text"], input[type="date"], input[type="datetime-local"]').val('');
 
-                // 2️⃣ Clear file inputs
+                // Clear files
                 $(this).find('input[type="file"]').val('');
 
-                // 3️⃣ Clear textareas (normal + CKEditor)
-                $(this).find('textarea').each(function () {
-                    if (this.classList.contains('classicEditor') && window.editor) {
-                        // Clear CKEditor content
-                        window.editor.setData('');
-                    } else {
-                        $(this).val('');
-                    }
-                });
+                // Clear Textarea + CKEditor
+                if (window.reminderEditor) {
+                    window.reminderEditor.setData('');
+                } else {
+                    $('#reminder-note').val('');
+                }
             });
 
 
             $(document).on("click", "#set-reminder-button", function(e) {
                 e.preventDefault();
-                var comment = window.commentEditor ? window.commentEditor.getData() : '';
 
-                // var comment = window.commentEditor.getData();
+                var comment = window.reminderEditor ? window.reminderEditor.getData() : '';
                 var reminderDatetime = $('#reminder-datetime').val();
 
                 var formData = new FormData();
@@ -385,13 +392,12 @@
                     $('#doctor-reminder-modal').modal('hide');
                     $('#set-reminder-button').prop('disabled', false);
 
-                    // Show toastr based on backend response
                     if (response.success) {
                         toastSuccess(response.message);
 
-                        // Clear form
+                        // Reset fields
                         $('#reminder-datetime').val('');
-                        if(window.editor) window.editor.setData('');
+                        if (window.reminderEditor) window.reminderEditor.setData('');
                         fileInput.value = '';
                     } else {
                         toastError(response.message);
@@ -400,14 +406,69 @@
                 .fail(function(xhr) {
                     $('#set-reminder-button').prop('disabled', false);
 
-                    // Show backend error if available
-                    if(xhr.responseJSON && xhr.responseJSON.message) {
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
                         toastError(xhr.responseJSON.message);
                     } else {
                         toastError("Unable to schedule reminder");
                     }
                 });
             });
+
+            // $(document).on("click", "#set-reminder-button", function(e) {
+            //     e.preventDefault();
+            //     var comment = window.commentEditor ? window.commentEditor.getData() : '';
+
+            //     // var comment = window.commentEditor.getData();
+            //     var reminderDatetime = $('#reminder-datetime').val();
+
+            //     var formData = new FormData();
+            //     formData.append('treatment_plan_id', '{{ $patient->id }}');
+            //     formData.append('comment', comment);
+            //     formData.append('reminderDatetime', reminderDatetime);
+            //     formData.append('_token', '{{ csrf_token() }}');
+
+            //     var fileInput = document.getElementById('setreminderAttachments');
+            //     for (var i = 0; i < fileInput.files.length; i++) {
+            //         formData.append('attachments[]', fileInput.files[i]);
+            //     }
+
+            //     $('#set-reminder-button').prop('disabled', true);
+
+            //     $.ajax({
+            //         type: "POST",
+            //         url: "{{ route('set-reminder-for-doctoer') }}",
+            //         data: formData,
+            //         processData: false,
+            //         contentType: false,
+            //         cache: false,
+            //     })
+            //     .done(function(response) {
+            //         $('#doctor-reminder-modal').modal('hide');
+            //         $('#set-reminder-button').prop('disabled', false);
+
+            //         // Show toastr based on backend response
+            //         if (response.success) {
+            //             toastSuccess(response.message);
+
+            //             // Clear form
+            //             $('#reminder-datetime').val('');
+            //             if(window.editor) window.editor.setData('');
+            //             fileInput.value = '';
+            //         } else {
+            //             toastError(response.message);
+            //         }
+            //     })
+            //     .fail(function(xhr) {
+            //         $('#set-reminder-button').prop('disabled', false);
+
+            //         // Show backend error if available
+            //         if(xhr.responseJSON && xhr.responseJSON.message) {
+            //             toastError(xhr.responseJSON.message);
+            //         } else {
+            //             toastError("Unable to schedule reminder");
+            //         }
+            //     });
+            // });
 
             $("#approve").on('click', function() {
 
@@ -1255,6 +1316,14 @@
             .then(editor => {
                 editor.ui.view.editable.element.style.height = '150px';
                 window.commentEditor = editor; // store reference
+            })
+            .catch(error => console.error(error));
+        // For #reminder-note
+        ClassicEditor
+            .create(document.querySelector('#reminder-note'))
+            .then(editor => {
+                editor.ui.view.editable.element.style.height = '150px';
+                window.reminderEditor = editor; // store reference
             })
             .catch(error => console.error(error));
 
