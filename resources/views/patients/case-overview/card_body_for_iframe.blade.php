@@ -123,7 +123,7 @@
                                    View on Full Screen
                                 </a>
                                 @if($role && ($role == 'staff' || $role == 'doctor') && $patient->is_approved != 1)
-                                    @if($patient->status == 'Treatment Plan Completed' || $patient->status == 'Doctor requests a Modification to Setup 1')
+                                    @if($patient->status == 'Treatment Plan Completed' || $patient->status == 'Doctor requests a Modification to Setup 1' || $patient->status == 'Waiting Doctor’s Review' )
                                     <select id="patientOption" name="patient_option"
                                         class="form-select stylish-dropdown-half fw-medium border-0 shadow-sm"
                                         onchange="syncNemoLink(this)">
