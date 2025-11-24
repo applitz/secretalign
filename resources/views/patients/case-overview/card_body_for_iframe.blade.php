@@ -86,7 +86,7 @@
                 @if (@$patient->iframe_link)
                     @if(@$patient->link_type == 'edit')
                     <?php $simseToken = getSimseToken($patient->first_name,$patient->last_name,$patient->dob,$patient->user_id);?>
-                    <iframe onload="authenticate('{{$simseToken}}', '{{ $patient->iframe_link }}')"     id="nemoPortal" width="100%" height="700" style="min-height: 700px";     src="{{ $patient->iframe_link }}">   
+                    <iframe onload="authenticate('{{$simseToken}}', '{{ $patient->iframe_link }}')"     id="nemoPortal" width="100%" height="700" style="min-height: 700px";     src="{{ $patient->iframe_link }}">
                     </iframe>
                     @else
                     <iframe src="{{ $patient->iframe_link }}" width="100%" height="700" style="min-height: 700px;"></iframe>
@@ -101,7 +101,7 @@
                                         <!--<label for="patientOption" class="me-2 mb-0 fw-semibold">-->
                                         <!--    Select Nemo Sync Option-->
                                         <!--</label>-->
-                                    
+
                     <!--                    <select id="patientOption" name="patient_option"-->
                     <!--                        class="form-select stylish-dropdown-half fw-medium border-0 shadow-sm"-->
                     <!--                        onchange="syncNemoLink(this)">-->
@@ -112,12 +112,12 @@
                     <!--                </div>-->
                     <!--            </div>-->
                     <!--    </div>-->
-                  
+
                     <div class="row mt-5">
                         <div class="col-md-12">
                             <div class="d-flex align-items-center gap-3">
                                 <!-- Full Screen Button -->
-                                <a href="{{ route('iframe', request()->phase) }}" 
+                                <a href="{{ route('iframe', request()->phase) }}"
                                    class="btn btn-primary"
                                    target="_blank">
                                    View on Full Screen
@@ -133,15 +133,15 @@
                                     </select>
                                     @endif
                                 @endif
-                                @if($role && ($role == 'lab'))
+                                @if($role && ($role == 'lab' || $role == 'doctor') && $patient->treatment_type != 1)
                                     @if($patient->status == 'Treatment Plan Completed' || $patient->status == 'Doctor requests a Modification to Setup 1' || $patient->status == 'Treatment Plan Approved' )
-                                    <select id="patientOption" name="patient_option"
-                                            class="form-select stylish-dropdown-half fw-medium shadow-sm"
-                                            onchange="syncNemoLink(this)">
-                                        <option value="">Please select option</option>
-                                        <option value="view" {{ $patient->link_type == 'view' ? 'selected' : '' }}>Advanced Viewer</option>
-                                        <option value="edit" {{ $patient->link_type == 'edit' ? 'selected' : '' }}>Editor</option>
-                                    </select>
+                                        <select id="patientOption" name="patient_option"
+                                                class="form-select stylish-dropdown-half fw-medium shadow-sm"
+                                                onchange="syncNemoLink(this)">
+                                            <option value="">Please select option</option>
+                                            <option value="view" {{ $patient->link_type == 'view' ? 'selected' : '' }}>Advanced Viewer</option>
+                                            <option value="edit" {{ $patient->link_type == 'edit' ? 'selected' : '' }}>Editor</option>
+                                        </select>
                                     @endif
                                 @endif
                             </div>
