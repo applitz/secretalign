@@ -122,7 +122,7 @@
                                    target="_blank">
                                    View on Full Screen
                                 </a>
-                                @if($role && ($role == 'staff' || $role == 'doctor'))
+                                @if($role && ($role == 'staff' || $role == 'doctor') && $patient->is_approved != 1)
                                     @if($patient->status == 'Treatment Plan Completed' || $patient->status == 'Doctor requests a Modification to Setup 1')
                                     <select id="patientOption" name="patient_option"
                                         class="form-select stylish-dropdown-half fw-medium border-0 shadow-sm"
@@ -133,15 +133,15 @@
                                     </select>
                                     @endif
                                 @endif
-                                @if($role && ($role == 'lab' || $role == 'doctor') && $patient->treatment_type != 1)
+                                @if($role && ($role == 'lab') && $patient->is_approved != 1)
                                     @if($patient->status == 'Treatment Plan Completed' || $patient->status == 'Doctor requests a Modification to Setup 1' || $patient->status == 'Treatment Plan Approved' )
-                                        <select id="patientOption" name="patient_option"
-                                                class="form-select stylish-dropdown-half fw-medium shadow-sm"
-                                                onchange="syncNemoLink(this)">
-                                            <option value="">Please select option</option>
-                                            <option value="view" {{ $patient->link_type == 'view' ? 'selected' : '' }}>Advanced Viewer</option>
-                                            <option value="edit" {{ $patient->link_type == 'edit' ? 'selected' : '' }}>Editor</option>
-                                        </select>
+                                    <select id="patientOption" name="patient_option"
+                                            class="form-select stylish-dropdown-half fw-medium shadow-sm"
+                                            onchange="syncNemoLink(this)">
+                                        <option value="">Please select option</option>
+                                        <option value="view" {{ $patient->link_type == 'view' ? 'selected' : '' }}>Advanced Viewer</option>
+                                        <option value="edit" {{ $patient->link_type == 'edit' ? 'selected' : '' }}>Editor</option>
+                                    </select>
                                     @endif
                                 @endif
                             </div>
