@@ -173,6 +173,30 @@
             padding-bottom: 7px;" src="<?php echo e(asset('public/assets/medit-link-logo.svg')); ?>" width="52px">
             </div>
         </a>
+
+
+        <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#order-from-shining3d-modal"  id="select-from-shining3d-link" >
+            <div class="d-flex align-items-center justify-content-center">
+            <span>Import From</span>
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                width="92"
+                height="26"
+                viewBox="0 0 800 226">
+
+                <text x="50" y="150"
+                        font-family="Arial, Helvetica, sans-serif"
+                        font-size="120"
+                        font-weight="700"
+                        font-style="bold"
+                        fill="#1E88FF">
+                    SHINING3D
+                </text>
+            </svg>
+
+            
+            </div>
+        </a>
     </div>
 
     <?php if($patient->phase > 1): ?>
