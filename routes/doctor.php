@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 use App\Http\Controllers\Doctor\PatientsController;
+use App\Http\Controllers\Doctor\Shining3dController;
 
 Route::middleware(['auth', 'auth.doctor'])->group(function () {
     Route::resource('patients', PatientsController::class);
@@ -13,6 +14,8 @@ Route::middleware(['auth', 'auth.doctor'])->group(function () {
     Route::post('order-from-dental-monitoring', [PatientsController::class, 'orderFromDentalMonitoring'])->name('order-from-dental-monitoring');
     Route::post('update-order-from-dental-monitoring', [PatientsController::class, 'updateOrderFromDentalMonitoring'])->name('update-order-from-dental-monitoring');
     Route::post('cancel-order-from-dental-monitoring', [PatientsController::class, 'cancelOrderFromDentalMonitoring'])->name('cancel-order-from-dental-monitoring');
+
+    Route::post('get-shining3d-order-list', [Shining3dController::class, 'getOrderList'])->name('get-shining3d-order-list');
 });
 
 ?>

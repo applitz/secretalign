@@ -607,7 +607,103 @@
         </div>
     </div>
     <!-- Order From Dental-Monitoring Modal End -->
+
+
 @endif
+    <!--  Order From shining3d Modal Start -->
+        <div class="modal fade" id="order-from-shining3d-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderFromShining3dLabel">
+                            Order From Shining3d
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div id="shining3d-error" class="alert alert-danger py-1" style="display:none; font-size: 14px;"></div>
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="scanType" class="form-label">Select Region</label>
+                                        <select id="scanRegion" class="form-select">
+                                            <option value="">-- Select Region Based on Your Location --</option>
+
+                                            <option value="frankfurt">
+                                                Europe (Frankfurt) – Recommended for EU countries
+                                            </option>
+
+                                            <option value="hz">
+                                                China (Hangzhou) – Mainland China users
+                                            </option>
+
+                                            <option value="ru">
+                                                Russia – Users located in Russia
+                                            </option>
+
+                                            <option value="silicon">
+                                                USA (Silicon Valley) – North America users
+                                            </option>
+
+                                            <option value="tokyo">
+                                                Japan (Tokyo) – Japan & East Asia users
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="startDate" class="form-label">Start Date</label>
+                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" placeholder="Select start date">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="endDate" class="form-label">End Date</label>
+                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" placeholder="Select end date">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3" id="caseSearchRow" style="display:none;">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped align-middle">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Patient Name</th>
+                                                    <th>Phone</th>
+                                                    <th>Sex</th>
+                                                    <th>Lab Name</th>
+                                                     <th>Status</th>
+                                                    <th>Created At</th>
+                                                    <th>Scan Files</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="shining3dOrderTable">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
+                        <button type="button" class="btn btn-danger" id="order-from-shining3d">Get Sacn</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    <!-- Order From shining3d Modal End -->
 @stop
 
 @section('javascript')
@@ -3218,6 +3314,41 @@ async function previewUpperStlFile(file_upper)
 
         $(document).ready(function() {
             const fp = flatpickr($(".pickr"), {});
+            document.getElementById("startDate").addEventListener("change", function () {
+                let startValue = this.value;
+                if (!startValue) return;
+
+                let start = new Date(startValue);
+
+                // End date = Start + 3 days
+                let end = new Date(start);
+                end.setDate(end.getDate() + 3);
+
+                let yyyy = end.getFullYear();
+                let mm = ("0" + (end.getMonth() + 1)).slice(-2);
+                let dd = ("0" + end.getDate()).slice(-2);
+
+                document.getElementById("endDate").value = `${yyyy}-${mm}-${dd}`;
+            });
+
+
+            document.getElementById("endDate").addEventListener("change", function () {
+                let endValue = this.value;
+                if (!endValue) return;
+
+                let end = new Date(endValue);
+
+                // Start date = End − 3 days
+                let start = new Date(end);
+                start.setDate(start.getDate() - 3);
+
+                let yyyy = start.getFullYear();
+                let mm = ("0" + (start.getMonth() + 1)).slice(-2);
+                let dd = ("0" + start.getDate()).slice(-2);
+
+                document.getElementById("startDate").value = `${yyyy}-${mm}-${dd}`;
+            });
+
             $(document).on('change', 'input[name=pricing_package]', function () {
                 if($(this).is(":checked")) {
                     $("input[name=client_preferred_package]").val($(this).val());
@@ -3754,11 +3885,13 @@ async function previewUpperStlFile(file_upper)
 
 <script src="{{ asset('public/assets/customjs/dm-integration.js') }}"></script>
 <script src="{{ asset('public/assets/customjs/add-patient.js') }}"></script>
+<script src="{{ asset('public/assets/customjs/shining3d.js') }}"></script>
 
 <script>
     $(document).ready(function() {
         DmIntegration.init();
         AddPatient.init();
+        Shining3d.init();
     });
 </script>
 

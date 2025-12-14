@@ -86,7 +86,7 @@
                 <?php if(@$patient->iframe_link): ?>
                     <?php if(@$patient->link_type == 'edit'): ?>
                     <?php $simseToken = getSimseToken($patient->first_name,$patient->last_name,$patient->dob,$patient->user_id);?>
-                    <iframe onload="authenticate('<?php echo e($simseToken); ?>', '<?php echo e($patient->iframe_link); ?>')"     id="nemoPortal" width="100%" height="700" style="min-height: 700px";     src="<?php echo e($patient->iframe_link); ?>">   
+                    <iframe onload="authenticate('<?php echo e($simseToken); ?>', '<?php echo e($patient->iframe_link); ?>')"     id="nemoPortal" width="100%" height="700" style="min-height: 700px";     src="<?php echo e($patient->iframe_link); ?>">
                     </iframe>
                     <?php else: ?>
                     <iframe src="<?php echo e($patient->iframe_link); ?>" width="100%" height="700" style="min-height: 700px;"></iframe>
@@ -101,7 +101,7 @@
                                         <!--<label for="patientOption" class="me-2 mb-0 fw-semibold">-->
                                         <!--    Select Nemo Sync Option-->
                                         <!--</label>-->
-                                    
+
                     <!--                    <select id="patientOption" name="patient_option"-->
                     <!--                        class="form-select stylish-dropdown-half fw-medium border-0 shadow-sm"-->
                     <!--                        onchange="syncNemoLink(this)">-->
@@ -112,18 +112,18 @@
                     <!--                </div>-->
                     <!--            </div>-->
                     <!--    </div>-->
-                  
+
                     <div class="row mt-5">
                         <div class="col-md-12">
                             <div class="d-flex align-items-center gap-3">
                                 <!-- Full Screen Button -->
-                                <a href="<?php echo e(route('iframe', request()->phase)); ?>" 
+                                <a href="<?php echo e(route('iframe', request()->phase)); ?>"
                                    class="btn btn-primary"
                                    target="_blank">
                                    View on Full Screen
                                 </a>
-                                <?php if($role && ($role == 'staff' || $role == 'doctor')): ?>
-                                    <?php if($patient->status == 'Treatment Plan Completed' || $patient->status == 'Doctor requests a Modification to Setup 1'): ?>
+                                <?php if($role && ($role == 'staff' || $role == 'doctor') && $patient->is_approved != 1): ?>
+                                    <?php if($patient->status == 'Treatment Plan Completed' || $patient->status == 'Doctor requests a Modification to Setup 1' || $patient->status == 'Waiting Doctor’s Review' ): ?>
                                     <select id="patientOption" name="patient_option"
                                         class="form-select stylish-dropdown-half fw-medium border-0 shadow-sm"
                                         onchange="syncNemoLink(this)">
@@ -133,7 +133,7 @@
                                     </select>
                                     <?php endif; ?>
                                 <?php endif; ?>
-                                <?php if($role && ($role == 'lab')): ?>
+                                <?php if($role && ($role == 'lab') && $patient->is_approved != 1): ?>
                                     <?php if($patient->status == 'Treatment Plan Completed' || $patient->status == 'Doctor requests a Modification to Setup 1' || $patient->status == 'Treatment Plan Approved' ): ?>
                                     <select id="patientOption" name="patient_option"
                                             class="form-select stylish-dropdown-half fw-medium shadow-sm"
