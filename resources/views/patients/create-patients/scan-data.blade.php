@@ -145,7 +145,7 @@
 
     <div class="mb-3 ">
         <a
-        class="btn btn-primary"
+        class="btn btn-primary order-from-button"
         @if(Auth::user()->three_shape_access_token != null)
         href="javascript:void(0);"
         id="select-from-3shape"
@@ -155,12 +155,12 @@
         >
             <div class="d-flex align-items-center justify-content-center">
             <span>Import From</span>
-            <img class="ms- 1" src="{{asset('public/assets/communicate-logo-white.png')}}" width="92px">
+            <img class="" src="{{asset('public/assets/communicate-logo-white.png')}}" width="92px">
             </div>
         </a>
 
 
-        <a class="btn btn-primary"
+        <a class="btn btn-primary order-from-button"
                 @if(Auth::user()->medit_link_access_token != null)
                         href="javascript:void(0);" id="select-from-medit-link"
                 @else
@@ -168,34 +168,17 @@
                 @endif
         >
             <div class="d-flex align-items-center justify-content-center">
-            <span>Import From</span>
-            <img class="ms-2" style="    padding-top: 8px;
+            <span style="padding-left: 10px">Import From </span>
+            <img class="ms-2" style="    padding-top: 8px; padding-right: 5px;
             padding-bottom: 7px;" src="{{asset('public/assets/medit-link-logo.svg')}}" width="52px">
             </div>
         </a>
 
 
-        <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#order-from-shining3d-modal"  id="select-from-shining3d-link" >
+        <a class="btn btn-primary order-from-button" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#order-from-shining3d-modal"  id="select-from-shining3d-link" >
             <div class="d-flex align-items-center justify-content-center">
-            <span>Import From</span>
+            <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D</span>
 
-            <svg xmlns="http://www.w3.org/2000/svg"
-                width="92"
-                height="26"
-                viewBox="0 0 800 226">
-
-                <text x="50" y="150"
-                        font-family="Arial, Helvetica, sans-serif"
-                        font-size="120"
-                        font-weight="700"
-                        font-style="bold"
-                        fill="#1E88FF">
-                    SHINING3D
-                </text>
-            </svg>
-
-            {{-- <img class="ms-2" style="    padding-top: 8px;
-            padding-bottom: 7px;" src="{{asset('public/assets/shining3d.svg')}}" width="60px"> --}}
             </div>
         </a>
     </div>
