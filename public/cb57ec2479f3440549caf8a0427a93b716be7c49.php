@@ -2857,12 +2857,12 @@ unset($__errorArgs, $__bag); ?>
                         <?php endif; ?>
 
 
-                        <div class="btn-group">
+                        <div class="btn-group" style="flex-wrap: wrap; gap: 6px; ">
                             
                             <?php if(Auth::user()->role == 'doctor' && $patient->case_holder == 'doctor'): ?>
                                 <?php if($patient->is_completed == 0): ?>
                                     <?php if($patient->is_treatment_submitted == 1 && $patient->is_sent_to_lab == 1): ?>
-                                        <button class="btn btn-success rounded-pill me-1 mb-1 btn-action"
+                                        <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                             id="approve">
                                             <span class="fas fa-check-circle me-1"
                                                 data-fa-transform="shrink-3"></span>
@@ -2871,11 +2871,11 @@ unset($__errorArgs, $__bag); ?>
                                     <?php endif; ?>
                                     
                                     <?php if($patient->send_for_approval == 0): ?>
-                                        <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action" type="button" id="doctor-send-to-staff">
+                                        <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn" type="button" id="doctor-send-to-staff">
                                             <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send for Modification
                                         </button>
                                     <?php else: ?>
-                                        <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action" type="button" id="doctor-send-to-staff-request-modification">
+                                        <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn" type="button" id="doctor-send-to-staff-request-modification">
                                             <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Request Modification
                                         </button>
                                     <?php endif; ?>
@@ -2883,7 +2883,7 @@ unset($__errorArgs, $__bag); ?>
                                     <?php if(Auth::user()->role == 'doctor' && $patient->is_editable == 0 && $patient->is_submitted != 0): ?>
                                         <?php if(($patient->is_treatment_submitted == 0) ||
                                                 ($patient->is_treatment_submitted == 1)): ?>
-                                                <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action" data-bs-toggle="modal" data-bs-target="#send-to-Advisor-Modal" type="button" id="send-to-advisor">
+                                                <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn" data-bs-toggle="modal" data-bs-target="#send-to-Advisor-Modal" type="button" id="send-to-advisor">
                                                     <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Advisor
                                                 </button>
                                         <?php endif; ?>
@@ -2897,7 +2897,7 @@ unset($__errorArgs, $__bag); ?>
 
                             <?php if(Auth::user()->role == 'staff' && $patient->case_holder == 'staff'): ?>
                                 <?php if($patient->is_treatment_submitted == 1 && $patient->is_completed == 0 && $patient->is_continue == 0): ?>
-                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action" data-send_back_to_doctor_status="0"
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn" data-send_back_to_doctor_status="0"
                                         type="button" id="staff-send-to-doctor-for-approval">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>
                                         Send to the Doctor for Approval
@@ -2909,7 +2909,7 @@ unset($__errorArgs, $__bag); ?>
                                         $advisorDetails = DB::table('users')->where('id', $patient->recommended_advisor)->first();
                                     ?>
                                     <?php if($patient->advisor_id == null): ?>
-                                        <button class="btn btn-info rounded-pill me-1 mb-1 btn-action" id="send-to-advisor" >
+                                        <button class="btn btn-info rounded-pill me-1 mb-1 btn-action case-overview-btn" id="send-to-advisor" >
                                             <span class="fas fa-cube me-2"></span>SEND TO <?php echo e($advisorDetails->first_name); ?> <?php echo e($advisorDetails->last_name); ?>
 
                                             (€<?php echo e($advisorDetails->advisor_price); ?>)
@@ -2918,7 +2918,7 @@ unset($__errorArgs, $__bag); ?>
                                         <!-- Advisor Modal Start -->
                                     <?php endif; ?>
                                     <?php if($patient->advisor_id != null): ?>
-                                        <button class="btn btn-info rounded-pill me-1 mb-1"
+                                        <button class="btn btn-info rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                             data-bs-toggle="modal" data-bs-target="#advisorModal">
                                             <span class="fas fa-cube me-2"></span>SEND MOD. TO1 ➡ <?php echo e($advisorDetails->first_name); ?> <?php echo e($advisorDetails->last_name); ?>
 
@@ -2982,14 +2982,14 @@ unset($__errorArgs, $__bag); ?>
                                 <?php endif; ?>
 
                                 <?php if($patient->is_treatment_submitted == 0 || ($patient->is_continue == 1 || $patient->patient_link == null)): ?>
-                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action" data-staff-send-to-doctor-for-approval="0"
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn" data-staff-send-to-doctor-for-approval="0"
                                         type="button" id="staff-send-to-doctor">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to the Doctor for Modification
                                     </button>
                                 <?php endif; ?>
 
                                 <?php if($patient->is_treatment_submitted == 0 && $patient->is_continue == 0): ?>
-                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="request-treatment">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Lab
                                     </button>
@@ -2999,14 +2999,14 @@ unset($__errorArgs, $__bag); ?>
                                         $patient->is_approved == 0 &&
                                         $patient->is_completed == 0 &&
                                         $patient->is_continue == 0): ?>
-                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="send-to-lab-for-modification">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Lab for modification
                                     </button>
                                 <?php endif; ?>
 
                                 <?php if(($patient->is_completed == 1) && $patient->tracking_id == null): ?>
-                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action" data-send_back_to_doctor_status="0"
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn" data-send_back_to_doctor_status="0"
                                         type="button" id="staff-send-to-doctor-for-approval">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>
                                         Send to the Doctor for Approval
@@ -3014,7 +3014,7 @@ unset($__errorArgs, $__bag); ?>
                                 <?php endif; ?>
 
                                 <?php if(($patient->is_completed == 1 || $patient->is_continue == 1) && $patient->tracking_id == null): ?>
-                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="staff-submit-tracking-id">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>
                                         Submit Tracking Nr.
@@ -3024,7 +3024,7 @@ unset($__errorArgs, $__bag); ?>
 
 
                                 <?php if($patient->is_continue == 1 || $patient->is_completed == 1): ?>
-                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="staff-send-to-lab">
                                         <span class="fas fa-share me-1"
                                             data-fa-transform="shrink-3"></span>Request Files
@@ -3032,7 +3032,7 @@ unset($__errorArgs, $__bag); ?>
                                 <?php endif; ?>
 
                                 <?php if(($patient->is_completed == 1) && $patient->tracking_id == null): ?>
-                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="staff-reject-treatment">
                                         <span class="fas fa-tint-slash me-1"
                                             data-fa-transform="shrink-3"></span>Reject Treatment
@@ -3040,7 +3040,7 @@ unset($__errorArgs, $__bag); ?>
                                 <?php endif; ?>
 
                                 <?php if($patient->is_completed == 0): ?>
-                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="staff-reject-treatment">
                                         <span class="fas fa-tint-slash me-1"
                                             data-fa-transform="shrink-3"></span>Reject Treatment
@@ -3052,24 +3052,24 @@ unset($__errorArgs, $__bag); ?>
                             
                             <?php if(Auth::user()->role == 'lab' && $patient->case_holder == 'lab'): ?>
                                 <?php if($patient->is_treatment_submitted == 0 && $patient->is_continue == 0): ?>
-                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="submit-treatment">
                                         <span class="fas fa-share me-1"
                                             data-fa-transform="shrink-3"></span>Submit
                                         Treatment
                                     </button>
-                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="lab-cancel-request">
                                         <span class="fas fa-tint-slash" data-fa-transform="shrink-3"></span> Cancel Request
                                     </button>
                                 <?php endif; ?>
                                 <?php if($patient->is_treatment_submitted == 1 || $patient->is_continue == 1): ?>
-                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="submit-files">
                                         <span class="fas fa-share me-1"
                                             data-fa-transform="shrink-3"></span>Submit Files
                                     </button>
-                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="lab-cancel-request">
                                         <span class="fas fa-tint-slash"
                                             data-fa-transform="shrink-3"></span> Cancel Request
@@ -3081,7 +3081,7 @@ unset($__errorArgs, $__bag); ?>
                             
                             
                             <?php if(Auth::user()->role == 'advisor' && $patient->recommended_advisor == Auth::id() && $patient->case_holder == 'advisor'): ?>
-                                <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action" type="button"
+                                <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn" type="button"
                                     id="advisor-send-to-doctor">
                                     <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send for
                                     Review

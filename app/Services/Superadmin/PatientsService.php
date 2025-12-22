@@ -4,12 +4,14 @@ namespace App\Services\Superadmin;
 
 use App\Services\CommonFunction;
 use App\Models\Patients;
+use App\Models\PatientTreatmentPlan;
 use App\Models\Patients_treatment_plans;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Hashids\Hashids;
+use Carbon\Carbon;
 
 class PatientsService extends CommonFunction
 {
@@ -106,6 +108,7 @@ class PatientsService extends CommonFunction
                 'tp.status',
                 'tp.phase',
                 'tp.is_submitted',
+                'tp.expiry_date',
                 'tp.case_holder',
                 'tp.is_completed',
                 'tp.treatment_type',
@@ -122,7 +125,7 @@ class PatientsService extends CommonFunction
             ->offset($offset)
             ->limit($limit)
             ->get();
-
+        // dd($patientsLists);
         $hashids = new Hashids();
 
 
@@ -154,6 +157,26 @@ class PatientsService extends CommonFunction
                 $case_holder = '<span class="badge fw-semi-bold rounded-pill status badge-soft-info">Doctor</span>';
             }
 
+            $expiryDate = checkForRequestNewPlanExpriyDate($patient->id);
+            $today = date('Y-m-d');
+
+            $expiredHtml = '';
+
+            if ($expiryDate && Carbon::parse($expiryDate)->lt(Carbon::today())) {
+               $expiredHtml = '<a class="btn p-0 ms-2 change-expiry-date"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#changeExpiryDateModal"
+                                    data-patient-id="' . $patient->treatment_plan . '"
+                                    data-patient-name="' . htmlspecialchars($patient->last_name . ' ' . $patient->first_name) . '"
+                                    data-current-expiry="' . date('Y-m-d', strtotime($expiryDate)) . '"
+                                    href="javascript:;"
+                                    title="Change Expiry Date">
+                                    <i class="fas fa-calendar-alt text-danger"></i>
+                                </a>';
+
+            }
+
+
             $records['data'][] = [
 
                 'patientId' => $hashids->encode($patient->id),
@@ -166,7 +189,7 @@ class PatientsService extends CommonFunction
                 'status' => '<span class="badge fw-semi-bold rounded-pill status ' . (getPatientTreatmentPlanStatus($patient->status)) . '">'
                     . ($patient->status == "Waiting for Review from Advisor" ? "Waiting Advisor's Review" : ucfirst($patient->status))
                     . '</span>',
-                'due_date' => checkForRequestNewPlanExpriyDate($patient->id),
+                'due_date' => $patient->expiry_date != null ? date('Y-m-d', strtotime($patient->expiry_date)) : '', //checkForRequestNewPlanExpriyDate($patient->id),
                 'setup_approval_date' => $patient->setup_approval_date ? date_formate($patient->setup_approval_date) : '',
                 'advisor' => $advisor,
                 'case_overview' => '<a class="badge  badge-soft-primary text-600 btn-sm btn-reveal-sm transition-none" href="' . url('/patient/case-overview/' . $hashids->encode($patient->treatment_plan)) . '"
@@ -174,11 +197,22 @@ class PatientsService extends CommonFunction
                 'case_holder' => $case_holder,
                 'action' => '<a class="btn p-0 ms-2 delete" data-id="' . $patient->id . '" data-name="' . htmlspecialchars($patient->last_name . ' ' . $patient->first_name) . '"
                             href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Delete" aria-label="Delete"><i class="fas fa-trash-alt"></i></a>',
+                            title="Delete" aria-label="Delete"><i class="fas fa-trash-alt"></i></a>' . $expiredHtml,
 
             ];
         }
 
         return $records;
+    }
+
+    public function changeExpiryDate($request)
+    {
+        $patient = PatientTreatmentPlan::find($request->patient_id);
+        if ($patient) {
+            $patient->expiry_date = date('Y-m-d', strtotime($request->expiry_date));
+            $patient->save();
+            return response()->json(['success' => true, 'message' => 'Expiry date updated successfully']);
+        }
+        return response()->json(['success' => false, 'message' => 'Patient not found']);
     }
 }

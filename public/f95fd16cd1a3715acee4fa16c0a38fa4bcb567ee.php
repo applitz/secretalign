@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('content'); ?>
 <div class="page-content">
     <div class="row">
@@ -142,9 +140,24 @@
 <script src="<?php echo e(asset('public/assets/plugins/dataTables/1.11.5/js/dataTables.bootstrap5.min.js')); ?>"></script>
 <script src="<?php echo e(asset('public/assets/plugins/dataTables/responsive/2.2.9/js/dataTables.responsive.min.js')); ?>"></script>
 <script src="<?php echo e(asset('public/assets/customjs/superadmin/patients.js')); ?>"></script>
+
+
 <script>
     $(document).ready(function() {
+
         Patients.init();
+    });
+</script>
+
+<script>
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.change-expiry-date')) {
+            const btn = e.target.closest('.change-expiry-date');
+
+            document.getElementById('modal_patient_id').value = btn.dataset.patientId;
+            document.getElementById('modal_patient_name').value = btn.dataset.patientName;
+            document.getElementById('modal_expiry_date').value = btn.dataset.currentExpiry;
+        }
     });
 </script>
 <?php $__env->stopSection(); ?>

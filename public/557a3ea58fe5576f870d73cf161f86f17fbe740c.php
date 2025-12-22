@@ -356,6 +356,28 @@
 </div>
 
 
+
+<div class="modal fade" id="secret-blocks-modal" tabindex="-1" aria-labelledby="secret-blocks-modal-Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="secret-blocks-modal-Label">SECRET Blocks</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <img src="<?php echo e(asset('public/assets/secret-blocks.png')); ?>" alt="Precision Cuts Placement" class="img-fluid shadow-sm">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal fade" id="add-pontic-modal" tabindex="-1" aria-labelledby="add-pontic-modal-Label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -405,4 +427,41 @@
     </div>
 </div>
 
+<div class="modal fade" id="changeExpiryDateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Change Plan Expiry Date
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="changeExpiryDateForm" method="POST" action="<?php echo e(route('patients.changeExpiryDate')); ?>">
+                    <?php echo csrf_field(); ?>
+                    <input type="hidden" name="patient_id" id="modal_patient_id">
+
+                    <div class="mb-3">
+                        <label class="form-label">Patient</label>
+                        <input type="text" class="form-control" id="modal_patient_name" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">New Expiry Date</label>
+                        <input type="date" class="form-control pickr" name="expiry_date" id="modal_expiry_date" required>
+                        <span class="text-danger error-text expiry_date_error"></span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="saveExpiryDate">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 <?php /**PATH D:\xampp\htdocs\secretalign\resources\views/layouts/modal.blade.php ENDPATH**/ ?>

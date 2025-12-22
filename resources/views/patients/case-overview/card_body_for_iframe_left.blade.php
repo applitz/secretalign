@@ -2830,12 +2830,12 @@
                         @endif
 
 
-                        <div class="btn-group">
+                        <div class="btn-group" style="flex-wrap: wrap; gap: 6px; ">
                             {{-- doctor button start --}}
                             @if (Auth::user()->role == 'doctor' && $patient->case_holder == 'doctor')
                                 @if ($patient->is_completed == 0)
                                     @if ($patient->is_treatment_submitted == 1 && $patient->is_sent_to_lab == 1)
-                                        <button class="btn btn-success rounded-pill me-1 mb-1 btn-action"
+                                        <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                             id="approve">
                                             <span class="fas fa-check-circle me-1"
                                                 data-fa-transform="shrink-3"></span>
@@ -2844,11 +2844,11 @@
                                     @endif
                                     {{-- Done By Parth --}}
                                     @if($patient->send_for_approval == 0)
-                                        <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action" type="button" id="doctor-send-to-staff">
+                                        <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn" type="button" id="doctor-send-to-staff">
                                             <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send for Modification
                                         </button>
                                     @else
-                                        <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action" type="button" id="doctor-send-to-staff-request-modification">
+                                        <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn" type="button" id="doctor-send-to-staff-request-modification">
                                             <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Request Modification
                                         </button>
                                     @endif
@@ -2856,7 +2856,7 @@
                                     @if (Auth::user()->role == 'doctor' && $patient->is_editable == 0 && $patient->is_submitted != 0)
                                         @if (($patient->is_treatment_submitted == 0) ||
                                                 ($patient->is_treatment_submitted == 1))
-                                                <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action" data-bs-toggle="modal" data-bs-target="#send-to-Advisor-Modal" type="button" id="send-to-advisor">
+                                                <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn" data-bs-toggle="modal" data-bs-target="#send-to-Advisor-Modal" type="button" id="send-to-advisor">
                                                     <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Advisor
                                                 </button>
                                         @endif
@@ -2870,7 +2870,7 @@
 
                             @if (Auth::user()->role == 'staff' && $patient->case_holder == 'staff')
                                 @if ($patient->is_treatment_submitted == 1 && $patient->is_completed == 0 && $patient->is_continue == 0)
-                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action" data-send_back_to_doctor_status="0"
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn" data-send_back_to_doctor_status="0"
                                         type="button" id="staff-send-to-doctor-for-approval">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>
                                         Send to the Doctor for Approval
@@ -2882,7 +2882,7 @@
                                         $advisorDetails = DB::table('users')->where('id', $patient->recommended_advisor)->first();
                                     @endphp
                                     @if ($patient->advisor_id == null)
-                                        <button class="btn btn-info rounded-pill me-1 mb-1 btn-action" id="send-to-advisor" >
+                                        <button class="btn btn-info rounded-pill me-1 mb-1 btn-action case-overview-btn" id="send-to-advisor" >
                                             <span class="fas fa-cube me-2"></span>SEND TO {{ $advisorDetails->first_name }} {{ $advisorDetails->last_name }}
                                             (€{{ $advisorDetails->advisor_price }})
                                         </button>
@@ -2890,7 +2890,7 @@
                                         <!-- Advisor Modal Start -->
                                     @endif
                                     @if ($patient->advisor_id != null)
-                                        <button class="btn btn-info rounded-pill me-1 mb-1"
+                                        <button class="btn btn-info rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                             data-bs-toggle="modal" data-bs-target="#advisorModal">
                                             <span class="fas fa-cube me-2"></span>SEND MOD. TO1 ➡ {{ $advisorDetails->first_name }} {{ $advisorDetails->last_name }}
                                             (€{{ $advisorDetails->advisor_price }})
@@ -2954,14 +2954,14 @@
                                 @endif
 
                                 @if ($patient->is_treatment_submitted == 0 || ($patient->is_continue == 1 || $patient->patient_link == null))
-                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action" data-staff-send-to-doctor-for-approval="0"
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn" data-staff-send-to-doctor-for-approval="0"
                                         type="button" id="staff-send-to-doctor">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to the Doctor for Modification
                                     </button>
                                 @endif
 
                                 @if ($patient->is_treatment_submitted == 0 && $patient->is_continue == 0)
-                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="request-treatment">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Lab
                                     </button>
@@ -2971,14 +2971,14 @@
                                         $patient->is_approved == 0 &&
                                         $patient->is_completed == 0 &&
                                         $patient->is_continue == 0)
-                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="send-to-lab-for-modification">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Lab for modification
                                     </button>
                                 @endif
 
                                 @if (($patient->is_completed == 1) && $patient->tracking_id == null)
-                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action" data-send_back_to_doctor_status="0"
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn" data-send_back_to_doctor_status="0"
                                         type="button" id="staff-send-to-doctor-for-approval">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>
                                         Send to the Doctor for Approval
@@ -2986,7 +2986,7 @@
                                 @endif
 
                                 @if (($patient->is_completed == 1 || $patient->is_continue == 1) && $patient->tracking_id == null)
-                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="staff-submit-tracking-id">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>
                                         Submit Tracking Nr.
@@ -2996,7 +2996,7 @@
 
 
                                 @if ($patient->is_continue == 1 || $patient->is_completed == 1)
-                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="staff-send-to-lab">
                                         <span class="fas fa-share me-1"
                                             data-fa-transform="shrink-3"></span>Request Files
@@ -3004,7 +3004,7 @@
                                 @endif
 
                                 @if (($patient->is_completed == 1) && $patient->tracking_id == null)
-                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="staff-reject-treatment">
                                         <span class="fas fa-tint-slash me-1"
                                             data-fa-transform="shrink-3"></span>Reject Treatment
@@ -3012,7 +3012,7 @@
                                 @endif
 
                                 @if ($patient->is_completed == 0)
-                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="staff-reject-treatment">
                                         <span class="fas fa-tint-slash me-1"
                                             data-fa-transform="shrink-3"></span>Reject Treatment
@@ -3024,24 +3024,24 @@
                             {{-- lab button start --}}
                             @if (Auth::user()->role == 'lab' && $patient->case_holder == 'lab')
                                 @if ($patient->is_treatment_submitted == 0 && $patient->is_continue == 0)
-                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="submit-treatment">
                                         <span class="fas fa-share me-1"
                                             data-fa-transform="shrink-3"></span>Submit
                                         Treatment
                                     </button>
-                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="lab-cancel-request">
                                         <span class="fas fa-tint-slash" data-fa-transform="shrink-3"></span> Cancel Request
                                     </button>
                                 @endif
                                 @if ($patient->is_treatment_submitted == 1 || $patient->is_continue == 1)
-                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="submit-files">
                                         <span class="fas fa-share me-1"
                                             data-fa-transform="shrink-3"></span>Submit Files
                                     </button>
-                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action"
+                                    <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="lab-cancel-request">
                                         <span class="fas fa-tint-slash"
                                             data-fa-transform="shrink-3"></span> Cancel Request
@@ -3053,7 +3053,7 @@
                             {{-- lab button end --}}
                             {{-- advisor button start --}}
                             @if (Auth::user()->role == 'advisor' && $patient->recommended_advisor == Auth::id() && $patient->case_holder == 'advisor')
-                                <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action" type="button"
+                                <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn" type="button"
                                     id="advisor-send-to-doctor">
                                     <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send for
                                     Review

@@ -1,8 +1,82 @@
 var Patients = function() {
     var list = function(){
-        const fp = flatpickr($(".pickr"), {
-           "mode": "range"
-       });
+        flatpickr(".pickr", {
+            dateFormat: "Y-m-d",
+            allowInput: false,
+            closeOnSelect: true
+        });
+
+
+        $(document).on('click', '#saveExpiryDate', function (e) {
+            e.preventDefault();
+
+            // Clear old errors
+            $('.expiry_date_error').text('');
+            $('#modal_expiry_date').removeClass('is-invalid');
+
+            let expiryDate = $('#modal_expiry_date').val();
+
+            // Required check
+            if (!expiryDate) {
+                $('.expiry_date_error').text('Please select expiry date');
+                $('#modal_expiry_date').addClass('is-invalid');
+                return false;
+            }
+
+            // Today (00:00)
+            let today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Selected date
+            let selectedDate = new Date(expiryDate);
+            selectedDate.setHours(0, 0, 0, 0);
+
+            // Future date validation
+            if (selectedDate <= today) {
+                $('.expiry_date_error').text('Expiry date must be a future date');
+                $('#modal_expiry_date').addClass('is-invalid');
+                return false;
+            }
+
+            var formData = new FormData();
+            formData.append('_token', $('input[name="_token"]').val());
+            formData.append('patient_id', $('#modal_patient_id').val());
+            formData.append('expiry_date', expiryDate);
+
+
+            $.ajax({
+                type: "POST",
+                url: baseUrl + '/superadmin/patients/change-expiry-date',
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 120000, // 120 seconds
+                success: function(response, textStatus, xhr) {
+                    if (response.success === true) {
+                            toastSuccess(response.message);
+                            $('#changeExpiryDateModal').modal('hide');
+                            $('#patients-list').DataTable().ajax.reload(null, false);
+                    } else {
+                        toastError(response.message ?? "Unable to update expiry date!");
+                    }
+                },
+                error: function(xhr) {
+                    // ❌ Laravel validation error (422)
+                    if (xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        if (errors.expiry_date) {
+                            $('.expiry_date_error').text(errors.expiry_date[0]);
+                            $('#modal_expiry_date').addClass('is-invalid');
+                        }
+                    } else {
+                        toastError("Unable to update expiry date!");
+                    }
+                }
+            });
+
+        });
+
         $("#patients-list").dataTable({
             "pageLength": 20,
             "processing": true,
@@ -67,6 +141,7 @@ var Patients = function() {
             // Reload the DataTable
             $('#patients-list').DataTable().ajax.reload();
         });
+
 
 
         $(document).on('click', '.continue-treatment', function(e) {

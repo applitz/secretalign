@@ -57,6 +57,10 @@
         .canvas-bg {
             background: #aaaaaa;
         }
+
+        .case-overview-btn {
+            width: 200px !important;
+        }
     </style>
     <style>
        .stylish-dropdown-half {

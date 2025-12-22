@@ -8,6 +8,7 @@ use App\Services\Superadmin\PatientsService;
 use App\Models\PatientTreatmentPlan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Patients;
 
 class PatientsController extends Controller
 {
@@ -113,5 +114,40 @@ class PatientsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function changeExpiryDate(Request $request)
+    {
+        return $this->patientsService->changeExpiryDate($request);
+    }
+
+    public function updateExpiryDate()
+    {
+        $allshipedRecords = Patients::from('patients as p')
+                ->join('p_treatment_plans as tp', 'p.id', '=', 'tp.patient_id')
+                ->where('p.is_deleted', 0)
+                ->where('tp.status', 'Shipped')
+                ->where('tp.shipping_date_time', '!=', null)
+                ->select('p.id', 'p.first_name', 'p.last_name', 'tp.status', 'tp.id as treatment_plan_id', 'tp.shipping_date_time', 'p.pricing_package', 'tp.aligner_steps')
+                ->get();
+
+        foreach($allshipedRecords as $key => $record){
+            if ($record->pricing_package == 'AL-SECRET-SELECT') {
+                $aligner_steps = $record->aligner_steps;
+                $addOnweeks = 2*$aligner_steps;
+                $planExprieyDate = date('Y-m-d', strtotime($record->shipping_date_time . ' + '.$addOnweeks.' weeks'));
+                if($aligner_steps > 0 && $aligner_steps <= 20) {
+                    $planExprieyDate = date('Y-m-d', strtotime($planExprieyDate . ' + 3 months'));
+                } else {
+                    $planExprieyDate = date('Y-m-d', strtotime($planExprieyDate . ' + 6 months'));
+                }
+            } else {
+                $planExprieyDate = date('Y-m-d', strtotime($record->shipping_date_time . ' + 3 years'));
+            }
+
+            $obj = PatientTreatmentPlan::find($record->treatment_plan_id);
+            $obj->expiry_date = date('Y-m-d', strtotime($planExprieyDate));
+            $obj->save();
+        }
     }
 }
