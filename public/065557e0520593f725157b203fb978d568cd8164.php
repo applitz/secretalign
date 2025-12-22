@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('content'); ?>
 
 <div class="page-content">
@@ -337,4 +339,4 @@ unset($__errorArgs, $__bag); ?>
     
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layouts.app_base_horizontal', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/u531876341/domains/secretalign-user.com/public_html/resources/views/users/profile_settings.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.app_base_horizontal', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp\htdocs\secretalign\resources\views/users/profile_settings.blade.php ENDPATH**/ ?>

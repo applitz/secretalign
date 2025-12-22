@@ -175,12 +175,12 @@
         </a>
 
 
-        <a class="btn btn-primary order-from-button" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#order-from-shining3d-modal"  id="select-from-shining3d-link" >
+        {{-- <a class="btn btn-primary order-from-button" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#order-from-shining3d-modal"  id="select-from-shining3d-link" >
             <div class="d-flex align-items-center justify-content-center">
             <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D</span>
 
             </div>
-        </a>
+        </a> --}}
     </div>
 
     @if($patient->phase > 1)

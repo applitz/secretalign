@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Artisan;
 
 Route::middleware(['auth', 'auth.superadmin'])->prefix('superadmin')->group(function () {
     Route::resource('patients', PatientsController::class);
+    Route::post('patients/change-expiry-date', [PatientsController::class, 'changeExpiryDate'])->name('patients.changeExpiryDate');
+    Route::get('update-all-records-expiry-date', [PatientsController::class, 'updateExpiryDate'])->name('updateExpiryDate');
 });
 
 ?>

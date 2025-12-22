@@ -65,6 +65,8 @@
         border: none;
         width: 250px !important;
     }
+
+
 </style>
 <?php $__env->stopSection(); ?>
 <?php

@@ -1,1 +1,0 @@
-<?php /**PATH /home/u531876341/domains/secretalign-user.com/public_html/resources/views/layouts/breadcrumb.blade.php ENDPATH**/ ?>

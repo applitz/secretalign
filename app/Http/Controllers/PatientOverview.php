@@ -886,6 +886,7 @@ class PatientOverview extends Controller
                     "case_holder" => 'doctor',
                     'previous_case_holder' => 'staff',
                     'status' => 'Shipped',
+                    'expiry_date' => getExpriyDateForNewPlaFromTreatmentPlanId($treatment_plan->id, date("Y-m-d H:i:s")),
                     'is_completed' => 1,
                 ]);
 
@@ -958,6 +959,7 @@ class PatientOverview extends Controller
                     'previous_case_holder' => 'staff',
                     'is_completed' => 1,
                     'status' => 'Shipped',
+                    'expiry_date' => getExpriyDateForNewPlaFromTreatmentPlanId($treatment_plan->id, date("Y-m-d H:i:s")),
                 ]);
                 $task_service = (new TaskService($treatment_plan_id));
                 // $task_id = $task_service->create_task_withoutMail("doctor", "Review Tracking Nr." . $treatment_plan->phase, $treatment_plan->user_id, $comment, "staff", "doctor", $attachments); //comment from staff to lab
@@ -1056,6 +1058,7 @@ class PatientOverview extends Controller
                     "case_holder" => 'doctor',
                     'previous_case_holder' => 'staff',
                     'status' => 'Shipped',
+                    'expiry_date' => getExpriyDateForNewPlaFromTreatmentPlanId($treatment_plan->id, date("Y-m-d H:i:s")),
                     'is_completed' => 1,
                 ]);
                 $patient_id = $treatment_plan->patient_id;
@@ -1147,6 +1150,7 @@ class PatientOverview extends Controller
                     "case_holder" => 'doctor',
                     'previous_case_holder' => 'staff',
                     'is_completed' => 1,
+                    'expiry_date' => getExpriyDateForNewPlaFromTreatmentPlanId($treatment_plan->id, date("Y-m-d H:i:s")),
                     'status' => 'Shipped',
                 ]);
                 $task_service = (new TaskService($treatment_plan_id));
@@ -1305,6 +1309,7 @@ class PatientOverview extends Controller
                     "case_holder" => 'doctor',
                     'previous_case_holder' => 'staff',
                     'is_completed' => 1,
+                    'expiry_date' => getExpriyDateForNewPlaFromTreatmentPlanId($treatment_plan->id, date("Y-m-d H:i:s")),
                     'status' => 'Shipped',
                 ]);
                 $task_service = (new TaskService($treatment_plan_id));
