@@ -161,8 +161,21 @@ class PatientsService extends CommonFunction
             $today = date('Y-m-d');
 
             $expiredHtml = '';
+            $changeStatusHtml = '';
+            if($patient->status != 'Cancelled' && $patient->status != 'Shipped' ) {
+                $changeStatusHtml = '<a class="btn p-0 ms-2 change-status"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#changeStatusModal"
+                                    data-patient-id="' . $patient->treatment_plan . '"
+                                    data-patient-name="' . htmlspecialchars($patient->last_name . ' ' . $patient->first_name) . '"
+                                    data-current-status="' . $patient->status . '"
+                                    href="javascript:;"
+                                    title="Change Status">
+                                    <i class="fas fa-edit text-primary"></i>
+                                </a>';
 
-            if ($expiryDate && Carbon::parse($expiryDate)->lt(Carbon::today())) {
+            }
+            if ($expiryDate && $patient->status == 'Shipped') {
                $expiredHtml = '<a class="btn p-0 ms-2 change-expiry-date"
                                     data-bs-toggle="modal"
                                     data-bs-target="#changeExpiryDateModal"
@@ -189,7 +202,7 @@ class PatientsService extends CommonFunction
                 'status' => '<span class="badge fw-semi-bold rounded-pill status ' . (getPatientTreatmentPlanStatus($patient->status)) . '">'
                     . ($patient->status == "Waiting for Review from Advisor" ? "Waiting Advisor's Review" : ucfirst($patient->status))
                     . '</span>',
-                'due_date' => $patient->expiry_date != null ? date('Y-m-d', strtotime($patient->expiry_date)) : '', //checkForRequestNewPlanExpriyDate($patient->id),
+                'due_date' => $patient->expiry_date != null ? date('d.m.Y', strtotime($patient->expiry_date)) : '', //checkForRequestNewPlanExpriyDate($patient->id),
                 'setup_approval_date' => $patient->setup_approval_date ? date_formate($patient->setup_approval_date) : '',
                 'advisor' => $advisor,
                 'case_overview' => '<a class="badge  badge-soft-primary text-600 btn-sm btn-reveal-sm transition-none" href="' . url('/patient/case-overview/' . $hashids->encode($patient->treatment_plan)) . '"
@@ -197,7 +210,7 @@ class PatientsService extends CommonFunction
                 'case_holder' => $case_holder,
                 'action' => '<a class="btn p-0 ms-2 delete" data-id="' . $patient->id . '" data-name="' . htmlspecialchars($patient->last_name . ' ' . $patient->first_name) . '"
                             href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Delete" aria-label="Delete"><i class="fas fa-trash-alt"></i></a>' . $expiredHtml,
+                            title="Delete" aria-label="Delete"><i class="fas fa-trash-alt"></i></a>' . $expiredHtml . $changeStatusHtml,
 
             ];
         }
@@ -212,6 +225,18 @@ class PatientsService extends CommonFunction
             $patient->expiry_date = date('Y-m-d', strtotime($request->expiry_date));
             $patient->save();
             return response()->json(['success' => true, 'message' => 'Expiry date updated successfully']);
+        }
+        return response()->json(['success' => false, 'message' => 'Patient not found']);
+    }
+
+    public function changePatientStatus($request)
+    {
+        $patient = PatientTreatmentPlan::find($request->patient_id);
+        if ($patient) {
+            $patient->status = 'Shipped';
+            $patient->shipping_date_time = date('Y-m-d H:i:s', strtotime($request->shipping_date));
+            $patient->save();
+            return response()->json(['success' => true, 'message' => 'Patient status updated successfully']);
         }
         return response()->json(['success' => false, 'message' => 'Patient not found']);
     }

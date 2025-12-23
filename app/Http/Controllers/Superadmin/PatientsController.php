@@ -9,6 +9,7 @@ use App\Models\PatientTreatmentPlan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Patients;
+use Illuminate\Support\Facades\Hash;
 
 class PatientsController extends Controller
 {
@@ -118,6 +119,13 @@ class PatientsController extends Controller
 
     public function changeExpiryDate(Request $request)
     {
+        // ✅ Check password with logged-in user
+        if (!Hash::check($request->password, Auth::user()->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Incorrect password'
+            ], 422);
+        }
         return $this->patientsService->changeExpiryDate($request);
     }
 
@@ -149,5 +157,17 @@ class PatientsController extends Controller
             $obj->expiry_date = date('Y-m-d', strtotime($planExprieyDate));
             $obj->save();
         }
+    }
+
+    public function changePatientStatus(Request $request)
+    {
+        // ✅ Check password with logged-in user
+        if (!Hash::check($request->password, Auth::user()->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Incorrect password'
+            ], 422);
+        }
+        return $this->patientsService->changePatientStatus($request);
     }
 }

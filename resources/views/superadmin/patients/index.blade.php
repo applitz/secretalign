@@ -145,7 +145,6 @@
 
 <script>
     $(document).ready(function() {
-
         Patients.init();
     });
 </script>
@@ -156,9 +155,70 @@
             const btn = e.target.closest('.change-expiry-date');
 
             document.getElementById('modal_patient_id').value = btn.dataset.patientId;
-            document.getElementById('modal_patient_name').value = btn.dataset.patientName;
+            document.getElementById('modal_expiry_date_patient_name').innerText = btn.dataset.patientName;
+            const rawDate = btn.dataset.currentExpiry; // e.g. 2025-12-23
+
+            if (rawDate) {
+                const [year, month, day] = rawDate.split('-');
+                const formattedDate = `${day}.${month}.${year}`;
+
+                document.getElementById(
+                    'modal_expiry_date_current_expiry_date'
+                ).innerText = formattedDate;
+            }
+
+            // document.getElementById('modal_expiry_date_current_expiry_date').innerText = btn.dataset.currentExpiry;
             document.getElementById('modal_expiry_date').value = btn.dataset.currentExpiry;
+
+            // ✅ Password input clear
+            const passwordInput = document.getElementById('modal_change_expiry_date_password');
+            passwordInput.value = '';
+            passwordInput.classList.remove('is-invalid');
+
+            // ✅ Password error text clear
+            document.querySelector('.password_error').innerText = '';
         }
     });
+
+    function getPatientTreatmentPlanStatus(status) {
+        const statusMap = {
+            'In Progress': 'badge-soft-primary',
+            'Production': 'badge-soft-success',
+            'Waiting Staff Review': 'badge-soft-warning',
+            'Waiting Lab Review': 'badge-soft-warning',
+            "Waiting Dr's Review": 'badge-soft-warning',
+            "Waiting for Review from Advisor": 'badge-soft-warning',
+            'Treatment Plan Completed': 'badge-soft-info',
+            'Shipped': 'badge-soft-info',
+            'Cancelled By Lab': 'badge-soft-warning',
+            'Cancelled': 'badge-soft-danger',
+            'Pending': 'badge-soft-secondary',
+        };
+        return statusMap[status] ?? 'badge-soft-secondary';
+    }
+
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.change-status');
+        if (!btn) return;
+
+        document.getElementById('modal_change_status_patient_id').value = btn.dataset.patientId;
+        document.getElementById('modal_change_status_patient_name').innerText = btn.dataset.patientName;
+
+        const statusText = btn.dataset.currentStatus;
+        const statusEl = document.getElementById('modal_change_status_current_status');
+
+        statusEl.innerText = statusText;
+        statusEl.className = 'badge ' + getPatientTreatmentPlanStatus(statusText);
+
+        // ✅ Password input clear
+        const passwordInput = document.getElementById('modal_change_status_password');
+        passwordInput.value = '';
+        passwordInput.classList.remove('is-invalid');
+
+        // ✅ Password error text clear
+        document.querySelector('.password_error').innerText = '';
+    });
+
+
 </script>
 @endsection
