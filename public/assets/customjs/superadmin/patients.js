@@ -6,43 +6,163 @@ var Patients = function() {
             closeOnSelect: true
         });
 
+        $(document).on('click', '#saveStatus', function (e) {
+            e.preventDefault();
+
+            // Clear previous errors
+            $('.error-text').text('');
+            $('.form-control').removeClass('is-invalid');
+
+            let isValid = true;
+
+            let shippingDate = $('#modal_change_status_shipping_date').val();
+            let password = $('#modal_change_status_password').val();
+
+            // Shipping date validation
+            let today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (!shippingDate) {
+                isValid = false;
+                $('#modal_change_status_shipping_date').addClass('is-invalid');
+                $('.shipping_date_error').text('Shipping date is required');
+            } else {
+                let selectedDate = new Date(shippingDate);
+                selectedDate.setHours(0, 0, 0, 0);
+
+                if (selectedDate > today) {
+                    isValid = false;
+                    $('#modal_change_status_shipping_date').addClass('is-invalid');
+                    $('.shipping_date_error').text('Shipping date cannot be a future date');
+                }
+            }
+
+            // Password validation
+            if (!password) {
+                isValid = false;
+                $('#modal_change_status_password').addClass('is-invalid');
+                $('.password_error').text('Password is required');
+            } else if (password.length < 6) {
+                isValid = false;
+                $('#modal_change_status_password').addClass('is-invalid');
+                $('.password_error').text('Password must be at least 6 characters');
+            }
+
+            if (!isValid) return false;
+
+            let formData = new FormData($('#changePatientStatus')[0]);
+
+            $.ajax({
+                type: "POST",
+                url: $('#changePatientStatus').attr('action'),
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 120000,
+
+                success: function (response) {
+                    if (response.success === true) {
+                        toastSuccess(response.message);
+                        $('#changeStatusModal').modal('hide');
+                        $('#patients-list').DataTable().ajax.reload(null, false);
+                    } else {
+                        toastError(response.message ?? 'Unable to change status');
+                    }
+                },
+
+                error: function (xhr) {
+
+                    // ✅ Case 1: Laravel validation errors
+                    if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                        let errors = xhr.responseJSON.errors;
+
+                        if (errors.shipping_date) {
+                            $('#modal_change_status_shipping_date')
+                                .addClass('is-invalid');
+                            $('.shipping_date_error').text(errors.shipping_date[0]);
+                        }
+
+                        if (errors.password) {
+                            $('#modal_change_status_password')
+                                .addClass('is-invalid');
+                            $('.password_error').text(errors.password[0]);
+                        }
+
+                    }
+                    // ✅ Case 2: Custom controller error (Incorrect password)
+                    else if (xhr.status === 422 && xhr.responseJSON?.message) {
+                        $('#modal_change_status_password')
+                            .addClass('is-invalid');
+                        $('.password_error').text(xhr.responseJSON.message);
+                    }
+                    // ✅ Other errors
+                    else {
+                        toastError('Something went wrong!');
+                    }
+                }
+            });
+        });
+
 
         $(document).on('click', '#saveExpiryDate', function (e) {
             e.preventDefault();
 
-            // Clear old errors
+            // ✅ Clear old errors
             $('.expiry_date_error').text('');
-            $('#modal_expiry_date').removeClass('is-invalid');
+            $('.change_expiry_date_password_error').text('');
+            $('#modal_expiry_date, #modal_change_expiry_date_password')
+                .removeClass('is-invalid');
+
+            let isValid = true;
 
             let expiryDate = $('#modal_expiry_date').val();
+            let password = $('#modal_change_expiry_date_password').val();
 
-            // Required check
+            // ✅ Expiry date required
             if (!expiryDate) {
+                isValid = false;
                 $('.expiry_date_error').text('Please select expiry date');
                 $('#modal_expiry_date').addClass('is-invalid');
-                return false;
             }
 
-            // Today (00:00)
-            let today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            // Selected date
-            let selectedDate = new Date(expiryDate);
-            selectedDate.setHours(0, 0, 0, 0);
-
-            // Future date validation
-            if (selectedDate <= today) {
-                $('.expiry_date_error').text('Expiry date must be a future date');
-                $('#modal_expiry_date').addClass('is-invalid');
-                return false;
+            // ✅ Password validation
+            if (!password) {
+                isValid = false;
+                $('#modal_change_expiry_date_password').addClass('is-invalid');
+                $('.change_expiry_date_password_error').text('Password is required');
+            } else if (password.length < 6) {
+                isValid = false;
+                $('#modal_change_expiry_date_password').addClass('is-invalid');
+                $('.change_expiry_date_password_error')
+                    .text('Password must be at least 6 characters');
             }
 
-            var formData = new FormData();
+            // ✅ Date must be future
+            if (expiryDate) {
+                let today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                let selectedDate = new Date(expiryDate);
+                selectedDate.setHours(0, 0, 0, 0);
+
+                if (selectedDate <= today) {
+                    isValid = false;
+                    $('.expiry_date_error')
+                        .text('Expiry date must be a future date');
+                    $('#modal_expiry_date').addClass('is-invalid');
+                }
+            }
+
+            // ❌ Stop if validation fails
+            if (!isValid) return false;
+
+            // ✅ FormData
+            let formData = new FormData();
             formData.append('_token', $('input[name="_token"]').val());
             formData.append('patient_id', $('#modal_patient_id').val());
             formData.append('expiry_date', expiryDate);
-
+            formData.append('password', password); // ✅ IMPORTANT
 
             $.ajax({
                 type: "POST",
@@ -51,31 +171,133 @@ var Patients = function() {
                 processData: false,
                 contentType: false,
                 cache: false,
-                timeout: 120000, // 120 seconds
-                success: function(response, textStatus, xhr) {
+                timeout: 120000,
+
+                success: function (response) {
                     if (response.success === true) {
-                            toastSuccess(response.message);
-                            $('#changeExpiryDateModal').modal('hide');
-                            $('#patients-list').DataTable().ajax.reload(null, false);
+                        toastSuccess(response.message);
+                        $('#changeExpiryDateModal').modal('hide');
+                        $('#patients-list').DataTable().ajax.reload(null, false);
                     } else {
-                        toastError(response.message ?? "Unable to update expiry date!");
+                        toastError(response.message ?? 'Unable to update expiry date!');
                     }
                 },
-                error: function(xhr) {
-                    // ❌ Laravel validation error (422)
-                    if (xhr.status === 422) {
+
+                error: function (xhr) {
+
+                    // ✅ Laravel validation errors
+                    if (xhr.status === 422 && xhr.responseJSON?.errors) {
                         let errors = xhr.responseJSON.errors;
+
                         if (errors.expiry_date) {
-                            $('.expiry_date_error').text(errors.expiry_date[0]);
                             $('#modal_expiry_date').addClass('is-invalid');
+                            $('.expiry_date_error').text(errors.expiry_date[0]);
                         }
-                    } else {
-                        toastError("Unable to update expiry date!");
+
+                        if (errors.password) {
+                            $('#modal_change_expiry_date_password')
+                                .addClass('is-invalid');
+                            $('.change_expiry_date_password_error')
+                                .text(errors.password[0]);
+                        }
+                    }
+                    // ✅ Custom password error (Incorrect password)
+                    else if (xhr.status === 422 && xhr.responseJSON?.message) {
+                        $('#modal_change_expiry_date_password')
+                            .addClass('is-invalid');
+                        $('.change_expiry_date_password_error')
+                            .text(xhr.responseJSON.message);
+                    }
+                    else {
+                        toastError('Unable to update expiry date!');
                     }
                 }
             });
-
         });
+
+
+        // $(document).on('click', '#saveExpiryDate', function (e) {
+        //     e.preventDefault();
+
+        //     // Clear old errors
+        //     $('.expiry_date_error').text('');
+        //     $('#modal_expiry_date').removeClass('is-invalid');
+        //     let password = $('#modal_change_expiry_date_password').val();
+
+        //     let expiryDate = $('#modal_expiry_date').val();
+
+        //     // Required check
+        //     if (!expiryDate) {
+        //         $('.expiry_date_error').text('Please select expiry date');
+        //         $('#modal_expiry_date').addClass('is-invalid');
+        //         return false;
+        //     }
+
+        //     // Password validation
+        //     if (!password) {
+        //         isValid = false;
+        //         $('#modal_change_expiry_date_password').addClass('is-invalid');
+        //         $('.change_expiry_date_password_error').text('Password is required');
+        //     } else if (password.length < 6) {
+        //         isValid = false;
+        //         $('#modal_change_expiry_date_password').addClass('is-invalid');
+        //         $('.change_expiry_date_password_error').text('Password must be at least 6 characters');
+        //     }
+
+
+        //     // Today (00:00)
+        //     let today = new Date();
+        //     today.setHours(0, 0, 0, 0);
+
+        //     // Selected date
+        //     let selectedDate = new Date(expiryDate);
+        //     selectedDate.setHours(0, 0, 0, 0);
+
+        //     // Future date validation
+        //     if (selectedDate <= today) {
+        //         $('.expiry_date_error').text('Expiry date must be a future date');
+        //         $('#modal_expiry_date').addClass('is-invalid');
+        //         return false;
+        //     }
+
+        //     var formData = new FormData();
+        //     formData.append('_token', $('input[name="_token"]').val());
+        //     formData.append('patient_id', $('#modal_patient_id').val());
+        //     formData.append('expiry_date', expiryDate);
+
+
+        //     $.ajax({
+        //         type: "POST",
+        //         url: baseUrl + '/superadmin/patients/change-expiry-date',
+        //         data: formData,
+        //         processData: false,
+        //         contentType: false,
+        //         cache: false,
+        //         timeout: 120000, // 120 seconds
+        //         success: function(response, textStatus, xhr) {
+        //             if (response.success === true) {
+        //                     toastSuccess(response.message);
+        //                     $('#changeExpiryDateModal').modal('hide');
+        //                     $('#patients-list').DataTable().ajax.reload(null, false);
+        //             } else {
+        //                 toastError(response.message ?? "Unable to update expiry date!");
+        //             }
+        //         },
+        //         error: function(xhr) {
+        //             // ❌ Laravel validation error (422)
+        //             if (xhr.status === 422) {
+        //                 let errors = xhr.responseJSON.errors;
+        //                 if (errors.expiry_date) {
+        //                     $('.expiry_date_error').text(errors.expiry_date[0]);
+        //                     $('#modal_expiry_date').addClass('is-invalid');
+        //                 }
+        //             } else {
+        //                 toastError("Unable to update expiry date!");
+        //             }
+        //         }
+        //     });
+
+        // });
 
         $("#patients-list").dataTable({
             "pageLength": 20,

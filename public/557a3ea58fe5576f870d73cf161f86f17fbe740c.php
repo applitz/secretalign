@@ -441,11 +441,24 @@
             <div class="modal-body">
                 <form id="changeExpiryDateForm" method="POST" action="<?php echo e(route('patients.changeExpiryDate')); ?>">
                     <?php echo csrf_field(); ?>
-                    <input type="hidden" name="patient_id" id="modal_patient_id">
 
                     <div class="mb-3">
-                        <label class="form-label">Patient</label>
-                        <input type="text" class="form-control" id="modal_patient_name" readonly>
+                        <p>Are you sure you want to change this patient’s <strong>plan expiry date</strong>? This action cannot be undone.</p>
+                    </div>
+
+                    <input type="hidden" name="patient_id" id="modal_patient_id">
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Patient Name</label>
+                            <h5 id="modal_expiry_date_patient_name"></h5>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Current Expiry Date</label>
+                            <h5>
+                                <span id="modal_expiry_date_current_expiry_date"></span>
+                            </h5>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -453,12 +466,74 @@
                         <input type="date" class="form-control pickr" name="expiry_date" id="modal_expiry_date" required>
                         <span class="text-danger error-text expiry_date_error"></span>
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="modal_change_expiry_date_password" placeholder="Enter your password" required>
+                        <span class="text-danger error-text change_expiry_date_password_error"></span>
+                    </div>
+
                 </form>
             </div>
 
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button class="btn btn-primary" id="saveExpiryDate">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="changeStatusModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Change Patient Status to "Shipped"
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="changePatientStatus" method="POST" action="<?php echo e(route('patients.change-patient-status')); ?>">
+                    <?php echo csrf_field(); ?>
+                    <input type="hidden" name="patient_id" id="modal_change_status_patient_id">
+                    <div class="mb-3">
+                        <p>Are you sure you want to change this patient's status to <strong>"Shipped"</strong>? This action cannot be undone.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Patient Name</label>
+                            <h5 id="modal_change_status_patient_name"></h5>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Current Status</label>
+                            <h5>
+                                <span id="modal_change_status_current_status" class="badge"></span>
+                            </h5>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Shipping Date</label>
+                        <input type="date" class="form-control pickr" name="shipping_date" id="modal_change_status_shipping_date" value="<?php echo e(date('Y-m-d')); ?>" required>
+                        <span class="text-danger error-text shipping_date_error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="modal_change_status_password" required>
+                        <span class="text-danger error-text password_error"></span>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="saveStatus">Change Status</button>
             </div>
 
         </div>
