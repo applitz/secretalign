@@ -592,7 +592,7 @@ class PatientOverview extends Controller
                 'comment' => $comment,
                 'patient_link' => $patient_link,
                 'iframe_link' => $iframe_link,
-                'attachments' => $attachments,
+                'attachments' => $attachments_str,
                 'lab_name' => $labName,
             ];
 
