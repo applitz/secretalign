@@ -1,1 +1,0 @@
-<?php /**PATH D:\xampp\htdocs\secretalign\resources\views/layouts/breadcrumb.blade.php ENDPATH**/ ?>

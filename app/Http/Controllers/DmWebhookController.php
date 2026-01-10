@@ -55,6 +55,7 @@ class DmWebhookController extends Controller
             'email' => 'wisherw064@gmail.com',
             'data' => json_encode($request->all()),
         ];
+
         WeebhookCalledJob::dispatch($details);
 
         if ($request->platform === 'dmeu2') {
@@ -66,10 +67,13 @@ class DmWebhookController extends Controller
                 ], 200);
             }
             $orderResource = $request->input('resource');
+
             if($orderResource){
                 $orderUrl = $orderResource['url'] ?? null;
                 if($orderUrl){
+
                     $orderProcess = $this->getASmartSTLOrder($orderUrl);
+
                     if ($orderProcess) {
                         $orderId = $orderProcess['order_id'];
                         $pTreatmentPlan  = DB::table('p_treatment_plans as tp')
@@ -82,6 +86,7 @@ class DmWebhookController extends Controller
                                         ->where("dm_order_id", $orderId)
                                         ->select("tp.*", "p.first_name", "p.last_name", "p.id as patinetId", "dr.first_name as doctor_first_name", "dr.last_name as doctor_last_name", "dr.email as doctor_email")
                                         ->first();
+
                         if($pTreatmentPlan && !empty($pTreatmentPlan)){
 
                             switch ($type) {
@@ -234,6 +239,7 @@ class DmWebhookController extends Controller
 
                                 case "OrderStatusChangedToOrderCompleted":
                                     if ($orderProcess && isset($orderProcess['generated_files']['generated_stl_files']['url']) ) {
+
                                         $this->orderCompleted($orderProcess, $pTreatmentPlan);
                                         return response()->json([
                                             'status'  => true,

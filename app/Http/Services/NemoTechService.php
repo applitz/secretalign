@@ -30,9 +30,18 @@ class NemoTechService
         }
         return null;
     }
-        public function syncDocuments($patient, $job = null)
+    public function syncDocuments($patient, $job = null)
     {
         Log::info("started");
+
+        $patientDir = storage_path(
+            'PatientFiles/Patient' . $patient->patient_id
+        );
+
+        if (!is_dir($patientDir)) {
+            mkdir($patientDir, 0775, true);
+        }
+
         if ($job == null) {
             DB::table('sync_queues')->updateOrInsert([
                 "treatment_plan_id" => $patient->id,
@@ -516,9 +525,14 @@ class NemoTechService
 
     private function uploadImage($nemoservice_url, $credential, $image, $patient_id, $serie_id = "")
     {
+
         $filename = $image["fileName"];
         $original_filename = $image["originalFileName"];
         $filePath = $image["filePath"];
+        if (!file_exists($filePath)) {
+            throw new \Exception("File not found: " . $filePath);
+        }
+
 
         $ext = explode(".", $original_filename);
         $filename_without_ext = $ext[0];
@@ -549,7 +563,9 @@ class NemoTechService
         $header .= "<?xml version='1.0'?><DocumentRawDataHeader><mimeType>application/vnd.com.nemotec-nsi</mimeType><docName>" . $filename . "</docName><creationDate>" . date("Y-m-d") . "T" . date("H:i:s") . "Z</creationDate></DocumentRawDataHeader>\r\n";
 
         // Open file and read contents
-        $file = fopen($filePath, 'r');
+        // $file = fopen($filePath, 'r');
+        $file = fopen($filePath, 'rb');
+
         // $fileData = fread($file, filesize($filePath));
         $fileSize = filesize($filePath);
 
@@ -742,7 +758,7 @@ class NemoTechService
         curl_close($ch);
     }
     public function basicCentrePreAuth(){
-        
+
         $partnerId = "38";
         $doctorId = "230-45-80-84";
         $centerId = '002-85-89-82';
@@ -766,7 +782,7 @@ class NemoTechService
                 'Accept: application/json',
             ),
         ));
-      
+
         $response = curl_exec($curl);
         if ($response === false) {
             return null;
@@ -775,10 +791,10 @@ class NemoTechService
         $response = json_decode($response);
         return @$response->authHeader;
     }
-    
+
     public function getSecretToken($nemoTechId, $phase)
     {
-        
+
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => 'https://community.nemocloud-development.net/NMXRegisterService/authentication/authenticate?loginCenters=true&remember=true',
@@ -795,16 +811,16 @@ class NemoTechService
                 'Content-Type: application/json',
             ],
         ]);
-    
+
         $response = curl_exec($curl);
         curl_close($curl);
-    
+
         if (!$response) {
             return 1;
         }
-    
+
         $cleaned = trim(preg_replace('/\s+/', ' ', $response));
-    
+
         if (!preg_match('/Simse\s+([A-Za-z0-9]+)/', $cleaned, $matches)) {
             return 1;
         }
@@ -836,14 +852,14 @@ class NemoTechService
                 'Authorization: ' . $token,
             ],
         ]);
-    
+
         $response2 = curl_exec($curl);
         curl_close($curl);
-    
+
         if (!$response2) {
             return 2;
         }
-        
+
         $allDocumentLink = json_decode($response2, true);
         $targetFile = "TP{$phase} SETUPGO.nsf";
         $documents = $allDocumentLink['data']['documentsOfPatient'] ?? [];
@@ -872,7 +888,7 @@ class NemoTechService
                     "shared" => true,
                 ]
             ];
-        
+
             $curl = curl_init();
             curl_setopt_array($curl, [
                 CURLOPT_URL => 'https://downloads-default.nemocloud-services.com/DownloadUploadService/storage/graphql',
@@ -888,7 +904,7 @@ class NemoTechService
                     'User-Agent: AlsecretApp/1.0',
                 ],
             ]);
-        
+
             $response3 = curl_exec($curl);
             curl_close($curl);
             if (!$response3) {
@@ -896,14 +912,14 @@ class NemoTechService
             }
             $allSharedDocumentLink = json_decode($response3, true);
             $documents = $allSharedDocumentLink['data']['shareDocument'] ?? [];
-            return $documents; 
+            return $documents;
         } else {
             return 3;
         }
-        
+
     }
 
-    
+
     public function getSecretIframeToken(){
         $curl = curl_init();
         curl_setopt_array($curl, array(
