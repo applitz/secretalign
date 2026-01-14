@@ -1811,7 +1811,7 @@ class PatientOverview extends Controller
                 ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "u.email as doctor_email", "p.pricing_package")
                 ->first();
 
-            if (@$treatment_plan->case_holder == 'staff' && @$treatment_plan->is_completed == 0) {
+            if (@$treatment_plan->case_holder == 'staff' ) {
                 $task = (new TaskService($treatment_plan_id));
                 $task->complete_task("staff");
                 $task->liveAlert("Treatment plan rejected by Al Secret staff.", $treatment_plan->user_id, "doctor");
