@@ -7,6 +7,9 @@ return [
     'shining3d_app_secret' => env('SHINING3D_APP_SECRET', '2b2e3b89-4ee5-5b48-b2b2-9f32e05cbbdd'),
     'shining3d_public_key' => env('SHINING3D_PUBLIC_KEY', '7ae856ad-b703-5992-b8fc-c1c48498b761'),
     'shining3d_public_secrect' => env('SHINING3D_PUBLIC_SECRECT', '8a09231a-1eb2-5146-8d28-08e052b8efbc'),
+    'shining3d_code_challenge' => env('SHINING3D_CODE_CHALLENGE', '123456'),
+    'shining3d_code_challenge_method' => env('SHINING3D_CODE_CHALLENGE_METHOD', 'PLAIN'),
+    'shining3d_redirect_uri' => env('SHINING3D_REDIRECT_URI', 'https://secretalign-user.com/patient/create'),
 ];
 
 ?>

@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `shining3d_user_id` TEXT NULL AFTER `advisor_price`, ADD `shining3d_org_code` TEXT NULL AFTER `shining3d_user_id`;
