@@ -3890,16 +3890,17 @@ async function previewUpperStlFile(file_upper)
             });
 
             $(document).on('click', '#select-from-shining3d-link', function () {
-
+                var first_name = $("#first_name").val();
+                var last_name = $("#last_name").val();
                 const shining3dAuthUrl =
                     'https://dental3dcloud.com/p/index?' +
-                    'codeChallenge=123456' +
-                    '&codeChallengeMethod=PLAIN' +
-                    '&redirectUri=https://secretalign-user.com/patient/create' +
+                    'codeChallenge=<?php echo e(config("shining3d.shining3d_code_challenge")); ?>' +
+                    '&codeChallengeMethod=<?php echo e(config("shining3d.shining3d_code_challenge_method")); ?>' +
+                    '&redirectUri=<?php echo e(config("shining3d.shining3d_redirect_uri")); ?>' +
                     '&responseType=code' +
-                    '&appId=daddd452-ae8b-562a-9c54-7c633c6a4465' +
-                    '&thirdUserID=DoctorKhuntID' +
-                    '&thirdUserName=Khunt';
+                    '&appId=<?php echo e(config("shining3d.shining3d_app_id")); ?>' +
+                    '&thirdUserID=<?php echo e($patient->patient_id); ?>' +
+                    '&thirdUserName=' + first_name + ' ' + last_name;
 
                 // Redirect in same tab/page
                 window.location.href = shining3dAuthUrl;
