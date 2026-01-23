@@ -1,18 +1,16 @@
-@extends('layouts.app_base_horizontal')
+<?php $__env->startSection('css'); ?>
 
-@section('css')
-
-<script src="{{ asset('public/assets/three/build/three.js') }}"></script>
+<script src="<?php echo e(asset('public/assets/three/build/three.js')); ?>"></script>
  <script type="importmap">
 {
     "imports": {
-        "three": "{{asset('public/assets/three/build/three.module.js')}}",
-        "OrbitControls": "{{asset('public/assets/three/examples/jsm/controls/OrbitControls.js')}}"
+        "three": "<?php echo e(asset('public/assets/three/build/three.module.js')); ?>",
+        "OrbitControls": "<?php echo e(asset('public/assets/three/examples/jsm/controls/OrbitControls.js')); ?>"
     }
 }
 </script>
-<link rel="stylesheet" href="{{ asset('public/assets') }}/restrictions.css">
-<link rel="stylesheet" href="{{asset('public/css/cropper.css')}}">
+<link rel="stylesheet" href="<?php echo e(asset('public/assets')); ?>/restrictions.css">
+<link rel="stylesheet" href="<?php echo e(asset('public/css/cropper.css')); ?>">
 <style>
     ._dropzone {
         width: 225px;
@@ -70,16 +68,16 @@
 
 
 </style>
-@stop
-@php
+<?php $__env->stopSection(); ?>
+<?php
     $change_plan = 'true';
     if ($changePlan){
         $change_plan = $changePlan;
     }
-@endphp
+?>
 
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="page-content">
 
     <div class="row">
@@ -89,7 +87,7 @@
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{url('/patients')}}">Patients</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo e(url('/patients')); ?>">Patients</a></li>
                         <li class="breadcrumb-item active">Create New Patient</li>
                     </ol>
                 </div>
@@ -98,7 +96,7 @@
         </div>
     </div>
 
-     @php
+     <?php
         //sections completed
         $fn1 = 0;
         $fn2 = 0;
@@ -118,7 +116,7 @@
         if (($patient->treat_upper_arch == 1 || $patient->treat_lower_arch == 1) && $patient->is_prescription_submitted == 1) {
             $fn4 = 1;
         }
-    @endphp
+    ?>
 
 
 <div class="row gx-0 d-none" id="3shape-section">
@@ -128,8 +126,8 @@
                 <h4 class="card-title">3Shape communicate Scan data</h4>
                 <p class="card-title-desc">Search with case id or by patient. Click on case to download stl files.</p>
                 <form class="mt-2" method="GET" id="3shape-search">
-                    <input type="hidden" name="_patient_id" value="{{ $patient->patient_id }}">
-                    <input type="hidden" name="_case_id" value="{{ $patient->id }}">
+                    <input type="hidden" name="_patient_id" value="<?php echo e($patient->patient_id); ?>">
+                    <input type="hidden" name="_case_id" value="<?php echo e($patient->id); ?>">
                     <div class="row">
                       <div class="col-md-3 mb-3">
                         <div class="row align-items-center g-3">
@@ -158,14 +156,14 @@
                             <button class="btn btn-primary waves-effect waves-light" type="submit">Search</button>
                             <a class="btn btn-warning waves-effect waves-light" href="javascript:void(0);" id="cancel-3shape-select">Cancel</a>
                         </div>
-                        @if(Auth::user()->three_shape_access_token != null)
-                            <a class="btn btn-danger float-end" href="{{url('/integrations/3shape-disable')}}">
+                        <?php if(Auth::user()->three_shape_access_token != null): ?>
+                            <a class="btn btn-danger float-end" href="<?php echo e(url('/integrations/3shape-disable')); ?>">
                                <div class="d-flex align-items-center justify-content-center ">
                                 <span>Logout From</span>
-                                <img class="ms- 1" src="{{asset('public/assets/communicate-logo-white.png')}}" width="75px">
+                                <img class="ms- 1" src="<?php echo e(asset('public/assets/communicate-logo-white.png')); ?>" width="75px">
                                </div>
                             </a>
-                         @endif
+                         <?php endif; ?>
                       </div>
                     </div>
                   </form>
@@ -191,8 +189,8 @@
                 <h4 class="card-title">Medit Link Scan data</h4>
                 <p class="card-title-desc">Search with case registration/modification dates and case name. Click on case to download stl files.</p>
                 <form class="mt-2" method="GET" id="medit-link-search">
-                    <input type="hidden" name="_patient_id" value="{{ $patient->patient_id }}">
-                    <input type="hidden" name="_case_id" value="{{ $patient->id }}">
+                    <input type="hidden" name="_patient_id" value="<?php echo e($patient->patient_id); ?>">
+                    <input type="hidden" name="_case_id" value="<?php echo e($patient->id); ?>">
                     <div class="row">
                       <div class="col-md-3 mb-3">
                         <div class="row align-items-center g-3">
@@ -200,7 +198,7 @@
                             <h6 class="text-700 mb-0">Start Date: </h6>
                           </div>
                           <div class="col-12 position-relative">
-                            <input type="text" class="form-control pickr" name="_medit_link_start_date" value="{{date("Y-m-d", strtotime("-1 month"))}}">
+                            <input type="text" class="form-control pickr" name="_medit_link_start_date" value="<?php echo e(date("Y-m-d", strtotime("-1 month"))); ?>">
                           </div>
                         </div>
                       </div>
@@ -210,7 +208,7 @@
                             <h6 class="text-700 mb-0">End Date: </h6>
                           </div>
                           <div class="col-12 position-relative">
-                            <input type="text" class="form-control pickr" name="_medit_link_end_date" value="{{date("Y-m-d")}}">
+                            <input type="text" class="form-control pickr" name="_medit_link_end_date" value="<?php echo e(date("Y-m-d")); ?>">
                           </div>
                         </div>
                       </div>
@@ -231,14 +229,14 @@
                             <button class="btn btn-primary waves-effect waves-light" type="submit">Search</button>
                             <a class="btn btn-warning waves-effect waves-light" href="javascript:void(0);" id="cancel-medit-link-select">Cancel</a>
                         </div>
-                        @if(Auth::user()->medit_link_access_token != null)
-                            <a class="btn btn-danger float-end" href="{{url('/integrations/medit-link-disable')}}">
+                        <?php if(Auth::user()->medit_link_access_token != null): ?>
+                            <a class="btn btn-danger float-end" href="<?php echo e(url('/integrations/medit-link-disable')); ?>">
                                <div class="d-flex align-items-center justify-content-center ">
                                 <span>Logout From</span>
-                                <img class="ms-2"  src="{{asset('public/assets/medit-link-logo.svg')}}" width="52px">
+                                <img class="ms-2"  src="<?php echo e(asset('public/assets/medit-link-logo.svg')); ?>" width="52px">
                                </div>
                             </a>
-                         @endif
+                         <?php endif; ?>
                       </div>
                     </div>
                   </form>
@@ -317,19 +315,19 @@
                 </ul>
 
                 <div class="tab-content p-3 mt-3" id="pill-myTabContent">
-                    @include('patients.create-patients.patient-info')
+                    <?php echo $__env->make('patients.create-patients.patient-info', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-                    @include('patients.create-patients.treatment-type')
+                    <?php echo $__env->make('patients.create-patients.treatment-type', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-                    @include('patients.create-patients.scan-data')
+                    <?php echo $__env->make('patients.create-patients.scan-data', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-                    @include('patients.create-patients.images-xray')
+                    <?php echo $__env->make('patients.create-patients.images-xray', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-                    @include('patients.create-patients.prescription')
+                    <?php echo $__env->make('patients.create-patients.prescription', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-                    @include('patients.create-patients.case-overview')
+                    <?php echo $__env->make('patients.create-patients.case-overview', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-                    @include('patients.create-patients.confirm-submit')
+                    <?php echo $__env->make('patients.create-patients.confirm-submit', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
 
 
@@ -341,11 +339,11 @@
 
 
 
-<form method="POST" action="{{ url('/patient/submit') }}" id="final-submit-form">
-    @csrf
+<form method="POST" action="<?php echo e(url('/patient/submit')); ?>" id="final-submit-form">
+    <?php echo csrf_field(); ?>
     <input type="hidden" name="client_preferred_package" value="select">
-    <input type="hidden" name="treatment_plan_id" value="{{ $patient->id }}">
-    <input type="hidden" name="patient_id" value="{{ $patient->patient_id }}">
+    <input type="hidden" name="treatment_plan_id" value="<?php echo e($patient->id); ?>">
+    <input type="hidden" name="patient_id" value="<?php echo e($patient->patient_id); ?>">
 </form>
 
 
@@ -372,7 +370,7 @@
 <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-@if($patient->phase > 1)
+<?php if($patient->phase > 1): ?>
     <!-- Cancel Order From Dental-Monitoring Modal Start -->
     <div class="modal fade" id="cancel-order-from-dental-monitoring-modal" tabindex="-1" aria-labelledby="cancelOrderFromDentalMonitoringLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -411,31 +409,31 @@
                     <h5 class="modal-title" id="order-from-dental-monitoring">Order From Dental Monitoring</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                {{-- <form id="order-from-dental-monitoring-form" method="POST" action="{{url('/order-from-dental-monitoring')}}" enctype="multipart/form-data"> --}}
+                
                     <div class="modal-body">
-                        @if(empty(Auth::user()->doctor_id) || is_null(Auth::user()->doctor_id))
+                        <?php if(empty(Auth::user()->doctor_id) || is_null(Auth::user()->doctor_id)): ?>
                             <p>Please update your Dental Monitoring Doctor ID in Profile Settings. Without a Doctor ID, you cannot place an order.</p>
-                        @else
+                        <?php else: ?>
                             <div class="alert alert-danger border-2 d-flex align-items-center d-none" role="alert" id="dental-monitoring-alert" >
                                 <p class="mb-0 flex-1">Please wait while we place your order with Dental Monitoring. Don't close this page or navigate away until the process is complete.</p>
                             </div>
                             <p>The Patient ID is required and should match the Dental Monitoring Patient ID.</p>
-                            @if (checkFileisStlOrNot($priviousPatientDetails->fl_upper_arch) === false || checkFileisStlOrNot($priviousPatientDetails->fl_lower_arch === false) )
+                            <?php if(checkFileisStlOrNot($priviousPatientDetails->fl_upper_arch) === false || checkFileisStlOrNot($priviousPatientDetails->fl_lower_arch === false) ): ?>
                                 <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
                                     <p class="mb-0 flex-1">
                                         In your previous treatment plan, you uploaded scan files that were not STL files.For orders with Dental Monitoring, you need to upload them manually.
                                         Scan files must be in STL format.
                                     </p>
                                 </div>
-                            @endif
-                            @csrf
+                            <?php endif; ?>
+                            <?php echo csrf_field(); ?>
                             <div class="row">
                                 <div class="mb-3">
                                     <label class="form-label" for="patient_id">Patient ID<span class="text-danger">*</span></label>
                                     <input class="form-control " id="dental_patient_id" type="text" placeholder="Enter Patient ID" name="dental_patient_id" value="">
                                     <input class="form-control " id="p_treatment_plans_id_input" type="hidden" placeholder="Enter Patient ID" name="p_treatment_plans_id" value="">
                                     <input class="form-control " id="patient_id_input" type="hidden" placeholder="Enter Patient ID" name="patient_id" value="">
-                                    <input class="form-control " id="manullay_upload" type="hidden" placeholder="Enter Patient ID" name="patient_id" value="{{ checkFileisStlOrNot($priviousPatientDetails->fl_upper_arch) === false || checkFileisStlOrNot($priviousPatientDetails->fl_lower_arch === false) ? 'yes' : 'no' }}">
+                                    <input class="form-control " id="manullay_upload" type="hidden" placeholder="Enter Patient ID" name="patient_id" value="<?php echo e(checkFileisStlOrNot($priviousPatientDetails->fl_upper_arch) === false || checkFileisStlOrNot($priviousPatientDetails->fl_lower_arch === false) ? 'yes' : 'no'); ?>">
                                 </div>
                             </div>
                             <div class="row">
@@ -455,7 +453,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (checkFileisStlOrNot($priviousPatientDetails->fl_upper_arch) === false || checkFileisStlOrNot($priviousPatientDetails->fl_lower_arch === false) )
+                            <?php if(checkFileisStlOrNot($priviousPatientDetails->fl_upper_arch) === false || checkFileisStlOrNot($priviousPatientDetails->fl_lower_arch === false) ): ?>
                                 <div class="row">
                                     <div class="mb-3">
                                         <label class="form-label" for="upper_arch_scan">Upper Arch Scan<span class="text-danger">*</span></label>
@@ -469,24 +467,24 @@
                                         <input class="form-control " id="lower_arch_scan" type="file" placeholder="Enter Patient ID" name="lower_arch_scan" value="">
                                     </div>
                                 </div>
-                            @endif
+                            <?php endif; ?>
 
-                        @endif
+                        <?php endif; ?>
 
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        @if(empty(Auth::user()->doctor_id) || is_null(Auth::user()->doctor_id))
-                            <a href="{{ route('profile-settings') }}" target="_blank" class="btn btn-primary" id="update-profile">
+                        <?php if(empty(Auth::user()->doctor_id) || is_null(Auth::user()->doctor_id)): ?>
+                            <a href="<?php echo e(route('profile-settings')); ?>" target="_blank" class="btn btn-primary" id="update-profile">
                                 Go to Update Profile
                             </a>
-                        @else
+                        <?php else: ?>
                             <button type="button" class="btn btn-primary " id="confirm-order-from-dental-monitoring">Order Now</button>
-                        @endif
+                        <?php endif; ?>
 
                     </div>
-                {{-- </form> --}}
+                
             </div>
         </div>
     </div>
@@ -500,13 +498,13 @@
                     <h5 class="modal-title" id="reupload-from-dental-monitoring">Reupload files for Update Order From Dental Monitoring </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                {{-- <form id="order-from-dental-monitoring-form" method="POST" action="{{url('/order-from-dental-monitoring')}}" enctype="multipart/form-data"> --}}
+                
                     <div class="modal-body">
 
                             <div class="alert alert-danger border-2 d-flex align-items-center d-none" role="alert" id="dental-monitoring-alert" >
                                 <p class="mb-0 flex-1">Please wait while we place your order with Dental Monitoring. Don't close this page or navigate away until the process is complete.</p>
                             </div>
-                            @php
+                            <?php
                                 $message = '';
 
                                 switch ($patient->dm_order_status) {
@@ -546,15 +544,15 @@
                                         $message = "The order was rejected because additional teeth were detected in the scan. Doctor has been informed to upload a new IOS (Intraoral Scan) file.";
                                         break;
                                 }
-                            @endphp
-                            @if (!empty($message))
-                                <p>{{ $message }}</p>
-                            @endif
-                            @csrf
+                            ?>
+                            <?php if(!empty($message)): ?>
+                                <p><?php echo e($message); ?></p>
+                            <?php endif; ?>
+                            <?php echo csrf_field(); ?>
                             <div class="row">
                                 <div class="mb-3">
                                     <label class="form-label" for="patient_id">Patient ID<span class="text-danger">*</span></label>
-                                    <input class="form-control " id="dental_patient_id" type="text" placeholder="Enter Patient ID" name="dental_patient_id" value="{{ $patient->dm_patient_id }}">
+                                    <input class="form-control " id="dental_patient_id" type="text" placeholder="Enter Patient ID" name="dental_patient_id" value="<?php echo e($patient->dm_patient_id); ?>">
                                     <input class="form-control " id="p_treatment_plans_id_input" type="hidden" placeholder="Enter Patient ID" name="p_treatment_plans_id" value="">
                                     <input class="form-control " id="patient_id_input" type="hidden" placeholder="Enter Patient ID" name="patient_id" value="">
                                 </div>
@@ -569,9 +567,9 @@
                                 </div>
                             </div>
 
-                            {{-- IOS FIles Reupload Start --}}
-                            @if ($patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesIOSIncorrect' || $patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesIOSCorrupted' || $patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesIOSUnusable' ||
-                                $patient->dm_order_status == 'OrderStatusChangedToOrderRejectedAnatomicalChanges' || $patient->dm_order_status == 'OrderStatusChangedToOrderRejectedAdditionalTeeth')
+                            
+                            <?php if($patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesIOSIncorrect' || $patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesIOSCorrupted' || $patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesIOSUnusable' ||
+                                $patient->dm_order_status == 'OrderStatusChangedToOrderRejectedAnatomicalChanges' || $patient->dm_order_status == 'OrderStatusChangedToOrderRejectedAdditionalTeeth'): ?>
                                 <div class="row">
                                     <div class="mb-3">
                                         <label class="form-label" for="upper_arch_scan">Upper Arch Scan<span class="text-danger">*</span></label>
@@ -587,12 +585,12 @@
                                         <span class="text-danger lower_arch_scan_error"></span>
                                     </div>
                                 </div>
-                            @endif
-                            {{-- IOS FIles Reupload End --}}
+                            <?php endif; ?>
+                            
 
-                            {{-- Stage FIles Reupload Start --}}
-                            @if ($patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesStageFileIncorrect' || $patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesStageFileCorrupted' || $patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesStageFileUnusable' ||
-                                $patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesAlignerNumberIncorrect')
+                            
+                            <?php if($patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesStageFileIncorrect' || $patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesStageFileCorrupted' || $patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesStageFileUnusable' ||
+                                $patient->dm_order_status == 'OrderStatusChangedToWaitingForNewFilesAlignerNumberIncorrect'): ?>
                                 <div class="row">
                                     <div class="mb-3">
                                         <label class="form-label" for="upper_arch_scan">Stage Upper Arch Scan<span class="text-danger">*</span></label>
@@ -608,23 +606,23 @@
                                         <span class="text-danger lower_arch_stage_file_error"></span>
                                     </div>
                                 </div>
-                            @endif
-                            {{-- Stage FIles Reupload End --}}
+                            <?php endif; ?>
+                            
 
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary " id="update-order-from-dental-monitoring" data-dm-order-id="{{ $patient->dm_order_id }}" data-dm-order-status="{{ $patient->dm_order_status }}">Update Order Now</button>
+                        <button type="button" class="btn btn-primary " id="update-order-from-dental-monitoring" data-dm-order-id="<?php echo e($patient->dm_order_id); ?>" data-dm-order-status="<?php echo e($patient->dm_order_status); ?>">Update Order Now</button>
                     </div>
-                {{-- </form> --}}
+                
             </div>
         </div>
     </div>
     <!-- Order From Dental-Monitoring Modal End -->
 
 
-@endif
+<?php endif; ?>
     <!--  Order From shining3d Modal Start -->
         <div class="modal fade" id="order-from-shining3d-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -639,7 +637,7 @@
 
                     <div class="modal-body">
                         <div id="shining3d-error" class="alert alert-danger py-1" style="display:none; font-size: 14px;"></div>
-                            @csrf
+                            <?php echo csrf_field(); ?>
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="mb-3">
@@ -719,16 +717,16 @@
 
         </div>
     <!-- Order From shining3d Modal End -->
-@stop
+<?php $__env->stopSection(); ?>
 
-@section('javascript')
+<?php $__env->startSection('javascript'); ?>
 
 
 
 <script type="module">
-    import { STLLoader } from "{{asset('public/assets/three/examples/jsm/loaders/STLLoader.js')}}";
-    import { PLYLoader } from "{{asset('public/assets/three/examples/jsm/loaders/PLYLoader.js')}}";
-    import { OrbitControls } from '{{asset("public/assets/three/examples/jsm/controls/OrbitControls.js")}}';
+    import { STLLoader } from "<?php echo e(asset('public/assets/three/examples/jsm/loaders/STLLoader.js')); ?>";
+    import { PLYLoader } from "<?php echo e(asset('public/assets/three/examples/jsm/loaders/PLYLoader.js')); ?>";
+    import { OrbitControls } from '<?php echo e(asset("public/assets/three/examples/jsm/controls/OrbitControls.js")); ?>';
 
 
 
@@ -965,7 +963,7 @@ async function previewUpperStlFile(file_upper)
         directionalLight.position.set(1, 1, 1).normalize();
         scene1.add(directionalLight);
 
-        const geometry = await loadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+        const geometry = await loadSTLUpper('<?php echo e(url('/patient/mesh/fetch/'.$patient->patient_id)); ?>/'+file_upper)
         const mesh = new THREE.Mesh(geometry, material1)
         mesh.tag = 'base';
         scene1.add(mesh);
@@ -1014,7 +1012,7 @@ async function previewUpperStlFile(file_upper)
                     directionalLight.position.set(1, 1, 1).normalize();
                     scene2.add(directionalLight);
 
-                    const geometry = await loadSTLLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
+                    const geometry = await loadSTLLower('<?php echo e(url('/patient/mesh/fetch/'.$patient->patient_id)); ?>/'+file_lower)
                     const mesh = new THREE.Mesh(geometry, material2)
 
                     mesh.tag = 'base';
@@ -1069,7 +1067,7 @@ async function previewUpperStlFile(file_upper)
                     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
                     directionalLight.position.set(1, 1, 1).normalize();
                     scene1.add(directionalLight);
-                    const geometry = await loadPLYUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+                    const geometry = await loadPLYUpper('<?php echo e(url('/patient/mesh/fetch/'.$patient->patient_id)); ?>/'+file_upper)
                     geometry.computeVertexNormals();
                     const mesh = new THREE.Mesh(geometry, material1)
 
@@ -1126,7 +1124,7 @@ async function previewUpperStlFile(file_upper)
                     scene2.add(directionalLight);
 
 
-                    const geometry = await loadPLYLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
+                    const geometry = await loadPLYLower('<?php echo e(url('/patient/mesh/fetch/'.$patient->patient_id)); ?>/'+file_lower)
                     geometry.computeVertexNormals();
                     const mesh = new THREE.Mesh(geometry, material2)
 
@@ -1147,32 +1145,32 @@ async function previewUpperStlFile(file_upper)
             window.previewLowerPlyFile = previewLowerPlyFile;
 
 
-            @if(@$patient->fl_upper_arch!='')
+            <?php if(@$patient->fl_upper_arch!=''): ?>
 
-            @if(explode(".", @$patient->fl_upper_arch)[1] == 'stl')
-            previewUpperStlFile("{{@$patient->fl_upper_arch}}")
-            @else
-            previewUpperPlyFile("{{@$patient->fl_upper_arch}}")
-            @endif
-            @endif
-            @if(@$patient->fl_lower_arch!='')
+            <?php if(explode(".", @$patient->fl_upper_arch)[1] == 'stl'): ?>
+            previewUpperStlFile("<?php echo e(@$patient->fl_upper_arch); ?>")
+            <?php else: ?>
+            previewUpperPlyFile("<?php echo e(@$patient->fl_upper_arch); ?>")
+            <?php endif; ?>
+            <?php endif; ?>
+            <?php if(@$patient->fl_lower_arch!=''): ?>
 
-            @if(explode(".", @$patient->fl_lower_arch)[1] == 'stl')
-            previewLowerStlFile("{{@$patient->fl_lower_arch}}")
-            @else
-            previewLowerPlyFile("{{@$patient->fl_lower_arch}}")
-            @endif
-            @endif
+            <?php if(explode(".", @$patient->fl_lower_arch)[1] == 'stl'): ?>
+            previewLowerStlFile("<?php echo e(@$patient->fl_lower_arch); ?>")
+            <?php else: ?>
+            previewLowerPlyFile("<?php echo e(@$patient->fl_lower_arch); ?>")
+            <?php endif; ?>
+            <?php endif; ?>
 
             function downloadMeditLinkStlFiles($uuid)
             {
                 $.ajax({
                         type: "POST",
-                        url: "{{url('/patient/file/download-medit-link')}}",
+                        url: "<?php echo e(url('/patient/file/download-medit-link')); ?>",
                         data: {
-                            "_token" : "{{ csrf_token() }}",
-                            "patient_id" : "{{ $patient->patient_id }}",
-                            "treatment_plan_id" : "{{ $patient->id }}",
+                            "_token" : "<?php echo e(csrf_token()); ?>",
+                            "patient_id" : "<?php echo e($patient->patient_id); ?>",
+                            "treatment_plan_id" : "<?php echo e($patient->id); ?>",
                             "uuid" : $uuid,
                         },
                         beforeSend: function () {
@@ -1214,11 +1212,11 @@ async function previewUpperStlFile(file_upper)
             {
                 $.ajax({
                         type: "POST",
-                        url: "{{url('/patient/file/download-3shape')}}",
+                        url: "<?php echo e(url('/patient/file/download-3shape')); ?>",
                         data: {
-                            "_token" : "{{ csrf_token() }}",
-                            "patient_id" : "{{ $patient->patient_id }}",
-                            "treatment_plan_id" : "{{ $patient->id }}",
+                            "_token" : "<?php echo e(csrf_token()); ?>",
+                            "patient_id" : "<?php echo e($patient->patient_id); ?>",
+                            "treatment_plan_id" : "<?php echo e($patient->id); ?>",
                             "case_id" : $case_id,
                             "hash_upper" : $hash_upper,
                             "hash_lower" : $hash_lower,
@@ -1253,9 +1251,9 @@ async function previewUpperStlFile(file_upper)
 
         $(document).ready(function () {
 
-            @if(@$medit_data->case_uuid)
-                    downloadMeditLinkStlFiles('{{@$medit_data->case_uuid}}')
-                    @endif
+            <?php if(@$medit_data->case_uuid): ?>
+                    downloadMeditLinkStlFiles('<?php echo e(@$medit_data->case_uuid); ?>')
+                    <?php endif; ?>
 
 
             $("#select-from-3shape").on('click', function () {
@@ -1308,9 +1306,9 @@ async function previewUpperStlFile(file_upper)
 
                         $.ajax({
                             type: "POST",
-                            url: "{{ url('/integrations/medit-link-search-cases') }}",
+                            url: "<?php echo e(url('/integrations/medit-link-search-cases')); ?>",
                             data: {
-                                "_token" : "{{ csrf_token() }}",
+                                "_token" : "<?php echo e(csrf_token()); ?>",
                                 "case_id" : case_id,
                                 "patient_id" : patient_id,
                                 "medit_link_search_for_case" : medit_link_search_for_case,
@@ -1335,9 +1333,9 @@ async function previewUpperStlFile(file_upper)
                         three_shape_search_for_case = $("#3shape-search input[name=_three_shape_search_for_case]").val();
                         $.ajax({
                             type: "POST",
-                            url: "{{ url('/integrations/3shape-search-cases') }}",
+                            url: "<?php echo e(url('/integrations/3shape-search-cases')); ?>",
                             data: {
-                                "_token" : "{{ csrf_token() }}",
+                                "_token" : "<?php echo e(csrf_token()); ?>",
                                 "case_id" : case_id,
                                 "patient_id" : patient_id,
                                 "three_shape_case_id" : three_shape_case_id,
@@ -1397,7 +1395,7 @@ async function previewUpperStlFile(file_upper)
 
         });
 </script>
-<script src="{{asset('public/js/cropper.js')}}"></script>
+<script src="<?php echo e(asset('public/js/cropper.js')); ?>"></script>
 <script>
     $(function () {
         let
@@ -1482,9 +1480,9 @@ async function previewUpperStlFile(file_upper)
         let dropzone_destroy_state = (key, message = "") => {
             $.ajax({
                 type: "POST",
-                url: "{{url('/patient/file/revert/'.$patient->patient_id.'/'.$patient->id)}}",
+                url: "<?php echo e(url('/patient/file/revert/'.$patient->patient_id.'/'.$patient->id)); ?>",
                 data: {
-                    "_token": "{{ csrf_token() }}",
+                    "_token": "<?php echo e(csrf_token()); ?>",
                     "key" : key,
                 }
             }).done(function (response) {
@@ -1511,7 +1509,7 @@ async function previewUpperStlFile(file_upper)
             let formData = new FormData();
             formData.append('file'+key, file)
             $.ajax({
-                url: '{{url('/patient/file/upload/'.$patient->patient_id.'/'.$patient->id)}}?key='+key,
+                url: '<?php echo e(url('/patient/file/upload/'.$patient->patient_id.'/'.$patient->id)); ?>?key='+key,
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -2858,7 +2856,7 @@ async function previewUpperStlFile(file_upper)
 
         var file = $("._dropzone_template #key" + key).attr('file');
 
-        var imageUrl="{{asset('storage/PatientFiles/Patient')}}{{$patient->patient_id}}/"+file;
+        var imageUrl="<?php echo e(asset('storage/PatientFiles/Patient')); ?><?php echo e($patient->patient_id); ?>/"+file;
     if (file) {
   fetch(imageUrl)
             .then(response => response.blob()) // Convert the image to a blob
@@ -2988,7 +2986,7 @@ async function previewUpperStlFile(file_upper)
         });
     </script>
 <script>
-    const PHASE = '{{$patient->phase}}'
+    const PHASE = '<?php echo e($patient->phase); ?>'
     var link_regex =
             /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/
 
@@ -3014,7 +3012,7 @@ async function previewUpperStlFile(file_upper)
 
             // function fetchOverview()
             // {
-            //     fetch(`{{url('/patient/fetch-case-overview/'.$hashids->encode($patient->id).'?i=true')}}`)
+            //     fetch(`<?php echo e(url('/patient/fetch-case-overview/'.$hashids->encode($patient->id).'?i=true')); ?>`)
             //         .then(response => response.text())
             //         .then(html => {
             //             $("#overview-container").html(html)
@@ -3025,7 +3023,7 @@ async function previewUpperStlFile(file_upper)
                 // ensure loader is visible when fetching overview
                 try { showLoader(); } catch(e) { /* noop if showLoader undefined */ }
                 $.ajax({
-                    url: `{{ url('/patient/fetch-case-overview/' . $hashids->encode($patient->id) . '?i=true') }}`,
+                    url: `<?php echo e(url('/patient/fetch-case-overview/' . $hashids->encode($patient->id) . '?i=true')); ?>`,
                     type: "GET",
                     success: function(response) {
                         $("#overview-container").html(response);
@@ -3055,11 +3053,11 @@ async function previewUpperStlFile(file_upper)
             //         try {
             //             const response = await $.ajax({
             //                 type: "POST",
-            //                 url: "{{ url('/patient/validate-data') }}",
+            //                 url: "<?php echo e(url('/patient/validate-data')); ?>",
             //                 data: {
-            //                     "_token": "{{ csrf_token() }}",
-            //                     "treatment_plan_id": "{{ $patient->id }}",
-            //                     "patient_id": "{{ $patient->patient_id }}"
+            //                     "_token": "<?php echo e(csrf_token()); ?>",
+            //                     "treatment_plan_id": "<?php echo e($patient->id); ?>",
+            //                     "patient_id": "<?php echo e($patient->patient_id); ?>"
             //                 },
             //                 beforeSend() {
             //                     showLoader();
@@ -3163,11 +3161,11 @@ async function previewUpperStlFile(file_upper)
                 if (targetTab == '#pill-tab-div6') {
                     let responseCall = await $.ajax({
                         type: "POST",
-                        url: "{{ url('/patient/validate-data') }}",
+                        url: "<?php echo e(url('/patient/validate-data')); ?>",
                         data: {
-                            "_token": "{{ csrf_token() }}",
-                            "treatment_plan_id": "{{ $patient->id }}",
-                            "patient_id": "{{ $patient->patient_id }}"
+                            "_token": "<?php echo e(csrf_token()); ?>",
+                            "treatment_plan_id": "<?php echo e($patient->id); ?>",
+                            "patient_id": "<?php echo e($patient->patient_id); ?>"
                         },
                         beforeSend() {
                             showLoader();
@@ -3242,23 +3240,23 @@ async function previewUpperStlFile(file_upper)
                 }
             });
 
-            @if(@$_GET['tab'])
+            <?php if(@$_GET['tab']): ?>
                 try { showLoader(); } catch(e) { }
                 fetchOverview()
-                let tabSelector = 'ul.nav-pills a[href="#{{ $_GET["tab"] }}"]';
+                let tabSelector = 'ul.nav-pills a[href="#<?php echo e($_GET["tab"]); ?>"]';
                 let tabEl = document.querySelector(tabSelector);
 
                 if (tabEl) {
                     let tab = new bootstrap.Tab(tabEl);
                     tab.show();
                 }
-            @endif
+            <?php endif; ?>
 
 
         });
 </script>
 <script>
-    const mode = "{{$mode}}";
+    const mode = "<?php echo e($mode); ?>";
         const midlineCheckboxes = document.querySelectorAll('input[name="midline"]');
         const archformCheckboxes = document.querySelectorAll('input[name="archform"]');
         const classCheckboxes = document.querySelectorAll('input[name="class"]');
@@ -3389,14 +3387,14 @@ async function previewUpperStlFile(file_upper)
                 }
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('/patient/patient-info/save') }}",
+                    url: "<?php echo e(url('/patient/patient-info/save')); ?>",
                     data: {
-                        "_token": "{{ csrf_token() }}",
+                        "_token": "<?php echo e(csrf_token()); ?>",
                         "first_name": first_name,
                         "last_name": last_name,
                         "dob": dob,
-                        "treatment_plan_id": "{{ $patient->id }}",
-                        "patient_id": "{{ $patient->patient_id }}"
+                        "treatment_plan_id": "<?php echo e($patient->id); ?>",
+                        "patient_id": "<?php echo e($patient->patient_id); ?>"
                     },
                 }).done(function(response) {
                     $("#submit-prescription").attr('fn', 1);
@@ -3420,12 +3418,12 @@ async function previewUpperStlFile(file_upper)
                 }
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('/patient/patient-info/selected-plan') }}",
+                    url: "<?php echo e(url('/patient/patient-info/selected-plan')); ?>",
                     data: {
-                        "_token": "{{ csrf_token() }}",
+                        "_token": "<?php echo e(csrf_token()); ?>",
                         "treatment_type": selectedPlan, // 👈 send selected treatment type
-                        "treatment_plan_id": "{{ $patient->id }}",
-                        "patient_id": "{{ $patient->patient_id }}"
+                        "treatment_plan_id": "<?php echo e($patient->id); ?>",
+                        "patient_id": "<?php echo e($patient->patient_id); ?>"
                     },
                 }).done(function(response) {
                     $("#submit-treatment-plan").attr('disabled', false);
@@ -3456,13 +3454,13 @@ async function previewUpperStlFile(file_upper)
                 toastSuccess("Scan data Saved");
                 // $.ajax({
                 //     type: "POST",
-                //     url: "{{ url('/patient/scan-data/save') }}",
+                //     url: "<?php echo e(url('/patient/scan-data/save')); ?>",
                 //     data: {
-                //         "_token": "{{ csrf_token() }}",
+                //         "_token": "<?php echo e(csrf_token()); ?>",
                 //         "fl_upper_arch": fl_upper_arch,
                 //         "fl_lower_arch": fl_lower_arch,
-                //         "treatment_plan_id": "{{ $patient->id }}",
-                //         "patient_id": "{{ $patient->patient_id }}"
+                //         "treatment_plan_id": "<?php echo e($patient->id); ?>",
+                //         "patient_id": "<?php echo e($patient->patient_id); ?>"
                 //     },
                 // }).done(function (response) {
                 //     $("#submit-prescription").attr('fn', 1);
@@ -3489,12 +3487,12 @@ async function previewUpperStlFile(file_upper)
                     } else {
                         $.ajax({
                             type: "POST",
-                            url: "{{ url('/patient/images/save') }}",
+                            url: "<?php echo e(url('/patient/images/save')); ?>",
                             data: {
-                                "_token": "{{ csrf_token() }}",
+                                "_token": "<?php echo e(csrf_token()); ?>",
                                 "hyperlink": hyperlink,
-                                "treatment_plan_id": "{{ $patient->id }}",
-                                "patient_id": "{{ $patient->patient_id }}"
+                                "treatment_plan_id": "<?php echo e($patient->id); ?>",
+                                "patient_id": "<?php echo e($patient->patient_id); ?>"
                             },
                         }).done(function(response) {
                             $("#submit-images").attr('fn', 1);
@@ -3855,12 +3853,12 @@ async function previewUpperStlFile(file_upper)
                 fd.append("add_bite_turbos_ll", JSON.stringify(add_bite_turbos_ll));
 
                 //csrf & id
-                fd.append("_token", "{{ csrf_token() }}");
-                fd.append("patient_id", "{{ $patient->patient_id }}");
-                fd.append("treatment_plan_id", "{{ $patient->id }}");
+                fd.append("_token", "<?php echo e(csrf_token()); ?>");
+                fd.append("patient_id", "<?php echo e($patient->patient_id); ?>");
+                fd.append("treatment_plan_id", "<?php echo e($patient->id); ?>");
                 $.ajax({
                     type: "POST",
-                   url: "{{ url('/patient/prescription/save') }}",
+                   url: "<?php echo e(url('/patient/prescription/save')); ?>",
                     data: fd,
                     processData: false,
                     contentType: false,
@@ -3913,9 +3911,9 @@ async function previewUpperStlFile(file_upper)
 
 </script>
 
-<script src="{{ asset('public/assets/customjs/dm-integration.js') }}"></script>
-<script src="{{ asset('public/assets/customjs/add-patient.js') }}"></script>
-<script src="{{ asset('public/assets/customjs/shining3d.js') }}"></script>
+<script src="<?php echo e(asset('public/assets/customjs/dm-integration.js')); ?>"></script>
+<script src="<?php echo e(asset('public/assets/customjs/add-patient.js')); ?>"></script>
+<script src="<?php echo e(asset('public/assets/customjs/shining3d.js')); ?>"></script>
 
 <script>
     $(document).ready(function() {
@@ -3925,4 +3923,6 @@ async function previewUpperStlFile(file_upper)
     });
 </script>
 
-@stop
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app_base_horizontal', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp\htdocs\secretalign\resources\views/patients/add_patient.blade.php ENDPATH**/ ?>
