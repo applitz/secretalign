@@ -1,99 +1,99 @@
-{{-- scan Data Start --}}
+
 <div class="tab-pane fade" id="pill-tab-div2" role="tabpanel">
     <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
         <div class="bg-warning me-3 icon-item"><span
                 class="fas fa-exclamation-circle text-white fs-3"></span></div>
         <p class="mb-0 flex-1">
-            @if ($patient->phase <= 1)
+            <?php if($patient->phase <= 1): ?>
                 You must upload the scan data!
-            @elseif ($patient->phase > 1)
+            <?php elseif($patient->phase > 1): ?>
 
-                @if (in_array($patient->dm_order_status, [
+                <?php if(in_array($patient->dm_order_status, [
                     'OrderStatusChangedToWaitingForNewFilesStageFileIncorrect',
                     'OrderStatusChangedToWaitingForNewFilesStageFileUnusable',
                     'OrderStatusChangedToWaitingForNewFilesStageFileCorrupted'
-                ]))
-                    @switch($patient->dm_order_status)
-                        @case('OrderStatusChangedToWaitingForNewFilesStageFileIncorrect')
+                ])): ?>
+                    <?php switch($patient->dm_order_status):
+                        case ('OrderStatusChangedToWaitingForNewFilesStageFileIncorrect'): ?>
                             The stage file you uploaded is incorrect. Please re-upload the correct stage file.
-                            @break
+                            <?php break; ?>
 
-                        @case('OrderStatusChangedToWaitingForNewFilesStageFileUnusable')
+                        <?php case ('OrderStatusChangedToWaitingForNewFilesStageFileUnusable'): ?>
                             The stage file you uploaded is unusable. Please re-upload a valid stage STL file.
-                            @break
+                            <?php break; ?>
 
-                        @case('OrderStatusChangedToWaitingForNewFilesStageFileCorrupted')
+                        <?php case ('OrderStatusChangedToWaitingForNewFilesStageFileCorrupted'): ?>
                             The stage file you uploaded is corrupted. Please re-upload the stage file.
-                            @break
-                    @endswitch
+                            <?php break; ?>
+                    <?php endswitch; ?>
 
-                @elseif (in_array($patient->dm_order_status, [
+                <?php elseif(in_array($patient->dm_order_status, [
                     'OrderStatusChangedToWaitingForNewFilesIOSIncorrect',
                     'OrderStatusChangedToWaitingForNewFilesIOSCorrupted',
                     'OrderStatusChangedToWaitingForNewFilesIOSUnusable',
                     'OrderStatusChangedToOrderRejectedAnatomicalChanges',
                     'OrderStatusChangedToOrderRejectedAdditionalTeeth'
-                ]))
-                    {{-- IOS or Rejection Issues --}}
-                    @switch($patient->dm_order_status)
-                        @case('OrderStatusChangedToWaitingForNewFilesIOSIncorrect')
+                ])): ?>
+                    
+                    <?php switch($patient->dm_order_status):
+                        case ('OrderStatusChangedToWaitingForNewFilesIOSIncorrect'): ?>
                             The IOS file you uploaded is incorrect. Please re-upload the correct IOS file.
-                            @break
+                            <?php break; ?>
 
-                        @case('OrderStatusChangedToWaitingForNewFilesIOSUnusable')
+                        <?php case ('OrderStatusChangedToWaitingForNewFilesIOSUnusable'): ?>
                             The IOS file you uploaded is unusable. Please re-upload a valid IOS STL file.
-                            @break
+                            <?php break; ?>
 
-                        @case('OrderStatusChangedToWaitingForNewFilesIOSCorrupted')
+                        <?php case ('OrderStatusChangedToWaitingForNewFilesIOSCorrupted'): ?>
                             The IOS file you uploaded is corrupted. Please re-upload the IOS file.
-                            @break
+                            <?php break; ?>
 
-                        @case('OrderStatusChangedToOrderRejectedAnatomicalChanges')
+                        <?php case ('OrderStatusChangedToOrderRejectedAnatomicalChanges'): ?>
                             Your order was rejected due to anatomical changes. Please re-upload updated IOS and stage files.
-                            @break
+                            <?php break; ?>
 
-                        @case('OrderStatusChangedToOrderRejectedAdditionalTeeth')
+                        <?php case ('OrderStatusChangedToOrderRejectedAdditionalTeeth'): ?>
                             Your order was rejected due to additional teeth detected. Please re-upload updated IOS and stage files.
-                            @break
-                    @endswitch
+                            <?php break; ?>
+                    <?php endswitch; ?>
 
-                @elseif (in_array($patient->dm_order_status, [
+                <?php elseif(in_array($patient->dm_order_status, [
                             'OrderStatusChangedToWaitingForNewFilesAlignerNumberIncorrect'
-                        ]))
-                            {{-- Aligner Number Issues --}}
+                        ])): ?>
+                            
                         The stage file you uploaded has an incorrect aligner number. Please re-upload the correct stage file.
-                @elseif ($patient->dm_order_status == 'OrderStatusChangedToOrderCompleted')
+                <?php elseif($patient->dm_order_status == 'OrderStatusChangedToOrderCompleted'): ?>
                         <strong>🎉 Congratulations!</strong> Your order has been successfully completed.
                         Your treatment plan is now ready and you can proceed with the next steps.
-                @else
-                    {{-- Default Message --}}
+                <?php else: ?>
+                    
                     Your order is under processing in Dental Monitoring.
                     If you want to update scan data manually, you need to cancel the order first.
-                @endif
-            @endif
+                <?php endif; ?>
+            <?php endif; ?>
         </p>
         <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <div class="row mb-3">
 
         <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-6 col-12 _dropzone_template" template-key="1">
-            <input class="d-none" name="file1" id="key1" file="{{ @$patient->fl_upper_arch }}" data-field="1" type="file">
-            <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="upper-jaw-box" key="1" style="background-image: url('{{asset('public/assets/vector/upper-jaw.png')}}')">
+            <input class="d-none" name="file1" id="key1" file="<?php echo e(@$patient->fl_upper_arch); ?>" data-field="1" type="file">
+            <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="upper-jaw-box" key="1" style="background-image: url('<?php echo e(asset('public/assets/vector/upper-jaw.png')); ?>')">
                 <div class="_dropzone_added _dropzone_added_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text></span>
-                    <img src="{{asset('public/assets')}}/check-mark.png" style="width: 50px;height: 50px;">
+                    <img src="<?php echo e(asset('public/assets')); ?>/check-mark.png" style="width: 50px;height: 50px;">
                 </div>
                 <div class="_dropzone_hover _dropzone_hover_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text>Drag & drop file</span>
-                    <img src="{{asset('public/assets')}}/download-circular-button.png" style="width: 50px;height: 50px;">
+                    <img src="<?php echo e(asset('public/assets')); ?>/download-circular-button.png" style="width: 50px;height: 50px;">
                 </div>
                 <div class="_dropzone_loading _dropzone_loading_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text>Uploading...</span>
-                    <img src="{{asset('public/assets')}}/circle-loading.png" class="_dropzone_loading_animation" style="width: 50px;height: 50px;">
+                    <img src="<?php echo e(asset('public/assets')); ?>/circle-loading.png" class="_dropzone_loading_animation" style="width: 50px;height: 50px;">
                 </div>
                 <div class="_dropzone_remove _dropzone_remove_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text>Delete file</span>
-                    <img src="{{asset('public/assets')}}/x-mark.png" style="width: 50px; height: 50px;">
+                    <img src="<?php echo e(asset('public/assets')); ?>/x-mark.png" style="width: 50px; height: 50px;">
                 </div>
 
             </div>
@@ -110,23 +110,23 @@
 
 
         <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-6 col-12 _dropzone_template" template-key="2">
-            <input class="d-none" name="file2" id="key2" file="{{ @$patient->fl_lower_arch }}" data-field="2" type="file">
-            <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="lower-jaw-box" key="2" style="background-image: url('{{asset('public/assets/vector/down-jaw.png')}}')">
+            <input class="d-none" name="file2" id="key2" file="<?php echo e(@$patient->fl_lower_arch); ?>" data-field="2" type="file">
+            <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="lower-jaw-box" key="2" style="background-image: url('<?php echo e(asset('public/assets/vector/down-jaw.png')); ?>')">
                 <div class="_dropzone_added _dropzone_added_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text></span>
-                    <img src="{{asset('public/assets')}}/check-mark.png" style="width: 50px;height: 50px;">
+                    <img src="<?php echo e(asset('public/assets')); ?>/check-mark.png" style="width: 50px;height: 50px;">
                 </div>
                 <div class="_dropzone_hover _dropzone_hover_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text>Drag & drop file</span>
-                    <img src="{{asset('public/assets')}}/download-circular-button.png" style="width: 50px;height: 50px;">
+                    <img src="<?php echo e(asset('public/assets')); ?>/download-circular-button.png" style="width: 50px;height: 50px;">
                 </div>
                 <div class="_dropzone_loading _dropzone_loading_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text>Uploading...</span>
-                    <img src="{{asset('public/assets')}}/circle-loading.png" class="_dropzone_loading_animation" style="width: 50px;height: 50px;">
+                    <img src="<?php echo e(asset('public/assets')); ?>/circle-loading.png" class="_dropzone_loading_animation" style="width: 50px;height: 50px;">
                 </div>
                 <div class="_dropzone_remove _dropzone_remove_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text>Delete file</span>
-                    <img src="{{asset('public/assets')}}/x-mark.png" style="width: 50px; height: 50px;">
+                    <img src="<?php echo e(asset('public/assets')); ?>/x-mark.png" style="width: 50px; height: 50px;">
                 </div>
 
             </div>
@@ -146,62 +146,55 @@
     <div class="mb-3 ">
         <a
         class="btn btn-primary order-from-button"
-        @if(Auth::user()->three_shape_access_token != null)
+        <?php if(Auth::user()->three_shape_access_token != null): ?>
         href="javascript:void(0);"
         id="select-from-3shape"
-        @else
-        href="{{url('/integration-3shape/obtain-authorization-code')}}"
-        @endif
+        <?php else: ?>
+        href="<?php echo e(url('/integration-3shape/obtain-authorization-code')); ?>"
+        <?php endif; ?>
         >
             <div class="d-flex align-items-center justify-content-center">
             <span>Import From</span>
-            <img class="" src="{{asset('public/assets/communicate-logo-white.png')}}" width="92px">
+            <img class="" src="<?php echo e(asset('public/assets/communicate-logo-white.png')); ?>" width="92px">
             </div>
         </a>
 
 
         <a class="btn btn-primary order-from-button"
-                @if(Auth::user()->medit_link_access_token != null)
+                <?php if(Auth::user()->medit_link_access_token != null): ?>
                         href="javascript:void(0);" id="select-from-medit-link"
-                @else
-                    href="{{url('/integration-medit-link/obtain-authorization-code')}}"
-                @endif
+                <?php else: ?>
+                    href="<?php echo e(url('/integration-medit-link/obtain-authorization-code')); ?>"
+                <?php endif; ?>
         >
             <div class="d-flex align-items-center justify-content-center">
             <span style="padding-left: 10px">Import From </span>
             <img class="ms-2" style="    padding-top: 8px; padding-right: 5px;
-            padding-bottom: 7px;" src="{{asset('public/assets/medit-link-logo.svg')}}" width="52px">
+            padding-bottom: 7px;" src="<?php echo e(asset('public/assets/medit-link-logo.svg')); ?>" width="52px">
             </div>
         </a>
 
-        @php
-            $allowedIps = ['::1', '136.185.98.178'];
-        @endphp
 
-        @if(in_array(request()->ip(), $allowedIps))
-
-            <a class="btn btn-primary order-from-button" href="javascript:void(0);" id="select-from-shining3d-link" >
-                <div class="d-flex align-items-center justify-content-center">
-                    <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D {{ request()->ip() }}</span>
-                </div>
-            </a>
-
-        @endif
+        <a class="btn btn-primary order-from-button" href="javascript:void(0);" id="select-from-shining3d-link" >
+            <div class="d-flex align-items-center justify-content-center">
+                <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D <?php echo e(request()->ip()); ?></span>
+            </div>
+        </a>
     </div>
 
-    @if($patient->phase > 1)
-        @if ($patient->dm_order_details == null || $patient->dm_order_details == '')
+    <?php if($patient->phase > 1): ?>
+        <?php if($patient->dm_order_details == null || $patient->dm_order_details == ''): ?>
             <div class="mb-3 order-from">
-                <button  class="btn btn-primary order-from-dental-monitoring-btn" data-bs-toggle="modal" data-bs-target="#order-from-dental-monitoring-modal" data-patient-treatment-plans-id="{{ $patient->id }}" data-patient-id="{{ $patient->patient_id }}">
+                <button  class="btn btn-primary order-from-dental-monitoring-btn" data-bs-toggle="modal" data-bs-target="#order-from-dental-monitoring-modal" data-patient-treatment-plans-id="<?php echo e($patient->id); ?>" data-patient-id="<?php echo e($patient->patient_id); ?>">
                     <div class="d-flex align-items-center justify-content-center">
                         <span>Order From</span>
-                        <img class="ms-2" style="padding-top: 8px; padding-bottom: 7px;" src="{{asset('public/assets/dm-logo.png')}}" width="100px">
+                        <img class="ms-2" style="padding-top: 8px; padding-bottom: 7px;" src="<?php echo e(asset('public/assets/dm-logo.png')); ?>" width="100px">
                     </div>
                 </button>
             </div>
-        @else
+        <?php else: ?>
             <div class="mb-3 order-from" >
-                @php
+                <?php
                 $reuploadStatuses = [
                     'OrderStatusChangedToWaitingForNewFilesStageFileIncorrect',
                     'OrderStatusChangedToWaitingForNewFilesStageFileUnusable',
@@ -212,37 +205,38 @@
                     'OrderStatusChangedToOrderRejectedAnatomicalChanges',
                     'OrderStatusChangedToOrderRejectedAdditionalTeeth',
                 ];
-            @endphp
+            ?>
 
-            @if (in_array($patient->dm_order_status, $reuploadStatuses))
+            <?php if(in_array($patient->dm_order_status, $reuploadStatuses)): ?>
                 <button class="btn btn-warning reupload-files-from-dental-monitoring-btn" data-bs-toggle="modal" data-bs-target="#reupload-from-dental-monitoring-modal"
-                    data-patient-treatment-plans-id="{{ $patient->id }}" data-patient-id="{{ $patient->patient_id }}">
+                    data-patient-treatment-plans-id="<?php echo e($patient->id); ?>" data-patient-id="<?php echo e($patient->patient_id); ?>">
                     <div class="d-flex align-items-center justify-content-center">
                         <span>Update Order From</span>
                         <img class="ms-2" style="padding-top: 8px; padding-bottom: 7px;"
-                            src="{{ asset('public/assets/dm-logo.png') }}" width="100px" alt="DM Logo">
+                            src="<?php echo e(asset('public/assets/dm-logo.png')); ?>" width="100px" alt="DM Logo">
                     </div>
                 </button>
-            @endif
-            @if ($patient->dm_order_status != 'OrderStatusChangedToOrderCompleted')
-                <button  class="btn btn-danger cancel-order-from-dental-monitoring-btn" data-bs-toggle="modal" data-bs-target="#cancel-order-from-dental-monitoring-modal" data-patient-treatment-plans-id="{{ $patient->id }}" data-patient-id="{{ $patient->patient_id }}">
+            <?php endif; ?>
+            <?php if($patient->dm_order_status != 'OrderStatusChangedToOrderCompleted'): ?>
+                <button  class="btn btn-danger cancel-order-from-dental-monitoring-btn" data-bs-toggle="modal" data-bs-target="#cancel-order-from-dental-monitoring-modal" data-patient-treatment-plans-id="<?php echo e($patient->id); ?>" data-patient-id="<?php echo e($patient->patient_id); ?>">
                     <div class="d-flex align-items-center justify-content-center">
                         <span>Cancel Order </span>
-                        <img class="ms-2" style="padding-top: 8px; padding-bottom: 7px;" src="{{asset('public/assets/dm-logo.png')}}" width="100px">
+                        <img class="ms-2" style="padding-top: 8px; padding-bottom: 7px;" src="<?php echo e(asset('public/assets/dm-logo.png')); ?>" width="100px">
                     </div>
                 </button>
-            @endif
+            <?php endif; ?>
             </div>
 
-        @endif
-    @endif
+        <?php endif; ?>
+    <?php endif; ?>
 
     <div class="mb-3 text-end">
         <button class="btn btn-primary btn-sm waves-effect waves-light px-3 previous-tab" data-target="#pill-tab-li-treatment-type">Previous</button>
-        <button class="btn btn-primary btn-sm waves-effect waves-light px-3" id="submit-scan-data" @if (@$patient->fl_upper_arch
-            && @$patient->fl_lower_arch) fn="1"
-            @else
-            fn="0" @endif>Next</button>
+        <button class="btn btn-primary btn-sm waves-effect waves-light px-3" id="submit-scan-data" <?php if(@$patient->fl_upper_arch
+            && @$patient->fl_lower_arch): ?> fn="1"
+            <?php else: ?>
+            fn="0" <?php endif; ?>>Next</button>
     </div>
 </div>
-{{-- scan Data End --}}
+
+<?php /**PATH D:\xampp\htdocs\secretalign\resources\views/patients/create-patients/scan-data.blade.php ENDPATH**/ ?>
