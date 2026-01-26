@@ -3892,20 +3892,27 @@ async function previewUpperStlFile(file_upper)
             });
 
             $(document).on('click', '#select-from-shining3d-link', function () {
-                var first_name = $("#first_name").val();
-                var last_name = $("#last_name").val();
-                const shining3dAuthUrl =
-                    'https://dental3dcloud.com/p/index?' +
-                    'codeChallenge={{ config("shining3d.shining3d_code_challenge") }}' +
-                    '&codeChallengeMethod={{ config("shining3d.shining3d_code_challenge_method") }}' +
-                    '&redirectUri={{ config("shining3d.shining3d_redirect_uri") }}' +
-                    '&responseType=code' +
-                    '&appId={{ config("shining3d.shining3d_app_id") }}' +
-                    '&thirdUserID={{ $patient->patient_id }}' +
-                    '&thirdUserName=' + first_name + ' ' + last_name;
+                var shining3d_user_id = $(this).attr('data-shining3d-user-id');
+                var shining3d_access_token = $(this).attr('data-shining3d-access-token');
+                if(shining3d_user_id == "" && shining3d_access_token == "") {
+                    var first_name = $("#first_name").val();
+                    var last_name = $("#last_name").val();
+                    const shining3dAuthUrl =
+                        'https://dental3dcloud.com/p/index?' +
+                        'codeChallenge={{ config("shining3d.shining3d_code_challenge") }}' +
+                        '&codeChallengeMethod={{ config("shining3d.shining3d_code_challenge_method") }}' +
+                        '&redirectUri={{ config("shining3d.shining3d_redirect_uri") }}' +
+                        '&responseType=code' +
+                        '&appId={{ config("shining3d.shining3d_app_id") }}' +
+                        '&thirdUserID={{ $patient->patient_id }}' +
+                        '&thirdUserName=' + first_name + ' ' + last_name;
 
-                // Redirect in same tab/page
-                window.location.href = shining3dAuthUrl;
+                    // Redirect in same tab/page
+                    window.location.href = shining3dAuthUrl;
+                } else {
+
+                }
+
             });
 
 
