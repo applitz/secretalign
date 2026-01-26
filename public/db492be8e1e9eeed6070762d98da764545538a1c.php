@@ -1,4 +1,5 @@
 
+
 <div class="tab-pane fade" id="pill-tab-div2" role="tabpanel">
     <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
         <div class="bg-warning me-3 icon-item"><span
@@ -175,12 +176,12 @@
         </a>
 
         <?php
-            $allowedIps = ['::1', '136.185.98.178'];
+            $allowedIps = ['::1', '136.185.119.226', '122.170.188.71'];
         ?>
 
         <?php if(in_array(request()->ip(), $allowedIps)): ?>
 
-            <a class="btn btn-primary order-from-button" href="javascript:void(0);" id="select-from-shining3d-link" >
+            <a class="btn btn-primary order-from-button" href="javascript:void(0);" id="select-from-shining3d-link" data-shining3d-user-id="<?php echo e(Auth::user()->shining3d_user_id); ?>" data-shining3d-access-token="<?php echo e(Auth::user()->shining3d_access_token); ?>" >
                 <div class="d-flex align-items-center justify-content-center">
                     <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D </span>
                 </div>

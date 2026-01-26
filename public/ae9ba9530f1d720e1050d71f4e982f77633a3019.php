@@ -1633,6 +1633,7 @@
 
                     <h5 class="">Additional Attachments</h5>
                     <div class="mb-3">
+                        
                         <?php
                                                 $additional_attachments = [];
                                                 if ($patient->additional_attachments != '' && $patient->additional_attachments !=

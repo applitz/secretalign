@@ -1973,6 +1973,14 @@
                                         </li>
                                     @endif
 
+                                    @if (in_array('Secret Blocks', $additional_attachments))
+                                        <li class="list-group-item">
+
+                                            <p class="text-muted"><i class="fas fa-check"></i> Secret Blocks</p>
+
+                                        </li>
+                                    @endif
+
                                     @php
                                         $add_pontic_ur = [];
                                         if ($patient->add_pontic_ur != '' && $patient->add_pontic_ur != null) {
