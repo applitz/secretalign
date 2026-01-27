@@ -330,9 +330,6 @@
                     @include('patients.create-patients.case-overview')
 
                     @include('patients.create-patients.confirm-submit')
-
-
-
                 </div>
             </div>
         </div>
@@ -3904,8 +3901,8 @@ async function previewUpperStlFile(file_upper)
                         '&redirectUri={{ config("shining3d.shining3d_redirect_uri") }}' +
                         '&responseType=code' +
                         '&appId={{ config("shining3d.shining3d_app_id") }}' +
-                        '&thirdUserID={{ $patient->patient_id }}' +
-                        '&thirdUserName=' + first_name + ' ' + last_name;
+                        '&thirdUserID={{ Auth::user()->id }}' +
+                        '&thirdUserName={{ Auth::user()->first_name }} {{ Auth::user()->last_name }}';
 
                     // Redirect in same tab/page
                     window.location.href = shining3dAuthUrl;
