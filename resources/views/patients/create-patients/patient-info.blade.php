@@ -1,5 +1,5 @@
 {{-- Patient Info Start --}}
-    <div class="tab-pane fade show active" id="pill-tab-div1" role="tabpanel">
+    <div class="tab-pane fade {{ $baseUrl == null && $code == null ? 'show active' : '' }}" id="pill-tab-div1" role="tabpanel">
         <div class="mb-3">
             <label class="form-label">Patient ID</label>
             <input type="text" class="form-control" placeholder="patient ID" disabled value="{{$hashids->encode($patient->patient_id)}}">

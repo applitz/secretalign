@@ -182,6 +182,20 @@ class RegisterPatient extends Controller
     }
     public function create(Request $request)
     {
+        $baseUrl = null;
+        $code = null;
+        if($request->has('code') && $request->has('codeChallenge') && $request->has('matchNode') && $request->has('domain')) {
+            $shining3d_user_id = Auth::user()->shining3d_user_id;
+            $shining3d_org_code = Auth::user()->shining3d_org_code;
+            $baseUrl = $request->get('domain');
+            $code = $request->get('code');
+            if($shining3d_org_code == null && $shining3d_user_id == null){
+                dd(getDynamicEncryptionToken($baseUrl));
+            }
+
+            // dd($baseUrl);
+        }
+
         //DB::BeginTransaction();
         if(Auth::user()->three_shape_refresh_token != null) {
             $this->ThreeShapeRefreshToken();
@@ -348,7 +362,7 @@ class RegisterPatient extends Controller
         }
 
         $changePlan = 'true';
-        return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan'));
+        return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code'));
     }
     protected function delete_patient_storage_dir($patient_id)
     {

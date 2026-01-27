@@ -41,6 +41,7 @@
         },
         "files": [
             "app/Helper/helper.php",
+            "app/Helper/shining3d.php",
             "app/Helper/GoogleDrive.php"
         ]
     },
