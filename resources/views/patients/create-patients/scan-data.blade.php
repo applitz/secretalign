@@ -1,6 +1,6 @@
 {{-- scan Data Start --}}
 
-<div class="tab-pane fade" id="pill-tab-div2" role="tabpanel">
+<div class="tab-pane fade {{ $baseUrl !== null && $code !== null ? 'show active' : '' }} " id="pill-tab-div2" role="tabpanel">
     <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
         <div class="bg-warning me-3 icon-item"><span
                 class="fas fa-exclamation-circle text-white fs-3"></span></div>
@@ -175,19 +175,15 @@
             </div>
         </a>
 
-        @php
-            $allowedIps = ['::1', '136.185.119.226', '122.170.188.71'];
-        @endphp
 
-        @if(in_array(request()->ip(), $allowedIps))
 
-            <a class="btn btn-primary order-from-button" href="javascript:void(0);" id="select-from-shining3d-link" data-shining3d-user-id="{{ Auth::user()->shining3d_user_id }}" data-shining3d-access-token="{{ Auth::user()->shining3d_access_token }}" >
+            <a class="btn btn-primary order-from-button"  style="display: none" href="javascript:void(0);" id="select-from-shining3d-link" data-shining3d-user-id="{{ Auth::user()->shining3d_user_id }}" data-shining3d-access-token="{{ Auth::user()->shining3d_access_token }}" >
                 <div class="d-flex align-items-center justify-content-center">
                     <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D </span>
                 </div>
             </a>
 
-        @endif
+
     </div>
 
     @if($patient->phase > 1)

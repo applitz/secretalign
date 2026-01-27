@@ -65,7 +65,7 @@ class Shining3dController extends Controller
     {
         $detail = Shining3Details::where('node', $region)->first();
         if ($detail?->auth_csrf) {
-        return $detail->auth_csrf;
+            return $detail->auth_csrf;
         }
 
 
