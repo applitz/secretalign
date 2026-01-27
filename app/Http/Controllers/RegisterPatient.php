@@ -109,6 +109,8 @@ class RegisterPatient extends Controller
     }
     public function edit($treatment_plan_id)
     {
+        $baseUrl = null;
+        $code = null;
         $changePlan = 'true';
         if(Auth::user()->three_shape_refresh_token != null) {
             $this->ThreeShapeRefreshToken();
@@ -162,11 +164,11 @@ class RegisterPatient extends Controller
             $mode = "edit";
             if ($patient->is_submitted == 1) {
                 if ($patient->is_editable == 1) {
-                    return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails"));
+                    return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code'));
                 }
 
             } else {
-                 return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails"));
+                 return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code'));
             }
         }
         abort(403, "Unauthorized request!");
@@ -190,9 +192,8 @@ class RegisterPatient extends Controller
             $baseUrl = $request->get('domain');
             $code = $request->get('code');
             if($shining3d_org_code == null && $shining3d_user_id == null){
-                dd(getDynamicEncryptionToken($baseUrl));
+                dd($code);
             }
-
             // dd($baseUrl);
         }
 
