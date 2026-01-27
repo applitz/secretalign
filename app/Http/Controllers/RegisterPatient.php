@@ -173,6 +173,7 @@ class RegisterPatient extends Controller
         }
         abort(403, "Unauthorized request!");
     }
+
     private function splitByLastSpace($string) {
         $lastSpacePos = strrpos($string, ' ');
         if ($lastSpacePos === false) {
@@ -192,7 +193,10 @@ class RegisterPatient extends Controller
             $baseUrl = $request->get('domain');
             $code = $request->get('code');
             if($shining3d_org_code == null && $shining3d_user_id == null){
-                dd($code);
+                $csrfToken = getDynamicEncryptionToken($baseUrl);
+                $connectionAuthorization = connect($baseUrl, $csrfToken);
+                $userDetails = exchangeCodeForToken($code, $baseUrl);
+                dd($userDetails);
             }
             // dd($baseUrl);
         }
