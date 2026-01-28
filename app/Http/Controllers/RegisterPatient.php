@@ -196,7 +196,14 @@ class RegisterPatient extends Controller
                 $csrfToken = getDynamicEncryptionToken($baseUrl);
                 $connectionAuthorization = connect($baseUrl, $csrfToken);
                 $userDetails = exchangeCodeForToken($code, $baseUrl);
-                dd($userDetails);
+                // dd($userDetails['result']['userId']);
+
+                $factories = $userDetails['result']['factories'];
+
+                $clinic = collect($factories)
+                    ->firstWhere('name', Auth::user()->shining3d_org_name);
+
+                dd($clinic);
             }
             // dd($baseUrl);
         }
