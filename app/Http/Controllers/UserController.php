@@ -151,11 +151,13 @@ class UserController extends Controller
             $first_name = $request->input('first_name');
             $email = $request->input('email');
             $doctor_id = $request->input('doctor_id');
+            $shining3d_org_name = $request->input('shining3d_org_name');
             DB::table('users')->where('id', $id)->update([
                 'first_name' => $first_name,
                 'last_name' => $request->input('last_name'),
                 'email' => $email,
                 'doctor_id' => $doctor_id,
+                'shining3d_org_name' => $shining3d_org_name,
                 'phone_number' => $request->input('phone_number'),
                 "billing_address" => $request->input('billing_address'),
                 "shipping_address" => $request->input('shipping_address')
@@ -210,7 +212,7 @@ class UserController extends Controller
                 'phone_number' => $request->input('phone_number'),
                 "billing_address" => $request->input('billing_address'),
                 "shipping_address" => $request->input('shipping_address'),
-                  "advisor_price" => $request->input('advisor_price')
+                "advisor_price" => $request->input('advisor_price')
             ]);
             if (DB::table('users')->where('role', 'doctor')->where('id', $id)->exists()) {
                 DB::table('users')->where('id', $id)->update([

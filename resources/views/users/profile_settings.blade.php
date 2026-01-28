@@ -90,10 +90,23 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label" for="doctor_id">Doctor Id</label>
+                            <label class="form-label" for="doctor_id">Dental Monitoring Doctor Id</label>
                             <input class="form-control @error('doctor_id') is-invalid @enderror" id="doctor_id"
                                 value="{{ $user->doctor_id }}" type="text" placeholder="Please enter dental-monitoring doctor Id" name="doctor_id">
                             @error('doctor_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="shining3d_org_name">Shining3d Organization Name
+                                <a href="javascript:;" class="text-info" data-bs-toggle="modal" data-bs-target="#shining3d-organization-name-modal">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                            </label>
+                            <input class="form-control @error('shining3d_org_name') is-invalid @enderror" id="shining3d_org_name"
+                                value="{{ $user->shining3d_org_name }}" type="text" placeholder="Please enter shining3d organization name" name="shining3d_org_name">
+                            @error('shining3d_org_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

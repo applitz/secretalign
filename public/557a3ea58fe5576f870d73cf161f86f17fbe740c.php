@@ -357,6 +357,28 @@
 
 
 
+<div class="modal fade" id="shining3d-organization-name-modal" tabindex="-1" aria-labelledby="shining3d-organization-name-modal-Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="shining3d-organization-name-modal-Label">Shining3d Organization Name</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <img src="<?php echo e(asset('public/assets/shining3d-organization-name.jpg')); ?>" alt="Precision Cuts Placement" class="img-fluid shadow-sm">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <div class="modal fade" id="secret-blocks-modal" tabindex="-1" aria-labelledby="secret-blocks-modal-Label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
