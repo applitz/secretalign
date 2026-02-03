@@ -197,8 +197,7 @@ class RegisterPatient extends Controller
                 $csrfToken = getDynamicEncryptionToken($baseUrl);
 
                 if($csrfToken['status'] == 'success') {
-                    $connectionAuthorization = connect($baseUrl, $csrfToken['result']);
-
+                    $connectionAuthorization = json_decode(connect($baseUrl, $csrfToken['result']), true);
                     if($connectionAuthorization['status'] == 'success') {
                         $userDetails = exchangeCodeForToken($code, $baseUrl);
                         if($userDetails['status'] == 'success') {

@@ -1,7 +1,7 @@
 <?php
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
-
+use Nette\Utils\Json;
 
     function getDynamicEncryptionToken($domainName) {
         $response = Http::withHeaders([
@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Http;
             throw new \RuntimeException('Failed to get auth token');
         }
 
-        return $response;
+        return Json::encode($response);
     }
 
 
