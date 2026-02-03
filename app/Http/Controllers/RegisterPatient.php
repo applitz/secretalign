@@ -203,7 +203,7 @@ class RegisterPatient extends Controller
                         if($userDetails['status'] == 'success') {
                             if($userDetails['result'] && $userDetails['result']['factories'] && count($userDetails['result']['factories']) > 0) {
                                  // Find clinic by name
-                                $factories = $userDetails['result']['factories'];
+                                $factories = $userDetails;
                                 $clinic = collect($factories)
                                 ->firstWhere('name', Auth::user()->shining3d_org_name);
 
