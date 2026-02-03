@@ -202,12 +202,12 @@ class RegisterPatient extends Controller
                         $userDetails = exchangeCodeForToken($code, $baseUrl);
                         if($userDetails['status'] == 'success') {
                             if($userDetails['result'] && $userDetails['result']['factories'] && count($userDetails['result']['factories']) > 0) {
-                                 // Find clinic by name
-                                $factories = $userDetails;
-                                $clinic = collect($factories)
+                                // Find clinic by name
+                                $userId = $userDetails['result']['userId'];
+                                $clinic = collect($userDetails['factories'])
                                 ->firstWhere('name', Auth::user()->shining3d_org_name);
-
-                                dd($clinic, $factories);
+                                $orgCode = $clinic['orgCode'];
+                                dd($clinic, $userId, $orgCode);
                             }
                             $scanError = 'Failed to retrieve user details from SHINING 3D.';
                         }
