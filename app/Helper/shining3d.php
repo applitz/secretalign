@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Http;
                 'X-Auth-AppID' => config('shining3d.shining3d_app_id'),
             ])->get($domainName . '/sdk/auth/dynamicEncodeToken')->json();
 
-        return $response['result'];
+        return $response;
     }
 
     function connect(string $domainName, $csrfToken): string
@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Http;
             throw new \RuntimeException('Failed to get auth token');
         }
 
-        return $response['result'];
+        return $response;
     }
 
 

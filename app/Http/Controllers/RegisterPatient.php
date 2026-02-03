@@ -185,6 +185,7 @@ class RegisterPatient extends Controller
     }
     public function create(Request $request)
     {
+        $scanError = null;
         $baseUrl = null;
         $code = null;
         if($request->has('code') && $request->has('codeChallenge') && $request->has('matchNode') && $request->has('domain')) {
@@ -194,16 +195,28 @@ class RegisterPatient extends Controller
             $code = $request->get('code');
             if($shining3d_org_code == null && $shining3d_user_id == null){
                 $csrfToken = getDynamicEncryptionToken($baseUrl);
-                $connectionAuthorization = connect($baseUrl, $csrfToken);
-                $userDetails = exchangeCodeForToken($code, $baseUrl);
-                // dd($userDetails['result']['userId']);
 
-                $factories = $userDetails['result']['factories'];
+                if($csrfToken['status'] == 'success') {
+                    $connectionAuthorization = connect($baseUrl, $csrfToken['result']);
 
-                $clinic = collect($factories)
-                    ->firstWhere('name', Auth::user()->shining3d_org_name);
+                    if($connectionAuthorization['status'] == 'success') {
+                        $userDetails = exchangeCodeForToken($code, $baseUrl);
+                        if($userDetails['status'] == 'success') {
+                            if($userDetails['result'] && $userDetails['result']['factories'] && count($userDetails['result']['factories']) > 0) {
+                                 // Find clinic by name
+                                $factories = $userDetails['result']['factories'];
+                                $clinic = collect($factories)
+                                ->firstWhere('name', Auth::user()->shining3d_org_name);
 
-                dd($clinic);
+                                dd($clinic, $factories);
+                            }
+                            $scanError = 'Failed to retrieve user details from SHINING 3D.';
+                        }
+                        $scanError = 'Failed to exchange authorization code with SHINING 3D.';
+                    }
+                    $scanError = 'Failed to establish secure connection with SHINING 3D.';
+                }
+                $scanError = 'Failed to generate secure authentication token from SHINING 3D.';
             }
             // dd($baseUrl);
         }
