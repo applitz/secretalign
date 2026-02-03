@@ -204,7 +204,7 @@ class RegisterPatient extends Controller
                             if($userDetails['result'] && $userDetails['result']['factories'] && count($userDetails['result']['factories']) > 0) {
                                 // Find clinic by name
                                 $userId = $userDetails['result']['userId'];
-                                $clinic = collect($userDetails['factories'])
+                                $clinic = collect($userDetails['result']['factories'])
                                 ->firstWhere('name', Auth::user()->shining3d_org_name);
                                 $orgCode = $clinic['orgCode'];
                                 dd($clinic, $userId, $orgCode);
