@@ -204,10 +204,11 @@ class RegisterPatient extends Controller
                             if($userDetails['result'] && $userDetails['result']['factories'] && count($userDetails['result']['factories']) > 0) {
                                  // Find clinic by name
                                 $factories = $userDetails;
-                                $clinic = collect($factories)
+                                $userId = $userDetails['result']['userId'];
+                                $clinic = collect($factories['result']['factories'])
                                 ->firstWhere('name', Auth::user()->shining3d_org_name);
-
-                                dd($clinic, $factories);
+                                $orgCode = $clinic['orgCode'];
+                                dd($clinic, $userId, $orgCode);
                             }
                             $scanError = 'Failed to retrieve user details from SHINING 3D.';
                         }
