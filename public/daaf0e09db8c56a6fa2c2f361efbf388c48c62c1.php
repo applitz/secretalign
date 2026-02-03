@@ -3900,7 +3900,7 @@ async function previewUpperStlFile(file_upper)
                         '&responseType=code' +
                         '&appId=<?php echo e(config("shining3d.shining3d_app_id")); ?>' +
                         '&thirdUserID=<?php echo e(Auth::user()->id); ?>' +
-                        '&thirdUserName=<?php echo e(Auth::user()->first_name); ?> <?php echo e(Auth::user()->last_name); ?>';
+                        '&thirdUserName=<?php echo e(Auth::user()->shining3d_org_name); ?>';
 
                     // Redirect in same tab/page
                     window.location.href = shining3dAuthUrl;

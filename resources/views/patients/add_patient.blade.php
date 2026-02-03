@@ -3902,7 +3902,7 @@ async function previewUpperStlFile(file_upper)
                         '&responseType=code' +
                         '&appId={{ config("shining3d.shining3d_app_id") }}' +
                         '&thirdUserID={{ Auth::user()->id }}' +
-                        '&thirdUserName={{ Auth::user()->first_name }} {{ Auth::user()->last_name }}';
+                        '&thirdUserName={{ Auth::user()->shining3d_org_name }}';
 
                     // Redirect in same tab/page
                     window.location.href = shining3dAuthUrl;
