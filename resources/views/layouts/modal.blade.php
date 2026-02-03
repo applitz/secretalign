@@ -378,6 +378,39 @@
 </div>
 
 
+{{-- shining3d-org-name-modal --}}
+<div class="modal fade" id="shining3d-org-name-modal" tabindex="-1" aria-labelledby="shining3d-org-name-modal-Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="shining3d-org-name-modal-Label">
+                    Update Shining3D Organization Name
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <h6 class="mb-0">
+                    To fetch scans from Shining3D, please update your Shining3D Organization Name in your Profile Settings.
+                </h6>
+            </div>
+
+            <div class="modal-footer">
+                <a class="btn btn-primary" href="{{ route('profile-settings') }}">
+                    Go to Profile Settings
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
 {{-- secret-blocks-modal --}}
 <div class="modal fade" id="secret-blocks-modal" tabindex="-1" aria-labelledby="secret-blocks-modal-Label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
