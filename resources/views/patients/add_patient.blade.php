@@ -3326,7 +3326,8 @@ async function previewUpperStlFile(file_upper)
 
         $(document).ready(function() {
             const fp = flatpickr($(".pickr"), {});
-            document.getElementById("startDate").addEventListener("change", function () {
+            // document.getElementById("startDate").addEventListener("change", function () {
+            $(document).on('change', '#startDate', function () {
                 let startValue = this.value;
                 if (!startValue) return;
 
@@ -3344,7 +3345,8 @@ async function previewUpperStlFile(file_upper)
             });
 
 
-            document.getElementById("endDate").addEventListener("change", function () {
+            // document.getElementById("endDate").addEventListener("change", function () {
+            $(document).on('change', '#endDate', function () {
                 let endValue = this.value;
                 if (!endValue) return;
 
