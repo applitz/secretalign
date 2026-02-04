@@ -190,48 +190,42 @@ class RegisterPatient extends Controller
         $baseUrl = null;
         $code = null;
         if($request->has('code') && $request->has('codeChallenge') && $request->has('matchNode') && $request->has('domain')) {
+
             $shining3d_user_id = Auth::user()->shining3d_user_id;
             $shining3d_org_code = Auth::user()->shining3d_org_code;
             $baseUrl = $request->get('domain');
             $code = $request->get('code');
-            if($shining3d_org_code == null && $shining3d_user_id == null){
-                $csrfToken = getDynamicEncryptionToken($baseUrl);
 
-                if($csrfToken['status'] == 'success') {
-                    $dataShining3d['csrfToken'] = $csrfToken;
-                    $connectionAuthorization = json_decode(connect($baseUrl, $csrfToken['result']), true);
-
-                    if($connectionAuthorization['status'] == 'success') {
-                         $dataShining3d['connectionAuthorization'] = $connectionAuthorization;
-                        $userDetails = exchangeCodeForToken($code, $baseUrl);
-                        if($userDetails['status'] == 'success') {
-                            if($userDetails['result'] && $userDetails['result']['factories'] && count($userDetails['result']['factories']) > 0) {
-                                // Find clinic by name
-                                $userId = $userDetails['result']['userId'];
-                                $dataShining3d['userId'] = $userId;
-                                $clinic = collect($userDetails['result']['factories'])
-                                ->firstWhere('name', Auth::user()->shining3d_org_name);
-                                $orgCode = $clinic['orgCode'];
-                                $dataShining3d['orgCode'] = $orgCode;
-                                $objUser = User::find(Auth::user()->id);
-                                $objUser->shining3d_user_id = $userId;
-                                $objUser->shining3d_org_code = $orgCode;
-                                $objUser->save();
-
-                                $dataDistribution = $clinic['dataDistribution'];
-                                $dataShining3d['dataDistribution'] = $dataDistribution;
-
-                            }
-                            $scanError = 'Failed to retrieve user details from SHINING 3D.';
+            $csrfToken = getDynamicEncryptionToken($baseUrl);
+            if($csrfToken['status'] == 'success') {
+                $dataShining3d['csrfToken'] = $csrfToken;
+                $connectionAuthorization = json_decode(connect($baseUrl, $csrfToken['result']), true);
+                if($connectionAuthorization['status'] == 'success') {
+                    $dataShining3d['connectionAuthorization'] = $connectionAuthorization;
+                    $userDetails = exchangeCodeForToken($code, $baseUrl);
+                    if($userDetails['status'] == 'success') {
+                        if($userDetails['result'] && $userDetails['result']['factories'] && count($userDetails['result']['factories']) > 0) {
+                            // Find clinic by name
+                            $userId = $userDetails['result']['userId'];
+                            $dataShining3d['userId'] = $userId;
+                            $clinic = collect($userDetails['result']['factories'])
+                            ->firstWhere('name', Auth::user()->shining3d_org_name);
+                            $orgCode = $clinic['orgCode'];
+                            $dataShining3d['orgCode'] = $orgCode;
+                            $objUser = User::find(Auth::user()->id);
+                            $objUser->shining3d_user_id = $userId;
+                            $objUser->shining3d_org_code = $orgCode;
+                            $objUser->save();
+                            $dataDistribution = $clinic['dataDistribution'];
+                            $dataShining3d['dataDistribution'] = $dataDistribution;
                         }
-                        $scanError = 'Failed to exchange authorization code with SHINING 3D.';
+                        $scanError = 'Failed to retrieve user details from SHINING 3D.';
                     }
-                    $scanError = 'Failed to establish secure connection with SHINING 3D.';
+                    $scanError = 'Failed to exchange authorization code with SHINING 3D.';
                 }
-                $scanError = 'Failed to generate secure authentication token from SHINING 3D.';
+                $scanError = 'Failed to establish secure connection with SHINING 3D.';
             }
-            // dd($baseUrl);
-            dd($dataShining3d);
+            $scanError = 'Failed to generate secure authentication token from SHINING 3D.';
         }
 
         //DB::BeginTransaction();
@@ -402,6 +396,7 @@ class RegisterPatient extends Controller
         $changePlan = 'true';
         return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code', 'dataShining3d', 'scanError'));
     }
+
     protected function delete_patient_storage_dir($patient_id)
     {
         $directory = storage_path('/PatientFiles/Patient' . $patient_id);
