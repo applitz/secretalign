@@ -232,7 +232,7 @@ class RegisterPatient extends Controller
             }
             // dd($baseUrl);
         }
-
+        // dd($dataShining3d);
         //DB::BeginTransaction();
         if(Auth::user()->three_shape_refresh_token != null) {
             $this->ThreeShapeRefreshToken();
@@ -399,7 +399,7 @@ class RegisterPatient extends Controller
         }
 
         $changePlan = 'true';
-        return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code', 'dataShining3d'));
+        return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code', 'dataShining3d', 'scanError'));
     }
     protected function delete_patient_storage_dir($patient_id)
     {

@@ -622,6 +622,8 @@
 
 
 @endif
+
+    @if( request()->get('code') && request()->get('matchNode') && request()->get('codeChallenge') && request()->get('domain'))
     <!--  Order From shining3d Modal Start -->
         <div class="modal fade" id="order-from-shining3d-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -643,7 +645,12 @@
                                         <label for="scanType" class="form-label">Select Region</label>
                                         <select id="scanRegion" class="form-select">
                                             <option value="">-- Select Region Based on Your Location --</option>
-
+                                            @forEach($dataShining3d['dataDistribution'] as $region)
+                                                <option value="{{ $region['code'] }}">
+                                                    {{ $region['name'] }} –
+                                                    {{ $region['description'] }}
+                                                </option>
+                                            @endforeach
                                             <option value="frankfurt">
                                                 Europe (Frankfurt) – Recommended for EU countries
                                             </option>
@@ -716,6 +723,22 @@
 
         </div>
     <!-- Order From shining3d Modal End -->
+
+
+        {{-- <div class="modal fade" id="authModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Authorization Required</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        Authorization data detected from URL.
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+    @endif
 @stop
 
 @section('javascript')
@@ -3930,7 +3953,7 @@ async function previewUpperStlFile(file_upper)
         const codeChallenge = params.get('codeChallenge');
         const domain = params.get('domain');
         if (code && matchNode && codeChallenge && domain) {
-            $('#authModal').modal('show');
+            $('#order-from-shining3d-modal').modal('show');
         }
 
         DmIntegration.init();

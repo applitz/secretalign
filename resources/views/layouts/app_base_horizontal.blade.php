@@ -1299,49 +1299,50 @@
     </script>
 
     <script>
-        document.getElementById('savePreviewBtn').addEventListener('click', function() {
-        const form = document.getElementById('treatmentForm');
-        const nameInput = form.coworker_name;
-        const errorDiv = document.getElementById('coworker_name_error');
-        errorDiv.innerText = '';
+        // document.getElementById('savePreviewBtn').addEventListener('click', function() {
+        $(document).on('click', '#savePreviewBtn', function () {
+            const form = document.getElementById('treatmentForm');
+            const nameInput = form.coworker_name;
+            const errorDiv = document.getElementById('coworker_name_error');
+            errorDiv.innerText = '';
 
-        if (nameInput.value.trim() === '') {
-            errorDiv.innerText = 'Coworker name is required';
-            nameInput.focus();
-            return;
-        }
-
-        const formData = new FormData(form);
-
-        this.disabled = true;
-        this.innerText = "Saving...";
-
-        fetch(form.action, {
-            method: "POST",
-            body: formData,
-            headers: {
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            if (nameInput.value.trim() === '') {
+                errorDiv.innerText = 'Coworker name is required';
+                nameInput.focus();
+                return;
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            this.disabled = false;
-            this.innerText = "Save & Preview";
-            if (data.success) {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('treatmentModal'));
-                modal.hide();
-                window.open(`/staff/treatment/preview/${data.id}`, '_blank');
-            } else {
-                alert('Something went wrong while saving.');
-            }
-        })
-        .catch(error => {
-            console.error(error);
-            this.disabled = false;
-            this.innerText = "Save & Preview";
-            alert("Error saving form!");
+
+            const formData = new FormData(form);
+
+            this.disabled = true;
+            this.innerText = "Saving...";
+
+            fetch(form.action, {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                this.disabled = false;
+                this.innerText = "Save & Preview";
+                if (data.success) {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('treatmentModal'));
+                    modal.hide();
+                    window.open(`/staff/treatment/preview/${data.id}`, '_blank');
+                } else {
+                    alert('Something went wrong while saving.');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                this.disabled = false;
+                this.innerText = "Save & Preview";
+                alert("Error saving form!");
+            });
         });
-    });
     </script>
 
     </body>
