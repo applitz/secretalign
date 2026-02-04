@@ -3369,7 +3369,8 @@ async function previewUpperStlFile(file_upper)
             });
 
 
-            document.getElementById("endDate").addEventListener("change", function () {
+            // document.getElementById("endDate").addEventListener("change", function () {
+            $(document).on('change', '#endDate', function () {
                 let endValue = this.value;
                 if (!endValue) return;
 
