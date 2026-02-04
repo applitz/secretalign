@@ -622,106 +622,8 @@
 
 
 @endif
-
-    @if( request()->get('code') && request()->get('matchNode') && request()->get('codeChallenge') && request()->get('domain'))
-        <!--  Order From shining3d Modal Start -->
-            <div class="modal fade" id="order-from-shining3d-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-xl">
-                    <div class="modal-content">
-
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="orderFromShining3dLabel">
-                                Order From Shining3d
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-
-                        <div class="modal-body">
-                            <div id="shining3d-error" class="alert alert-danger py-1" style="display:none; font-size: 14px;"></div>
-                                @csrf
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="scanType" class="form-label">Select Region</label>
-                                            <select id="scanRegion" class="form-select">
-                                                <option value="">-- Select Region Based on Your Location --</option>
-                                                @forEach($dataShining3d['dataDistribution'] as )
-                                                @endforeach
-                                                <option value="frankfurt">
-                                                    Europe (Frankfurt) – Recommended for EU countries
-                                                </option>
-
-                                                <option value="hz">
-                                                    China (Hangzhou) – Mainland China users
-                                                </option>
-
-                                                <option value="ru">
-                                                    Russia – Users located in Russia
-                                                </option>
-
-                                                <option value="silicon">
-                                                    USA (Silicon Valley) – North America users
-                                                </option>
-
-                                                <option value="tokyo">
-                                                    Japan (Tokyo) – Japan & East Asia users
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="startDate" class="form-label">Start Date</label>
-                                            <input type="text" id="startDate" class="form-control pickr flatpickr-input" placeholder="Select start date">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="endDate" class="form-label">End Date</label>
-                                            <input type="text" id="endDate" class="form-control pickr flatpickr-input" placeholder="Select end date">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3" id="caseSearchRow" style="display:none;">
-                                    <div class="col-12">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered table-striped align-middle">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th>Patient Name</th>
-                                                        <th>Phone</th>
-                                                        <th>Sex</th>
-                                                        <th>Lab Name</th>
-                                                        <th>Status</th>
-                                                        <th>Created At</th>
-                                                        <th>Scan Files</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="shining3dOrderTable">
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
-                            <button type="button" class="btn btn-danger" id="order-from-shining3d">Get Sacn</button>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        <!-- Order From shining3d Modal End -->
-    @endif
     <!--  Order From shining3d Modal Start -->
-        {{-- <div class="modal fade" id="order-from-shining3d-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
+        <div class="modal fade" id="order-from-shining3d-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content">
 
@@ -812,7 +714,7 @@
                 </div>
             </div>
 
-        </div> --}}
+        </div>
     <!-- Order From shining3d Modal End -->
 @stop
 
@@ -4022,14 +3924,6 @@ async function previewUpperStlFile(file_upper)
 
 <script>
     $(document).ready(function() {
-        // const params = new URLSearchParams(window.location.search);
-        // const code = params.get('code');
-        // const matchNode = params.get('matchNode');
-        // const codeChallenge = params.get('codeChallenge');
-        // const domain = params.get('domain');
-        // if (code && matchNode && codeChallenge && domain) {
-        //     $('#authModal').modal('show');
-        // }
         DmIntegration.init();
         AddPatient.init();
         Shining3d.init();
