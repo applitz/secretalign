@@ -175,7 +175,7 @@
             </div>
         </a>
 
-        {{-- @if( Auth::user()->email == 'shubham.kakadiya02@gmail.com' || Auth::user()->email == 'wisherw064@gmail.com') --}}
+        @if( Auth::user()->email == 'shubham.kakadiya02@gmail.com' || Auth::user()->email == 'wisherw064@gmail.com')
             @if(Auth::user()->shining3d_org_name == null )
                 <a class="btn btn-primary order-from-button" href="javascript:void(0);" id="select-from-shining3d-link" data-bs-toggle="modal" data-bs-target="#shining3d-org-name-modal" >
                     <div class="d-flex align-items-center justify-content-center">
@@ -189,7 +189,7 @@
                     </div>
                 </a>
             @endif
-        {{-- @endif --}}
+        @endif
 
     </div>
 
