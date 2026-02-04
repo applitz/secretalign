@@ -3349,7 +3349,9 @@ async function previewUpperStlFile(file_upper)
 
         $(document).ready(function() {
             const fp = flatpickr($(".pickr"), {});
-            document.getElementById("startDate").addEventListener("change", function () {
+            // document.getElementById("startDate").addEventListener("change", function () {
+            $(document).on('change', '#startDate', function () {
+
                 let startValue = this.value;
                 if (!startValue) return;
 
