@@ -1299,7 +1299,9 @@
     </script>
 
     <script>
-        document.getElementById('savePreviewBtn').addEventListener('click', function() {
+        // document.getElementById('savePreviewBtn').addEventListener('click', function() {
+        $(document).on('click', '#savePreviewBtn', function () {
+
         const form = document.getElementById('treatmentForm');
         const nameInput = form.coworker_name;
         const errorDiv = document.getElementById('coworker_name_error');
