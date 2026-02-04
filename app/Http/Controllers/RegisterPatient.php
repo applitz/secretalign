@@ -185,6 +185,7 @@ class RegisterPatient extends Controller
     }
     public function create(Request $request)
     {
+        $dataShining3d = [];
         $scanError = null;
         $baseUrl = null;
         $code = null;
@@ -207,7 +208,14 @@ class RegisterPatient extends Controller
                                 $clinic = collect($userDetails['result']['factories'])
                                 ->firstWhere('name', Auth::user()->shining3d_org_name);
                                 $orgCode = $clinic['orgCode'];
-                                dd($clinic, $userId, $orgCode);
+
+                                $objUser = User::find(Auth::user()->id);
+                                $objUser->shining3d_user_id = $userId;
+                                $objUser->shining3d_org_code = $orgCode;
+                                $objUser->save();
+
+                                $dataDistribution = $clinic['dataDistribution'];
+                                dd($dataDistribution);
                             }
                             $scanError = 'Failed to retrieve user details from SHINING 3D.';
                         }
