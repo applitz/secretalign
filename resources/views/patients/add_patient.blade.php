@@ -645,11 +645,11 @@
                                         <label for="scanType" class="form-label">Select Region</label>
                                         <select id="scanRegion" class="form-select">
                                             <option value="">-- Select Region Based on Your Location --</option>
-                                            @forEach($dataShining3d['dataDistribution'] as  $region)
+                                            {{-- @forEach($dataShining3d['dataDistribution'] as  $region)
                                                 <option value="{{ $region['regionCode'] }}">
                                                     {{ $region['regionName'] }}
                                                 </option>
-                                            @endforeach
+                                            @endforeach --}}
                                             <option value="frankfurt">
                                                 Europe (Frankfurt) – Recommended for EU countries
                                             </option>
