@@ -620,8 +620,6 @@
 
 
 <?php endif; ?>
-
-    <?php if( request()->get('code') && request()->get('matchNode') && request()->get('codeChallenge') && request()->get('domain')): ?>
     <!--  Order From shining3d Modal Start -->
         <div class="modal fade" id="order-from-shining3d-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -716,10 +714,6 @@
 
         </div>
     <!-- Order From shining3d Modal End -->
-
-
-        
-    <?php endif; ?>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('javascript'); ?>
@@ -3330,7 +3324,8 @@ async function previewUpperStlFile(file_upper)
 
         $(document).ready(function() {
             const fp = flatpickr($(".pickr"), {});
-            document.getElementById("startDate").addEventListener("change", function () {
+            // document.getElementById("startDate").addEventListener("change", function () {
+            $(document).on('change', '#startDate', function () {
                 let startValue = this.value;
                 if (!startValue) return;
 
@@ -3348,7 +3343,8 @@ async function previewUpperStlFile(file_upper)
             });
 
 
-            document.getElementById("endDate").addEventListener("change", function () {
+            // document.getElementById("endDate").addEventListener("change", function () {
+            $(document).on('change', '#endDate', function () {
                 let endValue = this.value;
                 if (!endValue) return;
 
@@ -3928,15 +3924,6 @@ async function previewUpperStlFile(file_upper)
 
 <script>
     $(document).ready(function() {
-        const params = new URLSearchParams(window.location.search);
-        const code = params.get('code');
-        const matchNode = params.get('matchNode');
-        const codeChallenge = params.get('codeChallenge');
-        const domain = params.get('domain');
-        if (code && matchNode && codeChallenge && domain) {
-            $('#order-from-shining3d-modal').modal('show');
-        }
-
         DmIntegration.init();
         AddPatient.init();
         Shining3d.init();
