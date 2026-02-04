@@ -631,7 +631,7 @@
 
                     <div class="modal-header">
                         <h5 class="modal-title" id="orderFromShining3dLabel">
-                            Order From Shining3d
+                            Import From Shining3d
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -645,11 +645,9 @@
                                         <label for="scanType" class="form-label">Select Region</label>
                                         <select id="scanRegion" class="form-select">
                                             <option value="">-- Select Region Based on Your Location --</option>
-                                            {{-- @forEach($dataShining3d['dataDistribution'] as  $region)
-                                                <option value="{{ $region['regionCode'] }}">
-                                                    {{ $region['regionName'] }}
-                                                </option>
-                                            @endforeach --}}
+                                            @forEach($dataShining3d['dataDistribution'] as  $region)
+                                                <option value="{{ $region['domain'] }}"> {{ $region['matchNode'] }}</option>
+                                            @endforeach
                                             <option value="frankfurt">
                                                 Europe (Frankfurt) – Recommended for EU countries
                                             </option>
