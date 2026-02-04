@@ -645,28 +645,42 @@
                                         <label for="scanType" class="form-label">Select Region</label>
                                         <select id="scanRegion" class="form-select">
                                             <option value="">-- Select Region Based on Your Location --</option>
-                                            @forEach($dataShining3d['dataDistribution'] as  $region)
-                                                <option value="{{ $region['domain'] }}"> {{ $region['matchNode'] }}</option>
+                                            @foreach ($dataShining3d['dataDistribution'] as $region)
+                                                @switch($region['matchNode'])
+
+                                                    @case('frankfurt')
+                                                        <option value="frankfurt">
+                                                            Europe (Frankfurt) – Recommended for EU countries
+                                                        </option>
+                                                        @break
+
+                                                    @case('hz')
+                                                        <option value="hz">
+                                                            China (Hangzhou) – Mainland China users
+                                                        </option>
+                                                        @break
+
+                                                    @case('ru')
+                                                        <option value="ru">
+                                                            Russia – Users located in Russia
+                                                        </option>
+                                                        @break
+
+                                                    @case('silicon')
+                                                        <option value="silicon">
+                                                            USA (Silicon Valley) – North America users
+                                                        </option>
+                                                        @break
+
+                                                    @case('tokyo')
+                                                        <option value="tokyo">
+                                                            Japan (Tokyo) – Japan & East Asia users
+                                                        </option>
+                                                        @break
+
+                                                @endswitch
                                             @endforeach
-                                            <option value="frankfurt">
-                                                Europe (Frankfurt) – Recommended for EU countries
-                                            </option>
 
-                                            <option value="hz">
-                                                China (Hangzhou) – Mainland China users
-                                            </option>
-
-                                            <option value="ru">
-                                                Russia – Users located in Russia
-                                            </option>
-
-                                            <option value="silicon">
-                                                USA (Silicon Valley) – North America users
-                                            </option>
-
-                                            <option value="tokyo">
-                                                Japan (Tokyo) – Japan & East Asia users
-                                            </option>
                                         </select>
                                     </div>
                                 </div>
