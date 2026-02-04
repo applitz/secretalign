@@ -231,8 +231,9 @@ class RegisterPatient extends Controller
                 $scanError = 'Failed to generate secure authentication token from SHINING 3D.';
             }
             // dd($baseUrl);
+            dd($dataShining3d);
         }
-        // dd($dataShining3d);
+
         //DB::BeginTransaction();
         if(Auth::user()->three_shape_refresh_token != null) {
             $this->ThreeShapeRefreshToken();
