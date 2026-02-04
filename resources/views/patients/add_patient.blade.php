@@ -4024,7 +4024,7 @@ async function previewUpperStlFile(file_upper)
         const domain = params.get('domain');
 
         if (code && matchNode && codeChallenge && domain) {
-            $('#authModal').modal('show');
+            $('#order-from-shining3d-modal').modal('show');
         }
 
         DmIntegration.init();
