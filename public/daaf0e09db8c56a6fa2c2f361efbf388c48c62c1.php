@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('css'); ?>
 
 <script src="<?php echo e(asset('public/assets/three/build/three.js')); ?>"></script>
@@ -3924,6 +3922,21 @@ async function previewUpperStlFile(file_upper)
 
 <script>
     $(document).ready(function() {
+
+
+
+            const params = new URLSearchParams(window.location.search);
+
+            const code = params.get('code');
+            const matchNode = params.get('matchNode');
+            const codeChallenge = params.get('codeChallenge');
+            const domain = params.get('domain');
+
+            if (code && matchNode && codeChallenge && domain) {
+                $('#authModal').modal('show');
+            }
+
+
         DmIntegration.init();
         AddPatient.init();
         Shining3d.init();

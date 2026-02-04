@@ -198,24 +198,29 @@ class RegisterPatient extends Controller
                 $csrfToken = getDynamicEncryptionToken($baseUrl);
 
                 if($csrfToken['status'] == 'success') {
+                    $dataShining3d['csrfToken'] = $csrfToken;
                     $connectionAuthorization = json_decode(connect($baseUrl, $csrfToken['result']), true);
+
                     if($connectionAuthorization['status'] == 'success') {
+                         $dataShining3d['connectionAuthorization'] = $connectionAuthorization;
                         $userDetails = exchangeCodeForToken($code, $baseUrl);
                         if($userDetails['status'] == 'success') {
                             if($userDetails['result'] && $userDetails['result']['factories'] && count($userDetails['result']['factories']) > 0) {
                                 // Find clinic by name
                                 $userId = $userDetails['result']['userId'];
+                                $dataShining3d['userId'] = $userId;
                                 $clinic = collect($userDetails['result']['factories'])
                                 ->firstWhere('name', Auth::user()->shining3d_org_name);
                                 $orgCode = $clinic['orgCode'];
-
+                                $dataShining3d['orgCode'] = $orgCode;
                                 $objUser = User::find(Auth::user()->id);
                                 $objUser->shining3d_user_id = $userId;
                                 $objUser->shining3d_org_code = $orgCode;
                                 $objUser->save();
 
                                 $dataDistribution = $clinic['dataDistribution'];
-                                dd($dataDistribution);
+                                $dataShining3d['dataDistribution'] = $dataDistribution;
+
                             }
                             $scanError = 'Failed to retrieve user details from SHINING 3D.';
                         }
@@ -394,7 +399,7 @@ class RegisterPatient extends Controller
         }
 
         $changePlan = 'true';
-        return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code'));
+        return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code', 'dataShining3d'));
     }
     protected function delete_patient_storage_dir($patient_id)
     {
