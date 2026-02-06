@@ -210,20 +210,23 @@ class RegisterPatient extends Controller
                             $userId = $userDetails['result']['userId'];
                             $dataShining3d['userId'] = $userId;
                             $clinic = collect($userDetails['result']['factories'])->firstWhere('name', Auth::user()->shining3d_org_name);
-                            $orgCode = $clinic['orgCode'];
-                            $dataShining3d['orgCode'] = $orgCode;
-                            $objUser = User::find(Auth::user()->id);
-                            $objUser->shining3d_user_id = $userId;
-                            $objUser->shining3d_org_code = $orgCode;
-                            $objUser->save();
-                            $dataDistribution = $clinic['dataDistribution'];
-                            $dataShining3d['dataDistribution'] = $dataDistribution;
-                            if(count($dataDistribution) > 0){
-                                $dataShining3d['startDate'] = date('Y-m-d', strtotime('2025-12-23'));
-                                $dataShining3d['endDate']   = date('Y-m-d',strtotime($dataShining3d['startDate'] . ' -3 days'));
-                                $dataShining3d['orderList'] = getOrderList($dataDistribution[0]['domain'], $connectionAuthorization['result'], $orgCode, $userId, $dataShining3d['startDate'], $dataShining3d['endDate']);
-                                dd($dataShining3d);
+                            if($clinic) {
+                                $orgCode = $clinic['orgCode'];
+                                $dataShining3d['orgCode'] = $orgCode;
+                                $objUser = User::find(Auth::user()->id);
+                                $objUser->shining3d_user_id = $userId;
+                                $objUser->shining3d_org_code = $orgCode;
+                                $objUser->save();
+                                $dataDistribution = $clinic['dataDistribution'];
+                                $dataShining3d['dataDistribution'] = $dataDistribution;
+                                if(count($dataDistribution) > 0){
+                                    $dataShining3d['startDate'] = date('Y-m-d');
+                                    $dataShining3d['endDate']   = date('Y-m-d',strtotime($dataShining3d['startDate'] . ' -3 days'));
+                                    $dataShining3d['orderList'] = getOrderList($dataDistribution[0]['domain'], $connectionAuthorization['result'], $orgCode, $userId, $dataShining3d['startDate'], $dataShining3d['endDate']);
+                                    dd($dataShining3d);
+                                }
                             }
+                            $scanError = 'Failed to find clinic in SHINING 3D.';
                         }
                         $scanError = 'Failed to retrieve user details from SHINING 3D.';
                     }

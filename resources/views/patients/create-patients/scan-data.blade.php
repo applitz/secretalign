@@ -185,7 +185,7 @@
             @else
                 <a class="btn btn-primary order-from-button"   href="javascript:void(0);" id="select-from-shining3d-link" data-shining3d-user-id="{{ Auth::user()->shining3d_user_id }}" data-shining3d-access-token="{{ Auth::user()->shining3d_access_token }}" >
                     <div class="d-flex align-items-center justify-content-center">
-                        <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D 11</span>
+                        <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D</span>
                     </div>
                 </a>
             @endif
