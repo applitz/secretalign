@@ -3438,7 +3438,9 @@ async function previewUpperStlFile(file_upper)
 
 
         $(document).ready(function() {
-            const fp = flatpickr($(".pickr"), {});
+            const fp = flatpickr($(".pickr"), {
+                dateFormat: "d=m-Y" // 2026-02-06
+            });
             // document.getElementById("startDate").addEventListener("change", function () {
             $(document).on('change', '#startDate', function () {
                 let startValue = this.value;
@@ -3454,7 +3456,7 @@ async function previewUpperStlFile(file_upper)
                 let mm = ("0" + (end.getMonth() + 1)).slice(-2);
                 let dd = ("0" + end.getDate()).slice(-2);
 
-                document.getElementById("endDate").value = `${yyyy}-${mm}-${dd}`;
+                document.getElementById("endDate").value = `${dd}-${mm}-${yyyy}`;
             });
 
 
@@ -3473,7 +3475,7 @@ async function previewUpperStlFile(file_upper)
                 let mm = ("0" + (start.getMonth() + 1)).slice(-2);
                 let dd = ("0" + start.getDate()).slice(-2);
 
-                document.getElementById("startDate").value = `${yyyy}-${mm}-${dd}`;
+                document.getElementById("startDate").value = `${dd}-${mm}-${yyyy}`;
             });
 
             $(document).on('change', 'input[name=pricing_package]', function () {
