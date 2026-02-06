@@ -3439,7 +3439,7 @@ async function previewUpperStlFile(file_upper)
 
         $(document).ready(function() {
             const fp = flatpickr($(".pickr"), {
-                dateFormat: "d=m-Y" // 2026-02-06
+                dateFormat: "d-m-Y" // 2026-02-06
             });
             // document.getElementById("startDate").addEventListener("change", function () {
             $(document).on('change', '#startDate', function () {
