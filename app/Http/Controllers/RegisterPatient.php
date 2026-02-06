@@ -221,8 +221,8 @@ class RegisterPatient extends Controller
                             if(count($dataDistribution) > 0){
                                 $dataShining3d['startDate'] = date('Y-m-d');
                                 $dataShining3d['endDate']   = date('Y-m-d', strtotime('-3 days'));
-                                dd($dataShining3d, $dataDistribution[0]['domain'], $connectionAuthorization['result'], $dataShining3d['startDate'], $dataShining3d['endDate']);
                                 $dataShining3d['orderList'] = getOrderList($dataDistribution[0]['domain'], $connectionAuthorization['result'], $dataShining3d['startDate'], $dataShining3d['endDate']);
+                                dd($dataShining3d);
                             }
                         }
                         $scanError = 'Failed to retrieve user details from SHINING 3D.';
