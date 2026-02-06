@@ -54,4 +54,22 @@ use Nette\Utils\Json;
 
         return $response->json();
     }
+
+
+    function getOrderList($baseUrl, $authToken, $start_date, $end_date)
+    {
+        $response = Http::withHeaders([
+            'X-Auth-Token' => $authToken,
+            'X-Auth-AppKey' => config('shining3d.shining3d_app_key'),
+            'X-Auth-AppID' => config('shining3d.shining3d_app_id'),
+        ])->get($baseUrl . '/sdk/dental/order/list', [
+            'orgType' => 'lab',
+            'orgCode' => config('shining3d.shining3d_orgcode'),
+            'page' => 1,
+            'pageSize' => 10,
+            'startOn' => Carbon::parse($start_date)->format('Y-m-d'),
+            'endOn' => Carbon::parse($end_date)->format('Y-m-d'),
+        ]);
+        return $response->json();
+    }
 ?>
