@@ -644,7 +644,7 @@
                                     <div class="mb-3">
                                         <label for="scanType" class="form-label">Select Region</label>
                                         <select id="scanRegion" class="form-select">
-                                            <option value="">-- Select Region Based on Your Location --</option>
+
                                             @foreach ($dataShining3d['dataDistribution'] as $region)
                                                 @switch($region['matchNode'])
 

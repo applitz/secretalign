@@ -189,6 +189,7 @@ class RegisterPatient extends Controller
         $scanError = null;
         $baseUrl = null;
         $code = null;
+        $orderList = [];
         if($request->has('code') && $request->has('codeChallenge') && $request->has('matchNode') && $request->has('domain')) {
 
             $shining3d_user_id = Auth::user()->shining3d_user_id;
@@ -208,8 +209,7 @@ class RegisterPatient extends Controller
                             // Find clinic by name
                             $userId = $userDetails['result']['userId'];
                             $dataShining3d['userId'] = $userId;
-                            $clinic = collect($userDetails['result']['factories'])
-                            ->firstWhere('name', Auth::user()->shining3d_org_name);
+                            $clinic = collect($userDetails['result']['factories'])->firstWhere('name', Auth::user()->shining3d_org_name);
                             $orgCode = $clinic['orgCode'];
                             $dataShining3d['orgCode'] = $orgCode;
                             $objUser = User::find(Auth::user()->id);
@@ -218,6 +218,12 @@ class RegisterPatient extends Controller
                             $objUser->save();
                             $dataDistribution = $clinic['dataDistribution'];
                             $dataShining3d['dataDistribution'] = $dataDistribution;
+                            if(count($dataDistribution) > 0){
+                                $dataShining3d['startDate'] = date('Y-m-d');
+                                $dataShining3d['endDate']   = date('Y-m-d', strtotime('-3 days'));
+                                dd($dataShining3d, $dataDistribution[0]['domain'], $connectionAuthorization['result'], $dataShining3d['startDate'], $dataShining3d['endDate']);
+                                $dataShining3d['orderList'] = getOrderList($dataDistribution[0]['domain'], $connectionAuthorization['result'], $dataShining3d['startDate'], $dataShining3d['endDate']);
+                            }
                         }
                         $scanError = 'Failed to retrieve user details from SHINING 3D.';
                     }
@@ -807,5 +813,27 @@ class RegisterPatient extends Controller
             "fn3" => $fn3,
             "fn4" => $fn4,
         ]);
+    }
+
+    public function getOrderList(Request $request)
+    {
+        $region = $request->input('region');
+        $this->setRegion($region);
+
+        $authToken = $this->getValidAuthToken($region);
+
+        $response = Http::withHeaders([
+            'X-Auth-Token' => $authToken,
+            'X-Auth-AppKey' => config('shining3d.shining3d_app_key'),
+            'X-Auth-AppID' => config('shining3d.shining3d_app_id'),
+        ])->get($this->baseUrl . '/sdk/dental/order/list', [
+            'orgType' => 'lab',
+            'orgCode' => config('shining3d.shining3d_orgcode'),
+            'page' => 1,
+            'pageSize' => 10,
+            'startOn' => Carbon::parse($request->input('start_date'))->format('Y-m-d'),
+            'endOn' => Carbon::parse($request->input('end_date'))->format('Y-m-d'),
+        ]);
+        return $response->json();
     }
 }
