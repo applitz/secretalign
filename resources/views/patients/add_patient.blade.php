@@ -716,8 +716,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="shining3dOrderTable">
-                                                @if(!empty($dataShining3d['orderList']) && count($dataShining3d['orderList']) > 0)
-                                                    @foreach($dataShining3d['orderList'] as $order)
+                                                @if(!empty($dataShining3d['orderList']['result']) && count($dataShining3d['orderList']['result']) > 0)
+                                                    @foreach($dataShining3d['orderList']['result'] as $order)
 
                                                         @php
                                                             // -------------------------
