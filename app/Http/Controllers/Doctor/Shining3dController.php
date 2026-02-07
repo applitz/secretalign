@@ -26,20 +26,22 @@ class Shining3dController extends Controller
     }
     public function getOrderList(Request $request)
     {
-
+        $stardDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
         $response = Http::withHeaders([
             'X-Auth-Token' => $request->input('authToken'),
             'X-Auth-AppKey' => config('shining3d.shining3d_app_key'),
             'X-Auth-AppID' => config('shining3d.shining3d_app_id'),
-        ])->get($request->input('baseUrl') . '/sdk/dental/order/list', [
+        ])->get($request->input('domainUrl') . '/sdk/dental/order/list', [
             'orgType' => $request->input('orgType'),
-            'orgCode' => $request->input('orgCode'),
             'doctorID' => $request->input('doctorId'),
+            'orgCode' => $request->input('orgCode'),
             'page' => 1,
             'pageSize' => 10,
-            'startOn' => Carbon::parse($request->input('start_date'))->format('Y-m-d'),
-            'endOn' => Carbon::parse($request->input('end_date'))->format('Y-m-d'),
+             'startOn' => $stardDate,
+            'endOn' => $endDate,
         ]);
+        dd($stardDate, $endDate, $request->input('domainUrl'), $request->input('orgType'), $request->input('doctorId'), $request->input('orgCode'), $response->body());
         return $response->json();
     }
 
