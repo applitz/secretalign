@@ -8,11 +8,9 @@ var Shining3d = function() {
 
             const parts = dateStr.split('-');
             if (parts.length !== 3) return null;
-
             const day   = Number(parts[0]);
             const month = Number(parts[1]) - 1; // 0-based
             const year  = Number(parts[2]);
-
             const date = new Date(year, month, day);
             date.setHours(0, 0, 0, 0); // normalize time
 
@@ -24,7 +22,6 @@ var Shining3d = function() {
             ) {
                 return null;
             }
-
             return date; // ✅ Date object
         }
 
