@@ -700,7 +700,7 @@
                                 </div>
                             </div>
 
-                            <div class="row mt-3" id="caseSearchRow" style="display:none;">
+                            <div class="row mt-3" id="caseSearchRow" >
                                 <div class="col-12">
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-striped align-middle">
@@ -716,8 +716,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="shining3dOrderTable">
-                                                @if(!empty($dataShining3d['orders']) && count($dataShining3d['orders']) > 0)
-                                                    @foreach($dataShining3d['orders'] as $order)
+                                                @if(!empty($dataShining3d['orderList']) && count($dataShining3d['orderList']) > 0)
+                                                    @foreach($dataShining3d['orderList'] as $order)
 
                                                         @php
                                                             // -------------------------
