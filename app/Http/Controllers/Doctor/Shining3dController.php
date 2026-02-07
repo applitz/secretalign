@@ -26,8 +26,8 @@ class Shining3dController extends Controller
     }
     public function getOrderList(Request $request)
     {
-        $stardDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        $stardDate = date('Y-m-d', strtotime($request->input('start_date')));
+        $endDate = date('Y-m-d', strtotime($request->input('end_date')));
         $response = Http::withHeaders([
             'X-Auth-Token' => $request->input('authToken'),
             'X-Auth-AppKey' => config('shining3d.shining3d_app_key'),
@@ -38,7 +38,7 @@ class Shining3dController extends Controller
             'orgCode' => $request->input('orgCode'),
             'page' => 1,
             'pageSize' => 10,
-             'startOn' => $stardDate,
+            'startOn' => $stardDate,
             'endOn' => $endDate,
         ]);
         dd($stardDate, $endDate, $request->input('domainUrl'), $request->input('orgType'), $request->input('doctorId'), $request->input('orgCode'), $response->body());
