@@ -640,7 +640,7 @@
                         <div id="shining3d-error" class="alert alert-danger py-1" style="display:none; font-size: 14px;"></div>
                             @csrf
                             <div class="row">
-                                {{-- <div class="col-md-4">
+                                <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="scanType" class="form-label">Select Region</label>
                                         <select id="scanRegion" class="form-select">
@@ -683,19 +683,19 @@
 
                                         </select>
                                     </div>
-                                </div> --}}
+                                </div>
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="startDate" class="form-label">Start Date</label>
-                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" placeholder="Select start date">
+                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['start_date'] ?? ''}}" placeholder="Select start date">
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="endDate" class="form-label">End Date</label>
-                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" placeholder="Select end date">
+                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['end_date'] ?? '' }}" placeholder="Select end date">
                                     </div>
                                 </div>
                             </div>
