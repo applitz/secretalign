@@ -56,14 +56,14 @@ use Nette\Utils\Json;
     }
 
 
-    function getOrderList($baseUrl, $authToken, $doctorID, $orgcode, $start_date, $end_date)
+    function getOrderList($baseUrl, $authToken, $orgcode, $doctorID, $orgType,$start_date, $end_date)
     {
         $response = Http::withHeaders([
             'X-Auth-Token' => $authToken,
             'X-Auth-AppKey' => config('shining3d.shining3d_app_key'),
             'X-Auth-AppID' => config('shining3d.shining3d_app_id'),
         ])->get($baseUrl . '/sdk/dental/order/list', [
-            'orgType' => 'hospital',
+            'orgType' => $orgType,
             'doctorID' => $doctorID,
             'orgCode' => $orgcode,
             'page' => 1,
