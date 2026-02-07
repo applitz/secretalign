@@ -32,7 +32,7 @@ class Shining3dController extends Controller
             'X-Auth-Token' => $request->input('authToken'),
             'X-Auth-AppKey' => config('shining3d.shining3d_app_key'),
             'X-Auth-AppID' => config('shining3d.shining3d_app_id'),
-        ])->get($request->input('domainUrl') . '/sdk/dental/order/list', [
+        ])->get($request->input('region') . '/sdk/dental/order/list', [
             'orgType' => $request->input('orgType'),
             'doctorID' => $request->input('doctorId'),
             'orgCode' => $request->input('orgCode'),
