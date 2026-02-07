@@ -726,7 +726,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
-                        <button type="button" class="btn btn-danger" id="order-from-shining3d">Get Sacn</button>
+                        <button type="button" class="btn btn-danger" data-base-url="{{ $dataShining3d['baseUrl']}}" data-org-type="{{ $dataShining3d['orgType']}}" data-org-code="{{ $dataShining3d['orgCode']}}" data-doctor-id="{{ $dataShining3d['doctorId']}}" data-auth-token="{{ $dataShining3d['authToken']}}" id="order-from-shining3d">Get Sacn</button>
                     </div>
 
                 </div>
