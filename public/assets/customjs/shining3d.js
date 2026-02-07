@@ -47,7 +47,7 @@ var Shining3d = function() {
             const endDate   = isValidDate(end);
 
             if (!startDate || !endDate) {
-                return showError('Invalid date format.');
+                return showError('Invalid date format 1234154.');
             }
 
             if (endDate < startDate) {
