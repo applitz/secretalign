@@ -620,6 +620,8 @@
 
 
 <?php endif; ?>
+
+    <?php if( request()->get('code') && request()->get('matchNode') && request()->get('codeChallenge') && request()->get('domain')): ?>
     <!--  Order From shining3d Modal Start -->
         <div class="modal fade" id="order-from-shining3d-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -627,7 +629,7 @@
 
                     <div class="modal-header">
                         <h5 class="modal-title" id="orderFromShining3dLabel">
-                            Order From Shining3d
+                            Import From Shining3d
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -640,27 +642,43 @@
                                     <div class="mb-3">
                                         <label for="scanType" class="form-label">Select Region</label>
                                         <select id="scanRegion" class="form-select">
-                                            <option value="">-- Select Region Based on Your Location --</option>
 
-                                            <option value="frankfurt">
-                                                Europe (Frankfurt) – Recommended for EU countries
-                                            </option>
+                                            <?php $__currentLoopData = $dataShining3d['dataDistribution']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $region): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php switch($region['matchNode']):
 
-                                            <option value="hz">
-                                                China (Hangzhou) – Mainland China users
-                                            </option>
+                                                    case ('frankfurt'): ?>
+                                                        <option value="frankfurt">
+                                                            Europe (Frankfurt) – Recommended for EU countries
+                                                        </option>
+                                                        <?php break; ?>
 
-                                            <option value="ru">
-                                                Russia – Users located in Russia
-                                            </option>
+                                                    <?php case ('hz'): ?>
+                                                        <option value="hz">
+                                                            China (Hangzhou) – Mainland China users
+                                                        </option>
+                                                        <?php break; ?>
 
-                                            <option value="silicon">
-                                                USA (Silicon Valley) – North America users
-                                            </option>
+                                                    <?php case ('ru'): ?>
+                                                        <option value="ru">
+                                                            Russia – Users located in Russia
+                                                        </option>
+                                                        <?php break; ?>
 
-                                            <option value="tokyo">
-                                                Japan (Tokyo) – Japan & East Asia users
-                                            </option>
+                                                    <?php case ('silicon'): ?>
+                                                        <option value="silicon">
+                                                            USA (Silicon Valley) – North America users
+                                                        </option>
+                                                        <?php break; ?>
+
+                                                    <?php case ('tokyo'): ?>
+                                                        <option value="tokyo">
+                                                            Japan (Tokyo) – Japan & East Asia users
+                                                        </option>
+                                                        <?php break; ?>
+
+                                                <?php endswitch; ?>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
                                         </select>
                                     </div>
                                 </div>
@@ -714,6 +732,8 @@
 
         </div>
     <!-- Order From shining3d Modal End -->
+    <?php endif; ?>
+    
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('javascript'); ?>
@@ -3323,7 +3343,9 @@ async function previewUpperStlFile(file_upper)
 
 
         $(document).ready(function() {
-            const fp = flatpickr($(".pickr"), {});
+            const fp = flatpickr($(".pickr"), {
+                dateFormat: "d-m-Y" // 2026-02-06
+            });
             // document.getElementById("startDate").addEventListener("change", function () {
             $(document).on('change', '#startDate', function () {
                 let startValue = this.value;
@@ -3339,7 +3361,7 @@ async function previewUpperStlFile(file_upper)
                 let mm = ("0" + (end.getMonth() + 1)).slice(-2);
                 let dd = ("0" + end.getDate()).slice(-2);
 
-                document.getElementById("endDate").value = `${yyyy}-${mm}-${dd}`;
+                document.getElementById("endDate").value = `${dd}-${mm}-${yyyy}`;
             });
 
 
@@ -3358,7 +3380,7 @@ async function previewUpperStlFile(file_upper)
                 let mm = ("0" + (start.getMonth() + 1)).slice(-2);
                 let dd = ("0" + start.getDate()).slice(-2);
 
-                document.getElementById("startDate").value = `${yyyy}-${mm}-${dd}`;
+                document.getElementById("startDate").value = `${dd}-${mm}-${yyyy}`;
             });
 
             $(document).on('change', 'input[name=pricing_package]', function () {
@@ -3889,30 +3911,19 @@ async function previewUpperStlFile(file_upper)
             });
 
             $(document).on('click', '#select-from-shining3d-link', function () {
-                var shining3d_user_id = $(this).attr('data-shining3d-user-id');
-                var shining3d_access_token = $(this).attr('data-shining3d-access-token');
-                if(shining3d_user_id == "" && shining3d_access_token == "") {
-                    var first_name = $("#first_name").val();
-                    var last_name = $("#last_name").val();
-                    const shining3dAuthUrl =
-                        'https://dental3dcloud.com/p/index?' +
-                        'codeChallenge=<?php echo e(config("shining3d.shining3d_code_challenge")); ?>' +
-                        '&codeChallengeMethod=<?php echo e(config("shining3d.shining3d_code_challenge_method")); ?>' +
-                        '&redirectUri=<?php echo e(config("shining3d.shining3d_redirect_uri")); ?>' +
-                        '&responseType=code' +
-                        '&appId=<?php echo e(config("shining3d.shining3d_app_id")); ?>' +
-                        '&thirdUserID=<?php echo e(Auth::user()->id); ?>' +
-                        '&thirdUserName=<?php echo e(Auth::user()->shining3d_org_name); ?>';
+                const shining3dAuthUrl =
+                    'https://dental3dcloud.com/p/index?' +
+                    'codeChallenge=<?php echo e(config("shining3d.shining3d_code_challenge")); ?>' +
+                    '&codeChallengeMethod=<?php echo e(config("shining3d.shining3d_code_challenge_method")); ?>' +
+                    '&redirectUri=<?php echo e(config("shining3d.shining3d_redirect_uri")); ?>' +
+                    '&responseType=code' +
+                    '&appId=<?php echo e(config("shining3d.shining3d_app_id")); ?>' +
+                    '&thirdUserID=<?php echo e(Auth::user()->id); ?>' +
+                    '&thirdUserName=<?php echo e(Auth::user()->shining3d_org_name); ?>';
 
-                    // Redirect in same tab/page
-                    window.location.href = shining3dAuthUrl;
-                } else {
-
-                }
-
+                // Redirect in same tab/page
+                window.location.href = shining3dAuthUrl;
             });
-
-
         });
 
 
@@ -3924,6 +3935,17 @@ async function previewUpperStlFile(file_upper)
 
 <script>
     $(document).ready(function() {
+        const params = new URLSearchParams(window.location.search);
+
+        const code = params.get('code');
+        const matchNode = params.get('matchNode');
+        const codeChallenge = params.get('codeChallenge');
+        const domain = params.get('domain');
+
+        if (code && matchNode && codeChallenge && domain) {
+            $('#order-from-shining3d-modal').modal('show');
+        }
+
         DmIntegration.init();
         AddPatient.init();
         Shining3d.init();

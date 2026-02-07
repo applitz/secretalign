@@ -222,7 +222,7 @@ class RegisterPatient extends Controller
                                 if(count($dataDistribution) > 0){
                                     $dataShining3d['startDate'] = date('Y-m-d');
                                     $dataShining3d['endDate']   = date('Y-m-d',strtotime($dataShining3d['startDate'] . ' -3 days'));
-                                    $dataShining3d['orderList'] = getOrderList($dataDistribution[0]['domain'], $connectionAuthorization['result'], $orgCode, $userId, $dataShining3d['startDate'], $dataShining3d['endDate']);
+                                    $dataShining3d['orderList'] = getOrderList($baseUrl, $connectionAuthorization['result'], $orgCode, $userId, $dataShining3d['startDate'], $dataShining3d['endDate']);
                                     dd($dataShining3d);
                                 }
                             }

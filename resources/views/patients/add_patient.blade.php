@@ -640,7 +640,7 @@
                         <div id="shining3d-error" class="alert alert-danger py-1" style="display:none; font-size: 14px;"></div>
                             @csrf
                             <div class="row">
-                                <div class="col-md-4">
+                                {{-- <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="scanType" class="form-label">Select Region</label>
                                         <select id="scanRegion" class="form-select">
@@ -683,7 +683,7 @@
 
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-md-4">
                                     <div class="mb-3">

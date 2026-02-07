@@ -175,9 +175,9 @@
             </div>
         </a>
 
-        <?php if( Auth::user()->email == 'shubham.kakadiya02@gmail.com' || Auth::user()->email == 'wisherw064@gmail.com' || Auth::user()->email == 'info@zahnspangehome.at'): ?>
+        <?php if( Auth::user()->email == 'shubham.kakadiya02@gmail.com' || Auth::user()->email == 'wisherw064@gmail.com' || Auth::user()->email == 'info@zahnspangehome.at' || Auth::user()->email == 'chiragjogani21@gmail.com'): ?>
             <?php if(Auth::user()->shining3d_org_name == null ): ?>
-                <a class="btn btn-primary order-from-button" href="javascript:void(0);" id="select-from-shining3d-link" data-bs-toggle="modal" data-bs-target="#shining3d-org-name-modal" >
+                <a class="btn btn-primary order-from-button" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#shining3d-org-name-modal" >
                     <div class="d-flex align-items-center justify-content-center">
                         <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D </span>
                     </div>
@@ -185,7 +185,7 @@
             <?php else: ?>
                 <a class="btn btn-primary order-from-button"   href="javascript:void(0);" id="select-from-shining3d-link" data-shining3d-user-id="<?php echo e(Auth::user()->shining3d_user_id); ?>" data-shining3d-access-token="<?php echo e(Auth::user()->shining3d_access_token); ?>" >
                     <div class="d-flex align-items-center justify-content-center">
-                        <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D 11</span>
+                        <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D</span>
                     </div>
                 </a>
             <?php endif; ?>
