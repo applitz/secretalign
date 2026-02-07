@@ -716,6 +716,88 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="shining3dOrderTable">
+                                                @if(!empty($dataShining3d['orders']) && count($dataShining3d['orders']) > 0)
+                                                    @foreach($dataShining3d['orders'] as $order)
+
+                                                        @php
+                                                            // -------------------------
+                                                            // Patient details
+                                                            // -------------------------
+                                                            $patientName = $order['patient']['name'] ?? '-';
+
+                                                            if (!empty($order['patient']['phone'])) {
+                                                                $phone = '+' . ($order['patient']['phoneArea'] ?? '') . ' ' . $order['patient']['phone'];
+                                                            } else {
+                                                                $phone = '-';
+                                                            }
+
+                                                            $sex     = $order['patient']['sex'] ?? '-';
+                                                            $labName = $order['lab']['name'] ?? '-';
+
+                                                            // -------------------------
+                                                            // Created date
+                                                            // -------------------------
+                                                            $createdAt = !empty($order['createOn'])
+                                                                ? \Carbon\Carbon::parse($order['createOn'])->format('d-m-Y')
+                                                                : '-';
+
+                                                            // -------------------------
+                                                            // Status mapping
+                                                            // -------------------------
+                                                            $statusText  = $order['status'] ?? 'unknown';
+                                                            $statusClass = 'secondary';
+
+                                                            switch ($statusText) {
+                                                                case 'waitDelivery':
+                                                                    $statusText  = 'Waiting for Delivery';
+                                                                    $statusClass = 'warning';
+                                                                    break;
+
+                                                                case 'delivered':
+                                                                    $statusText  = 'Delivered';
+                                                                    $statusClass = 'info';
+                                                                    break;
+
+                                                                case 'completed':
+                                                                    $statusText  = 'Completed';
+                                                                    $statusClass = 'success';
+                                                                    break;
+
+                                                                case 'cancelled':
+                                                                    $statusText  = 'Cancelled';
+                                                                    $statusClass = 'danger';
+                                                                    break;
+                                                            }
+                                                        @endphp
+
+                                                        <tr>
+                                                            <td>{{ $patientName }}</td>
+                                                            <td>{{ $phone }}</td>
+                                                            <td>{{ $sex }}</td>
+                                                            <td>{{ $labName }}</td>
+                                                            <td>
+                                                                <span class="badge bg-{{ $statusClass }}">
+                                                                    {{ $statusText }}
+                                                                </span>
+                                                            </td>
+                                                            <td>{{ $createdAt }}</td>
+                                                            <td>
+                                                                <button class="btn btn-sm btn-primary view-scan"
+                                                                        data-id="{{ $order['id'] }}">
+                                                                    View
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                    @endforeach
+                                                @else
+                                                    <tr>
+                                                        <td colspan="7" class="text-center text-muted">
+                                                            No orders found for selected date range.
+                                                        </td>
+                                                    </tr>
+                                                @endif
+
                                             </tbody>
                                         </table>
                                     </div>
