@@ -3442,41 +3442,43 @@ async function previewUpperStlFile(file_upper)
                 dateFormat: "d-m-Y", // 2026-02-06
                 allowInput: true
             });
+
+            function parseDMY(dateStr) {
+                const [dd, mm, yyyy] = dateStr.split("-");
+                return new Date(yyyy, mm - 1, dd);
+            }
+
+            function formatDMY(date) {
+                const dd = String(date.getDate()).padStart(2, "0");
+                const mm = String(date.getMonth() + 1).padStart(2, "0");
+                const yyyy = date.getFullYear();
+                return `${dd}-${mm}-${yyyy}`;
+            }
             // document.getElementById("startDate").addEventListener("change", function () {
-            $(document).on('change', '#startDate', function () {
-                let startValue = this.value;
+           $(document).on('change', '#startDate', function () {
+                const startValue = this.value;
                 if (!startValue) return;
 
-                let start = new Date(startValue);
+                const start = parseDMY(startValue);
 
-                // End date = Start + 3 days
-                let end = new Date(start);
+                const end = new Date(start);
                 end.setDate(end.getDate() + 3);
 
-                let yyyy = end.getFullYear();
-                let mm = ("0" + (end.getMonth() + 1)).slice(-2);
-                let dd = ("0" + end.getDate()).slice(-2);
-
-                document.getElementById("endDate").value = `${dd}-${mm}-${yyyy}`;
+                $('#endDate').val(formatDMY(end));
             });
 
 
             // document.getElementById("endDate").addEventListener("change", function () {
             $(document).on('change', '#endDate', function () {
-                let endValue = this.value;
+                const endValue = this.value;
                 if (!endValue) return;
 
-                let end = new Date(endValue);
+                const end = parseDMY(endValue);
 
-                // Start date = End − 3 days
-                let start = new Date(end);
+                const start = new Date(end);
                 start.setDate(start.getDate() - 3);
 
-                let yyyy = start.getFullYear();
-                let mm = ("0" + (start.getMonth() + 1)).slice(-2);
-                let dd = ("0" + start.getDate()).slice(-2);
-
-                document.getElementById("startDate").value = `${dd}-${mm}-${yyyy}`;
+                $('#startDate').val(formatDMY(start));
             });
 
             $(document).on('change', 'input[name=pricing_package]', function () {
