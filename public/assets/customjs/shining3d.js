@@ -37,7 +37,7 @@ var Shining3d = function() {
             const region = $('#scanRegion').val();
             const start  = $('#startDate').val();
             const end    = $('#endDate').val();
-            const baseUrl = $(this).attr('data-base-url');
+            const domainUrl = $(this).attr('data-base-url');
             const authToken = $(this).attr('data-auth-token');
             const orgCode = $(this).attr('data-org-code');
             const doctorId = $(this).attr('data-doctor-id');
@@ -82,7 +82,7 @@ var Shining3d = function() {
                     region,
                     start_date: start,
                     end_date: end,
-                    baseUrl : baseUrl,
+                    domainUrl : domainUrl,
                     authToken : authToken,
                     orgCode : orgCode,
                     doctorId : doctorId,
