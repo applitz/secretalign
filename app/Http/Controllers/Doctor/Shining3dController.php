@@ -41,7 +41,6 @@ class Shining3dController extends Controller
             'startOn' => $stardDate,
             'endOn' => $endDate,
         ]);
-        dd($stardDate, $endDate, $request->input('domainUrl'), $request->input('orgType'), $request->input('doctorId'), $request->input('orgCode'), $response->body());
         return $response->json();
     }
 
