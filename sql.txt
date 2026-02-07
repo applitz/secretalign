@@ -2,3 +2,8 @@ ALTER TABLE `users` ADD `shining3d_user_id` TEXT NULL AFTER `advisor_price`, ADD
 
 ALTER TABLE `users` ADD `shining3d_org_name` TEXT NOT NULL AFTER `shining3d_org_code`;
 
+
+
+izdeensbah222@gmail.com
+20012001iz
+shining3d@
