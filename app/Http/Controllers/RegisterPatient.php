@@ -220,7 +220,10 @@ class RegisterPatient extends Controller
                                 $dataDistribution = $clinic['dataDistribution'];
                                 $dataShining3d['dataDistribution'] = $dataDistribution;
                                 if(count($dataDistribution) > 0){
-                                    $dataShining3d['endDate']   = date('Y-m-d');
+                                    // $dataShining3d['endDate']   = date('Y-m-d');
+                                    // $dataShining3d['startDate'] = date('Y-m-d',strtotime($dataShining3d['endDate'] . ' -3 days'));
+
+                                    $dataShining3d['endDate']   = date('Y-m-d', strtotime('2025-12-24'));
                                     $dataShining3d['startDate'] = date('Y-m-d',strtotime($dataShining3d['endDate'] . ' -3 days'));
 
                                     $dataShining3d['orderList'] = getOrderList($baseUrl, $connectionAuthorization['result'], $orgCode, $userId, $clinic['orgType'], $dataShining3d['startDate'], $dataShining3d['endDate']);
