@@ -1,24 +1,33 @@
 var Shining3d = function() {
     var add = function(){
 
-        function isValidDate(dateStr) {
-            if (!dateStr) return false;
+        function parseValidDate(dateStr) {
+            if (!dateStr) return null;
+
+            dateStr = dateStr.trim();
 
             const parts = dateStr.split('-');
-            if (parts.length !== 3) return false;
+            if (parts.length !== 3) return null;
 
-            const day   = parseInt(parts[0], 10);
-            const month = parseInt(parts[1], 10) - 1; // JS months start from 0
-            const year  = parseInt(parts[2], 10);
+            const day   = Number(parts[0]);
+            const month = Number(parts[1]) - 1; // 0-based
+            const year  = Number(parts[2]);
 
             const date = new Date(year, month, day);
+            date.setHours(0, 0, 0, 0); // normalize time
 
-            return (
-                date.getFullYear() === year &&
-                date.getMonth() === month &&
-                date.getDate() === day
-            );
+            // Logical validation
+            if (
+                date.getFullYear() !== year ||
+                date.getMonth() !== month ||
+                date.getDate() !== day
+            ) {
+                return null;
+            }
+
+            return date; // ✅ Date object
         }
+
 
         $(document).on('click', '#order-from-shining3d', function () {
             $(".my-loader").show();
@@ -43,11 +52,11 @@ var Shining3d = function() {
             if (!start)  return showError('Please select Start Date.');
             if (!end)    return showError('Please select End Date.');
 
-            const startDate = isValidDate(start);
-            const endDate   = isValidDate(end);
+            const startDate = parseValidDate(start);
+            const endDate   = parseValidDate(end);
 
             if (!startDate || !endDate) {
-                return showError('Invalid date format 1234154.');
+                return showError('Invalid date format11.');
             }
 
             if (endDate < startDate) {
