@@ -688,14 +688,14 @@
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="startDate" class="form-label">Start Date</label>
-                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['start_date'] ? date('d-m-Y', strtotime($dataShining3d['start_date'])) : '' }}" placeholder="Select start date">
+                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['startDate'] ? date('d-m-Y', strtotime($dataShining3d['startDate'])) : '' }}" placeholder="Select start date">
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="endDate" class="form-label">End Date</label>
-                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['end_date'] ? date('d-m-Y', strtotime($dataShining3d['end_date'])) : '' }}" placeholder="Select end date">
+                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['endDate'] ? date('d-m-Y', strtotime($dataShining3d['endDate'])) : '' }}" placeholder="Select end date">
                                     </div>
                                 </div>
                             </div>
