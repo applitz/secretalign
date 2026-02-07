@@ -645,41 +645,12 @@
                                         <label for="scanType" class="form-label">Select Region</label>
                                         <select id="scanRegion" class="form-select">
 
-                                            @foreach ($dataShining3d['dataDistribution'] as $region)
-                                                @switch($region['matchNode'])
+                                            <option value="https://ffapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ffapi.shining3d.com' ? 'selected="selected"' : '' }}> Europe (Frankfurt) – Recommended for EU countries </option>
+                                            <option value="https://hzapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://hzapi.shining3d.com' ? 'selected="selected"' : '' }}>China (Hangzhou) – Mainland China users</option>
+                                            <option value="https://ruapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ruapi.shining3d.com' ? 'selected="selected"' : '' }}>Russia – Users located in Russia</option>
+                                            <option value="https://sapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://sapi.shining3d.com' ? 'selected="selected"' : '' }}>USA (Silicon Valley) – North America users</option>
+                                            <option value="https://tkapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://tkapi.shining3d.com' ? 'selected="selected"' : '' }}>Japan (Tokyo) – Japan & East Asia users</option>
 
-                                                    @case('frankfurt')
-                                                        <option value="frankfurt">
-                                                            Europe (Frankfurt) – Recommended for EU countries
-                                                        </option>
-                                                        @break
-
-                                                    @case('hz')
-                                                        <option value="hz">
-                                                            China (Hangzhou) – Mainland China users
-                                                        </option>
-                                                        @break
-
-                                                    @case('ru')
-                                                        <option value="ru">
-                                                            Russia – Users located in Russia
-                                                        </option>
-                                                        @break
-
-                                                    @case('silicon')
-                                                        <option value="silicon">
-                                                            USA (Silicon Valley) – North America users
-                                                        </option>
-                                                        @break
-
-                                                    @case('tokyo')
-                                                        <option value="tokyo">
-                                                            Japan (Tokyo) – Japan & East Asia users
-                                                        </option>
-                                                        @break
-
-                                                @endswitch
-                                            @endforeach
 
                                         </select>
                                     </div>
