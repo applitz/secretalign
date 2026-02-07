@@ -1,9 +1,23 @@
 var Shining3d = function() {
     var add = function(){
 
-        function parseDMY(dateStr) {
-            const [dd, mm, yyyy] = dateStr.split("-");
-            return new Date(yyyy, mm - 1, dd);
+        function isValidDate(dateStr) {
+            if (!dateStr) return false;
+
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return false;
+
+            const day   = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1; // JS months start from 0
+            const year  = parseInt(parts[2], 10);
+
+            const date = new Date(year, month, day);
+
+            return (
+                date.getFullYear() === year &&
+                date.getMonth() === month &&
+                date.getDate() === day
+            );
         }
 
         $(document).on('click', '#order-from-shining3d', function () {
@@ -29,10 +43,10 @@ var Shining3d = function() {
             if (!start)  return showError('Please select Start Date.');
             if (!end)    return showError('Please select End Date.');
 
-            const startDate = parseDMY(start);
-            const endDate   = parseDMY(end);
+            const startDate = isValidDate(start);
+            const endDate   = isValidDate(end);
 
-            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+            if (!startDate || !endDate) {
                 return showError('Invalid date format.');
             }
 
@@ -40,8 +54,10 @@ var Shining3d = function() {
                 return showError('End Date cannot be earlier than Start Date.');
             }
 
+
             // Shining3D rule: minimum 3 days
-            const diffDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+            const diffDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+
             if (diffDays < 3) {
                 return showError('Date range must be at least 3 days (Shining3D requirement).');
             }
