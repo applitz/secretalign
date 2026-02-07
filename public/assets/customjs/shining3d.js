@@ -5,6 +5,7 @@ var Shining3d = function() {
             const [dd, mm, yyyy] = dateStr.split("-");
             return new Date(yyyy, mm - 1, dd);
         }
+
         $(document).on('click', '#order-from-shining3d', function () {
             $(".my-loader").show();
             const btn   = $('#order-from-shining3d');
@@ -31,7 +32,7 @@ var Shining3d = function() {
             const startDate = parseDMY(start);
             const endDate   = parseDMY(end);
 
-            if (isNaN(startDate) || isNaN(endDate)) {
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
                 return showError('Invalid date format.');
             }
 
