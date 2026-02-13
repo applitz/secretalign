@@ -218,6 +218,42 @@ var Shining3d = function() {
             }
         });
 
+        $(document).on('click', '#view-scan', function () {
+            const orderId = $(this).data('id');
+            const authToken = $("#order-from-shining3d-label-model-shining3d-auth-token").val();
+            const csrfToken = $('#order-from-shining3d-label-model-shining3d-csrf-token').val();
+            const orgCode = $("#order-from-shining3d-label-model-shining3d-org-code").val();
+            const baseUrl = $('#scanRegion').val();
+
+
+            $.ajax({
+                url: baseUrl + '/data-download-shining3d-order',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    orderId: orderId,
+                    authToken : authToken,
+                    csrfToken: csrfToken,
+                    orgCode: orgCode,
+                    baseUrl: baseUrl,
+                    _token: $('input[name="_token"]').val()
+                },
+
+                beforeSend: function () {
+                    btn.prop('disabled', true).text('Loading...');
+                },
+
+                success: function (response) {
+                },
+
+                error: function () {
+                    $(".my-loader").hide();
+                    showError('Unable to fetch data. Please try again.');
+                    btn.prop('disabled', false).text('Get Scan');
+                }
+            });
+
+        });
     //    $(document).on('click', '#order-from-shining3d', function () {
 
     //         let region = $('#scanRegion').val();
