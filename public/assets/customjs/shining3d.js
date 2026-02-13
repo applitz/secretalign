@@ -225,7 +225,6 @@ var Shining3d = function() {
             const orgCode = $("#order-from-shining3d-label-model-shining3d-org-code").val();
             const baseUrl = $('#scanRegion').val();
 
-
             $.ajax({
                 url: baseUrl + '/data-download-shining3d-order',
                 type: 'POST',
