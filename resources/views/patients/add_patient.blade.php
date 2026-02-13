@@ -4089,7 +4089,7 @@ async function previewUpperStlFile(file_upper)
 
 <script src="{{ asset('public/assets/customjs/dm-integration.js') }}"></script>
 <script src="{{ asset('public/assets/customjs/add-patient.js') }}"></script>
-<script src="{{ asset('public/assets/customjs/shining3d.js') }}"></script>
+<script src="{{ asset('public/assets/customjs/shining3d.js') }}?v={{ time() }}"></script>
 
 <script>
     $(document).ready(function() {
