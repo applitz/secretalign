@@ -36,10 +36,15 @@ var Shining3d = function() {
             const end    = $('#endDate').val();
 
             // const domainUrl = $(this).attr('data-base-url');
-            const authToken = $(this).attr('data-auth-token');
-            const orgCode = $(this).attr('data-org-code');
-            const doctorId = $(this).attr('data-doctor-id');
-            const orgType = $(this).attr('data-org-type');
+            // const authToken = $(this).attr('data-auth-token');
+            // const orgCode = $(this).attr('data-org-code');
+            // const doctorId = $(this).attr('data-doctor-id');
+            // const orgType = $(this).attr('data-org-type');
+
+            const authToken = $()("#order-from-shining3d-label-model-shining3d-auth-token").val();
+            const orgCode = $("#order-from-shining3d-label-model-shining3d-org-code").val();
+            const doctorId = $("#order-from-shining3d-label-model-shining3d-doctor-id").val();
+            const orgType = $("#order-from-shining3d-label-model-shining3d-org-type").val();
             // Reset message
             error.hide().removeClass('alert-success alert-danger').text('');
 
