@@ -218,7 +218,7 @@ var Shining3d = function() {
             }
         });
 
-        $(document).on('click', '#view-scan', function () {
+        $(document).on('click', '.view-scan', function () {
             const orderId = $(this).data('id');
             const authToken = $("#order-from-shining3d-label-model-shining3d-auth-token").val();
             const csrfToken = $('#order-from-shining3d-label-model-shining3d-csrf-token').val();
