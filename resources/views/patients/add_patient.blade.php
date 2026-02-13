@@ -667,6 +667,13 @@
                                     <div class="mb-3">
                                         <label for="endDate" class="form-label">End Date</label>
                                         <input type="text" id="endDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['endDate'] ? date('d-m-Y', strtotime($dataShining3d['endDate'])) : '' }}" placeholder="Select end date">
+                                        {{-- <input type="text" id="shining3dDoctorId" value="{{ $dataShining3d['doctorId'] }}">
+                                        <input type="text" id="shining3dAuthToken" value="{{ $dataShining3d['authToken'] }}">
+                                        <input type="text" id="shining3dOrgType" value="{{ $dataShining3d['orgType'] }}">
+                                        <input type="text" id="shining3dOrgCode" value="{{ $dataShining3d['orgCode'] }}">
+                                        <input type="text" id="shining3dCsrfToken" value="{{ $dataShining3d['csrfToken'] }}">
+                                        <input type="text" id="shining3dBaseUrl" value="{{ $dataShining3d['baseUrl'] }}"> --}}
+
                                     </div>
                                 </div>
                             </div>
@@ -753,9 +760,9 @@
                                                             </td>
                                                             <td>{{ $createdAt }}</td>
                                                             <td>
-                                                                <button class="btn btn-sm btn-primary view-scan"
+                                                                <button class="btn btn-sm btn-primary view-scan get-scan-btn"
                                                                         data-id="{{ $order['id'] }}">
-                                                                    View
+                                                                    Get Scan
                                                                 </button>
                                                             </td>
                                                         </tr>
@@ -779,7 +786,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
-                        <button type="button" class="btn btn-danger" data-base-url="{{ $dataShining3d['baseUrl']}}" data-org-type="{{ $dataShining3d['orgType']}}" data-org-code="{{ $dataShining3d['orgCode']}}" data-doctor-id="{{ $dataShining3d['doctorId']}}" data-auth-token="{{ $dataShining3d['authToken']}}" id="order-from-shining3d">Get Sacn</button>
+                        <button type="button" class="btn btn-danger" data-base-url="{{ $dataShining3d['baseUrl']}}" data-csrf-token="{{ $dataShining3d['csrfToken']}}"  data-org-type="{{ $dataShining3d['orgType']}}" data-org-code="{{ $dataShining3d['orgCode']}}" data-doctor-id="{{ $dataShining3d['doctorId']}}" data-auth-token="{{ $dataShining3d['authToken']}}" id="order-from-shining3d">Get Sacn</button>
                     </div>
 
                 </div>

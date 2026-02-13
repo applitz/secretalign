@@ -643,41 +643,12 @@
                                         <label for="scanType" class="form-label">Select Region</label>
                                         <select id="scanRegion" class="form-select">
 
-                                            <?php $__currentLoopData = $dataShining3d['dataDistribution']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $region): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <?php switch($region['matchNode']):
+                                            <option value="https://ffapi.shining3d.com" <?php echo e($dataShining3d['baseUrl'] == 'https://ffapi.shining3d.com' ? 'selected="selected"' : ''); ?>> Europe (Frankfurt) – Recommended for EU countries </option>
+                                            <option value="https://hzapi.shining3d.com" <?php echo e($dataShining3d['baseUrl'] == 'https://hzapi.shining3d.com' ? 'selected="selected"' : ''); ?>>China (Hangzhou) – Mainland China users</option>
+                                            <option value="https://ruapi.shining3d.com" <?php echo e($dataShining3d['baseUrl'] == 'https://ruapi.shining3d.com' ? 'selected="selected"' : ''); ?>>Russia – Users located in Russia</option>
+                                            <option value="https://sapi.shining3d.com" <?php echo e($dataShining3d['baseUrl'] == 'https://sapi.shining3d.com' ? 'selected="selected"' : ''); ?>>USA (Silicon Valley) – North America users</option>
+                                            <option value="https://tkapi.shining3d.com" <?php echo e($dataShining3d['baseUrl'] == 'https://tkapi.shining3d.com' ? 'selected="selected"' : ''); ?>>Japan (Tokyo) – Japan & East Asia users</option>
 
-                                                    case ('frankfurt'): ?>
-                                                        <option value="frankfurt">
-                                                            Europe (Frankfurt) – Recommended for EU countries
-                                                        </option>
-                                                        <?php break; ?>
-
-                                                    <?php case ('hz'): ?>
-                                                        <option value="hz">
-                                                            China (Hangzhou) – Mainland China users
-                                                        </option>
-                                                        <?php break; ?>
-
-                                                    <?php case ('ru'): ?>
-                                                        <option value="ru">
-                                                            Russia – Users located in Russia
-                                                        </option>
-                                                        <?php break; ?>
-
-                                                    <?php case ('silicon'): ?>
-                                                        <option value="silicon">
-                                                            USA (Silicon Valley) – North America users
-                                                        </option>
-                                                        <?php break; ?>
-
-                                                    <?php case ('tokyo'): ?>
-                                                        <option value="tokyo">
-                                                            Japan (Tokyo) – Japan & East Asia users
-                                                        </option>
-                                                        <?php break; ?>
-
-                                                <?php endswitch; ?>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                                         </select>
                                     </div>
@@ -686,19 +657,21 @@
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="startDate" class="form-label">Start Date</label>
-                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" placeholder="Select start date">
+                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" value="<?php echo e($dataShining3d['startDate'] ? date('d-m-Y', strtotime($dataShining3d['startDate'])) : ''); ?>" placeholder="Select start date">
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="endDate" class="form-label">End Date</label>
-                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" placeholder="Select end date">
+                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" value="<?php echo e($dataShining3d['endDate'] ? date('d-m-Y', strtotime($dataShining3d['endDate'])) : ''); ?>" placeholder="Select end date">
+                                        
+
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row mt-3" id="caseSearchRow" style="display:none;">
+                            <div class="row mt-3" id="caseSearchRow" >
                                 <div class="col-12">
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-striped align-middle">
@@ -714,6 +687,89 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="shining3dOrderTable">
+                                                <?php if(!empty($dataShining3d['orderList']['result']) && count($dataShining3d['orderList']['result']) > 0): ?>
+                                                    <?php $__currentLoopData = $dataShining3d['orderList']['result']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+
+                                                        <?php
+                                                            // -------------------------
+                                                            // Patient details
+                                                            // -------------------------
+                                                            $patientName = $order['patient']['name'] ?? '-';
+
+                                                            if (!empty($order['patient']['phone'])) {
+                                                                $phone = '+' . ($order['patient']['phoneArea'] ?? '') . ' ' . $order['patient']['phone'];
+                                                            } else {
+                                                                $phone = '-';
+                                                            }
+
+                                                            $sex     = $order['patient']['sex'] ?? '-';
+                                                            $labName = $order['lab']['name'] ?? '-';
+
+                                                            // -------------------------
+                                                            // Created date
+                                                            // -------------------------
+                                                            $createdAt = !empty($order['createOn'])
+                                                                ? \Carbon\Carbon::parse($order['createOn'])->format('d-m-Y')
+                                                                : '-';
+
+                                                            // -------------------------
+                                                            // Status mapping
+                                                            // -------------------------
+                                                            $statusText  = $order['status'] ?? 'unknown';
+                                                            $statusClass = 'secondary';
+
+                                                            switch ($statusText) {
+                                                                case 'waitDelivery':
+                                                                    $statusText  = 'Waiting for Delivery';
+                                                                    $statusClass = 'warning';
+                                                                    break;
+
+                                                                case 'delivered':
+                                                                    $statusText  = 'Delivered';
+                                                                    $statusClass = 'info';
+                                                                    break;
+
+                                                                case 'completed':
+                                                                    $statusText  = 'Completed';
+                                                                    $statusClass = 'success';
+                                                                    break;
+
+                                                                case 'cancelled':
+                                                                    $statusText  = 'Cancelled';
+                                                                    $statusClass = 'danger';
+                                                                    break;
+                                                            }
+                                                        ?>
+
+                                                        <tr>
+                                                            <td><?php echo e($patientName); ?></td>
+                                                            <td><?php echo e($phone); ?></td>
+                                                            <td><?php echo e($sex); ?></td>
+                                                            <td><?php echo e($labName); ?></td>
+                                                            <td>
+                                                                <span class="badge bg-<?php echo e($statusClass); ?>">
+                                                                    <?php echo e($statusText); ?>
+
+                                                                </span>
+                                                            </td>
+                                                            <td><?php echo e($createdAt); ?></td>
+                                                            <td>
+                                                                <button class="btn btn-sm btn-primary view-scan get-scan-btn"
+                                                                        data-id="<?php echo e($order['id']); ?>">
+                                                                    Get Scan
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                <?php else: ?>
+                                                    <tr>
+                                                        <td colspan="7" class="text-center text-muted">
+                                                            No orders found for selected date range.
+                                                        </td>
+                                                    </tr>
+                                                <?php endif; ?>
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -724,7 +780,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
-                        <button type="button" class="btn btn-danger" id="order-from-shining3d">Get Sacn</button>
+                        <button type="button" class="btn btn-danger" data-base-url="<?php echo e($dataShining3d['baseUrl']); ?>" data-csrf-token="<?php echo e($dataShining3d['csrfToken']); ?>"  data-org-type="<?php echo e($dataShining3d['orgType']); ?>" data-org-code="<?php echo e($dataShining3d['orgCode']); ?>" data-doctor-id="<?php echo e($dataShining3d['doctorId']); ?>" data-auth-token="<?php echo e($dataShining3d['authToken']); ?>" id="order-from-shining3d">Get Sacn</button>
                     </div>
 
                 </div>
@@ -3344,43 +3400,46 @@ async function previewUpperStlFile(file_upper)
 
         $(document).ready(function() {
             const fp = flatpickr($(".pickr"), {
-                dateFormat: "d-m-Y" // 2026-02-06
+                dateFormat: "d-m-Y", // 2026-02-06
+                allowInput: true
             });
+
+            function parseDMY(dateStr) {
+                const [dd, mm, yyyy] = dateStr.split("-");
+                return new Date(yyyy, mm - 1, dd);
+            }
+
+            function formatDMY(date) {
+                const dd = String(date.getDate()).padStart(2, "0");
+                const mm = String(date.getMonth() + 1).padStart(2, "0");
+                const yyyy = date.getFullYear();
+                return `${dd}-${mm}-${yyyy}`;
+            }
             // document.getElementById("startDate").addEventListener("change", function () {
-            $(document).on('change', '#startDate', function () {
-                let startValue = this.value;
+           $(document).on('change', '#startDate', function () {
+                const startValue = this.value;
                 if (!startValue) return;
 
-                let start = new Date(startValue);
+                const start = parseDMY(startValue);
 
-                // End date = Start + 3 days
-                let end = new Date(start);
+                const end = new Date(start);
                 end.setDate(end.getDate() + 3);
 
-                let yyyy = end.getFullYear();
-                let mm = ("0" + (end.getMonth() + 1)).slice(-2);
-                let dd = ("0" + end.getDate()).slice(-2);
-
-                document.getElementById("endDate").value = `${dd}-${mm}-${yyyy}`;
+                $('#endDate').val(formatDMY(end));
             });
 
 
             // document.getElementById("endDate").addEventListener("change", function () {
             $(document).on('change', '#endDate', function () {
-                let endValue = this.value;
+                const endValue = this.value;
                 if (!endValue) return;
 
-                let end = new Date(endValue);
+                const end = parseDMY(endValue);
 
-                // Start date = End − 3 days
-                let start = new Date(end);
+                const start = new Date(end);
                 start.setDate(start.getDate() - 3);
 
-                let yyyy = start.getFullYear();
-                let mm = ("0" + (start.getMonth() + 1)).slice(-2);
-                let dd = ("0" + start.getDate()).slice(-2);
-
-                document.getElementById("startDate").value = `${dd}-${mm}-${yyyy}`;
+                $('#startDate').val(formatDMY(start));
             });
 
             $(document).on('change', 'input[name=pricing_package]', function () {
