@@ -223,7 +223,7 @@ var Shining3d = function() {
             const authToken = $("#order-from-shining3d-label-model-shining3d-auth-token").val();
             const csrfToken = $('#order-from-shining3d-label-model-shining3d-csrf-token').val();
             const orgCode = $("#order-from-shining3d-label-model-shining3d-org-code").val();
-            const domainUrl = $('#order-from-shining3d-label-model-shining3d-base-url').val();
+            const domainUrl = $('#scanRegion').val();
 
             $.ajax({
                 url: baseUrl + '/data-download-shining3d-order',
