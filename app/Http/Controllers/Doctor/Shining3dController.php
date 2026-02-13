@@ -112,6 +112,7 @@ class Shining3dController extends Controller
 
     public function dataDownload(Request $request)
     {
+        dd($request->all());
          $response = Http::withHeaders([
             'X-Auth-Token'     => $authToken,
             'X-Auth-AppKey'    => config('shining3d.shining3d_app_key'),
@@ -122,7 +123,7 @@ class Shining3dController extends Controller
             'Content-Type'     => 'application/json',
         ])->post($baseUrl . '/sdk/dental/order/dataDownload', [
             'orgCode'    => $orgcode,
-            'id'         => $doctorID,
+            'id'         => $orderID,
             'attachType' => 'full_stl',
         ]);
 

@@ -667,12 +667,12 @@
                                     <div class="mb-3">
                                         <label for="endDate" class="form-label">End Date</label>
                                         <input type="text" id="endDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['endDate'] ? date('d-m-Y', strtotime($dataShining3d['endDate'])) : '' }}" placeholder="Select end date">
-                                        <input type="text" id="order-from-shining3d-label-model-shining3d-doctor-id" value="{{ $dataShining3d['doctorId'] }}">
-                                        <input type="text" id="order-from-shining3d-label-model-shining3d-auth-token" value="{{ $dataShining3d['authToken'] }}">
-                                        <input type="text" id="order-from-shining3d-label-model-shining3d-org-type" value="{{ $dataShining3d['orgType'] }}">
-                                        <input type="text" id="order-from-shining3d-label-model-shining3d-org-code" value="{{ $dataShining3d['orgCode'] }}">
-                                        <input type="text" id="order-from-shining3d-label-model-shining3d-csrf-token" value="{{ $dataShining3d['csrfToken'] }}">
-                                        <input type="text" id="order-from-shining3d-label-model-shining3d-base-url" value="{{ $dataShining3d['baseUrl'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-doctor-id" value="{{ $dataShining3d['doctorId'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-auth-token" value="{{ $dataShining3d['authToken'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-org-type" value="{{ $dataShining3d['orgType'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-org-code" value="{{ $dataShining3d['orgCode'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-csrf-token" value="{{ $dataShining3d['csrfToken'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-base-url" value="{{ $dataShining3d['baseUrl'] }}">
                                     </div>
                                 </div>
                             </div>
