@@ -41,7 +41,7 @@ var Shining3d = function() {
             // const doctorId = $(this).attr('data-doctor-id');
             // const orgType = $(this).attr('data-org-type');
 
-            const authToken = $()("#order-from-shining3d-label-model-shining3d-auth-token").val();
+            const authToken = $("#order-from-shining3d-label-model-shining3d-auth-token").val();
             const orgCode = $("#order-from-shining3d-label-model-shining3d-org-code").val();
             const doctorId = $("#order-from-shining3d-label-model-shining3d-doctor-id").val();
             const orgType = $("#order-from-shining3d-label-model-shining3d-org-type").val();
