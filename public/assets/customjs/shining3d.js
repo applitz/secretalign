@@ -223,7 +223,7 @@ var Shining3d = function() {
             const authToken = $("#order-from-shining3d-label-model-shining3d-auth-token").val();
             const csrfToken = $('#order-from-shining3d-label-model-shining3d-csrf-token').val();
             const orgCode = $("#order-from-shining3d-label-model-shining3d-org-code").val();
-            const baseUrl = $('#scanRegion').val();
+            const domainUrl = $('#order-from-shining3d-label-model-shining3d-base-url').val();
 
             $.ajax({
                 url: baseUrl + '/data-download-shining3d-order',
@@ -234,7 +234,7 @@ var Shining3d = function() {
                     authToken : authToken,
                     csrfToken: csrfToken,
                     orgCode: orgCode,
-                    baseUrl: baseUrl,
+                    domainUrl: domainUrl,
                     _token: $('input[name="_token"]').val()
                 },
 

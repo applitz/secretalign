@@ -112,18 +112,20 @@ class Shining3dController extends Controller
 
     public function dataDownload(Request $request)
     {
-        dd($request->all());
+
+
          $response = Http::withHeaders([
-            'X-Auth-Token'     => $authToken,
+            'X-Auth-Token'     => $request->input('authToken'),
             'X-Auth-AppKey'    => config('shining3d.shining3d_app_key'),
             'X-Auth-AppID'     => config('shining3d.shining3d_app_id'),
             'isCsrf'           => 'true',
             'X-Encrypt-AES'    => 'true',
-            'X-Auth-CSRF'      => $csrfToken,
+            'X-Auth-CSRF'      => $request->input('csrfToken'),
+             'Content-Type'     => 'application/json',
             'Content-Type'     => 'application/json',
-        ])->post($baseUrl . '/sdk/dental/order/dataDownload', [
-            'orgCode'    => $orgcode,
-            'id'         => $orderID,
+        ])->post($request->input('domainUrl') . '/sdk/dental/order/dataDownload', [
+            'orgCode'    => $request->input('orgCode'),
+            'id'         => $request->input('orderID'),
             'attachType' => 'full_stl',
         ]);
 
