@@ -239,7 +239,7 @@ var Shining3d = function() {
                 },
 
                 beforeSend: function () {
-                    btn.prop('disabled', true).text('Loading...');
+                    // btn.prop('disabled', true).text('Loading...');
                 },
 
                 success: function (response) {
@@ -248,7 +248,7 @@ var Shining3d = function() {
                 error: function () {
                     $(".my-loader").hide();
                     showError('Unable to fetch data. Please try again.');
-                    btn.prop('disabled', false).text('Get Scan');
+                    // btn.prop('disabled', false).text('Get Scan');
                 }
             });
 
