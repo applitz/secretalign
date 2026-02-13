@@ -28,9 +28,14 @@ return [
     |
     */
 
+    // 'compiled' => env(
+    //     'VIEW_COMPILED_PATH',
+    //     realpath('public')
+    // ),
     'compiled' => env(
         'VIEW_COMPILED_PATH',
-        realpath('public')
+        realpath(storage_path('framework/views'))
     ),
+
 
 ];
