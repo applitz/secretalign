@@ -112,7 +112,7 @@ class Shining3dController extends Controller
 
     public function dataDownload(Request $request)
     {
-
+        dd($request->all());
 
          $response = Http::withHeaders([
             'X-Auth-Token'     => $request->input('authToken'),
