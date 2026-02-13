@@ -112,28 +112,32 @@ class Shining3dController extends Controller
 
     public function dataDownload(Request $request)
     {
-         $response = Http::withHeaders([
-            'X-Auth-Token'     => $request->input('authToken'),
-            'X-Auth-AppKey'    => config('shining3d.shining3d_app_key'),
-            'X-Auth-AppID'     => config('shining3d.shining3d_app_id'),
-            'isCsrf'           => 'true',
-            'X-Encrypt-AES'    => 'true',
-            'X-Auth-CSRF'      => $request->input('csrfToken'),
-             'Content-Type'     => 'application/json',
-            'Content-Type'     => 'application/json',
-        ])->post($request->input('domainUrl') . '/sdk/dental/order/dataDownload', [
-            'orgCode'    => $request->input('orgCode'),
-            'id'         => $request->input('orderID'),
-            'attachType' => 'full_stl',
-        ]);
+        $csrfToken  = getDynamicEncryptionToken($request->input('domainUrl'));
+        if($csrfToken['status'] == 'success') {
+            $response = Http::withHeaders([
+                'X-Auth-Token'     => $request->input('authToken'),
+                'X-Auth-AppKey'    => config('shining3d.shining3d_app_key'),
+                'X-Auth-AppID'     => config('shining3d.shining3d_app_id'),
+                'isCsrf'           => 'true',
+                'X-Encrypt-AES'    => 'true',
+                'X-Auth-CSRF'      => $csrfToken['result'] ,
+                'Content-Type'     => 'application/json',
+                'Content-Type'     => 'application/json',
+            ])->post($request->input('domainUrl') . '/sdk/dental/order/dataDownload', [
+                'orgCode'    => $request->input('orgCode'),
+                'id'         => $request->input('orderID'),
+                'attachType' => 'full_stl',
+            ]);
 
-        // Raw response
-        $data = $response->body();
+            // Raw response
+            $data = $response->body();
 
-        // If response is JSON
-        $json = $response->json();
+            // If response is JSON
+            $json = $response->json();
 
-        return $json;
+            return $json;
+        }
+        return response()->json(['status' => 'error', 'message' => 'Failed to get CSRF token'], 500);
     }
 
 }
