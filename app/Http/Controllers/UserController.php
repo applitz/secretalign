@@ -17,6 +17,7 @@ class UserController extends Controller
     {
         $this->middleware(['auth']);
     }
+
     public function view(Request $request)
     {
         $whereClauses = [
@@ -61,11 +62,13 @@ class UserController extends Controller
         ]);
         return view("users.view_users", compact("users"));
     }
+
     public function add()
     {
         $tiers = DB::table('tiers')->orderBy('id', 'asc')->get();
         return view("users.add_user", compact("tiers"));
     }
+
     public function save(Request $request)
     {
         $validated = $request->validate([
@@ -119,6 +122,7 @@ class UserController extends Controller
         }
         return \redirect()->back();
     }
+
     public function profile_settings()
     {
         $user = DB::table('users')->where('id', Auth::user()->id)->first();
@@ -127,6 +131,7 @@ class UserController extends Controller
         }
         return redirect()->back()->with('error', 'page not found.');
     }
+
     public function edit($id)
     {
         $user = DB::table('users')->where('id', $id)->where('role', '!=', 'admin')->first();
@@ -136,6 +141,7 @@ class UserController extends Controller
         }
         return redirect()->back()->with('error', 'page not found.');
     }
+
     public function post_profile(Request $request, $id)
     {
         $validated = $request->validate([
@@ -189,6 +195,7 @@ class UserController extends Controller
         }
         return \redirect()->back();
     }
+
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -228,6 +235,7 @@ class UserController extends Controller
         }
         return \redirect()->back();
     }
+
     public function change_password(Request $request, $id)
     {
         $validated = $request->validate([
@@ -257,6 +265,7 @@ class UserController extends Controller
         }
         return \redirect()->back();
     }
+
     public function change_profile_photo(Request $request, $id)
     {
         $this->validate($request, [
@@ -273,6 +282,7 @@ class UserController extends Controller
         }
         return redirect()->back()->with('error', 'enable to upload file');
     }
+
     public function delete($id)
     {
         $user = DB::table('users')->where('id', $id)->where('role', '!=', 'superamdin')->where('role', '!=', 'doctor')->first();
