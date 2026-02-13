@@ -229,7 +229,7 @@ class RegisterPatient extends Controller
                                     $dataShining3d['orgCode'] = $orgCode;
                                     $dataShining3d['doctorId'] = $userId;
                                     $dataShining3d['orgType'] = $clinic['orgType'];
-                                    // dd($dataShining3d, $clinic);
+                                    dd($dataShining3d, $clinic);
                                     Log::info('SHINING 3D connection successful', ['user_id' => Auth::id(), 'clinic' => $clinic, 'shining3d_user_id' => $userId, 'org_code' => $orgCode]);
                                 }
                             }
