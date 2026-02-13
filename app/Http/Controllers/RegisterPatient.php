@@ -408,7 +408,7 @@ class RegisterPatient extends Controller
                 ->first();
             session()->forget('patient_id');
         }
-    dd($dataShining3d);
+    // dd($dataShining3d);
         $changePlan = 'true';
         return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code', 'dataShining3d', 'scanError'));
     }
