@@ -223,6 +223,8 @@ var Shining3d = function() {
             const authToken = $("#order-from-shining3d-label-model-shining3d-auth-token").val();
             const csrfToken = $('#order-from-shining3d-label-model-shining3d-csrf-token').val();
             const orgCode = $("#order-from-shining3d-label-model-shining3d-org-code").val();
+            const patientId = $("#order-from-shining3d-label-model-shining3d-patient-id").val();
+            const treatmentPlanId = $("#order-from-shining3d-label-model-shining3d-treatment-plan-id").val();
             const domainUrl = $('#scanRegion').val();
 
             $.ajax({
