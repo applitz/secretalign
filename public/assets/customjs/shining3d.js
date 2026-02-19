@@ -236,6 +236,8 @@ var Shining3d = function() {
                     authToken : authToken,
                     csrfToken: csrfToken,
                     orgCode: orgCode,
+                    patientId: patientId,
+                    treatmentPlanId: treatmentPlanId,
                     domainUrl: domainUrl,
                     _token: $('input[name="_token"]').val()
                 },
