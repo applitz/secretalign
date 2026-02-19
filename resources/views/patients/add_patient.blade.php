@@ -673,8 +673,8 @@
                                         <input type="hidden" id="order-from-shining3d-label-model-shining3d-org-code" value="{{ $dataShining3d['orgCode'] }}">
                                         <input type="hidden" id="order-from-shining3d-label-model-shining3d-csrf-token" value="{{ $dataShining3d['csrfToken'] }}">
                                         <input type="hidden" id="order-from-shining3d-label-model-shining3d-base-url" value="{{ $dataShining3d['baseUrl'] }}">
-                                        <input type="text" id="order-from-shining3d-label-model-shining3d-patient-id" value="{{ $patient->id }}">
-                                        <input type="text" id="order-from-shining3d-label-model-shining3d-treatment-plan-id" value="{{ $patient->patient_id }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-patient-id" value="{{  $patient->patient_id }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-treatment-plan-id" value="{{ $patient->id }}">
                                     </div>
                                 </div>
                             </div>
