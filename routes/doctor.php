@@ -17,6 +17,7 @@ Route::middleware(['auth', 'auth.doctor'])->group(function () {
 
     Route::post('get-shining3d-order-list', [Shining3dController::class, 'getOrderList'])->name('get-shining3d-order-list');
     Route::post('data-download-shining3d-order', [Shining3dController::class, 'dataDownload'])->name('download-shining3d-order');
+    Route::get('data-download-and-upload-shining3d-order', [Shining3dController::class, 'dataDownloadAndUpload'])->name('download-and-upload-shining3d-order');
 });
 
 ?>
