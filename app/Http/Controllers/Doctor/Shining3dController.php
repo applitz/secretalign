@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Shining3Details;
 use Carbon\Carbon;
+use Hashids\Hashids;
 use Illuminate\Support\Facades\File;
 use ZipArchive;
 use Illuminate\Support\Facades\Storage;
@@ -193,11 +194,12 @@ class Shining3dController extends Controller
             $filename    = $json['result'][0]['filename'];
 
             $dataUpload = $this->dataUpload($downloadUrl, $patientId, $treatmentPlanId);
-
+            $hashids = new Hashids();
             return response()->json([
                 'status' => 'success',
                 'file'   => $filename,
-                'upload' => $dataUpload
+                'upload' => $dataUpload,
+                'hashCode'   => $hashids->encode($treatmentPlanId)
             ]);
         }
         return response()->json(['status' => 'error', 'message' => 'Failed to get CSRF token'], 500);
