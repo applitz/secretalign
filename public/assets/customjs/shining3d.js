@@ -219,6 +219,7 @@ var Shining3d = function() {
         });
 
         $(document).on('click', '.view-scan', function () {
+            $(".my-loader").show();
             const orderId = $(this).data('id');
             const authToken = $("#order-from-shining3d-label-model-shining3d-auth-token").val();
             const csrfToken = $('#order-from-shining3d-label-model-shining3d-csrf-token').val();
@@ -226,6 +227,7 @@ var Shining3d = function() {
             const patientId = $("#order-from-shining3d-label-model-shining3d-patient-id").val();
             const treatmentPlanId = $("#order-from-shining3d-label-model-shining3d-treatment-plan-id").val();
             const domainUrl = $('#scanRegion').val();
+            const error = $('#shining3d-error');
 
             $.ajax({
                 url: baseUrl + '/data-download-shining3d-order',
@@ -243,8 +245,12 @@ var Shining3d = function() {
                 },
                 success: function (response) {
                     if (response.status === 'success') {
+                        $(".my-loader").hide();
                         showSuccess('Scan data fetched successfully.');
-                        $("#order-from-shining3d-modal").modal('hide');
+                        setTimeout(function () {
+                            $("#order-from-shining3d-modal").modal('hide');
+                            window.location.href = baseUrl + '/patient/create?tab=pill-tab-div2';
+                        }, 2000); // 2000 milliseconds = 2 seconds
                     } else {
                         showError(response.message || 'API returned an error.');
                     }
@@ -256,6 +262,22 @@ var Shining3d = function() {
                     // btn.prop('disabled', false).text('Get Scan');
                 }
             });
+
+            function showError(message) {
+                error
+                    .removeClass('alert-success')
+                    .addClass('alert-danger')
+                    .text(message)
+                    .show();
+            }
+
+            function showSuccess(message) {
+                error
+                    .removeClass('alert-danger')
+                    .addClass('alert-success')
+                    .text(message)
+                    .show();
+            }
         });
     //    $(document).on('click', '#order-from-shining3d', function () {
 
