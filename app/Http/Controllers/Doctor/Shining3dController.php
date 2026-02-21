@@ -130,27 +130,62 @@ class Shining3dController extends Controller
         return base64_encode($encrypted);
     }
 
+    function encryptRequestBody($data, $csrfToken)
+    {
+        // 1. JSON normalize (same as JSON.stringify(JSON.parse()))
+        $json = json_encode(json_decode($data, true), JSON_UNESCAPED_SLASHES);
+
+        // 2. MD5 (hex string)
+        $csrfKeyHex = md5($csrfToken); // 32 char hex string
+
+        // 3. Key & IV (same logic as CryptoJS)
+        $key = $csrfKeyHex; // UTF8 string
+        $iv  = substr($csrfKeyHex, 0, 16);
+
+        // 4. Encrypt (AES-256-CBC because 32 byte key)
+        $encrypted = openssl_encrypt(
+            $json,
+            'AES-256-CBC',
+            $key,
+            OPENSSL_RAW_DATA,
+            $iv
+        );
+
+        // 5. Base64 encode ciphertext
+        return base64_encode($encrypted);
+    }
+
     public function dataDownload(Request $request)
     {
-        $csrfToken  = getDynamicEncryptionToken($request->input('domainUrl'));
+        $csrfToken  = "0VMK7lXr3noP8zFZNzcpjjOlI2948M8526oQTgw6p5c="; //getDynamicEncryptionToken($request->input('domainUrl'));
         $patientId = $request->input('patientId');
         $treatmentPlanId = $request->input('treatmentPlanId');
 
+        $body = json_encode([
+            "orgCode" => "8e0a94e9-352f-5500-a51c-46266a9ba19c",
+            "id" => "471557c7-bcbc-5d5d-90fa-598b43228317",
+            "attachType" => "full_stl"
+        ]);
+
+        $encryptedBody = $this->encryptRequestBody($body, $csrfToken);
+
         if($csrfToken['status'] == 'success') {
             $response = Http::withHeaders([
-                'X-Auth-Token'     => $request->input('authToken'),
-                'X-Auth-AppKey'    => config('shining3d.shining3d_app_key'),
-                'X-Auth-AppID'     => config('shining3d.shining3d_app_id'),
-                'isCsrf'           => 'true',
-                'X-Encrypt-AES'    => 'true',
-                'X-Auth-CSRF'      => $csrfToken['result'] ,
-                'Content-Type'     => 'application/json',
-                'Content-Type'     => 'application/json',
-            ])->post($request->input('domainUrl') . '/sdk/dental/order/dataDownload', [
-                'orgCode'    => $request->input('orgCode'),
-                'id'         => $request->input('orderID'),
-                'attachType' => 'full_stl',
-            ]);
+                'X-Auth-Token'     => "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhcHBJRCI6ImRhZGRkNDUyLWFlOGItNTYyYS05YzU0LTdjNjMzYzZhNDQ2NSIsImFwcEtleSI6ImE2ODRjY2FhLTMwMWMtNTQzNi1hMTMwLTEzMWZhNDliMTU2NyIsImFwcFB1YmxpY0tleSI6ImE4MzJkMjkzLWU3MWUtNTg0Yy04YzBhLWVkOGJkOTUwMmI3NCJ9.gUpN0h3uOqOjQKYI_0E6oyerv5I6lIbeMkTNcPDJvRRPe4_cyXiv61YpcVhb2CWgGUhGoUuGoMBj9_ZWTC01Kg", //$request->input('authToken'),
+                'X-Auth-AppKey'    => "a684ccaa-301c-5436-a130-131fa49b1567", // config('shining3d.shining3d_app_key'),
+                'X-Auth-AppID'     => "daddd452-ae8b-562a-9c54-7c633c6a4465", //config('shining3d.shining3d_app_id'),
+                'isCsrf'         => 'true',
+                'X-Encrypt-AES'  => 'true',
+                'X-Auth-CSRF'      => $csrfToken, //$csrfToken['result'] ,
+                'Content-Type'   => 'text/plain', // IMPORTANT
+            ])
+            ->withBody($encryptedBody, 'text/plain')
+            ->post('https://ffapi.shining3d.com/sdk/dental/order/dataDownload');
+            // ->post($request->input('domainUrl') . '/sdk/dental/order/dataDownload', [
+            //     'orgCode'    => $request->input('orgCode'),
+            //     'id'         => $request->input('orderID'),
+            //     'attachType' => 'full_stl',
+            // ]);
 
             // Raw response
             $data = $response->body();
