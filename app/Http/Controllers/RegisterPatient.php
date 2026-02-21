@@ -226,11 +226,11 @@ class RegisterPatient extends Controller
             $mode = "edit";
             if ($patient->is_submitted == 1) {
                 if ($patient->is_editable == 1) {
-                    return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code', 'hashCode'));
+                    return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code', 'hashCode', 'dataShining3d', 'scanError'));
                 }
 
             } else {
-                 return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code', 'hashCode'));
+                 return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code', 'hashCode', 'dataShining3d', 'scanError'));
             }
         }
         abort(403, "Unauthorized request!");
