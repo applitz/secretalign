@@ -184,10 +184,9 @@
                 </a>
             @else
                 @php
-                use Hashids\Hashids;
-                $hashCode = $hashids->encode($patient->id);
+
                 @endphp
-                <a class="btn btn-primary order-from-button"   href="javascript:void(0);" data-mode="{{ $mode }}"  data-patient-id="{{ $hashCode }}"  id="select-from-shining3d-link" data-shining3d-user-id="{{ Auth::user()->shining3d_user_id }}" data-shining3d-access-token="{{ Auth::user()->shining3d_access_token }}" >
+                <a class="btn btn-primary order-from-button"   href="javascript:void(0);" data-mode="{{ $mode }}"  {{ $hashCode ? 'data-hash-code="'.$hashCode.'"' : '' }}  id="select-from-shining3d-link" data-shining3d-user-id="{{ Auth::user()->shining3d_user_id }}" data-shining3d-access-token="{{ Auth::user()->shining3d_access_token }}" >
                     <div class="d-flex align-items-center justify-content-center">
                         <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D</span>
                     </div>
