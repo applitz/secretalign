@@ -249,7 +249,7 @@ var Shining3d = function() {
                         showSuccess('Scan data fetched successfully.');
                         setTimeout(function () {
                             $("#order-from-shining3d-modal").modal('hide');
-                            window.location.href = baseUrl + '/patient/create?tab=pill-tab-div2';
+                            window.location.href = baseUrl + '/patient/edit/' + response.hashCode + '?tab=pill-tab-div2';
                         }, 2000); // 2000 milliseconds = 2 seconds
                     } else {
                         showError(response.message || 'API returned an error.');
