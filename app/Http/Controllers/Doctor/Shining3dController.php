@@ -157,44 +157,41 @@ class Shining3dController extends Controller
 
     public function dataDownload(Request $request)
     {
-        $csrfToken  = "0VMK7lXr3noP8zFZNzcpjjOlI2948M8526oQTgw6p5c="; //getDynamicEncryptionToken($request->input('domainUrl'));
+        $csrfToken  = getDynamicEncryptionToken($request->input('domainUrl'));
         $patientId = $request->input('patientId');
         $treatmentPlanId = $request->input('treatmentPlanId');
 
         $body = json_encode([
-            "orgCode" => "8e0a94e9-352f-5500-a51c-46266a9ba19c",
-            "id" => "471557c7-bcbc-5d5d-90fa-598b43228317",
+            "orgCode" =>  $request->input('orgCode'),
+            "id" =>  $request->input('orderID'),
             "attachType" => "full_stl"
         ]);
 
-        $encryptedBody = $this->encryptRequestBody($body, $csrfToken);
+        $encryptedBody = $this->encryptRequestBody($body, $csrfToken['result']);
 
         if($csrfToken['status'] == 'success') {
             $response = Http::withHeaders([
-                'X-Auth-Token'     => "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhcHBJRCI6ImRhZGRkNDUyLWFlOGItNTYyYS05YzU0LTdjNjMzYzZhNDQ2NSIsImFwcEtleSI6ImE2ODRjY2FhLTMwMWMtNTQzNi1hMTMwLTEzMWZhNDliMTU2NyIsImFwcFB1YmxpY0tleSI6ImE4MzJkMjkzLWU3MWUtNTg0Yy04YzBhLWVkOGJkOTUwMmI3NCJ9.gUpN0h3uOqOjQKYI_0E6oyerv5I6lIbeMkTNcPDJvRRPe4_cyXiv61YpcVhb2CWgGUhGoUuGoMBj9_ZWTC01Kg", //$request->input('authToken'),
-                'X-Auth-AppKey'    => "a684ccaa-301c-5436-a130-131fa49b1567", // config('shining3d.shining3d_app_key'),
-                'X-Auth-AppID'     => "daddd452-ae8b-562a-9c54-7c633c6a4465", //config('shining3d.shining3d_app_id'),
+                'X-Auth-Token'     => $request->input('authToken'),
+                'X-Auth-AppKey'    => config('shining3d.shining3d_app_key'),
+                'X-Auth-AppID'     => config('shining3d.shining3d_app_id'),
                 'isCsrf'         => 'true',
                 'X-Encrypt-AES'  => 'true',
-                'X-Auth-CSRF'      => $csrfToken, //$csrfToken['result'] ,
+                'X-Auth-CSRF'      => $csrfToken['result'] ,
                 'Content-Type'   => 'text/plain', // IMPORTANT
             ])
             ->withBody($encryptedBody, 'text/plain')
-            ->post('https://ffapi.shining3d.com/sdk/dental/order/dataDownload');
-            // ->post($request->input('domainUrl') . '/sdk/dental/order/dataDownload', [
-            //     'orgCode'    => $request->input('orgCode'),
-            //     'id'         => $request->input('orderID'),
-            //     'attachType' => 'full_stl',
-            // ]);
+            ->post($request->input('domainUrl') . '/sdk/dental/order/dataDownload');
 
             // Raw response
             $data = $response->body();
 
             // If response is JSON
             $json = $response->json();
-            dd($json);
-            $domainUrl = 'https://s3.eu-central-1.amazonaws.com/awsdown.dental3dcloud.com/dentalService/471557c7-bcbc-5d5d-90fa-598b43228317/da238fd1-2ce1-5cde-ba31-40b017569779/full/stl/1e42f82c7f5eef03323211eb2416c4ac?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Checksum-Mode=ENABLED&X-Amz-Credential=AKIA2QJ2WUEBGOJBNOWF%2F20260219%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20260219T105614Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&x-id=GetObject&X-Amz-Signature=bd1af4d4a521855fcd6d010165900ee3db66f9084bba67125b94cf422b0d138c';
+
+            $domainUrl = $json['result'][0]['downloadURL'];
+
             $dataUpload = $this->dataUpload($domainUrl, $patientId, $treatmentPlanId);
+            dd($json, $domainUrl, $dataUpload);
             return $json;
         }
         return response()->json(['status' => 'error', 'message' => 'Failed to get CSRF token'], 500);
@@ -256,8 +253,8 @@ class Shining3dController extends Controller
                     $upperArchFile = $file->getRealPath();
                 }
             }
-            $uploadStlFilesOnserver = $this->uploadStlFilesOnserver($patientId, $treatmentPlanId, $upperArchFile, $lowerArchFile);
-            dd($uploadStlFilesOnserver);
+            return $this->uploadStlFilesOnserver($patientId, $treatmentPlanId, $upperArchFile, $lowerArchFile);
+            // dd($uploadStlFilesOnserver);
 
         } catch (\Exception $e) {
             return $e->getMessage();
