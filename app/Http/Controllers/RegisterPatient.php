@@ -107,11 +107,71 @@ class RegisterPatient extends Controller
         }
 
     }
-    public function edit($treatment_plan_id)
+    public function edit(Request $request, $treatment_plan_id)
     {
         $baseUrl = null;
         $code = null;
         $changePlan = 'true';
+        $dataShining3d = [];
+        $scanError = null;
+        $baseUrl = null;
+        $code = null;
+        $orderList = [];
+        if($request->has('code') && $request->has('codeChallenge') && $request->has('matchNode') && $request->has('domain')) {
+
+            $shining3d_user_id = Auth::user()->shining3d_user_id;
+            $shining3d_org_code = Auth::user()->shining3d_org_code;
+            $baseUrl = $request->get('domain');
+            $code = $request->get('code');
+
+            $csrfToken = getDynamicEncryptionToken($baseUrl);
+            if($csrfToken['status'] == 'success') {
+                $dataShining3d['csrfToken'] = $csrfToken['result'];
+                $connectionAuthorization = json_decode(connect($baseUrl, $csrfToken['result']), true);
+                if($connectionAuthorization['status'] == 'success') {
+                    $dataShining3d['connectionAuthorization'] = $connectionAuthorization;
+                    $userDetails = exchangeCodeForToken($code, $baseUrl);
+                    if($userDetails['status'] == 'success') {
+                        if($userDetails['result'] && $userDetails['result']['factories'] && count($userDetails['result']['factories']) > 0) {
+                            // Find clinic by name
+                            $userId = $userDetails['result']['userId'];
+                            $dataShining3d['userId'] = $userId;
+                            $clinic = collect($userDetails['result']['factories'])->firstWhere('name', Auth::user()->shining3d_org_name);
+                            if($clinic) {
+                                $orgCode = $clinic['orgCode'];
+                                $dataShining3d['orgCode'] = $orgCode;
+                                $objUser = User::find(Auth::user()->id);
+                                $objUser->shining3d_user_id = $userId;
+                                $objUser->shining3d_org_code = $orgCode;
+                                $objUser->save();
+                                $dataDistribution = $clinic['dataDistribution'];
+                                $dataShining3d['dataDistribution'] = $dataDistribution;
+                                if(count($dataDistribution) > 0){
+                                    $dataShining3d['endDate']   = date('Y-m-d');
+                                    $dataShining3d['startDate'] = date('Y-m-d',strtotime($dataShining3d['endDate'] . ' -3 days'));
+
+                                    $dataShining3d['orderList'] = getOrderList($baseUrl, $connectionAuthorization['result'], $orgCode, $userId, $clinic['orgType'], $dataShining3d['startDate'], $dataShining3d['endDate']);
+                                    $dataShining3d['baseUrl'] = $baseUrl;
+                                    $dataShining3d['authToken'] = $connectionAuthorization['result'];
+                                    $dataShining3d['orgCode'] = $orgCode;
+                                    $dataShining3d['doctorId'] = $userId;
+                                    $dataShining3d['orgType'] = $clinic['orgType'];
+
+                                    Log::info('SHINING 3D connection successful', ['user_id' => Auth::id(), 'clinic' => $clinic, 'shining3d_user_id' => $userId, 'org_code' => $orgCode]);
+                                }
+                            }
+                            $scanError = 'Failed to find clinic in SHINING 3D.';
+                        }
+                        $scanError = 'Failed to retrieve user details from SHINING 3D.';
+                    }
+                    $scanError = 'Failed to exchange authorization code with SHINING 3D.';
+                }
+                $scanError = 'Failed to establish secure connection with SHINING 3D.';
+            }
+            $scanError = 'Failed to generate secure authentication token from SHINING 3D.';
+        }
+
+
         if(Auth::user()->three_shape_refresh_token != null) {
             $this->ThreeShapeRefreshToken();
         }
