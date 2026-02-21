@@ -161,14 +161,16 @@ class RegisterPatient extends Controller
                                 }
                             }
         if (@$patient) {
+            $hashids = new Hashids();
+            $hashCode = $hashids->encode($patient->id);
             $mode = "edit";
             if ($patient->is_submitted == 1) {
                 if ($patient->is_editable == 1) {
-                    return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code'));
+                    return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code', 'hashCode'));
                 }
 
             } else {
-                 return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code'));
+                 return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code', 'hashCode'));
             }
         }
         abort(403, "Unauthorized request!");
