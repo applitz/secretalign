@@ -4072,14 +4072,14 @@ async function previewUpperStlFile(file_upper)
 
             $(document).on('click', '#select-from-shining3d-link', function () {
                 const mode = $(this).attr('data-mode'); // 'add' or 'edit'
-                const patientId = $(this).attr('data-patient-id');
+                const hashCode = $(this).attr('data-hash-code');
 
                 let redirectUri;
 
                 if (mode === 'add') {
                     redirectUri = "{{ config('shining3d.shining3d_redirect_uri') }}";
                 } else {
-                    redirectUri = "{{ url('/patient/edit') }}/" + patientId;
+                    redirectUri = "{{ url('/patient/edit') }}/" + hashCode;
                 }
 
                 const shining3dAuthUrl =
