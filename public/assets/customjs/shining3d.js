@@ -247,6 +247,13 @@ var Shining3d = function() {
                 },
 
                 success: function (response) {
+                    if (response.status === 'success') {
+                        showSuccess('Scan data fetched successfully.');
+                    } else {
+                        showError(response.message || 'API returned an error.');
+                    }
+
+                    // btn.prop('disabled', false).text('Get Scan');
                 },
 
                 error: function () {

@@ -130,7 +130,7 @@ class Shining3dController extends Controller
         return base64_encode($encrypted);
     }
 
-    function encryptRequestBody($data, $csrfToken)
+     function encryptRequestBody($data, $csrfToken)
     {
         // 1. JSON normalize (same as JSON.stringify(JSON.parse()))
         $json = json_encode(json_decode($data, true), JSON_UNESCAPED_SLASHES);
@@ -163,7 +163,7 @@ class Shining3dController extends Controller
 
         $body = json_encode([
             "orgCode" =>  $request->input('orgCode'),
-            "id" =>  $request->input('orderID'),
+            "id" =>  $request->input('orderId'),
             "attachType" => "full_stl"
         ]);
 
@@ -184,10 +184,21 @@ class Shining3dController extends Controller
 
             // If response is JSON
             $json = $response->json();
-            $domainUrl = $json['result'][0]['downloadURL'];
-            $dataUpload = $this->dataUpload($domainUrl, $patientId, $treatmentPlanId);
-            dd($json, $domainUrl, $dataUpload);
-            return $json;
+
+            if ($json['status'] !== 'success') {
+                return response()->json($json, 400);
+            }
+
+            $downloadUrl = $json['result'][0]['downloadURL'];
+            $filename    = $json['result'][0]['filename'];
+
+            $dataUpload = $this->dataUpload($downloadUrl, $patientId, $treatmentPlanId);
+
+            return response()->json([
+                'status' => 'success',
+                'file'   => $filename,
+                'upload' => $dataUpload
+            ]);
         }
         return response()->json(['status' => 'error', 'message' => 'Failed to get CSRF token'], 500);
     }
