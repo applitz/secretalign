@@ -241,19 +241,13 @@ var Shining3d = function() {
                     domainUrl: domainUrl,
                     _token: $('input[name="_token"]').val()
                 },
-
-                beforeSend: function () {
-                    // btn.prop('disabled', true).text('Loading...');
-                },
-
                 success: function (response) {
                     if (response.status === 'success') {
                         showSuccess('Scan data fetched successfully.');
+                        $("#order-from-shining3d-modal").modal('hide');
                     } else {
                         showError(response.message || 'API returned an error.');
                     }
-
-                    // btn.prop('disabled', false).text('Get Scan');
                 },
 
                 error: function () {
@@ -262,7 +256,6 @@ var Shining3d = function() {
                     // btn.prop('disabled', false).text('Get Scan');
                 }
             });
-
         });
     //    $(document).on('click', '#order-from-shining3d', function () {
 
