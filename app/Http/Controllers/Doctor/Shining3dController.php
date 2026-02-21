@@ -182,14 +182,9 @@ class Shining3dController extends Controller
             ->withBody($encryptedBody, 'text/plain')
             ->post($request->input('domainUrl') . '/sdk/dental/order/dataDownload');
 
-            // Raw response
-            $data = $response->body();
-
             // If response is JSON
             $json = $response->json();
-
             $domainUrl = $json['result'][0]['downloadURL'];
-
             $dataUpload = $this->dataUpload($domainUrl, $patientId, $treatmentPlanId);
             dd($json, $domainUrl, $dataUpload);
             return $json;
