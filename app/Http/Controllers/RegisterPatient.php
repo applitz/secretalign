@@ -470,9 +470,12 @@ class RegisterPatient extends Controller
                 ->first();
             session()->forget('patient_id');
         }
+
+         $hashids = new Hashids();
+            $hashCode = $hashids->encode($patient->id);
     // dd($dataShining3d);
         $changePlan = 'true';
-        return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code', 'dataShining3d', 'scanError'));
+        return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code', 'dataShining3d', 'scanError', 'hashCode'));
     }
 
     protected function delete_patient_storage_dir($patient_id)
