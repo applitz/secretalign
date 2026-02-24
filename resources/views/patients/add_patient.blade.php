@@ -3632,6 +3632,7 @@ async function previewUpperStlFile(file_upper)
                 // let tab = new bootstrap.Tab(tabEl);
                 // tab.show();
                  $("#pill-tab-li3").click();
+                $("#pill-tab-div2").removeClass('show active');
                 toastSuccess("Scan data Saved");
                 // $.ajax({
                 //     type: "POST",
