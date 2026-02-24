@@ -205,14 +205,7 @@ class Shining3dController extends Controller
         return response()->json(['status' => 'error', 'message' => 'Failed to get CSRF token'], 500);
     }
 
-    public function dataDownloadAndUpload(Request $request)
-    {
-        $patientId = '1486';
-        $domainUrl = 'https://s3.eu-central-1.amazonaws.com/awsdown.dental3dcloud.com/dentalService/471557c7-bcbc-5d5d-90fa-598b43228317/da238fd1-2ce1-5cde-ba31-40b017569779/full/stl/1e42f82c7f5eef03323211eb2416c4ac?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Checksum-Mode=ENABLED&X-Amz-Credential=AKIA2QJ2WUEBGOJBNOWF%2F20260219%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20260219T105614Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&x-id=GetObject&X-Amz-Signature=bd1af4d4a521855fcd6d010165900ee3db66f9084bba67125b94cf422b0d138c';
-        $treatmentPlanId = 1821;
-        $dataUpload = $this->dataUpload($domainUrl, $patientId, $treatmentPlanId);
-        dd($dataUpload);
-    }
+
 
     public function dataUpload($link, $patientId, $treatmentPlanId)
     {
@@ -261,9 +254,16 @@ class Shining3dController extends Controller
                     $upperArchFile = $file->getRealPath();
                 }
             }
-            return $this->uploadStlFilesOnserver($patientId, $treatmentPlanId, $upperArchFile, $lowerArchFile);
-            // dd($uploadStlFilesOnserver);
+            $result = $this->uploadStlFilesOnserver($patientId, $treatmentPlanId, $upperArchFile, $lowerArchFile);
 
+            if (File::exists($zipPath)) {
+                File::delete($zipPath);
+            }
+
+            // Delete extracted STL temp folder
+            File::deleteDirectory($storagePath);
+
+            return $result;
         } catch (\Exception $e) {
             return $e->getMessage();
         }
@@ -377,8 +377,6 @@ class Shining3dController extends Controller
         }
     }
 
-
-
     protected function mkDr($patient_id)
     {
         $directory = storage_path('/PatientFiles/Patient' . $patient_id);
@@ -390,5 +388,14 @@ class Shining3dController extends Controller
             umask($old_umask);
         }
         return $directory;
+    }
+
+    public function dataDownloadAndUpload(Request $request)
+    {
+        $patientId = '1486';
+        $domainUrl = 'https://s3.eu-central-1.amazonaws.com/awsdown.dental3dcloud.com/dentalService/471557c7-bcbc-5d5d-90fa-598b43228317/da238fd1-2ce1-5cde-ba31-40b017569779/full/stl/1e42f82c7f5eef03323211eb2416c4ac?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Checksum-Mode=ENABLED&X-Amz-Credential=AKIA2QJ2WUEBGOJBNOWF%2F20260219%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20260219T105614Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&x-id=GetObject&X-Amz-Signature=bd1af4d4a521855fcd6d010165900ee3db66f9084bba67125b94cf422b0d138c';
+        $treatmentPlanId = 1821;
+        $dataUpload = $this->dataUpload($domainUrl, $patientId, $treatmentPlanId);
+        dd($dataUpload);
     }
 }
