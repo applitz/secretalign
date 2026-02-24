@@ -4076,12 +4076,12 @@ async function previewUpperStlFile(file_upper)
 
                 let redirectUri;
 
-                if (mode === 'add') {
-                    redirectUri = "{{ config('shining3d.shining3d_redirect_uri') }}";
-                } else {
-                    redirectUri = "{{ url('/patient/edit') }}/" + hashCode;
-                }
-
+                // if (mode === 'add') {
+                //     redirectUri = "{{ config('shining3d.shining3d_redirect_uri') }}";
+                // } else {
+                //     redirectUri = "{{ url('/patient/edit') }}/" + hashCode;
+                // }
+                redirectUri = "{{ url('/patient/edit') }}/" + hashCode;
                 const shining3dAuthUrl =
                     'https://dental3dcloud.com/p/index?' +
                     'codeChallenge={{ config("shining3d.shining3d_code_challenge") }}' +
