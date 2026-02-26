@@ -13,6 +13,9 @@ use ZipArchive;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+
+use function Adminer\view;
+
 class Shining3dController extends Controller
 {
     protected string $baseUrl;
@@ -205,8 +208,6 @@ class Shining3dController extends Controller
         return response()->json(['status' => 'error', 'message' => 'Failed to get CSRF token'], 500);
     }
 
-
-
     public function dataUpload($link, $patientId, $treatmentPlanId)
     {
         try {
@@ -270,7 +271,7 @@ class Shining3dController extends Controller
     }
 
 
-     public function uploadStlFilesOnserver($patientId, $treatmentPlanId, $upperArch, $lowerArch)
+    public function uploadStlFilesOnserver($patientId, $treatmentPlanId, $upperArch, $lowerArch)
     {
         try {
 
@@ -398,4 +399,10 @@ class Shining3dController extends Controller
         $dataUpload = $this->dataUpload($domainUrl, $patientId, $treatmentPlanId);
         dd($dataUpload);
     }
+
+    public function regionDetails(Request $request)
+    {
+        return view('doctor.shining3d_region_details');
+    }
+
 }
