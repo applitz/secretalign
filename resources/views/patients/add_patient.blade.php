@@ -642,16 +642,17 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label for="scanType" class="form-label">Select Region</label>
+                                        <label for="scanType" class="form-label">Select Region
+                                            <a href="{{ route('shining3d.info') }}" class="text-info" >
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </label>
                                         <select id="scanRegion" class="form-select">
-
                                             <option value="https://ffapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ffapi.shining3d.com' ? 'selected="selected"' : '' }}> Europe (Frankfurt) – Recommended for EU countries </option>
                                             <option value="https://hzapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://hzapi.shining3d.com' ? 'selected="selected"' : '' }}>China (Hangzhou) – Mainland China users</option>
                                             <option value="https://ruapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ruapi.shining3d.com' ? 'selected="selected"' : '' }}>Russia – Users located in Russia</option>
                                             <option value="https://sapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://sapi.shining3d.com' ? 'selected="selected"' : '' }}>USA (Silicon Valley) – North America users</option>
                                             <option value="https://tkapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://tkapi.shining3d.com' ? 'selected="selected"' : '' }}>Japan (Tokyo) – Japan & East Asia users</option>
-
-
                                         </select>
                                     </div>
                                 </div>
