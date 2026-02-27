@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use function Adminer\view;
-
 class Shining3dController extends Controller
 {
     protected string $baseUrl;
@@ -399,10 +397,10 @@ class Shining3dController extends Controller
         $dataUpload = $this->dataUpload($domainUrl, $patientId, $treatmentPlanId);
         dd($dataUpload);
     }
-
     public function regionDetails(Request $request)
     {
         return view('doctor.shining3d_region_details');
     }
 
 }
+
