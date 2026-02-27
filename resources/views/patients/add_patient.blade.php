@@ -643,7 +643,7 @@
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="scanType" class="form-label">Select Region
-                                            <a href="{{ route('shining3d-region-details') }}" class="text-info" >
+                                            <a href="{{ route('shining3d-region-details') }}" class="text-info" target="_blank" rel="noopener noreferrer">
                                                 <i class="fas fa-info-circle"></i>
                                             </a>
                                         </label>

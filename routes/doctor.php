@@ -20,6 +20,7 @@ Route::middleware(['auth', 'auth.doctor'])->group(function () {
     Route::get('data-download-and-upload-shining3d-order', [Shining3dController::class, 'dataDownloadAndUpload'])->name('download-and-upload-shining3d-order');
 
     Route::get('shining3d-region-details', [Shining3dController::class, 'regionDetails'])->name('shining3d-region-details');
+
 });
 
 ?>
