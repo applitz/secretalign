@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('p_treatment_plans', function (Blueprint $table) {
-            $table->dropColumn('records_type');
+        Schema::create('shining3d_country_region_map', function (Blueprint $table) {
+            $table->id();
+            $table->string('country_name')->unique();
+            $table->string('country_code')->unique();
+            $table->unsignedBigInteger('region_id');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('p_treatment_plans', function (Blueprint $table) {
-           $table->enum('records_type', ['old', 'new'])->default('old')->after('status');
-        });
+        Schema::dropIfExists('shining3d_country_region_map');
     }
 };
