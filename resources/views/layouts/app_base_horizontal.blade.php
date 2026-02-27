@@ -31,6 +31,10 @@
             .ck-editor__editable_inline {
                 min-height: 150px !important;
             }
+
+            .accordion-button.bg-primary::after {
+                filter: brightness(0) invert(1);
+            }
             /* Apply border to entire DataTable */
             /* table.dataTable {
                 border: 1px solid #d9d4d4 !important;
