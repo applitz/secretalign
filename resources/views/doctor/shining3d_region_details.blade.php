@@ -24,62 +24,60 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form id="filter-form">
+                    <div class="accordion" id="regionAccordion">
 
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <div class="row align-items-center g-3">
-                            <div class="col-12">
-                                <h6 class="text-700 mb-0">Date: </h6>
-                            </div>
-                            <div class="col-12 position-relative">
-                                <input class="form-control form-control-sm pickr ps-4" name="date" id="CRMDateRange"
-                                    value="{{ @$_GET['date'] }}" placeholder="Y-m-d to Y-m-d" type="text"
-                                    data-options="{&quot;mode&quot;:&quot;range&quot;,&quot;dateFormat&quot;:&quot;M d&quot;,&quot;disableMobile&quot;:true , &quot;defaultDate&quot;: [&quot;Aug 15&quot;, &quot;Aug 22&quot;] }" style="border: 1px solid #aaa;"/><span
-                                    class="fas fa-calendar-alt text-primary position-absolute top-50 translate-middle-y ms-2" >
-                                </span>
-                            </div>
-                            </div>
-                        </div>
+                        @foreach($regions as $key => $region)
+                            <div class="accordion-item mb-2">
+                                <h2 class="accordion-header " id="heading{{ $key }}">
+                                    <button class="accordion-button fw-bold bg-primary text-white {{ $key != 0 ? 'collapsed' : '' }}"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapse{{ $key }}"
+                                            aria-expanded="{{ $key == 0 ? 'true' : 'false' }}"
+                                            aria-controls="collapse{{ $key }}">
 
+                                        {{ $region->name }}
+                                    </button>
+                                </h2>
 
+                                <div id="collapse{{ $key }}"
+                                    class="accordion-collapse collapse {{ $key == 0 ? 'show' : '' }}"
+                                    aria-labelledby="heading{{ $key }}"
+                                    data-bs-parent="#regionAccordion">
 
-                        <div class="col-md-3 mb-3">
-                            <div class="row align-items-center g-3">
-                            <div class="col-12">
-                                <h6 class="text-700 mb-0">Search: </h6>
-                            </div>
-                            <div class="col-12 position-relative">
-                                <input class="form-control form-control-sm" id="ft_search" name="ft_search" placeholder="Search"
-                                    value="{{ @$_GET['search'] }}" style="border: 1px solid #aaa;"/>
-                            </div>
-                            </div>
-                        </div>
+                                    <div class="accordion-body">
 
-                        <div class="col-md-3 mb-3">
-                            <div class="row align-items-center g-3">
-                                <div class="col-12">
-                                    <h6 class="text-700 mb-0">&nbsp;</h6>
-                                </div>
-                                <div class="col-12 position-relative">
-                                    <div class="btn-group">
-                                        <button class="btn btn-primary waves-effect waves-light btn-sm submit-filter-form" type="submit"><i
-                                            class="fas fa-search me-2"></i> Filter</button>
-                                        <a class="btn btn-warning waves-effect waves-light btn-sm" id="clear-filters" href="javascript:;"><i
-                                            class="fas fa-trash-alt me-2"></i> Clean Filters</a>
+                                        @if($region->countries->count() > 0)
+
+                                            <div class="row">
+                                                @foreach($region->countries as $country)
+                                                    <div class="col-lg-2 col-md-4 col-12 mb-3">
+                                                        <div class="card border shadow-sm h-100">
+                                                            <div class="card-body p-2">
+
+                                                                <h6 class="mb-1 fw-bold">
+                                                                    {{ $country->country_name }}
+                                                                </h6>
+
+                                                                <small class="text-muted">
+                                                                    {{ $country->code ?? '(' . $country->country_code . ')' }}
+                                                                </small>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+
+                                        @else
+                                            <p class="text-muted mb-0">No countries available in this region.</p>
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    </form>
+                        @endforeach
 
-                    <div class="table-rep-plugin">
-                        <div class="table-responsive mb-0" data-pattern="priority-columns">
-                            <table id="tasks-list" class="table table-striped" >
-
-                            </table>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -89,14 +87,4 @@
 </div>
 @endsection
 
-@section('javascript')
-    <script src="{{ asset('public/assets/plugins/dataTables/1.11.5/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('public/assets/plugins/dataTables/1.11.5/js/dataTables.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('public/assets/plugins/dataTables/responsive/2.2.9/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('public/assets/customjs/shining3d_region_details.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            Shining3d_region_details.init();
-        });
-    </script>
-@endsection
+

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Shining3Details;
+use App\Models\Shining3dRegion;
 use Carbon\Carbon;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\File;
@@ -399,7 +400,11 @@ class Shining3dController extends Controller
     }
     public function regionDetails(Request $request)
     {
-        return view('doctor.shining3d_region_details');
+        $regions = Shining3dRegion::active()
+                ->with('countries')
+                ->orderBy('name')
+                ->get();
+        return view('doctor.shining3d_region_details', compact('regions'));
     }
 
 }
