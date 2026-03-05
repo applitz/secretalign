@@ -648,11 +648,11 @@
                                             </a>
                                         </label>
                                         <select id="scanRegion" class="form-select">
-                                            <option value="https://ffapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ffapi.shining3d.com' ? 'selected="selected"' : '' }}> Europe (Frankfurt) – Recommended for EU countries </option>
-                                            <option value="https://hzapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://hzapi.shining3d.com' ? 'selected="selected"' : '' }}>China (Hangzhou) – Mainland China users</option>
-                                            <option value="https://ruapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ruapi.shining3d.com' ? 'selected="selected"' : '' }}>Russia – Users located in Russia</option>
-                                            <option value="https://sapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://sapi.shining3d.com' ? 'selected="selected"' : '' }}>USA (Silicon Valley) – North America users</option>
-                                            <option value="https://tkapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://tkapi.shining3d.com' ? 'selected="selected"' : '' }}>Japan (Tokyo) – Japan & East Asia users</option>
+                                            <option value="https://ffapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ffapi.shining3d.com' ? 'selected="selected"' : '' }}> Europe </option>
+                                            <option value="https://hzapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://hzapi.shining3d.com' ? 'selected="selected"' : '' }}> China</option>
+                                            <option value="https://ruapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ruapi.shining3d.com' ? 'selected="selected"' : '' }}> Russia </option>
+                                            <option value="https://sapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://sapi.shining3d.com' ? 'selected="selected"' : '' }}> USA</option>
+                                            <option value="https://tkapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://tkapi.shining3d.com' ? 'selected="selected"' : '' }}> Asia-Pacific</option>
                                         </select>
                                     </div>
                                 </div>
