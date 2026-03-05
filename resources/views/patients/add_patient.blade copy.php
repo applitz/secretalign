@@ -3621,7 +3621,7 @@
                                                 </div>
                                                 <label><strong>Choose Advisor</strong></label>
                                                 <select class="form-control form-select" name="advisor" id="advisor" required>
-                                                    <option value="" disabled selected>Select Advisor</option>
+                                                    <option value="" selected>Select Advisor</option>
                                                     @foreach ($advisors as $item)
                                                     <option value="{{ $item->id }}">
                                                         {{ $item->first_name }} {{ $item->last_name }} (€{{ $item->advisor_price }})
@@ -3705,7 +3705,7 @@
                                                 </div>
                                                 <label><strong>Choose Advisor</strong></label>
                                                 <select class="form-control form-select" name="advisor" id="advisor" required>
-                                                    <option value="" disabled selected>Select Advisor</option>
+                                                    <option value="" selected>Select Advisor</option>
                                                     @foreach ($advisors as $item)
                                                     <option value="{{ $item->id }}">
                                                         {{ $item->first_name }} {{ $item->last_name }} (€{{ $item->advisor_price }})
