@@ -52,18 +52,6 @@
     @include('patients.case-overview.card_body_for_iframe_left')
 </div>
 
-{{-- </div>
-</div>
-</div>
-</div>
-</div>
-
-
-
-</div>
-</div>
-</div> --}}
-
 <div class="modal fade" id="docSendModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -135,7 +123,8 @@
         var filesLoaded = 0;
         var element = document.getElementById("progress-wrapper");
         var loadingBar = document.getElementById("loading-bar");
-        const buttons = document.querySelectorAll('.step-control');
+        // Scope to the primary viewer only so optional buttons don't affect it
+        const buttons = document.querySelectorAll('#hide-on-paste .step-control');
 
         var totalFiles = 2;
         var percentage = (100 / totalFiles);
@@ -206,9 +195,10 @@
             camera.position.z = 10;
             camera.position.x = 0;
             camera.position.y = -6;
-            scene.scale.set(0.02, 0.02, 0.02);
-            controls.update();
-            const divs = document.querySelectorAll('.model-control');
+        scene.scale.set(0.02, 0.02, 0.02);
+        controls.update();
+        // Scope to the primary viewer only so optional buttons don't affect it
+        const divs = document.querySelectorAll('#hide-on-paste .model-control');
             divs.forEach(el => el.addEventListener('click', event => {
                 console.log(event.target.getAttribute("id"));
                 const objectid = event.target.getAttribute("id");
@@ -582,7 +572,6 @@
     </script>
 @endif
 
-
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const inputField = document.getElementById('patient-iframe');
@@ -664,6 +653,7 @@
     });
 
 </script>
+
 <script type="text/javascript">
     function authenticate(auth, url) {
         var iframe = document.getElementById('nemoPortal');
@@ -673,6 +663,7 @@
         console.log(event.data);
     }
 </script>
+
 <script>
     function syncNemoLink(selectEl) {
         const option = selectEl.value.trim();

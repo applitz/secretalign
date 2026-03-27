@@ -244,6 +244,78 @@
         @endif
     @endif
 
+    <div class="mb-3">
+        Add additional Scans (Optional)
+    </div>
+
+    <div class="" id="additional-scans-optional">
+        <div class="row mb-3">
+            {{-- Posterior Bite Turbos --}}
+            <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-6 col-12 _dropzone_template" template-key="18">
+                <input class="d-none" name="file18" id="key18" file="{{ @$patient->optional_fl_upper_arch }}" data-field="18" type="file">
+                <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="posterior-bite-turbos-box" key="18" style="background-image: url('{{asset('public/assets/vector/upper-jaw.png')}}')">
+                    <div class="_dropzone_added _dropzone_added_hidden d-flex flex-column align-items-center justify-content-center">
+                        <span class="text-white fw-semibold" data-text></span>
+                        <img src="{{asset('public/assets')}}/check-mark.png" style="width: 50px;height: 50px;">
+                    </div>
+                    <div class="_dropzone_hover _dropzone_hover_hidden d-flex flex-column align-items-center justify-content-center">
+                        <span class="text-white fw-semibold" data-text>Drag & drop file</span>
+                        <img src="{{asset('public/assets')}}/download-circular-button.png" style="width: 50px;height: 50px;">
+                    </div>
+                    <div class="_dropzone_loading _dropzone_loading_hidden d-flex flex-column align-items-center justify-content-center">
+                        <span class="text-white fw-semibold" data-text>Uploading...</span>
+                        <img src="{{asset('public/assets')}}/circle-loading.png" class="_dropzone_loading_animation" style="width: 50px;height: 50px;">
+                    </div>
+                    <div class="_dropzone_remove _dropzone_remove_hidden d-flex flex-column align-items-center justify-content-center">
+                        <span class="text-white fw-semibold" data-text>Delete file</span>
+                        <img src="{{asset('public/assets')}}/x-mark.png" style="width: 50px; height: 50px;">
+                    </div>
+                </div>
+                <label class="form-label mb-3" for="optional_fl_upper_arch">Upper Arch</label>
+                <div class="mb-3" style="width: 60%;">
+                    <div class="progress animated-progress">
+                        <div class="progress-bar bg-primary" id="optional-upper-arch-progress-bar" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
+                </div>
+                <div class="mb-3 " id="optional-stl-upper-arch-preview">
+
+                </div>
+            </div>
+
+            {{-- Anterior Bite Turbos --}}
+            <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-6 col-12 _dropzone_template" template-key="19">
+                <input class="d-none" name="file19" id="key19" file="{{ @$patient->optional_fl_lower_arch }}" data-field="19" type="file">
+                <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="anterior-bite-turbos-box" key="19" style="background-image: url('{{asset('public/assets/vector/down-jaw.png')}}')">
+                    <div class="_dropzone_added _dropzone_added_hidden d-flex flex-column align-items-center justify-content-center">
+                        <span class="text-white fw-semibold" data-text></span>
+                        <img src="{{asset('public/assets')}}/check-mark.png" style="width: 50px;height: 50px;">
+                    </div>
+                    <div class="_dropzone_hover _dropzone_hover_hidden d-flex flex-column align-items-center justify-content-center">
+                        <span class="text-white fw-semibold" data-text>Drag & drop file</span>
+                        <img src="{{asset('public/assets')}}/download-circular-button.png" style="width: 50px;height: 50px;">
+                    </div>
+                    <div class="_dropzone_loading _dropzone_loading_hidden d-flex flex-column align-items-center justify-content-center">
+                        <span class="text-white fw-semibold" data-text>Uploading...</span>
+                        <img src="{{asset('public/assets')}}/circle-loading.png" class="_dropzone_loading_animation" style="width: 50px;height: 50px;">
+                    </div>
+                    <div class="_dropzone_remove _dropzone_remove_hidden d-flex flex-column align-items-center justify-content-center">
+                        <span class="text-white fw-semibold" data-text>Delete file</span>
+                        <img src="{{asset('public/assets')}}/x-mark.png" style="width: 50px; height: 50px;">
+                    </div>
+                </div>
+                <label class="form-label mb-3" for="optional_fl_lower_arch">Lower Arch</label>
+                <div class="mb-3" style="width: 60%;">
+                    <div class="progress animated-progress">
+                        <div class="progress-bar bg-primary" id="optional-lower-arch-progress-bar" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
+                </div>
+                <div class="mb-3 " id="optional-stl-lower-arch-preview">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="mb-3 text-end">
         <button class="btn btn-primary btn-sm waves-effect waves-light px-3 previous-tab" data-target="#pill-tab-li-treatment-type">Previous</button>
         <button class="btn btn-primary btn-sm waves-effect waves-light px-3" id="submit-scan-data" @if (@$patient->fl_upper_arch

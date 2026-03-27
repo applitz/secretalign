@@ -415,6 +415,13 @@ class PatientFileController extends Controller
                 $column = "fl_notes";
             }
 
+            if ($request->get('key') == 18) {
+                $column = "optional_fl_upper_arch";
+            }
+            if ($request->get('key') == 19) {
+                $column = "optional_fl_lower_arch";
+            }
+
             if ($column != '') {
                 DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
                     $column => $filename,
@@ -560,6 +567,24 @@ class PatientFileController extends Controller
             if ($request->post('key') == 13) {
                 $column = "fl_general_upload";
                 unlink($directory . $plan->fl_general_upload);
+            }
+            if ($request->post('key') == 14) {
+                $column = "fl_posterior_bite_turbos";
+                if (!empty($plan->fl_posterior_bite_turbos) && file_exists($directory . $plan->fl_posterior_bite_turbos)) {
+                    unlink($directory . $plan->fl_posterior_bite_turbos);
+                }
+            }
+            if ($request->post('key') == 15) {
+                $column = "fl_anterior_bite_turbos";
+                if (!empty($plan->fl_anterior_bite_turbos) && file_exists($directory . $plan->fl_anterior_bite_turbos)) {
+                    unlink($directory . $plan->fl_anterior_bite_turbos);
+                }
+            }
+            if ($request->post('key') == 16) {
+                $column = "fl_bite_keeper";
+                if (!empty($plan->fl_bite_keeper) && file_exists($directory . $plan->fl_bite_keeper)) {
+                    unlink($directory . $plan->fl_bite_keeper);
+                }
             }
 
             if ($column != '') {

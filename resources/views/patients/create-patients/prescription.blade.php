@@ -1678,8 +1678,8 @@
                             </div>
 
                             <div class="form-check">
-                                <input class="form-check-input" id="additional_attachments4" name="additional_attachments" type="checkbox" value="Secret Blocks" @if(in_array("Secret Blocks", $additional_attachments)) checked @endif />
-                                <label class="form-check-label" for="additional_attachments4">SECRET Blocks
+                                <input class="form-check-input" id="additional_attachments5" name="additional_attachments" type="checkbox" value="Secret Blocks" @if(in_array("Secret Blocks", $additional_attachments)) checked @endif />
+                                <label class="form-check-label" for="additional_attachments5">SECRET Blocks
                                     <a href="javascript:;" class="text-info" data-bs-toggle="modal" data-bs-target="#secret-blocks-modal">
                                         <i class="fas fa-info-circle"></i>
                                     </a>
