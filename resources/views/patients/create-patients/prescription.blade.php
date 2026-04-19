@@ -137,7 +137,7 @@
             </div>
             <div class="collapse bg-light" id="collapseFaqAccordion3"
                 aria-labelledby="faqAccordionHeading3" data-parent="#accordionFaq">
-                <div class="card-body">
+                <div class="card-body" style="text-align: center;">
                     <div class="mb-3">
                         <div class="form-check form-switch">
                             <input class="form-check-input" id="class1" type="checkbox" name="class"
@@ -151,6 +151,322 @@
                             <label class="form-check-label" for="class2">Correct</label>
                         </div>
                     </div>
+                    <hr>
+
+                    <div class="form-group" style="align-items: center; justify-content: center; display: flex;">
+                        <div id="buttons" style="justify-content: center">
+
+                            <style>
+
+                                .attachment-inline {
+                                    display: flex;
+                                    gap: 8px;
+                                    flex-wrap: wrap;
+                                    justify-content: center;
+                                }
+                                .choose-tooth-section-2 {
+                                    cursor: pointer;
+                                }
+                                .inline-item {
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    justify-content: center;
+                                    gap: 4px;
+
+                                    width: 120px;
+                                    min-height: 70px;
+                                    padding: 8px 14px;
+                                    border-radius: 10px;
+                                    border: 1px solid #ddd;
+                                    background: #fff;
+
+                                    font-size: 14px;
+                                    color: #6b7280;
+
+                                    cursor: pointer;
+                                    transition: all 0.2s ease;
+                                }
+
+                                .inline-item:has(input:checked) {
+                                    border-color: #2bb6a8;
+                                    background: #e8fbf8;
+                                }
+
+                                /* Hide radio */
+                                .inline-item input {
+                                    display: none;
+                                }
+
+                                /* ICON FIX */
+                                .inline-item img {
+                                    width: 24px;
+                                    height: 24px;
+                                    object-fit: contain;
+                                }
+
+                                /* Special small icon */
+                                .inline-item img[src*="precisioncut"] {
+                                    width: 12px;
+                                }
+
+                                /* HOVER */
+                                .inline-item:hover {
+                                    background: #f5f7fa;
+                                }
+
+                                /* ACTIVE */
+                                .inline-item:has(input:checked),
+                                .inline-item.active {
+                                    border-color: #2bb6a8;
+                                    background: #e8fbf8;
+                                }
+
+                                /* TEXT ACTIVE */
+                                .inline-item span {
+                                    text-align: center;
+                                }
+
+                                .inline-item:has(input:checked) span {
+                                    color: #2bb6a8;
+                                    font-weight: 500;
+                                }
+
+                                /* Tooth button overlay styles */
+                                .tooth-button-overlay {
+                                    border-radius: 50%;
+                                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                                    border: 2px solid #007bff;
+                                    transition: all 0.2s ease;
+                                }
+
+                                .tooth-button-overlay:hover {
+                                    transform: scale(1.1);
+                                    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                                }
+
+                                /* Make tooth containers positioned for absolute children and add space for buttons */
+                                #classIIUpperArcNew, #classIIUpperArcNew-2, #classIIUpperArcNew-3, #classIILowerArc, #classIILowerArc-2, #classIILowerArc-3 {
+                                    position: relative !important;
+                                }
+
+                                #classIIUpperArcNew, #classIIUpperArcNew-2, #classIIUpperArcNew-3 {
+                                    padding-top: 30px !important; /* Space for buttons above upper teeth */
+                                }
+
+                                #classIILowerArc, #classIILowerArc-2, #classIILowerArc-3 {
+                                    padding-bottom: 35px !important; /* Space for buttons below lower teeth */
+                                }
+                            </style>
+
+                            <div class="attachment-inline">
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector" class="class-selector" value="button-cutout" checked="checked">
+                                    <img src="{{ asset('public/assets/tooth/png/buttons.png') }}">
+                                    <span>Button Cutout</span>
+                                </label>
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector" class="class-selector" value="precision-cut">
+                                    <img src="{{ asset('public/assets/tooth/png/precisioncut.png') }}">
+                                    <span>Precision Cut</span>
+                                </label>
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector" class="class-selector" value="i-hook">
+                                    <img src="{{ asset('public/assets/tooth/png/I-hook.png') }}">
+                                    <span>I-Hook</span>
+                                </label>
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector" class="class-selector" value="power-ridge">
+                                    <img src="{{ asset('public/assets/tooth/png/Power-Ridge.png') }}">
+                                    <span>Power Ridge</span>
+                                </label>
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector" class="class-selector" value="power-arm-attachment">
+                                    <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.png') }}">
+                                    <span>Power Arm Attachment</span>
+                                </label>
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector" class="class-selector" value="bite-ramp">
+                                    <img src="{{ asset('public/assets/tooth/png/Bite-Ramp.png') }}">
+                                    <span>Bite Ramp</span>
+                                </label>
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector" class="class-selector" value="bite-turbos">
+                                    <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.png') }}">
+                                    <span>Bite Turbos</span>
+                                </label>
+
+                            </div>
+
+                            <input type="hidden" id="feature_button_outer_ids" value="" name="feature_button_outer_ids">
+                            <input type="hidden" id="feature_button_inner_ids" value="" name="feature_button_inner_ids">
+                            <input type="hidden" id="feature_ihook_outer_ids" value="" name="feature_ihook_outer_ids">
+                            <input type="hidden" id="feature_ihook_inner_ids" value="" name="feature_ihook_inner_ids">
+                            <input type="hidden" id="feature_precision_cut_outer_ids" value="" name="feature_precision_cut_outer_ids">
+                            <input type="hidden" id="feature_precision_cut_inner_ids" value="" name="feature_precision_cut_inner_ids">
+                            <input type="hidden" id="feature_bite_turbos_ids" value="" name="feature_bite_turbos_ids">
+                            <input type="hidden" id="feature_bite_ramp_ids" value="" name="feature_bite_ramp_ids">
+                            <input type="hidden" id="feature_power_arm_attachment_outer_ids" value="" name="feature_power_arm_attachment_outer_ids">
+                            <input type="hidden" id="feature_power_arm_attachment_inner_ids" value="" name="feature_power_arm_attachment_inner_ids">
+                            <input type="hidden" id="feature_power_ridge_outer_ids" value="" name="feature_power_ridge_outer_ids">
+                            <input type="hidden" id="feature_power_ridge_inner_ids" value="" name="feature_power_ridge_inner_ids">
+
+                            <div class="col-xs-12" style="margin-top: 10px;">
+                                <div class="teeth-layout-wrapper" style="max-width: 1200px; margin: 0 auto;">
+                                    <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:10px; padding:0.5rem 0;" id="classIIUpperArcNew">
+                                        <img id="1" class="choose-tooth" data-id="1"  data-image="UR-8.png" src="{{ asset('public/assets/tooth/png/UR-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="2" class="choose-tooth" data-id="2"  data-image="UR-7.png" src="{{ asset('public/assets/tooth/png/UR-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="3" class="choose-tooth" data-id="3"  data-image="UR-6.png" src="{{ asset('public/assets/tooth/png/UR-6.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="4" class="choose-tooth" data-id="4"  data-image="UR-5.png" src="{{ asset('public/assets/tooth/png/UR-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="5" class="choose-tooth" data-id="5"  data-image="UR-4.png" src="{{ asset('public/assets/tooth/png/UR-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="6" class="choose-tooth" data-id="6"  data-image="UR-3.png" src="{{ asset('public/assets/tooth/png/UR-3.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="7" class="choose-tooth" data-id="7"  data-image="UR-2.png" src="{{ asset('public/assets/tooth/png/UR-2.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="8" class="choose-tooth" data-id="8"  data-image="UR-1.png" src="{{ asset('public/assets/tooth/png/UR-1.png') }}" style="vertical-align: baseline;height: 65px;width: 65px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="9" class="choose-tooth" data-id="9"  data-image="UL-1.png" src="{{ asset('public/assets/tooth/png/UL-1.png') }}" style="vertical-align: baseline;height: 65px;width: 65px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="10" class="choose-tooth" data-id="10"  data-image="UL-2.png" src="{{ asset('public/assets/tooth/png/UL-2.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="11" class="choose-tooth" data-id="11"  data-image="UL-3.png" src="{{ asset('public/assets/tooth/png/UL-3.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="12" class="choose-tooth" data-id="12"  data-image="UL-4.png" src="{{ asset('public/assets/tooth/png/UL-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="13" class="choose-tooth" data-id="13"  data-image="UL-5.png" src="{{ asset('public/assets/tooth/png/UL-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="14" class="choose-tooth" data-id="14"  data-image="UL-6.png" src="{{ asset('public/assets/tooth/png/UL-6.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="15" class="choose-tooth" data-id="15"  data-image="UL-7.png" src="{{ asset('public/assets/tooth/png/UL-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="16" class="choose-tooth" data-id="16"  data-image="UL-8.png" src="{{ asset('public/assets/tooth/png/UL-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                    </div>
+                                    <div class="teeth-divider" style="display:flex; align-items:center; justify-content:center; gap:1rem; margin: 0.75rem 0;">
+                                        <span style="font-weight:bold;">R</span>
+                                        <span style="flex:1; height:1px; background: rgba(177, 175, 175, 0.70);"></span>
+                                        <span style="font-weight:bold;">L</span>
+                                    </div>
+                                    <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:10px; position:relative; padding:0.5rem 0 25px;" id="classIILowerArc">
+                                        <img id="17" class="choose-tooth" data-id="17"  data-image="LR-8.png"  src="{{ asset('public/assets/tooth/png/LR-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="18" class="choose-tooth" data-id="18"  data-image="LR-7.png"  src="{{ asset('public/assets/tooth/png/LR-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="19" class="choose-tooth" data-id="19"  data-image="LR-6.png"  src="{{ asset('public/assets/tooth/png/LR-6.png') }}" style="vertical-align: baseline;height: 63px;width: 63px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="20" class="choose-tooth" data-id="20"  data-image="LR-5.png"  src="{{ asset('public/assets/tooth/png/LR-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="21" class="choose-tooth" data-id="21"  data-image="LR-4.png"  src="{{ asset('public/assets/tooth/png/LR-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="22" class="choose-tooth" data-id="22"  data-image="LR-3.png"  src="{{ asset('public/assets/tooth/png/LR-3.png') }}" style="vertical-align: baseline;height: 59px;width: 59px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="23" class="choose-tooth" data-id="23"  data-image="LR-2.png"  src="{{ asset('public/assets/tooth/png/LR-2.png') }}" style="vertical-align: baseline;height: 54px;width: 54px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="24" class="choose-tooth" data-id="24"  data-image="LR-1.png"  src="{{ asset('public/assets/tooth/png/LR-1.png') }}" style="vertical-align: baseline;height: 53px;width: 53px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="25" class="choose-tooth" data-id="25"  data-image="LL-1.png"  src="{{ asset('public/assets/tooth/png/LL-1.png') }}" style="vertical-align: baseline;height: 53px;width: 53px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="26" class="choose-tooth" data-id="26"  data-image="LL-2.png"  src="{{ asset('public/assets/tooth/png/LL-2.png') }}" style="vertical-align: baseline;height: 54px;width: 54px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="27" class="choose-tooth" data-id="27"  data-image="LL-3.png"  src="{{ asset('public/assets/tooth/png/LL-3.png') }}" style="vertical-align: baseline;height: 59px;width: 59px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="28" class="choose-tooth" data-id="28"  data-image="LL-4.png"  src="{{ asset('public/assets/tooth/png/LL-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="29" class="choose-tooth" data-id="29"  data-image="LL-5.png"  src="{{ asset('public/assets/tooth/png/LL-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="30" class="choose-tooth" data-id="30"  data-image="LL-6.png"  src="{{ asset('public/assets/tooth/png/LL-6.png') }}" style="vertical-align: baseline;height: 63px;width: 63px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="31" class="choose-tooth" data-id="31"  data-image="LL-7.png"  src="{{ asset('public/assets/tooth/png/LL-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="32" class="choose-tooth" data-id="32"  data-image="LL-8.png"  src="{{ asset('public/assets/tooth/png/LL-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group" style="align-items: center; justify-content: center; display: flex;">
+                        <div id="buttons" style="justify-content: center">
+                            <div class="attachment-inline">
+
+
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector-section-2" class="class-selector-section-2" value="unerupted-teeth" checked="checked">
+                                    {{-- <img src="{{ asset('public/assets/tooth/png/precisioncut.png') }}"> --}}
+                                    <span>Missing or Unerupted teeth</span>
+                                </label>
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector-section-2" class="class-selector-section-2" value="extracted-teeth"  >
+                                    <img src="{{ asset('public/assets/tooth/png/extracted.png') }}">
+                                    <span>To be Extracted</span>
+                                </label>
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector-section-2" class="class-selector-section-2" value="tooth-movement-restrictions">
+                                    <img src="{{ asset('public/assets/tooth/png/movement.png') }}">
+                                    <span>Tooth Movement Restrictions</span>
+                                </label>
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector-section-2" class="class-selector-section-2" value="coil" >
+                                    <img src="{{ asset('public/assets/tooth/png/coil.png') }}" style="width: 36px">
+                                    <span>Open space for future Prosthesis</span>
+                                </label>
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector-section-2" class="class-selector-section-2" value="pontic">
+                                    <img src="{{ asset('public/assets/tooth/png/pontic.png') }}" style="width: 36px;height: 36px;">
+                                    <span>Pontic</span>
+                                </label>
+
+                                <label class="inline-item">
+                                    <input type="radio" name="class-selector-section-2" class="class-selector-section-2" value="bridge">
+                                    <img src="{{ asset('public/assets/tooth/png/Bridge.png') }}" style="width: 48px">
+                                    <span>Bridge</span>
+                                </label>
+
+                            </div>
+
+                             <input type="hidden" id="feature_unerupted_teeth_ids" value="" name="feature_unerupted_teeth_ids">
+                             <input type="hidden" id="feature_extracted_teethids" value="" name="feature_extracted_teethids">
+                             <input type="hidden" id="feature_tooth_movement_restrictions_ids" value="" name="feature_tooth_movement_restrictions_ids">
+                             <input type="hidden" id="feature_coil_ids" value="" name="feature_coil_ids">
+                             <input type="hidden" id="feature_pontic_ids" value="" name="feature_pontic_ids">
+                             <input type="hidden" id="feature_bridge_ids" value="" name="feature_bridge_ids">
+
+                            <div class="col-xs-12" style="margin-top: 10px;">
+                                <div class="teeth-layout-wrapper" style="max-width: 1200px; margin: 0 auto;">
+                                    <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:10px; padding:0.5rem 0;" id="classIIUpperArcNew-2">
+                                        <img id="1" class="choose-tooth-section-2" data-id="1"  data-image="UR-8.png" src="{{ asset('public/assets/tooth/png/UR-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="2" class="choose-tooth-section-2" data-id="2"  data-image="UR-7.png" src="{{ asset('public/assets/tooth/png/UR-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="3" class="choose-tooth-section-2" data-id="3"  data-image="UR-6.png" src="{{ asset('public/assets/tooth/png/UR-6.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="4" class="choose-tooth-section-2" data-id="4"  data-image="UR-5.png" src="{{ asset('public/assets/tooth/png/UR-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="5" class="choose-tooth-section-2" data-id="5"  data-image="UR-4.png" src="{{ asset('public/assets/tooth/png/UR-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="6" class="choose-tooth-section-2" data-id="6"  data-image="UR-3.png" src="{{ asset('public/assets/tooth/png/UR-3.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="7" class="choose-tooth-section-2" data-id="7"  data-image="UR-2.png" src="{{ asset('public/assets/tooth/png/UR-2.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="8" class="choose-tooth-section-2" data-id="8"  data-image="UR-1.png" src="{{ asset('public/assets/tooth/png/UR-1.png') }}" style="vertical-align: baseline;height: 65px;width: 65px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="9" class="choose-tooth-section-2" data-id="9"  data-image="UL-1.png" src="{{ asset('public/assets/tooth/png/UL-1.png') }}" style="vertical-align: baseline;height: 65px;width: 65px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="10" class="choose-tooth-section-2" data-id="10"  data-image="UL-2.png" src="{{ asset('public/assets/tooth/png/UL-2.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="11" class="choose-tooth-section-2" data-id="11"  data-image="UL-3.png" src="{{ asset('public/assets/tooth/png/UL-3.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="12" class="choose-tooth-section-2" data-id="12"  data-image="UL-4.png" src="{{ asset('public/assets/tooth/png/UL-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="13" class="choose-tooth-section-2" data-id="13"  data-image="UL-5.png" src="{{ asset('public/assets/tooth/png/UL-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="14" class="choose-tooth-section-2" data-id="14"  data-image="UL-6.png" src="{{ asset('public/assets/tooth/png/UL-6.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="15" class="choose-tooth-section-2" data-id="15"  data-image="UL-7.png" src="{{ asset('public/assets/tooth/png/UL-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="16" class="choose-tooth-section-2" data-id="16"  data-image="UL-8.png" src="{{ asset('public/assets/tooth/png/UL-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                    </div>
+                                    <div class="teeth-divider" style="display:flex; align-items:center; justify-content:center; gap:1rem; margin: 0.75rem 0;">
+                                        <span style="font-weight:bold;">R</span>
+                                        <span style="flex:1; height:1px; background: rgba(177, 175, 175, 0.70);"></span>
+                                        <span style="font-weight:bold;">L</span>
+                                    </div>
+                                    <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:10px; position:relative; padding:0.5rem 0 25px;" id="classIILowerArc-2">
+                                        <img id="17" class="choose-tooth-section-2" data-id="17"  data-image="LR-8.png"  src="{{ asset('public/assets/tooth/png/LR-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="18" class="choose-tooth-section-2" data-id="18"  data-image="LR-7.png"  src="{{ asset('public/assets/tooth/png/LR-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="19" class="choose-tooth-section-2" data-id="19"  data-image="LR-6.png"  src="{{ asset('public/assets/tooth/png/LR-6.png') }}" style="vertical-align: baseline;height: 63px;width: 63px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="20" class="choose-tooth-section-2" data-id="20"  data-image="LR-5.png"  src="{{ asset('public/assets/tooth/png/LR-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="21" class="choose-tooth-section-2" data-id="21"  data-image="LR-4.png"  src="{{ asset('public/assets/tooth/png/LR-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="22" class="choose-tooth-section-2" data-id="22"  data-image="LR-3.png"  src="{{ asset('public/assets/tooth/png/LR-3.png') }}" style="vertical-align: baseline;height: 59px;width: 59px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="23" class="choose-tooth-section-2" data-id="23"  data-image="LR-2.png"  src="{{ asset('public/assets/tooth/png/LR-2.png') }}" style="vertical-align: baseline;height: 54px;width: 54px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="24" class="choose-tooth-section-2" data-id="24"  data-image="LR-1.png"  src="{{ asset('public/assets/tooth/png/LR-1.png') }}" style="vertical-align: baseline;height: 53px;width: 53px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="25" class="choose-tooth-section-2" data-id="25"  data-image="LL-1.png"  src="{{ asset('public/assets/tooth/png/LL-1.png') }}" style="vertical-align: baseline;height: 53px;width: 53px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="26" class="choose-tooth-section-2" data-id="26"  data-image="LL-2.png"  src="{{ asset('public/assets/tooth/png/LL-2.png') }}" style="vertical-align: baseline;height: 54px;width: 54px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="27" class="choose-tooth-section-2" data-id="27"  data-image="LL-3.png"  src="{{ asset('public/assets/tooth/png/LL-3.png') }}" style="vertical-align: baseline;height: 59px;width: 59px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="28" class="choose-tooth-section-2" data-id="28"  data-image="LL-4.png"  src="{{ asset('public/assets/tooth/png/LL-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="29" class="choose-tooth-section-2" data-id="29"  data-image="LL-5.png"  src="{{ asset('public/assets/tooth/png/LL-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="30" class="choose-tooth-section-2" data-id="30"  data-image="LL-6.png"  src="{{ asset('public/assets/tooth/png/LL-6.png') }}" style="vertical-align: baseline;height: 63px;width: 63px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="31" class="choose-tooth-section-2" data-id="31"  data-image="LL-7.png"  src="{{ asset('public/assets/tooth/png/LL-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="32" class="choose-tooth-section-2" data-id="32"  data-image="LL-8.png"  src="{{ asset('public/assets/tooth/png/LL-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
                     <hr>
                     <h5 class="text-center mb-3">Precision Cuts Placement
                         <a href="javascript:;" class="text-info" data-bs-toggle="modal" data-bs-target="#precision-cuts-placement-modal">
@@ -730,8 +1046,8 @@
                             </div>
                         </div>
                     </div>
-
                     <hr>
+
                     <div class="mb-3">
                         <label>Notes</label>
                         <textarea class="form-control" id="class_notes"
@@ -2308,7 +2624,61 @@
                     </div>
 
                     <h5 class="text-center my-3">Please Mark the last tooth you want the aligners to cover</h5>
-                    <div class="row justify-content-center">
+
+                        <div class="form-group" style="align-items: center; justify-content: center; display: flex;">
+                        <div id="buttons" style="justify-content: center">
+                            <div class="col-xs-12">
+                                <div class="teeth-layout-wrapper" style="max-width: 1200px; margin: 0 auto;">
+                                    <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:10px; padding:0.5rem 0;" id="classIIUpperArcNew-3">
+                                        <img id="1" class="choose-tooth-aligners-to-cover" data-id="1"  data-image="UR-8.png" src="{{ asset('public/assets/tooth/png/UR-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="2" class="choose-tooth-aligners-to-cover" data-id="2"  data-image="UR-7.png" src="{{ asset('public/assets/tooth/png/UR-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="3" class="choose-tooth-aligners-to-cover" data-id="3"  data-image="UR-6.png" src="{{ asset('public/assets/tooth/png/UR-6.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="4" class="choose-tooth-aligners-to-cover" data-id="4"  data-image="UR-5.png" src="{{ asset('public/assets/tooth/png/UR-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="5" class="choose-tooth-aligners-to-cover" data-id="5"  data-image="UR-4.png" src="{{ asset('public/assets/tooth/png/UR-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="6" class="choose-tooth-aligners-to-cover" data-id="6"  data-image="UR-3.png" src="{{ asset('public/assets/tooth/png/UR-3.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="7" class="choose-tooth-aligners-to-cover" data-id="7"  data-image="UR-2.png" src="{{ asset('public/assets/tooth/png/UR-2.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="8" class="choose-tooth-aligners-to-cover" data-id="8"  data-image="UR-1.png" src="{{ asset('public/assets/tooth/png/UR-1.png') }}" style="vertical-align: baseline;height: 65px;width: 65px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="9" class="choose-tooth-aligners-to-cover" data-id="9"  data-image="UL-1.png" src="{{ asset('public/assets/tooth/png/UL-1.png') }}" style="vertical-align: baseline;height: 65px;width: 65px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="10" class="choose-tooth-aligners-to-cover" data-id="10"  data-image="UL-2.png" src="{{ asset('public/assets/tooth/png/UL-2.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="11" class="choose-tooth-aligners-to-cover" data-id="11"  data-image="UL-3.png" src="{{ asset('public/assets/tooth/png/UL-3.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="12" class="choose-tooth-aligners-to-cover" data-id="12"  data-image="UL-4.png" src="{{ asset('public/assets/tooth/png/UL-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="13" class="choose-tooth-aligners-to-cover" data-id="13"  data-image="UL-5.png" src="{{ asset('public/assets/tooth/png/UL-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="14" class="choose-tooth-aligners-to-cover" data-id="14"  data-image="UL-6.png" src="{{ asset('public/assets/tooth/png/UL-6.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="15" class="choose-tooth-aligners-to-cover" data-id="15"  data-image="UL-7.png" src="{{ asset('public/assets/tooth/png/UL-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="16" class="choose-tooth-aligners-to-cover" data-id="16"  data-image="UL-8.png" src="{{ asset('public/assets/tooth/png/UL-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                    </div>
+                                    <div class="teeth-divider" style="display:flex; align-items:center; justify-content:center; gap:1rem; margin: 0.75rem 0;">
+                                        <span style="font-weight:bold;">R</span>
+                                        <span style="flex:1; height:1px; background: rgba(177, 175, 175, 0.70);"></span>
+                                        <span style="font-weight:bold;">L</span>
+                                    </div>
+                                    <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:10px; position:relative; padding:0.5rem 0 25px;" id="classIILowerArc-3">
+                                        <img id="17" class="choose-tooth-aligners-to-cover" data-id="17"  data-image="LR-8.png"  src="{{ asset('public/assets/tooth/png/LR-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="18" class="choose-tooth-aligners-to-cover" data-id="18"  data-image="LR-7.png"  src="{{ asset('public/assets/tooth/png/LR-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="19" class="choose-tooth-aligners-to-cover" data-id="19"  data-image="LR-6.png"  src="{{ asset('public/assets/tooth/png/LR-6.png') }}" style="vertical-align: baseline;height: 63px;width: 63px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="20" class="choose-tooth-aligners-to-cover" data-id="20"  data-image="LR-5.png"  src="{{ asset('public/assets/tooth/png/LR-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="21" class="choose-tooth-aligners-to-cover" data-id="21"  data-image="LR-4.png"  src="{{ asset('public/assets/tooth/png/LR-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="22" class="choose-tooth-aligners-to-cover" data-id="22"  data-image="LR-3.png"  src="{{ asset('public/assets/tooth/png/LR-3.png') }}" style="vertical-align: baseline;height: 59px;width: 59px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="23" class="choose-tooth-aligners-to-cover" data-id="23"  data-image="LR-2.png"  src="{{ asset('public/assets/tooth/png/LR-2.png') }}" style="vertical-align: baseline;height: 54px;width: 54px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="24" class="choose-tooth-aligners-to-cover" data-id="24"  data-image="LR-1.png"  src="{{ asset('public/assets/tooth/png/LR-1.png') }}" style="vertical-align: baseline;height: 53px;width: 53px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="25" class="choose-tooth-aligners-to-cover" data-id="25"  data-image="LL-1.png"  src="{{ asset('public/assets/tooth/png/LL-1.png') }}" style="vertical-align: baseline;height: 53px;width: 53px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="26" class="choose-tooth-aligners-to-cover" data-id="26"  data-image="LL-2.png"  src="{{ asset('public/assets/tooth/png/LL-2.png') }}" style="vertical-align: baseline;height: 54px;width: 54px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="27" class="choose-tooth-aligners-to-cover" data-id="27"  data-image="LL-3.png"  src="{{ asset('public/assets/tooth/png/LL-3.png') }}" style="vertical-align: baseline;height: 59px;width: 59px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="28" class="choose-tooth-aligners-to-cover" data-id="28"  data-image="LL-4.png"  src="{{ asset('public/assets/tooth/png/LL-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="29" class="choose-tooth-aligners-to-cover" data-id="29"  data-image="LL-5.png"  src="{{ asset('public/assets/tooth/png/LL-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="30" class="choose-tooth-aligners-to-cover" data-id="30"  data-image="LL-6.png"  src="{{ asset('public/assets/tooth/png/LL-6.png') }}" style="vertical-align: baseline;height: 63px;width: 63px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="31" class="choose-tooth-aligners-to-cover" data-id="31"  data-image="LL-7.png"  src="{{ asset('public/assets/tooth/png/LL-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="32" class="choose-tooth-aligners-to-cover" data-id="32"  data-image="LL-8.png"  src="{{ asset('public/assets/tooth/png/LL-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="aligners_to_cover" value="">
+
+                    {{-- <div class="row justify-content-center">
                         <div class="col-8">
                             <div class="row">
                                 <div class="col-xs-6 col-sm-6  top left tw">
@@ -2493,11 +2863,40 @@
                                 </div>
                             </div>
                         </div>
+                    </div> --}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- B/L Side Selection Modal -->
+    <div class="modal fade" id="sideSelectionModal" tabindex="-1" role="dialog" aria-labelledby="sideSelectionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sideSelectionModalLabel">Select Tooth Side</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center mb-4">Please select which side of the tooth to place the cutout:</p>
+                    <div class="d-flex gap-3 justify-content-center">
+                        <!-- B (Outer) Button -->
+                        <button type="button" class="btn btn-outline-primary btn-lg" id="btn-select-outer" style="width: 200px; padding: 30px;">
+                            <div style="font-size: 24px; margin-bottom: 10px;">B</div>
+                            <strong>Buccal</strong>
+                        </button>
+
+                        <!-- L (Inner) Button -->
+                        <button type="button" class="btn btn-outline-success btn-lg" id="btn-select-inner" style="width: 200px; padding: 30px;">
+                            <div style="font-size: 24px; margin-bottom: 10px;">L</div>
+                            <strong>Lingual</strong>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="mb-3 text-end">
         <button class="btn btn-primary btn-sm waves-effect waves-light px-3 previous-tab" data-target="#pill-tab-li3">Previous</button>
         <button class="btn btn-primary btn-sm waves-effect waves-light px-3" id="submit-prescription"

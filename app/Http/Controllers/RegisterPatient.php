@@ -541,7 +541,7 @@ class RegisterPatient extends Controller
     }
     public function save_prescription(Request $request)
     {
-        //dd($request->all());
+        
         $data = [];
         $data['treat_upper_arch'] = $request->post('upper_arch');
         $data['treat_lower_arch'] = $request->post('lower_arch');
@@ -559,6 +559,26 @@ class RegisterPatient extends Controller
         $data['ctp_lr'] = serialize(json_decode($request->post('ctp_lr')));
         $data['ctp_ul'] = serialize(json_decode($request->post('ctp_ul')));
         $data['ctp_ll'] = serialize(json_decode($request->post('ctp_ll')));
+
+        $data['button_inner'] = implode(',', json_decode($request->post('button_inner'), true) ?? []);
+        $data['button_outer'] = implode(',', json_decode($request->post('button_outer'), true) ?? []);
+        $data['ihook_outer'] = implode(',', json_decode($request->post('ihook_outer'), true) ?? []);
+        $data['ihook_inner'] = implode(',', json_decode($request->post('ihook_inner'), true) ?? []);
+        $data['precision_cut_outer'] = implode(',', json_decode($request->post('precision_cut_outer'), true) ?? []);
+        $data['precision_cut_inner'] = implode(',', json_decode($request->post('precision_cut_inner'), true) ?? []);
+        $data['power_arm_attachment_outer'] = implode(',', json_decode($request->post('power_arm_attachment_outer'), true) ?? []);
+        $data['power_arm_attachment_inner'] = implode(',', json_decode($request->post('power_arm_attachment_inner'), true) ?? []);
+        $data['power_ridge_outer'] = implode(',', json_decode($request->post('power_ridge_outer'), true) ?? []);
+        $data['power_ridge_inner'] = implode(',', json_decode($request->post('power_ridge_inner'), true) ?? []);
+        $data['bite_turbos'] = implode(',', json_decode($request->post('bite_turbos'), true) ?? []);
+        $data['bite_ramp'] = implode(',', json_decode($request->post('bite_ramp'), true) ?? []);
+
+        $data['unerupted_teeth'] = implode(',', json_decode($request->post('unerupted_teeth'), true) ?? []);
+        $data['extracted_teeth'] = implode(',', json_decode($request->post('extracted_teeth'), true) ?? []);
+        $data['tooth_movement_restrictions'] = implode(',', json_decode($request->post('tooth_movement_restrictions'), true) ?? []);
+        $data['coil'] = implode(',', json_decode($request->post('coil'), true) ?? []);
+        $data['pontic'] = implode(',', json_decode($request->post('pontic'), true) ?? []);
+        $data['bridge'] = implode(',', json_decode($request->post('bridge'), true) ?? []);
 
         $data['ihook_ur'] = serialize(json_decode($request->post('ihook_ur')));
         $data['ihook_lr'] = serialize(json_decode($request->post('ihook_lr')));

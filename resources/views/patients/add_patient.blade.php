@@ -4056,6 +4056,46 @@ async function previewUpperStlFile(file_upper)
                 fd.append("class", clas);
                 var clas_notes = $("textarea[name=class_notes]").val();
 
+                var button_outer = $("input[name=feature_button_outer_ids]").val();
+                var button_inner = $("input[name=feature_button_inner_ids]").val();
+                var ihook_outer = $("input[name=feature_ihook_outer_ids]").val();
+                var ihook_inner = $("input[name=feature_ihook_inner_ids]").val();
+                var precision_cut_outer = $("input[name=feature_precision_cut_outer_ids]").val();
+                var precision_cut_inner = $("input[name=feature_precision_cut_inner_ids]").val();
+                var power_arm_attachment_outer = $("input[name=feature_power_arm_attachment_outer_ids]").val();
+                var power_arm_attachment_inner = $("input[name=feature_power_arm_attachment_inner_ids]").val();
+                var power_ridge_outer = $("input[name=feature_power_ridge_outer_ids]").val();
+                var power_ridge_inner = $("input[name=feature_power_ridge_inner_ids]").val();
+                var bite_turbos = $("input[name=feature_bite_turbos_ids]").val();
+                var bite_ramp = $("input[name=feature_bite_ramp_ids]").val();
+
+                var unerupted_teeth = $("input[name=feature_unerupted_teeth_ids]").val();
+                var extracted_teeth = $("input[name=feature_extracted_teeth_ids]").val();
+                var tooth_movement_restrictions = $("input[name=feature_tooth_movement_restrictions_ids]").val();
+                var coil = $("input[name=feature_coil_ids]").val();
+                var pontic = $("input[name=feature_pontic_ids]").val();
+                var bridge = $("input[name=feature_bridge_ids]").val();
+
+                fd.append("button_outer", button_outer);
+                fd.append("button_inner", button_inner);
+                fd.append("ihook_outer", ihook_outer);
+                fd.append("ihook_inner", ihook_inner);
+                fd.append("precision_cut_outer", precision_cut_outer);
+                fd.append("precision_cut_inner", precision_cut_inner);
+                fd.append("power_arm_attachment_outer", power_arm_attachment_outer);
+                fd.append("power_arm_attachment_inner", power_arm_attachment_inner);
+                fd.append("power_ridge_outer", power_ridge_outer);
+                fd.append("power_ridge_inner", power_ridge_inner);
+                fd.append("bite_turbos", bite_turbos);
+                fd.append("bite_ramp", bite_ramp);
+
+                fd.append("unerupted_teeth", unerupted_teeth);
+                fd.append("extracted_teeth", extracted_teeth);
+                fd.append("tooth_movement_restrictions", tooth_movement_restrictions);
+                fd.append("coil", coil);
+                fd.append("pontic", pontic);
+                fd.append("bridge", bridge);
+
                 //pcp
                 var pcp_ur = $('input[name="pcp_ur"]:checked').map(function() {
                     return $(this).data('number');
@@ -4289,22 +4329,45 @@ async function previewUpperStlFile(file_upper)
                 $("select[name=trim_type_lower]").removeClass('is-invalid')
 
                 //last aligners to cover
-                var tla_ur = $("input[name=tla_ur]:checked").map(function() {
-                    return $(this).data('number');
-                }).get();
+                function parseAlignersToCoverState(selector) {
+                    var raw = $(selector).val();
+
+                    if (!raw) {
+                        return [];
+                    }
+
+                    try {
+                        var parsed = JSON.parse(raw);
+                        return Array.isArray(parsed) ? parsed : [];
+                    } catch (e) {
+                        return [];
+                    }
+                }
+
+                var tla_ur = parseAlignersToCoverState("#tla_ur_state");
                 fd.append("tla_ur", JSON.stringify(tla_ur));
-                var tla_lr = $("input[name=tla_lr]:checked").map(function() {
-                    return $(this).data('number');
-                }).get();
+
+                var tla_lr = parseAlignersToCoverState("#tla_lr_state");
                 fd.append("tla_lr", JSON.stringify(tla_lr));
-                var tla_ul = $("input[name=tla_ul]:checked").map(function() {
-                    return $(this).data('number');
-                }).get();
+
+                var tla_ul = parseAlignersToCoverState("#tla_ul_state");
                 fd.append("tla_ul", JSON.stringify(tla_ul));
-                var tla_ll = $("input[name=tla_ll]:checked").map(function() {
-                    return $(this).data('number');
-                }).get();
+
+                var tla_ll = parseAlignersToCoverState("#tla_ll_state");
                 fd.append("tla_ll", JSON.stringify(tla_ll));
+
+                var upper_teeth_to_cover = tla_ur.length + tla_ul.length;
+                var lower_teeth_to_cover = tla_lr.length + tla_ll.length;
+
+                if (upper_teeth_to_cover > 0 && upper_teeth_to_cover < 4) {
+                    toastError("Please select at least 4 upper teeth to cover.");
+                    return false;
+                }
+
+                if (lower_teeth_to_cover > 0 && lower_teeth_to_cover < 4) {
+                    toastError("Please select at least 4 lower teeth to cover.");
+                    return false;
+                }
 
                 if (tla_ur.length == 0 && tla_lr.length == 0 && tla_ul.length == 0 && tla_ll.length == 0) {
                     toastError("Please mark the last tooth you want the aligners to cover (Special Instructions).");
@@ -4418,10 +4481,12 @@ async function previewUpperStlFile(file_upper)
 
 
 </script>
-
+<script src="{{  asset('public/assets/customjs/clinicalPreferences.js') }}"></script>
 <script src="{{ asset('public/assets/customjs/dm-integration.js') }}"></script>
 <script src="{{ asset('public/assets/customjs/add-patient.js') }}"></script>
 <script src="{{ asset('public/assets/customjs/shining3d.js') }}?v={{ time() }}"></script>
+<script src="{{  asset('public/assets/customjs/clinicalPreferencesSection2.js') }}"></script>
+<script src="{{  asset('public/assets/customjs/alignersToCover.js') }}?v={{ time() }}"></script>
 
 <script>
     $(document).ready(function() {

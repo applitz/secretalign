@@ -145,4 +145,15 @@ function getSimseToken($firstName,$lastName,$dob,$userId){
     return $simseToken;
 }
 
+// Safely explode values
+function arr($value) {
+return !empty($value) ? explode(',', $value) : [];
+}
+// Check if tooth is selected
+function isSelected($tooth, $arrays) {
+    foreach ($arrays as $arr) {
+        if (in_array($tooth, $arr)) return true;
+    }
+    return false;
+}
 ?>

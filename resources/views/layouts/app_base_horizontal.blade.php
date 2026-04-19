@@ -20,6 +20,7 @@
         <link href="{{ asset('public/qovex') }}/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
         <!-- App Css-->
         <link href="{{ asset('public/qovex') }}/assets/css/app.min.css"  id="app-style"  rel="stylesheet" type="text/css" />
+        <link href="{{ asset('public/css/custom.css') }}" rel="stylesheet" type="text/css" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <style>
 
@@ -1125,6 +1126,7 @@
         <script src="{{  asset('public/assets/customjs/validate/jquery.validate.min.js') }}"></script>
         <script src="{{  asset('public/assets/customjs/validate/additional-methods.min.js') }}"></script>
         <script src="{{  asset('public/assets/plugins/ckeditor.js') }}"></script>
+        
 
 
         <script src="{{ asset('public/qovex') }}/assets/js/app.js"></script>
