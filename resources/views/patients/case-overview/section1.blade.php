@@ -53,6 +53,7 @@ $lowerSize = [
         <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
 
             <div style="display:flex; flex-direction:row; justify-content:center; gap:5px; width:100%; margin-bottom: 8px;">
+                
                 @foreach($upperTeeth as $id => $tooth)
                     @php
                         $buttonOuter = in_array($id, arr($patient->button_outer));

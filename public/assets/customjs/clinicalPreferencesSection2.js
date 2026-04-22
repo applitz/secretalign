@@ -16,8 +16,8 @@ $(document).on('click', '.choose-tooth-section-2', function(){
     }
 
     // Wrap the tooth in a wrapper for positioning overlays
-    if (!$(this).parent().hasClass('tooth-wrapper')) {
-        $(this).wrap('<div class="tooth-wrapper" style="position: relative; display: inline-block;"></div>');
+    if (!$(this).parent().hasClass('tooth-wrapper-2')) {
+        $(this).wrap('<div class="tooth-wrapper-2" style="position: relative; display: inline-block;"></div>');
     }
 
     // Store context and show modal
@@ -107,7 +107,7 @@ function getSection2MaxOverflow(layoutWrapper, side) {
             return;
         }
 
-        var wrapper = $(this).parent('.tooth-wrapper');
+        var wrapper = $(this).parent('.tooth-wrapper-2');
         if (wrapper.length === 0) {
             return;
         }
@@ -184,7 +184,7 @@ function syncSection2FeatureInputs() {
             return;
         }
 
-        var wrapper = tooth.parent('.tooth-wrapper');
+        var wrapper = tooth.parent('.tooth-wrapper-2');
         if (tooth.attr('data-section2-missing') === '1') {
             featureValues.uneruptedTeeth.push(toothId);
         }
@@ -261,7 +261,7 @@ function refreshSection2ToothSelectedState(tooth) {
         return;
     }
 
-    var wrapper = tooth.parent('.tooth-wrapper');
+    var wrapper = tooth.parent('.tooth-wrapper-2');
     if (wrapper.length === 0) {
         return;
     }
@@ -322,7 +322,7 @@ function placeSection2Overlay(toothNumber, overlayClass, imagePath, width, heigh
         return;
     }
 
-    var wrapper = tooth.parent('.tooth-wrapper');
+    var wrapper = tooth.parent('.tooth-wrapper-2');
     if (wrapper.length === 0) {
         return;
     }
@@ -442,7 +442,7 @@ function pontic(toothNumber){
         return;
     }
 
-    var wrapper = tooth.parent('.tooth-wrapper');
+    var wrapper = tooth.parent('.tooth-wrapper-2');
     if (wrapper.length === 0) {
         return;
     }
@@ -475,7 +475,7 @@ function bridge(toothNumber){
         return;
     }
 
-    var wrapper = tooth.parent('.tooth-wrapper');
+    var wrapper = tooth.parent('.tooth-wrapper-2');
     if (wrapper.length === 0) {
         return;
     }

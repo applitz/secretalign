@@ -107,6 +107,9 @@ class TasksService extends CommonFunction
                 'tp.cancellation_date',
                 'tp.previous_case_holder',
                 'tp.treatment_type',
+                'u.postal_code',
+                'u.city',
+                'u.country',
                 DB::raw("CONCAT(u.first_name, ' ', u.last_name) as user_full_name"),
                 DB::raw("CONCAT(p.first_name, ' ', p.last_name) as patient_full_name"),
             ])
@@ -173,7 +176,17 @@ class TasksService extends CommonFunction
             }
 
             $records['data'][] = [
-                'user_full_name' => $patient->user_full_name,
+                // 'user_full_name' => $patient->user_full_name . " - " . $patient->city . " " . $patient->country. " " . $patient->postal_code ,
+                'user_full_name' => $patient->user_full_name .
+                                    (
+                                        $patient->city || $patient->country || $patient->postal_code
+                                            ? ' - ' . trim(
+                                                $patient->city . ' ' .
+                                                $patient->country . ' ' .
+                                                $patient->postal_code
+                                            )
+                                            : ''
+                                    ),
                 'patient_full_name' => $patient->patient_full_name,
                 'task_name' => $task,
                 'treatment_type' => $patient->treatment_type == '2' ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-danger"> Aligners Full-Service </span>' : '<span class="badge fw-semi-bold rounded-pill status badge-soft-primary">Treatment Planning Service</span>',

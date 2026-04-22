@@ -121,6 +121,9 @@ class PatientsService extends CommonFunction
                 // 'u.first_name as d_first_name',
                 // 'u.last_name as d_last_name',
                 DB::raw("CONCAT(u.first_name, ' ', u.last_name) as user_full_name"),
+                'u.postal_code',
+                'u.city',
+                'u.country',
                 'l.first_name as lab_first_name',
                 'l.last_name as lab_last_name'
             )
@@ -162,7 +165,7 @@ class PatientsService extends CommonFunction
             $records['data'][] = [
 
                 'patientId' => $hashids->encode($patient->id),
-                'doctor' => $patient->user_full_name,
+                'doctor' => $patient->user_full_name. " - " . $patient->city  ." " . $patient->country. " " .  $patient->postal_code ,
                 'last_name' => $patient->last_name,
                 'first_name' => $patient->first_name,
                 'dob' => date_formate($patient->dob),

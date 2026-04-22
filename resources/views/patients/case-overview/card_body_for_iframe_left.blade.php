@@ -111,6 +111,15 @@
                                 @endif
 
                                 @if (@$patient->class)
+                                    @php
+                                        $additional_attachments = [];
+                                        if (
+                                            $patient->additional_attachments != '' &&
+                                            $patient->additional_attachments != null
+                                        ) {
+                                            $additional_attachments = unserialize($patient->additional_attachments);
+                                        }
+                                    @endphp
                                     <h5 class="card-title mt-2">Class</h5>
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item">
@@ -121,8 +130,26 @@
                                             @endif
 
                                         </li>
-                                    </ul>
 
+                                        @if (in_array('Bite Keeper', $additional_attachments))
+                                            <li class="list-group-item">
+                                                <p class="text-muted mb-0"><i class="fas fa-check"></i> Bite Keeper</p>
+                                            </li>
+                                        @endif
+
+                                        @if (in_array('Secret Wings', $additional_attachments))
+                                            <li class="list-group-item">
+                                                <p class="text-muted mb-0"><i class="fas fa-check"></i> Secret Wings</p>
+                                            </li>
+                                        @endif
+
+                                        @if (in_array('Secret Blocks', $additional_attachments))
+                                            <li class="list-group-item">
+                                                <p class="text-muted mb-0"><i class="fas fa-check"></i> Secret Blocks</p>
+                                            </li>
+                                        @endif
+                                    </ul>
+                                    <br>
                                     @if($patient->is_new == '1')
                                         @if($patient->button_outer != '' || $patient->button_inner != '' || $patient->ihook_outer != '' || $patient->ihook_inner != '' ||
                                             $patient->precision_cut_outer != '' || $patient->precision_cut_inner != '' || $patient->power_arm_attachment_outer != '' || $patient->power_arm_attachment_inner != '' ||
@@ -1922,28 +1949,6 @@
 
                                         </li>
                                     @endif
-                                    @if (in_array('Bite Keeper', $additional_attachments))
-                                        <li class="list-group-item">
-
-                                            <p class="text-muted"><i class="fas fa-check"></i> Bite Keeper</p>
-
-                                        </li>
-                                    @endif
-                                    @if (in_array('Secret Wings', $additional_attachments))
-                                        <li class="list-group-item">
-
-                                            <p class="text-muted"><i class="fas fa-check"></i> Secret Wings</p>
-
-                                        </li>
-                                    @endif
-
-                                    @if (in_array('Secret Blocks', $additional_attachments))
-                                        <li class="list-group-item">
-
-                                            <p class="text-muted"><i class="fas fa-check"></i> Secret Blocks</p>
-
-                                        </li>
-                                    @endif
 
                                     @php
                                         $add_pontic_ur = [];
@@ -2380,6 +2385,7 @@
                                     @endif
                                 </ul>
                                 <ul class="list-group list-group-flush">
+
                                     @if (@$patient->keep_already_placed_attachments == 1)
                                         <li class="list-group-item">
 
@@ -2389,19 +2395,52 @@
 
                                         </li>
                                     @endif
+
+                                    @if (@$patient->aesthetic_start != null)
+                                        <li class="list-group-item">
+                                            <p class="text-muted"><strong> Aesthetic start:</strong>
+                                                {{ $patient->aesthetic_start == '0' ? 'No' : 'Yes' }}
+                                            </p>
+                                        </li>
+                                    @endif
+
+                                    @if (@$patient->anterior_leveling != null)
+                                        <li class="list-group-item">
+                                            <p class="text-muted">
+                                                <strong> Primary Esthetic Objective for Anterior Leveling</strong><br>
+                                                @if($patient->anterior_leveling == '0')
+                                                    <strong> Incisal Edge Harmony: </strong>Prioritize a consistent smile arc and incisal symmetry (potential gingival discrepancies will be managed post-treatment).
+                                                @else
+                                                    <strong> Gingival Margin Symmetry: </strong>Prioritize level gingival zeniths (incisal edge discrepancies will be managed via restorative bonding/enameloplasty).
+                                                @endif
+                                            </p>
+                                        </li>
+                                    @endif
+
                                     <li class="list-group-item">
-
-                                        <p class="text-muted">Trim Upper:</strong>
-                                            {{ @$patient->trim_type_upper }}
+                                        <p class="text-muted">
+                                            <strong> Trim Upper:</strong>
+                                            {{ $patient->trim_type_upper }}
                                         </p>
-
+                                        @if($patient->trim_type_upper == 'Straight' && $patient->trim_type_upper_straight_upper != null)
+                                        <p class="text-muted">
+                                            {{ $patient->trim_type_upper_straight_upper == '0' ? 'Standard (1-1.5mm beyond the gingival margins)' : 'High Trim Line (2.5-3mm beyond the gingival margins)'  }}
+                                        </p>
+                                        @endif
                                     </li>
+
                                     <li class="list-group-item">
 
-                                        <p class="text-muted">Trim Lower:</strong>
-                                            {{ @$patient->trim_type_lower }}
+                                        <p class="text-muted">
+                                            <strong>Trim Lower:</strong>
+                                            {{ $patient->trim_type_lower }}
                                         </p>
 
+                                        @if($patient->trim_type_lower == 'Straight' && $patient->trim_type_upper_straight_upper != null)
+                                        <p class="text-muted">
+                                            {{ $patient->trim_type_lower_straight_lower == '0' ? 'Standard (1-1.5mm beyond the gingival margins)' : 'High Trim Line (2.5-3mm beyond the gingival margins)'  }}
+                                        </p>
+                                        @endif
                                     </li>
                                 </ul>
 

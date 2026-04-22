@@ -559,7 +559,16 @@ class HomeController extends Controller
             ->join('users as u', 'u.id', '=', 'p.user_id')
             ->select(
                 'u.id',
-                DB::raw("CONCAT(u.first_name, ' ', u.last_name) as user_full_name")
+                // DB::raw("CONCAT(u.first_name, ' ', u.last_name) as user_full_name")
+                DB::raw("
+                    CONCAT(
+                        u.first_name, ' ',
+                        u.last_name, ' - ',
+                        u.city, ' ',
+                        u.country, ' ',
+                        u.postal_code
+                    ) as user_full_name
+                ")
             )
             ->distinct()
             ->orderBy('user_full_name', 'asc')

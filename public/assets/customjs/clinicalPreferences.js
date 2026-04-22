@@ -259,6 +259,7 @@ function refreshToothSelectedState(toothNumber) {
 
 $(document).ready(function() {
     syncFeatureToothArrays();
+    updateArcPadding();
 });
 
 function repositionOverlays(toothNumber, side) {

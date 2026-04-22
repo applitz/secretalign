@@ -90,7 +90,7 @@ $lowerSize = [
                     $pontic = in_array($id, arr($patient->pontic));
                     $selected = isSelected($id, $allSelections2);
                     if ($unerupted_teeth && !$pontic) {
-                        $img = null; // Do not show image
+                        $img = "public/assets/tooth/png/$tooth.png";// Do not show image
                     } elseif ($pontic) {
                         $img = "public/assets/tooth/coloured/$tooth.png";
                     } else {
@@ -104,7 +104,7 @@ $lowerSize = [
                 <img id="{{ $id }}"
                     class="choose-tooth"
                     src="{{ asset($img) }}"
-                    style="width:{{$upperSize[$id]}}; height:{{$upperSize[$id]}}; margin:5px 0;">
+                    style="width:{{$upperSize[$id]}}; height:{{$upperSize[$id]}}; margin:5px 0; {{ ($unerupted_teeth && !$pontic) ? "opacity:0" : "" }}">
                 @endif
             @endforeach
         </div>
@@ -120,9 +120,12 @@ $lowerSize = [
         <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:5px;">
             @foreach($lowerTeeth as $id => $tooth)
                 @php
+                    $unerupted_teeth = in_array($id, arr($patient->unerupted_teeth));
                     $pontic = in_array($id, arr($patient->pontic));
                     $selected = isSelected($id, $allSelections2);
-                    if ($pontic) {
+                    if ($unerupted_teeth && !$pontic) {
+                        $img = "public/assets/tooth/png/$tooth.png"; // Do not show image
+                    } elseif ($pontic) {
                         $img = "public/assets/tooth/coloured/$tooth.png";
                     } else {
                         $img = $selected
@@ -134,7 +137,7 @@ $lowerSize = [
                 <img id="{{ $id }}"
                     class="choose-tooth"
                     src="{{ asset($img) }}"
-                    style="width:{{$lowerSize[$id]}}; height:{{$lowerSize[$id]}}; margin:5px 0;">
+                    style="width:{{$lowerSize[$id]}}; height:{{$lowerSize[$id]}}; margin:5px 0; {{ ($unerupted_teeth && !$pontic) ? "opacity:0" : "" }}">
             @endforeach
         </div>
 

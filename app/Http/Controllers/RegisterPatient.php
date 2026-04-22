@@ -221,6 +221,7 @@ class RegisterPatient extends Controller
                                 }
                             }
         if (@$patient) {
+
             $hashids = new Hashids();
             $hashCode = $hashids->encode($patient->id);
             $mode = "edit";
@@ -541,7 +542,6 @@ class RegisterPatient extends Controller
     }
     public function save_prescription(Request $request)
     {
-        
         $data = [];
         $data['treat_upper_arch'] = $request->post('upper_arch');
         $data['treat_lower_arch'] = $request->post('lower_arch');
@@ -623,11 +623,19 @@ class RegisterPatient extends Controller
         $data['resolutions_notes'] = $request->post('resolution_notes');
         $data['occlusal_plane'] = $request->post('occlusal_plane');
         $data['occlusal_plane_notes'] = $request->post('occlusal_plane_notes');
+
+        $data['aesthetic_start'] = $request->post('aesthetic_start');
+        $data['anterior_leveling'] = $request->post('anterior_leveling');
+
         $data['additional_attachments'] = serialize(json_decode($request->post('additional_attachments')));
         $data['additional_attachments_notes'] = $request->post('additional_attachments_notes');
         $data['keep_already_placed_attachments'] = $request->post('keep_already_place_attachments');
+
         $data['trim_type_upper'] = $request->post('aligner_trim_type_upper');
+        $data['trim_type_upper_straight_upper'] = $request->post('trim_type_upper_upper');
         $data['trim_type_lower'] = $request->post('aligner_trim_type_lower');
+        $data['trim_type_lower_straight_lower'] = $request->post('trim_type_lower_upper');
+
         $data['is_prescription_submitted'] = 1;
         $id = $request->post('patient_id');
         $treatment_plan_id = $request->post('treatment_plan_id');

@@ -4070,7 +4070,7 @@ async function previewUpperStlFile(file_upper)
                 var bite_ramp = $("input[name=feature_bite_ramp_ids]").val();
 
                 var unerupted_teeth = $("input[name=feature_unerupted_teeth_ids]").val();
-                var extracted_teeth = $("input[name=feature_extracted_teeth_ids]").val();
+                var extracted_teeth = $("input[name=feature_extracted_teethids]").val();
                 var tooth_movement_restrictions = $("input[name=feature_tooth_movement_restrictions_ids]").val();
                 var coil = $("input[name=feature_coil_ids]").val();
                 var pontic = $("input[name=feature_pontic_ids]").val();
@@ -4310,13 +4310,29 @@ async function previewUpperStlFile(file_upper)
                 var additional_attachments_notes = $("textarea[name=additional_attachments_notes]").val();
                 fd.append("additional_attachments_notes", additional_attachments_notes);
 
+                // var aesthetic_start = $("input[name=aesthetic_start]:checked").val();
+                var aesthetic_start = $("input[name='aesthetic_start']:checked").val();
+                fd.append("aesthetic_start", aesthetic_start);
+
+                var anterior_leveling = $("input[name='anterior_leveling']:checked").val();
+                fd.append("anterior_leveling", anterior_leveling);
+
                 var keep_already_place_attachments = $(
                     "input[name=keep_already_placed_attachments]:checked").val() || '0';
                 fd.append("keep_already_place_attachments", keep_already_place_attachments);
-                var aligner_trim_type_upper = $("select[name=trim_type_upper]").val();
+
+                var aligner_trim_type_upper = $("input[name='trim_type_upper']:checked").val(); //$("select[name=trim_type_upper]").val();
                 fd.append("aligner_trim_type_upper", aligner_trim_type_upper);
-                var aligner_trim_type_lower = $("select[name=trim_type_lower]").val();
+
+                var trim_type_upper_upper = $("select[name='trim_type_upper_upper']").val();
+                fd.append("trim_type_upper_upper", trim_type_upper_upper);
+
+                var aligner_trim_type_lower = $("input[name='trim_type_lower']:checked").val(); //$("select[name=trim_type_lower]").val();
                 fd.append("aligner_trim_type_lower", aligner_trim_type_lower);
+
+                var trim_type_lower_upper = $("select[name='trim_type_lower_upper']").val();
+                fd.append("trim_type_lower_upper", trim_type_lower_upper);
+
                 if (aligner_trim_type_lower == '' || aligner_trim_type_lower == undefined ||
                     aligner_trim_type_lower == null || aligner_trim_type_upper == '' ||
                     aligner_trim_type_upper == undefined || aligner_trim_type_upper == null) {
