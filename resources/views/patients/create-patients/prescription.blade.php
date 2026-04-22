@@ -2144,12 +2144,12 @@
 
 
                                 @endphp
-                                <input type="text" id="feature_unerupted_teeth_ids" value="{{ implode(',', arr($patient->unerupted_teeth)) }}" name="feature_unerupted_teeth_ids">
-                                <input type="text" id="feature_extracted_teethids" value="{{ implode(',', arr($patient->extracted_teeth)) }}" name="feature_extracted_teethids">
-                                <input type="text" id="feature_tooth_movement_restrictions_ids" value="{{ implode(',', arr($patient->tooth_movement_restrictions)) }}" name="feature_tooth_movement_restrictions_ids">
-                                <input type="text" id="feature_coil_ids" value="{{ implode(',', arr($patient->coil)) }}" name="feature_coil_ids">
-                                <input type="text" id="feature_pontic_ids" value="{{ implode(',', arr($patient->pontic)) }}" name="feature_pontic_ids">
-                                <input type="text" id="feature_bridge_ids" value="{{ implode(',', arr($patient->bridge)) }}" name="feature_bridge_ids">
+                                <input type="hidden" id="feature_unerupted_teeth_ids" value="{{ implode(',', arr($patient->unerupted_teeth)) }}" name="feature_unerupted_teeth_ids">
+                                <input type="hidden" id="feature_extracted_teethids" value="{{ implode(',', arr($patient->extracted_teeth)) }}" name="feature_extracted_teethids">
+                                <input type="hidden" id="feature_tooth_movement_restrictions_ids" value="{{ implode(',', arr($patient->tooth_movement_restrictions)) }}" name="feature_tooth_movement_restrictions_ids">
+                                <input type="hidden" id="feature_coil_ids" value="{{ implode(',', arr($patient->coil)) }}" name="feature_coil_ids">
+                                <input type="hidden" id="feature_pontic_ids" value="{{ implode(',', arr($patient->pontic)) }}" name="feature_pontic_ids">
+                                <input type="hidden" id="feature_bridge_ids" value="{{ implode(',', arr($patient->bridge)) }}" name="feature_bridge_ids">
 
                                 <div class="col-xs-12" style="margin-top: 10px;">
                                     <div class="teeth-layout-wrapper" style="max-width: 1200px; margin: 0 auto;">
