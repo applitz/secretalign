@@ -60,7 +60,7 @@ $lowerSize = [
                     <div style="width:{{$upperSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-end; gap:6px;">
 
                         @if($bridge)
-                            <img src="{{ asset('public/assets/tooth/png/bridge.png') }}" style=" width: 20px;" alt="Power Ridge Outer">
+                            <img src="{{ asset('public/assets/tooth/png/Bridge.png') }}" style=" width: 20px;" alt="Power Ridge Outer">
                         @endif
 
                         @if($tooth_movement_restrictions)
@@ -166,7 +166,7 @@ $lowerSize = [
                     @endif
 
                     @if($bridge)
-                        <img src="{{ asset('public/assets/tooth/png/bridge.png') }}" style=" width: 20px;" alt="Power Ridge Outer">
+                        <img src="{{ asset('public/assets/tooth/png/Bridge.png') }}" style=" width: 20px;" alt="Power Ridge Outer">
                     @endif
 
                 </div>
