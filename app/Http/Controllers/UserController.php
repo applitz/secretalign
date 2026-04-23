@@ -275,13 +275,14 @@ class UserController extends Controller
             "file" => "required|file|mimes:jpg,jpeg,png,webp,gif",
         ]);
         if($request->hasFile("file")) {
+            $oldFile = Auth::user()->photo;
             $file = $request->file('file');
             // $fileName = mt_rand(1, 1000) . time() . '.' . $file->getClientOriginalExtension();
             // $file->move(storage_path() . '/app/public/Profiles', $fileName);
             $fileName = uploadWebpImage($file, storage_path() . '/app/public/Profiles');
-            // dd($fileName);
+
             if($fileName && $fileName != null ){
-                $oldFile = Auth::user()->photo;
+
                 if (!empty($oldFile)) {
                     $oldFilePath = storage_path('app/public/Profiles/' . $oldFile);
                     if (File::exists($oldFilePath)) {

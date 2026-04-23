@@ -158,7 +158,7 @@ function isSelected($tooth, $arrays) {
 }
 
 if (!function_exists('uploadWebpImage')) {
-    function uploadWebpImage($file, $uploadPath, $fileName = 'null')
+    function uploadWebpImage($file, $uploadPath, $fileName = null)
     {
         if (!$file) {
             return null;
