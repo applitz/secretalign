@@ -67,7 +67,7 @@ class PatientDemo extends Controller
         }
         abort(403, 'Unauthorized request!');
     }
-    
+
     public function iframe(Request $request, $phase)
     {
         $whereClauses = [["tp.id", $this->hashids->decode($phase)], ["tp.is_deleted", 0],];
@@ -507,7 +507,7 @@ return null;
     }
 
     public function file_upload(Request $request, $patient_id, $treatment_plan_id)
-    {
+    {dd(":fbdnfv");
         if (DB::table('demo_p_treatment_plans')->where('patient_id', $patient_id)->where('id', $treatment_plan_id)->exists()) {
             $file = $request->file('file'.$request->get('key'));
             $attachment = $file->getClientOriginalName();

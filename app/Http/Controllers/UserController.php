@@ -276,12 +276,24 @@ class UserController extends Controller
         ]);
         if($request->hasFile("file")) {
             $file = $request->file('file');
-            $fileName = mt_rand(1, 1000) . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(storage_path() . '/app/public/Profiles', $fileName);
-            DB::table('users')->where('id', $id)->update([
-                "photo" => $fileName,
-            ]);
-            return redirect()->back()->with('success', 'You have successfully changed your profile picture');
+            // $fileName = mt_rand(1, 1000) . time() . '.' . $file->getClientOriginalExtension();
+            // $file->move(storage_path() . '/app/public/Profiles', $fileName);
+            $fileName = uploadWebpImage($file, storage_path() . '/app/public/Profiles');
+            // dd($fileName);
+            if($fileName && $fileName != null ){
+                $oldFile = Auth::user()->photo;
+                if (!empty($oldFile)) {
+                    $oldFilePath = storage_path('app/public/Profiles/' . $oldFile);
+                    if (File::exists($oldFilePath)) {
+                        File::delete($oldFilePath);
+                    }
+                }
+                DB::table('users')->where('id', $id)->update([
+                    "photo" => $fileName,
+                ]);
+                return redirect()->back()->with('success', 'You have successfully changed your profile picture');
+            }
+            return redirect()->back()->with('error', 'Something goes to wrong.');
         }
         return redirect()->back()->with('error', 'enable to upload file');
     }
