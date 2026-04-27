@@ -540,6 +540,9 @@ class RegisterPatient extends Controller
             "fl_general_upload_drive_link" => $request->post("hyperlink"),
         ]);
     }
+
+
+
     public function save_prescription(Request $request)
     {
         $data = [];

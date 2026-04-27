@@ -3941,37 +3941,31 @@ async function previewUpperStlFile(file_upper)
             $("#submit-scan-data").on('click', function() {
                 var fl_upper_arch = $("#fl_upper_arch").val();
                 var fl_lower_arch = $("#fl_lower_arch").val();
+
                 if ($("#key1").attr('file') == '' || $("#key2").attr('file') == '') {
                     toastError("Upload scan data files.");
                     $("#submit-prescription").attr('fn', 0);
                     return false;
                 }
                 $("#submit-prescription").attr('fn', 1);
-                // let tabEl = document.querySelector('#pill-tab-li3');
-                // let tab = new bootstrap.Tab(tabEl);
-                // tab.show();
                  $("#pill-tab-li3").click();
                 $("#pill-tab-div2").removeClass('show active');
                 toastSuccess("Scan data Saved");
-                // $.ajax({
-                //     type: "POST",
-                //     url: "{{ url('/patient/scan-data/save') }}",
-                //     data: {
-                //         "_token": "{{ csrf_token() }}",
-                //         "fl_upper_arch": fl_upper_arch,
-                //         "fl_lower_arch": fl_lower_arch,
-                //         "treatment_plan_id": "{{ $patient->id }}",
-                //         "patient_id": "{{ $patient->patient_id }}"
-                //     },
-                // }).done(function (response) {
-                //     $("#submit-prescription").attr('fn', 1);
-                //     $("#pill-tab-li3").click();
-                //     toastSuccess("Patient Info Saved");
-                // }).fail(function (response) {
-                //     $("#submit-prescription").attr('fn', 0);
-                //     toastError("Enable to save patient info");
-                // });
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('/patient/movixtech/create_case') }}",
+                    data: {
+                         "_token": "{{ csrf_token() }}",
+                        "treatment_plan_id": "{{ $patient->id }}",
+                        "patient_id": "{{ $patient->patient_id }}"
+                    },
+                }).done(function(response) {
+
+                }).fail(function(response) {
+
+                });
             });
+
             //
             $("#submit-images").on('click', function() {
                 if (PHASE == '1' && ($("#key3").attr('file') == '' || $("#key4").attr('file') == '' || $("#key5").attr('file') == '' || $("#key6").attr('file') == '' || $("#key7").attr('file') == '' || $("#key8").attr('file') == '' || $("#key9").attr('file') == '' || $("#key10").attr('file') == '' || $("#key11").attr('file') == '' || $("#key12").attr('file') == '')) {
