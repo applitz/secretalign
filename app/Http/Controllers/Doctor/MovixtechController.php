@@ -51,8 +51,6 @@ class MovixtechController extends Controller
             json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL
         );
 
-        dd($request->all());
-
         $patientDetails = Patients::with([
             'treatmentPlans' => function ($query) use ($request) {
                 $query->where('patient_id', $request->patient_id)
