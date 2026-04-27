@@ -140,6 +140,7 @@ class OrderController extends Controller
                 "u.email",
                 "u.phone_number",
                 "p.first_name as p_first_name",
+                "p.pricing_package",
                 "p.last_name as p_last_name",
                 "tp.treat_upper_arch",
                 "tp.treat_lower_arch",

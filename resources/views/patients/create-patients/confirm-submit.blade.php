@@ -173,7 +173,7 @@
         <div class="mb-3 ps-2">
                 <div class="form-check">
                 <input class="form-check-input" id="terms_and_conditions" type="checkbox" name="terms_and_conditions" value="1"/>
-                <label class="form-check-label" for="terms_and_conditions">I have read and accepted the <a href="{{asset('public/assets/ACFrOgDNGancwUUF4OXO-_6Ms-3RC6v9OdnsDpeGvDoT_VQfsjmuIPuClaf-Cc7mHpEQLZbSapOx7ghsAuip4PwC31FCgl2C9RiOAHY-yxwagybIQUkHKb6Hz--6t7Ru2WYboYmn1pO1hwp2LFpu.pdf')}}" target="_blank"><b>Packages and Terms & conditions agreement</b></a>.</label>
+                <label class="form-check-label" for="terms_and_conditions">I have read and accepted the <a href="{{asset('public/assets/Pricing-Terms-Conditions.pdf')}}" target="_blank"><b>Packages and Terms & conditions agreement</b></a>.</label>
                 </div>
         </div>
         @if($mode == 'edit' && $patient->is_editable == 1)

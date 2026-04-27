@@ -102,6 +102,7 @@
                                     <td class="align-middle">
                                         <h6 class="mb-0 text-nowrap">Treatment Plan: Phase-{{ $order->phase }}
                                             {{ $order->p_first_name . ' ' . $order->p_last_name }}</h6>
+                                        <p class="mb-0">Package: {{ $order->pricing_package == 'AL-SECRET-SELECT' ? 'SECRET SELECT' : 'SECRET CONFIDENCE' }}</p>
                                         <p class="mb-0">Aligners: {{ $order->aligner_steps }}</p>
                                         <p class="mb-0">Arch:
                                             {{ $order->treat_upper_arch == 1 && $order->treat_lower_arch == 1 ? 'Two' : 'One' }}

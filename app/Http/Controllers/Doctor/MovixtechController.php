@@ -324,14 +324,14 @@ class MovixtechController extends Controller
     public function createWebhook()
     {
         $data = [
-            'type'     => 'task_done',
+            'type'     => 'case_done',
             'endpoint' => 'https://test.secretalign-user.com/movix-webhook',
             'token'    => 'WebhookSecret_2026_X7mQ9vLp2RtK8cZa5NyD1wEf6HuJs3Bn',
         ];
 
         return $this->movixRequest(
             'POST',
-            '/api/v1/auth/webhooks',
+            '/api/v1/auth/webhooks/',
             $data,
             true
         );
@@ -351,6 +351,22 @@ class MovixtechController extends Controller
     }
 
     public function movixWebhook(Request $request){
-        dd('movixWebhook');
+        $logPath = storage_path('logs/processMovix/webhook');
+
+        if (!File::exists($logPath)) {
+            File::makeDirectory($logPath, 0777, true, true);
+        }
+
+        $filePath = $logPath . '/' . now()->format('Y-m-d') . '.log';
+
+        $logData = [
+            'datetime' => now()->format('Y-m-d H:i:s'),
+            'data'     => $request->all(),
+        ];
+
+        File::append(
+            $filePath,
+            json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL
+        );
     }
 }
