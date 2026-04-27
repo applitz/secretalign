@@ -23,6 +23,7 @@ var Home = function() {
             "columns": [
 
                 { 'title': 'Doctor', "data": "user_full_name", orderable: false, searchable: false },
+                { 'title': 'Country', "data": "country", orderable: false, searchable: false },
                 { 'title': 'Patient', "data": "patient_full_name", orderable: false, searchable: false },
                 { 'title': 'Task', "data": "task_name", orderable: false, searchable: false },
                 { 'title': 'Treatment Type', "data": "treatment_type", orderable: false, searchable: false },

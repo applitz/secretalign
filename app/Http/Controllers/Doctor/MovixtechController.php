@@ -318,6 +318,38 @@ class MovixtechController extends Controller
         return $response;
     }
 
+    /**
+    * Create Webhook
+    */
+    public function createWebhook()
+    {
+        $data = [
+            'type'     => 'task_done',
+            'endpoint' => 'https://test.secretalign-user.com/movix-webhook',
+            'token'    => 'WebhookSecret_2026_X7mQ9vLp2RtK8cZa5NyD1wEf6HuJs3Bn',
+        ];
+
+        return $this->movixRequest(
+            'POST',
+            '/api/v1/auth/webhooks',
+            $data,
+            true
+        );
+    }
+
+    /**
+     * Get Webhook List
+     */
+    public function getWebhooks()
+    {
+        return $this->movixRequest(
+            'GET',
+            '/api/v1/auth/webhooks/',
+            [],
+            true
+        );
+    }
+
     public function movixWebhook(Request $request){
         dd('movixWebhook');
     }

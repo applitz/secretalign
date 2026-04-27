@@ -165,7 +165,8 @@ class PatientsService extends CommonFunction
             $records['data'][] = [
 
                 'patientId' => $hashids->encode($patient->id),
-                'doctor' => $patient->user_full_name. " - " . $patient->city  ." " . $patient->country. " " .  $patient->postal_code ,
+                'doctor' => $patient->user_full_name,
+                'country' => $patient->country,
                 'last_name' => $patient->last_name,
                 'first_name' => $patient->first_name,
                 'dob' => date_formate($patient->dob),

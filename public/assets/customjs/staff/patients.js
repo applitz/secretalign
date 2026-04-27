@@ -25,6 +25,7 @@ var Patients = function() {
 
                 { 'title': 'ID', "data": "patientId", orderable: true, searchable: false },
                 { 'title': 'Doctor', "data": "doctor", orderable: true, searchable: false },
+                { 'title': 'Country', "data": "country", orderable: true, searchable: false },
                 { 'title': 'Last Name', "data": "last_name", orderable: false, searchable: true },
                 { 'title': 'First Name', "data": "first_name", orderable: false, searchable: true },
                 { 'title': 'Birth Date', "data": "dob", orderable: false, searchable: true },
