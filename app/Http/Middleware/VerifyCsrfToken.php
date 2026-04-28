@@ -21,6 +21,7 @@ class VerifyCsrfToken extends Middleware
         'demo/patient/file/revert/*',
         'handle-dropzone-files',
         'notifications',
+        'movix-webhook',
         'login',
         'logout',
     ];
