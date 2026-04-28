@@ -509,7 +509,9 @@ class MovixtechController extends Controller
             true // form-data
         );
     }
+
     public function movixWebhook(Request $request){
+
         $logPath = storage_path('logs/processMovix/webhook');
 
         if (!File::exists($logPath)) {
@@ -596,10 +598,10 @@ class MovixtechController extends Controller
             );
             // ✅ Append (NOT replace)
             if (!empty($getViewerLink) && !empty($getViewerLink['url'])) {
+
                 $updateData['movix_link'] = $getViewerLink['url'];
                 $updateData['movix_link_expires_at'] = Carbon::parse($getViewerLink['expires_at']);
             }
-
             // ✅ Single DB update (better)
             $case->update($updateData);
 

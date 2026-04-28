@@ -16,7 +16,9 @@ class Movixpatient extends Model
         'case_id',
         'note',
         'client',
-        'movix_note'
+        'movix_note',
+        'movix_link_expires_at',
+        'movix_link'
     ];
 
     /**
