@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Artisan;
 //Route::get('/update-phases', [CasePhaseController::class, 'duration_test']);
 
 Route::get('/test', [App\Http\Controllers\HomeController::class, 'testNemotech']);
-Route::get('movix-webhook', [MovixtechController::class, 'movixWebhook'])->name('movix-webhook');
+Route::post('movix-webhook', [MovixtechController::class, 'movixWebhook'])->name('movix-webhook');
 Route::get('/file/{filename}', function ($filename) {
     $path = storage_path('app/public/attachments/' . $filename);
     Log::info($path);
