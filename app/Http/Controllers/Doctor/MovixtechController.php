@@ -479,6 +479,35 @@ class MovixtechController extends Controller
         );
     }
 
+    /**
+     * Get Case Summary
+     */
+    public function getCaseSummary($caseId, $language = 'en')
+    {
+        return $this->movixRequest(
+            'POST',
+            "/api/v1/services/cases/{$caseId}/summary/",
+            [
+                'code' => $language
+            ],
+            true // form-data
+        );
+    }
+
+    /**
+     * Get Viewer Link
+     */
+    public function getViewerLink($caseId)
+    {
+        return $this->movixRequest(
+            'POST',
+            '/api/v1/viewer/links/',
+            [
+                'case_id' => $caseId
+            ],
+            true // form-data
+        );
+    }
     public function movixWebhook(Request $request){
         $logPath = storage_path('logs/processMovix/webhook');
 
@@ -497,5 +526,80 @@ class MovixtechController extends Controller
             $filePath,
             json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL
         );
+
+        if ($request->webhook_type === 'case_done') {
+            $caseId = $request->case_id;
+            if (empty($caseId)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Missing case_id'
+                ], 200);
+            }
+            // ✅ Find record
+            $case = Movixpatient::where('case_id', $caseId)->first();
+
+            if (!$case) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Case not found'
+                ], 404);
+            }
+
+            // ✅ Call summary API
+            $summaryResponse = $this->getCaseSummary($caseId);
+            // ✅ Handle response safely
+            if (!$summaryResponse) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Summary API failed'
+                ], 500);
+            }
+
+            $message = $summaryResponse['message'] ?? null;
+            // ✅ If still processing (202)
+            if ($message === null) {
+
+                // Could mean:
+                // - No issues OR
+                // - Not ready yet
+
+                // Optional: check tasks to confirm
+                $tasks = $request->tasks ?? [];
+
+                $allDone = collect($tasks)->every(function ($task) {
+                    return strtolower($task['status'] ?? '') === 'done';
+                });
+
+                if (!$allDone) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Summary not ready yet'
+                    ], 200);
+                }
+            }
+
+            // ✅ Prepare update data
+            $updateData = [
+                'movix_note' => $message,
+            ];
+
+            // ✅ Call getViewerLink API
+            $getViewerLink = $this->getViewerLink($caseId);
+            if (!empty($getViewerLink) && !empty($getViewerLink['url'])) {
+                $updateData['movix_link'] = $getViewerLink['url'];
+                $updateData['movix_link_expires_at'] = $getViewerLink['expires_at'];
+
+            }
+
+            // ✅ Single DB update (better)
+            $case->update($updateData);
+
+        }
+
+        // ❌ Unknown webhook
+        return response()->json([
+            'status' => false,
+            'message' => 'Invalid webhook type'
+        ], 200);
     }
 }
