@@ -585,6 +585,14 @@ class MovixtechController extends Controller
 
             // ✅ Call getViewerLink API
             $getViewerLink = $this->getViewerLink($caseId);
+            $logData = [
+                'title' => 'getViewerLink',
+                'data'     => $getViewerLink,
+            ];
+            File::append(
+                $filePath,
+                json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL
+            );
             if (!empty($getViewerLink) && !empty($getViewerLink['url'])) {
                 $updateData['movix_link'] = $getViewerLink['url'];
                 $updateData['movix_link_expires_at'] = $getViewerLink['expires_at'];
