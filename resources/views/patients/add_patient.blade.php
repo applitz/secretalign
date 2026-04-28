@@ -3961,14 +3961,26 @@ async function previewUpperStlFile(file_upper)
                         patient_id: "{{ $patient->patient_id }}"
                     },
                     success: function (response) {
-                        $("#submit-prescription").attr('fn', 1);
-                        $("#pill-tab-li3").click();
-                        $("#pill-tab-div2").removeClass('show active');
-                        toastSuccess("Scan data Saved");
+                        // ✅ Check backend status
+                        if (response.status) {
+                            $("#submit-prescription").attr('fn', 1);
+                            $("#pill-tab-li3").click();
+                            $("#pill-tab-div2").removeClass('show active');
+                            toastSuccess(response.message || "Case created successfully");
+                        } else {
+                            $("#submit-prescription").attr('fn', 0);
+                            toastError(response.message || "Failed to process case");
+                        }
                     },
                     error: function (xhr) {
-                        console.log(xhr.responseText);
-                        toastError("Something went wrong!");
+                        let msg = "Something went wrong!";
+
+                        // ✅ Try to read backend error message
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            msg = xhr.responseJSON.message;
+                        }
+
+                        toastError(msg);
                     },
                     complete: function() {
                         // 👉 Hide loader always (success or error)

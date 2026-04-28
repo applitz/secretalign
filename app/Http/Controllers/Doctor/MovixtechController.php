@@ -33,6 +33,123 @@ class MovixtechController extends Controller
 
     public function processMovix(Request $request)
     {
+       $logPath = storage_path('logs/processMovix');
+
+        if (!File::exists($logPath)) {
+            File::makeDirectory($logPath, 0777, true, true);
+        }
+
+        $filePath = $logPath . '/' . now()->format('Y-m-d') . '.log';
+
+        $logData = [
+            'datetime' => now()->format('Y-m-d H:i:s'),
+            'data'     => $request->all(),
+        ];
+
+        File::append(
+            $filePath,
+            json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL
+        );
+
+        $patientDetails = Patients::with([
+            'treatmentPlans' => function ($query) use ($request) {
+                $query->where('patient_id', $request->patient_id)
+                    ->where('id', $request->treatment_plan_id)
+                    ->select(
+                        'id',
+                        'patient_id',
+                        'fl_upper_arch',
+                        'fl_lower_arch',
+                        'optional_fl_upper_arch',
+                        'optional_fl_lower_arch'
+                    );
+            }
+        ])
+        ->select('id', 'first_name', 'last_name')
+        ->where('id', $request->patient_id)
+        ->first();
+
+        if (!$patientDetails || $patientDetails->treatmentPlans->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Patient or treatment plan not found'
+            ], 404);
+        }
+
+        $plan = $patientDetails->treatmentPlans->first();
+
+        $caseId = null;
+        $note = null;
+        $upperFile = null;
+        $lowerFile = null;
+        $clientName = $patientDetails->first_name . ' ' . $patientDetails->last_name;
+
+        // ✅ Decide which scan to use
+        if (!empty($plan->fl_upper_arch) && !empty($plan->fl_lower_arch)) {
+            $upperFile = $plan->fl_upper_arch;
+            $lowerFile = $plan->fl_lower_arch;
+            $note = 'Primary Scan';
+        }
+        elseif (!empty($plan->optional_fl_upper_arch) && !empty($plan->optional_fl_lower_arch)) {
+            $upperFile = $plan->optional_fl_upper_arch;
+            $lowerFile = $plan->optional_fl_lower_arch;
+            $note = 'Optional Scan';
+            $clientName .= ' (Optional)';
+        }
+        else {
+            return response()->json([
+                'status' => false,
+                'message' => 'No valid scan files found'
+            ], 400);
+        }
+
+        // ✅ Single call only
+        $result  = $this->createCase(
+            $request->patient_id,
+            $request->treatment_plan_id,
+            $upperFile,
+            $lowerFile,
+            $clientName,
+            $note
+        );
+        if (!$result['status']) {
+            return response()->json([
+                'status' => false,
+                'message' => $result['message']
+            ], 500);
+        }
+        $caseId = $result['case_id'];
+        $runCase = $this->runCase($caseId);
+        if (empty($runCase) || (isset($runCase['success']) && !$runCase['success'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Case created but failed to run',
+                'case_id' => $caseId
+            ], 500);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Case created and started successfully',
+            'case_id' => $caseId
+        ]);
+    }
+
+
+    /**
+     * Run Case (Start Processing)
+     */
+    public function runCase($caseId)
+    {
+        return $this->movixRequest(
+            'POST',
+            "/api/v1/services/cases/{$caseId}/run/",
+            [],
+            true
+        );
+    }
+    public function processMovixOld(Request $request)
+    {
         $logPath = storage_path('logs/processMovix');
 
         if (!File::exists($logPath)) {
@@ -189,35 +306,56 @@ class MovixtechController extends Controller
 
         $caseDetails = $this->movixRequest( 'POST', '/api/v1/base/cases/', $data);
 
+        if (empty($caseDetails['case_id'])) {
+            return [
+                'status' => false,
+                'message' => 'Case creation failed'
+            ];
+        }
+
+        $caseId = $caseDetails['case_id'];
         Movixpatient::updateOrCreate(
             [
-                'patient_id'            => $patientId,
+                'patient_id' => $patientId,
                 'p_treatment_plans_id' => $treatmentPlanId,
             ],
             [
-                'case_id' => $caseDetails['case_id'] ?? null,
-                'client'    => $clientName,
-                'note'    => $note,
-                'movix_note'    => null,
+                'case_id' => $caseId,
+                'client' => $clientName,
+                'note' => $note,
+                'movix_note' => null,
             ]
         );
 
-        // Step 2: Get Presigned URLs
-        $presignedLinks = $this->getPresignedLinks($caseDetails['case_id']);
+        $presignedLinks = $this->getPresignedLinks($caseId);
 
-        // Step 3: Upload Upper STL
-        $this->uploadToPresignedUrl(
-            $presignedLinks['upper_jaw']['url'],
-            storage_path("PatientFiles/Patient{$patientId}/".$upperFile) // file path
-        );
+        if (
+            empty($presignedLinks['upper_jaw']['url']) ||
+            empty($presignedLinks['lower_jaw']['url'])
+        ) {
+            return [
+                'status' => false,
+                'message' => 'Presigned URL missing'
+            ];
+        }
 
-        // Step 4: Upload Lower STL
-        $this->uploadToPresignedUrl(
-            $presignedLinks['lower_jaw']['url'],
-            storage_path("PatientFiles/Patient{$patientId}/".$lowerFile)
-            // public_path($lowerFile)
-        );
-        return true;
+        $upperPath = storage_path("PatientFiles/Patient{$patientId}/".$upperFile);
+        $lowerPath = storage_path("PatientFiles/Patient{$patientId}/".$lowerFile);
+
+        if (!file_exists($upperPath) || !file_exists($lowerPath)) {
+            return [
+                'status' => false,
+                'message' => 'File not found'
+            ];
+        }
+
+        $this->uploadToPresignedUrl($presignedLinks['upper_jaw']['url'], $upperPath);
+        $this->uploadToPresignedUrl($presignedLinks['lower_jaw']['url'], $lowerPath);
+
+        return [
+            'status' => true,
+            'case_id' => $caseId
+        ];
     }
 
     /**
