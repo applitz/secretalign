@@ -24,7 +24,9 @@ Route::middleware(['auth', 'auth.doctor'])->group(function () {
     Route::get('shining3d-region-details', [Shining3dController::class, 'regionDetails'])->name('shining3d-region-details');
 
     Route::get('movix-login', [MovixtechController::class, 'login'])->name('movix-login');
-    Route::post('/patient/movixtech/create_case', [MovixtechController::class, 'movixtech_create_case'])->name('movixtech_create_case');
+
+    Route::post('/patient/movixtech/create_case', [MovixtechController::class, 'processMovix'])->name('movixtech_create_case');
+
     Route::get('movix-get-access-token', [MovixtechController::class, 'getAccessToken'])->name('movix-get-access-token');
     Route::get('movix-create-webhook', [MovixtechController::class, 'createWebhook'])->name('movix-create-webhook');
     Route::get('movix-get-webhook', [MovixtechController::class, 'getWebhooks'])->name('movix-get-webhook');

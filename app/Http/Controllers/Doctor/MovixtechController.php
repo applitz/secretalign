@@ -18,18 +18,18 @@ use Illuminate\Support\Facades\Cache;
 class MovixtechController extends Controller
 {
 
-    public function movixtech_create_case(Request $request)
-    {
-        MovixProcessJob::dispatch([
-            'patient_id' => $request->patient_id,
-            'treatment_plan_id' => $request->treatment_plan_id,
-        ]);
+    // public function movixtech_create_case(Request $request)
+    // {
+    //     MovixProcessJob::dispatch([
+    //         'patient_id' => $request->patient_id,
+    //         'treatment_plan_id' => $request->treatment_plan_id,
+    //     ]);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Movix process started'
-        ]);
-    }
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'Movix process started'
+    //     ]);
+    // }
 
     public function processMovix(Request $request)
     {
@@ -74,11 +74,8 @@ class MovixtechController extends Controller
             $plan = $patientDetails->treatmentPlans->first();
 
             // Check main files
-            if (
-                !empty($plan->fl_upper_arch) &&
-                !empty($plan->fl_lower_arch)
-            ) {
-                $this->createCase(
+            if ( !empty($plan->fl_upper_arch) && !empty($plan->fl_lower_arch) ) {
+                return $this->createCase(
                     $request->patient_id,
                     $request->treatment_plan_id,
                     $plan->fl_upper_arch,
@@ -89,11 +86,8 @@ class MovixtechController extends Controller
             }
 
             // Check optional files
-            if (
-                !empty($plan->optional_fl_upper_arch) &&
-                !empty($plan->optional_fl_lower_arch)
-            ) {
-                $this->createCase(
+            if ( !empty($plan->optional_fl_upper_arch) &&   !empty($plan->optional_fl_lower_arch) ) {
+                return $this->createCase(
                     $request->patient_id,
                     $request->treatment_plan_id,
                     $plan->optional_fl_upper_arch,
@@ -104,7 +98,7 @@ class MovixtechController extends Controller
             }
         }
 
-        dd($patientDetails);
+
     }
     /**
     * Login
@@ -223,8 +217,7 @@ class MovixtechController extends Controller
             storage_path("PatientFiles/Patient{$patientId}/".$lowerFile)
             // public_path($lowerFile)
         );
-        $getCases = $this->getCases();
-        dd($getCases);
+        return true;
     }
 
     /**
