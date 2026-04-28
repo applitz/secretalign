@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\MovixProcessJob;
 use App\Models\Movixpatient;
 use App\Models\Patients;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -593,10 +594,10 @@ class MovixtechController extends Controller
                 $filePath,
                 json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL
             );
+            // ✅ Append (NOT replace)
             if (!empty($getViewerLink) && !empty($getViewerLink['url'])) {
                 $updateData['movix_link'] = $getViewerLink['url'];
-                $updateData['movix_link_expires_at'] = $getViewerLink['expires_at'];
-
+                $updateData['movix_link_expires_at'] = Carbon::parse($getViewerLink['expires_at']);
             }
 
             // ✅ Single DB update (better)
