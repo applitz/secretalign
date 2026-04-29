@@ -3,17 +3,13 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\MovixProcessJob;
-use App\Models\Movixpatient;
+use App\Models\PatientTreatmentPlan;
 use App\Models\Patients;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
-use ZipArchive;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 
 class MovixtechController extends Controller
@@ -315,18 +311,15 @@ class MovixtechController extends Controller
         }
 
         $caseId = $caseDetails['case_id'];
-        Movixpatient::updateOrCreate(
-            [
-                'patient_id' => $patientId,
-                'p_treatment_plans_id' => $treatmentPlanId,
-            ],
-            [
-                'case_id' => $caseId,
-                'client' => $clientName,
-                'note' => $note,
-                'movix_note' => null,
-            ]
-        );
+
+        $objPatientTreatmentPlan = PatientTreatmentPlan::find($treatmentPlanId);
+        if ($objPatientTreatmentPlan) {
+            $objPatientTreatmentPlan->primary_case_id = $caseId;
+            $objPatientTreatmentPlan->primary_client = $clientName;
+            $objPatientTreatmentPlan->primary_note = $note;
+            $objPatientTreatmentPlan->primary_movix_note = null;
+            $objPatientTreatmentPlan->save();
+        }
 
         $presignedLinks = $this->getPresignedLinks($caseId);
 
@@ -539,7 +532,7 @@ class MovixtechController extends Controller
                 ], 200);
             }
             // ✅ Find record
-            $case = Movixpatient::where('case_id', $caseId)->first();
+            $case = PatientTreatmentPlan::where('primary_case_id', $caseId)->first();
 
             if (!$case) {
                 return response()->json([

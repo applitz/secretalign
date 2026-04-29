@@ -240,6 +240,7 @@ class CasePhaseController extends Controller
                     "case_holder" => "staff",
                     "previous_case_holder" => "doctor",
                     "status" => "Waiting Staff Review",
+                    "treatment_link" => $treatment_plan->treatment_link,
                     "is_completed" => 0,
                     "is_submitted" => 1,
                     "is_continue" => 1,
