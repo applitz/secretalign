@@ -576,7 +576,7 @@ class MovixtechController extends Controller
 
             // ✅ Prepare update data
             $updateData = [
-                'movix_note' => $message,
+                'primary_movix_note' => $message,
             ];
 
             // ✅ Call getViewerLink API
@@ -592,8 +592,8 @@ class MovixtechController extends Controller
             // ✅ Append (NOT replace)
             if (!empty($getViewerLink) && !empty($getViewerLink['url'])) {
 
-                $updateData['movix_link'] = $getViewerLink['url'];
-                $updateData['movix_link_expires_at'] = Carbon::parse($getViewerLink['expires_at']);
+                $updateData['primary_movix_link'] = $getViewerLink['url'];
+                $updateData['primary_movix_link_expires_at'] = Carbon::parse($getViewerLink['expires_at']);
             }
             // ✅ Single DB update (better)
             $case->update($updateData);
