@@ -598,6 +598,10 @@ class MovixtechController extends Controller
             // ✅ Single DB update (better)
             $case->update($updateData);
 
+            return response()->json([
+                'status' => true,
+                'message' => 'Webhook processed successfully'
+            ], 200);
         }
 
         // ❌ Unknown webhook

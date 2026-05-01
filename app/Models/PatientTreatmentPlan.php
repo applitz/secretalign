@@ -20,3 +20,4 @@ class PatientTreatmentPlan extends Model
         return $this->belongsTo(User::class, 'lab');
     }
 }
+
