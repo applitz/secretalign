@@ -1126,7 +1126,7 @@
         <script src="{{  asset('public/assets/customjs/validate/jquery.validate.min.js') }}"></script>
         <script src="{{  asset('public/assets/customjs/validate/additional-methods.min.js') }}"></script>
         <script src="{{  asset('public/assets/plugins/ckeditor.js') }}"></script>
-        
+
 
 
         <script src="{{ asset('public/qovex') }}/assets/js/app.js"></script>
