@@ -110,6 +110,7 @@ class TasksService extends CommonFunction
                 'u.postal_code',
                 'u.city',
                 'u.country',
+                'p.setup_type',
                 DB::raw("CONCAT(u.first_name, ' ', u.last_name) as user_full_name"),
                 DB::raw("CONCAT(p.first_name, ' ', p.last_name) as patient_full_name"),
             ])
@@ -182,6 +183,11 @@ class TasksService extends CommonFunction
                 'patient_full_name' => $patient->patient_full_name,
                 'task_name' => $task,
                 'treatment_type' => $patient->treatment_type == '2' ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-danger"> Aligners Full-Service </span>' : '<span class="badge fw-semi-bold rounded-pill status badge-soft-primary">Treatment Planning Service</span>',
+                'setup_type' => $patient->setup_type == '1'
+                                ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-danger">Final Setup with individual staging</span>'
+                                : ($patient->setup_type == '2'
+                                    ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-primary">Quick Setup</span>'
+                                    : ''),
                 'phase' => '<span class="badge fw-semi-bold rounded-pill status badge-soft-info">Phase '. $patient->phase .'</span>',
                 'previous_case_holder' => ucfirst($patient->previous_case_holder),
                 'due_date' => $due_date,

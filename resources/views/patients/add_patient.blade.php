@@ -341,6 +341,7 @@
 <form method="POST" action="{{ url('/patient/submit') }}" id="final-submit-form">
     @csrf
     <input type="hidden" name="client_preferred_package" value="select">
+    <input type="hidden" name="client_setup_type" value="1">
     <input type="hidden" name="treatment_plan_id" value="{{ $patient->id }}">
     <input type="hidden" name="patient_id" value="{{ $patient->patient_id }}">
 </form>
@@ -1822,6 +1823,7 @@ async function previewUpperStlFile(file_upper)
                             const advisor = $("#advisor").val();
                             const comment = $("#comment").val();// Get advisor selection
                             const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
+                            const setup_type = $('input[name="setup_type"]:checked').val();
 
                             // Validate consultant agreement checkbox if advisor is selected
                             if (advisor && !consultantAgreementChecked) {
@@ -1829,12 +1831,17 @@ async function previewUpperStlFile(file_upper)
                                 return;
                             }
 
+                            if (!setup_type) {
+                                toastError("You must select your preferred package.");
+                                return;
+                            }
+
                             // Submit the form
                             $("#final-submit-form").append(`<input type="hidden" name="advisor" value="${advisor}" />`);
-                        $("#final-submit-form").append(`<input type="hidden" name="comment" value="${comment}" />`);
+                            $("#final-submit-form").append(`<input type="hidden" name="comment" value="${comment}" />`);
 
-                        // Submit the form
-                        $("#final-submit-form").submit();
+                            // Submit the form
+                            $("#final-submit-form").submit();
                         } else {
                             toastError("You must accept the Packages and Terms & Conditions agreement.");
                         }
@@ -3867,6 +3874,11 @@ async function previewUpperStlFile(file_upper)
                     $("input[name=client_preferred_package]").val($(this).val());
                 }
             });
+            $(document).on('change', 'input[name=setup_type]', function () {
+                if($(this).is(":checked")) {
+                    $("input[name=client_setup_type]").val($(this).val());
+                }
+            });
 
             $("#submit-patient-info").on('click', function() {
                 var first_name = $("#first_name").val();
@@ -4534,6 +4546,16 @@ async function previewUpperStlFile(file_upper)
             $('#order-from-shining3d-modal').modal('show');
         }
 
+        $(document).ready(function () {
+            $('#text-info-modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // clicked element
+                var infoText = button.data('info');  // get data-info
+                var infoTitle = button.data('info-title');  // get data-info
+
+                $(this).find('#text-info').text(infoText); // set text
+                $(this).find('#text-info-title').text(infoTitle); // set text
+            });
+        });
         DmIntegration.init();
         AddPatient.init();
         Shining3d.init();

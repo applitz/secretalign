@@ -312,14 +312,6 @@ function ensureAlignersToCoverUi() {
             '</style>'
         ].join(''));
     }
-
-    if (!$('#aligners-to-cover-upper-summary').length) {
-        $('#classIIUpperArcNew-3').after('<div id="aligners-to-cover-upper-summary" class="aligners-to-cover-summary"></div>');
-    }
-
-    if (!$('#aligners-to-cover-lower-summary').length) {
-        $('#classIILowerArc-3').after('<div id="aligners-to-cover-lower-summary" class="aligners-to-cover-summary"></div>');
-    }
 }
 
 function ensureAlignersToCoverStateInputs() {
@@ -533,7 +525,7 @@ function renderAlignersToCoverArch(arch) {
     });
 
     if (!hasSelection) {
-        $(summarySelector).text('Select the last ' + arch + ' tooth to cover with aligners.');
+        // $(summarySelector).text('Select the last ' + arch + ' tooth to cover with aligners.');
         syncAlignersToCoverStateInputs();
         return;
     }

@@ -133,14 +133,14 @@
                             SECRET SELECT
                             </label>
                         </div>
-                </div>
-                <div>
-                    <div class="form-check mb-0 custom-radio radio-select">
-                        <input class="form-check-input" id="pricing_package_2" type="radio" value="confidence" name="pricing_package" />
-                        <label class="form-check-label mb-0 fw-bold d-block" for="pricing_package_2">SECRET CONFIDENCE
-                            </label>
-                        </div>
-                </div>
+                    </div>
+                    <div>
+                        <div class="form-check mb-0 custom-radio radio-select">
+                            <input class="form-check-input" id="pricing_package_2" type="radio" value="confidence" name="pricing_package" />
+                            <label class="form-check-label mb-0 fw-bold d-block" for="pricing_package_2">SECRET CONFIDENCE
+                                </label>
+                            </div>
+                    </div>
             </div>
         </div>
 

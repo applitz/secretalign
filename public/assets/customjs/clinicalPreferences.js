@@ -537,7 +537,7 @@ function biteTurbos(toothNumber, side){
         return;
     }
 
-    var img = $('<img src="' + baseUrl + '/public/assets/tooth/png/Bite-Turbos.png" class="bite-turbos-overlay" style="position: absolute; width: 25px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">');
+    var img = $('<img src="' + baseUrl + '/public/assets/tooth/png/Bite-Turbos.png" class="bite-turbos-overlay" style="position: absolute; width: 35px; height: 30px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">');
     wrapper.append(img);
     refreshToothSelectedState(toothNumber);
 }

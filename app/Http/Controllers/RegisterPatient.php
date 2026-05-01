@@ -651,6 +651,7 @@ class RegisterPatient extends Controller
         $id = $request->post('patient_id');
         $phase = $request->post('treatment_plan_id');
         $preferred_package = @$request->post('client_preferred_package');
+        $setup_type = @$request->post('client_setup_type');
         $comment = $request->comment;
         $advisor_id = $request->advisor;
         // dd($advisor_id === null , $advisor_id === '');
@@ -697,6 +698,7 @@ class RegisterPatient extends Controller
                 }
                 DB::table('patients')->where('id', $patient->patient_id)->update([
                     "pricing_package" => $package,
+                    "setup_type" => $setup_type,
                 ]);
             }
 

@@ -198,6 +198,11 @@ class PatientsService extends CommonFunction
                 'first_name' => $patient->first_name,
                 'dob' => date_formate($patient->dob),
                 'treatment_type' => $patient->treatment_type == '2' ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-danger"> Aligners Full-Service </span>' : '<span class="badge fw-semi-bold rounded-pill status badge-soft-primary">Treatment Planning Service</span>',
+                'setup_type' => $patient->setup_type == '1'
+                                ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-danger">Final Setup with individual staging</span>'
+                                : ($patient->setup_type == '2'
+                                    ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-primary">Quick Setup</span>'
+                                    : ''),
                 'package' => '<span class="badge fw-semi-bold rounded-pill status badge-soft-primary">' . ($patient->pricing_package == 'AL-SECRET-CONFIDENCE' ? 'Confidence' : 'Select') . '</span>',
                 'status' => '<span class="badge fw-semi-bold rounded-pill status ' . (getPatientTreatmentPlanStatus($patient->status)) . '">'
                     . ($patient->status == "Waiting for Review from Advisor" ? "Waiting Advisor's Review" : ucfirst($patient->status))

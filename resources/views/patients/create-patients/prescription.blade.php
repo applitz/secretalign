@@ -2750,14 +2750,20 @@
                             <input class="form-check-input" id="anterior_leveling1" type="radio"
                                 name="anterior_leveling" value="1" @if ($patient->anterior_leveling == '1') checked="checked" @endif />
                             <label class="form-check-label" for="anterior_leveling1">
-                                <strong> Edge Harmony: </strong>a consistent smile arc and incisal symmetry (potential gingival discrepancies will be managed post-treatment).
+                                Incisal Edge Harmony
+                                <a href="javascript:;" class="text-info" data-bs-toggle="modal" data-bs-target="#text-info-modal" data-info-title="Incisal Edge Harmony" data-info="A consistent smile arc and incisal symmetry (potential gingival discrepancies will be managed post-treatment).">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
                             </label>
                         </div>
                         <div class="form-check form-switch">
                             <input class="form-check-input" id="anterior_leveling2" type="radio"
                                 name="anterior_leveling" value="0" @if ($patient->anterior_leveling == '0') checked="checked" @endif />
                             <label class="form-check-label" for="anterior_leveling2">
-                                <strong> Gingival Margin Symmetry: </strong>Prioritize level gingival zeniths (incisal edge discrepancies will be managed via restorative bonding/enameloplasty).
+                                Gingival Margin Symmetry
+                                    <a href="javascript:;" class="text-info" data-bs-toggle="modal" data-bs-target="#text-info-modal" data-info-title="Gingival Margin Symmetry" data-info="Prioritize level gingival zeniths (incisal edge discrepancies will be managed via restorative bonding/enameloplasty).">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
                             </label>
                         </div>
                     </div>
