@@ -331,44 +331,44 @@
 
                                 <label class="inline-item">
                                     <input type="radio" name="class-selector" class="class-selector" value="button-cutout" checked="checked">
-                                    <img src="{{ asset('public/assets/tooth/png/buttons.png') }}">
-                                    <span>Button Cutout</span>
+                                    <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}">
+                                    <span class="form-check-label" >Button Cutout</span>
                                 </label>
 
                                 <label class="inline-item">
                                     <input type="radio" name="class-selector" class="class-selector" value="precision-cut">
-                                    <img src="{{ asset('public/assets/tooth/png/precisioncut.png') }}">
-                                    <span>Precision Cut</span>
+                                    <img src="{{ asset('public/assets/tooth/png/precisioncut.webp') }}">
+                                    <span class="form-check-label">Precision Cut</span>
                                 </label>
 
                                 <label class="inline-item">
                                     <input type="radio" name="class-selector" class="class-selector" value="i-hook">
-                                    <img src="{{ asset('public/assets/tooth/png/I-hook.png') }}">
-                                    <span>I-Hook</span>
+                                    <img src="{{ asset('public/assets/tooth/png/I-hook.webp') }}">
+                                    <span class="form-check-label">I-Hook</span>
                                 </label>
 
                                 <label class="inline-item">
                                     <input type="radio" name="class-selector" class="class-selector" value="power-ridge">
-                                    <img src="{{ asset('public/assets/tooth/png/Power-Ridge.png') }}">
-                                    <span>Power Ridge</span>
+                                    <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}">
+                                    <span class="form-check-label">Power Ridge</span>
                                 </label>
 
                                 <label class="inline-item">
                                     <input type="radio" name="class-selector" class="class-selector" value="power-arm-attachment">
-                                    <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.png') }}">
-                                    <span>Power Arm Attachment</span>
+                                    <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.webp') }}">
+                                    <span class="form-check-label">Power Arm Attachment</span>
                                 </label>
 
                                 <label class="inline-item">
                                     <input type="radio" name="class-selector" class="class-selector" value="bite-ramp">
-                                    <img src="{{ asset('public/assets/tooth/png/Bite-Ramp.png') }}">
-                                    <span>Bite Ramp</span>
+                                    <img src="{{ asset('public/assets/tooth/png/Bite-Ramp.webp') }}">
+                                    <span class="form-check-label">Bite Ramp</span>
                                 </label>
 
                                 <label class="inline-item">
                                     <input type="radio" name="class-selector" class="class-selector" value="bite-turbos">
-                                    <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.png') }}">
-                                    <span>Bite Turbos</span>
+                                    <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.webp') }}">
+                                    <span class="form-check-label">Bite Turbos</span>
                                 </label>
 
                             </div>
@@ -442,7 +442,7 @@
                                                 $bite_ramp = in_array($id, arr($patient->bite_ramp));
 
                                                 $selected = isSelected($id, $allSelections);
-                                                $img = $selected ? "public/assets/tooth/png/selected/$tooth.png" : "public/assets/tooth/png/$tooth.png";
+                                                $img = $selected ? "public/assets/tooth/png/selected/$tooth.webp" : "public/assets/tooth/png/$tooth.webp";
 
                                                 $biteRampUpperIds = [6,7,8,9,10,11];
                                                 $biteTurbosUpperIds = [1,2,3,4,5,12,13,14,15,16];
@@ -455,7 +455,7 @@
                                         @if($selected)
                                             <div class="tooth-wrapper" style="position: relative; display: inline-block;">
                                         @endif
-                                        <img id="{{ $id }}" class="choose-tooth" data-id="{{ $id }}"  data-image="{{ $tooth }}.png" src="{{ asset($img) }}" style="vertical-align: baseline;height: {{ $upperSize[$id] }};width: {{ $upperSize[$id] }}; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="{{ $id }}" class="choose-tooth" data-id="{{ $id }}"  data-image="{{ $tooth }}.webp" src="{{ asset($img) }}" style="vertical-align: baseline;height: {{ $upperSize[$id] }};width: {{ $upperSize[$id] }}; margin-top: 10px; margin-bottom: 5px;">
                                         @if($selected)
                                             @php
                                                 $numberOfelementsOuter = 1;
@@ -464,79 +464,79 @@
 
                                             {{-- 3. Power Ridge (upper) --}}
                                             @if($power_ridge_outer)
-                                                <img src="{{ asset('public/assets/tooth/png/Power-Ridge.png') }}" class="power-ridge-overlay" data-side="upper" style="position: absolute; width: 30px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 12; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" class="power-ridge-overlay" data-side="upper" style="position: absolute; width: 30px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 12; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
                                                 @php $numberOfelementsOuter++; @endphp
                                             @endif
 
                                             {{-- 2. Power Arm Attachment (upper) --}}
                                             @if($power_arm_attachment_outer)
-                                                <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.png') }}" class="power-arm-attachment-overlay" data-side="upper" style="position: absolute; width: 15px; height: 25px; left: 50%; transform: translateX(-50%); z-index: 11; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.webp') }}" class="power-arm-attachment-overlay" data-side="upper" style="position: absolute; width: 15px; height: 25px; left: 50%; transform: translateX(-50%); z-index: 11; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
                                                 @php $numberOfelementsOuter++; @endphp
                                             @endif
 
                                             {{-- 1. Show only one of Button Cutout, Precision Cut, I-Hook (upper) --}}
                                             @if($buttonOuter)
-                                                <img src="{{ asset('public/assets/tooth/png/buttons.png') }}" class="button-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" class="button-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
                                                 @php $numberOfelementsOuter++; @endphp
                                             @elseif($precision_cut_outer)
                                                 @if($id >=1 && $id <= 8)
-                                                    <img src="{{ asset('public/assets/tooth/png/precisioncut-UR.png') }}" class="precision-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};" alt="precisioncut Outer">
+                                                    <img src="{{ asset('public/assets/tooth/png/precisioncut-UR.webp') }}" class="precision-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};" alt="precisioncut Outer">
                                                     @php $numberOfelementsOuter++; @endphp
                                                 @else
-                                                    <img src="{{ asset('public/assets/tooth/png/precisioncut-UL.png') }}" class="precision-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};" alt="precisioncut Outer">
+                                                    <img src="{{ asset('public/assets/tooth/png/precisioncut-UL.webp') }}" class="precision-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};" alt="precisioncut Outer">
                                                     @php $numberOfelementsOuter++; @endphp
                                                 @endif
                                             @elseif($ihookOuter)
                                                 @if($id >=1 && $id <= 8)
-                                                    <img src="{{ asset('public/assets/tooth/png/I-hook-UR.png') }}" class="i-hook-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                    <img src="{{ asset('public/assets/tooth/png/I-hook-UR.webp') }}" class="i-hook-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
                                                     @php $numberOfelementsOuter++; @endphp
                                                 @else
-                                                    <img src="{{ asset('public/assets/tooth/png/I-hook-UL.png') }}" class="i-hook-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                    <img src="{{ asset('public/assets/tooth/png/I-hook-UL.webp') }}" class="i-hook-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
                                                     @php $numberOfelementsOuter++; @endphp
                                                 @endif
                                             @endif
 
                                             {{-- 4. Bite Ramp and Bite Turbos (no change needed) --}}
                                             @if($bite_ramp && in_array($id, $biteRampUpperIds))
-                                                <img src="{{ asset('public/assets/tooth/png/Bite-Ramp.png') }}" class="bite-ramp-overlay" style="position: absolute; width: 20px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;" alt="Bite Ramp Upper">
+                                                <img src="{{ asset('public/assets/tooth/png/Bite-Ramp.webp') }}" class="bite-ramp-overlay" style="position: absolute; width: 20px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;" alt="Bite Ramp Upper">
                                             @endif
                                             @if($bite_turbos && in_array($id, $biteTurbosUpperIds))
-                                                <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.png') }}" class="bite-turbos-overlay" style="position: absolute; width: 25px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;" alt="Bite Turbos Upper">
-                                                {{-- <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.png') }}" style="position: absolute; width: 25px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;" alt="Bite Turbos Upper"> --}}
+                                                <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.webp') }}" class="bite-turbos-overlay" style="position: absolute; width: 25px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;" alt="Bite Turbos Upper">
+                                                {{-- <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.webp') }}" style="position: absolute; width: 25px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;" alt="Bite Turbos Upper"> --}}
                                             @endif
 
                                             {{-- Inner Side Start --}}
                                             @if($power_ridge_inner)
-                                                <img src="{{ asset('public/assets/tooth/png/Power-Ridge.png') }}" class="power-ridge-overlay" data-side="lower" style="position: absolute; width: 30px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 12; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" class="power-ridge-overlay" data-side="lower" style="position: absolute; width: 30px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 12; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                 @php $numberOfelementsInner++; @endphp
                                             @endif
 
                                             @if($power_arm_attachment_outer)
-                                                <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment-lower.png') }}" class="power-arm-attachment-overlay" data-side="lower" style="position: absolute; width: 15px; height: 25px; left: 50%; transform: translateX(-50%); z-index: 11; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment-lower.webp') }}" class="power-arm-attachment-overlay" data-side="lower" style="position: absolute; width: 15px; height: 25px; left: 50%; transform: translateX(-50%); z-index: 11; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                 @php $numberOfelementsInner++; @endphp
                                             @endif
 
                                             @if($buttonInner)
-                                                <img src="{{ asset('public/assets/tooth/png/buttons.png') }}" class="button-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" class="button-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                 @php $numberOfelementsInner++; @endphp
                                             @endif
 
                                             @if($precisionCutInner)
                                                 @if($id >=1 && $id <= 8)
-                                                    <img src="{{ asset('public/assets/tooth/png/precisioncut-LR.png') }}" class="precision-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                    <img src="{{ asset('public/assets/tooth/png/precisioncut-LR.webp') }}" class="precision-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                     @php $numberOfelementsInner++; @endphp
                                                 @else
-                                                    <img src="{{ asset('public/assets/tooth/png/precisioncut-LL.png') }}" class="precision-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                    <img src="{{ asset('public/assets/tooth/png/precisioncut-LL.webp') }}" class="precision-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                     @php $numberOfelementsInner++; @endphp
                                                 @endif
                                             @endif
 
                                             @if($ihookInner)
                                                 @if($id >=1 && $id <= 8)
-                                                    <img src="{{ asset('public/assets/tooth/png/I-hook-LR.png') }}" class="i-hook-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                    <img src="{{ asset('public/assets/tooth/png/I-hook-LR.webp') }}" class="i-hook-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                     @php $numberOfelementsInner++; @endphp
                                                 @else
-                                                    <img src="{{ asset('public/assets/tooth/png/I-hook-LL.png') }}" class="i-hook-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                    <img src="{{ asset('public/assets/tooth/png/I-hook-LL.webp') }}" class="i-hook-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                     @php $numberOfelementsInner++; @endphp
                                                 @endif
                                             @endif
@@ -559,13 +559,13 @@
                                                 $bite_ramp_lower = in_array($id, arr($patient->bite_ramp));
                                                 $selected = isSelected($id, $allSelections);
                                                 $img = $selected
-                                                    ? "public/assets/tooth/png/selected/$tooth.png"
-                                                    : "public/assets/tooth/png/$tooth.png";
+                                                    ? "public/assets/tooth/png/selected/$tooth.webp"
+                                                    : "public/assets/tooth/png/$tooth.webp";
                                             @endphp
                                             @if($selected)
                                                 <div class="tooth-wrapper" style="position: relative; display: inline-block;">
                                             @endif
-                                            <img id="{{ $id }}" class="choose-tooth" data-id="{{ $id }}"  data-image="{{ $tooth }}.png" src="{{ asset($img) }}" style="vertical-align: baseline;height: {{ $lowerSize[$id] }};width: {{ $lowerSize[$id] }}; margin-top: 10px; margin-bottom: 5px;">
+                                            <img id="{{ $id }}" class="choose-tooth" data-id="{{ $id }}"  data-image="{{ $tooth }}.webp" src="{{ asset($img) }}" style="vertical-align: baseline;height: {{ $lowerSize[$id] }};width: {{ $lowerSize[$id] }}; margin-top: 10px; margin-bottom: 5px;">
                                             @if($selected)
                                                 @php
                                                     $lowerNumberOfelementsOuter = 1;
@@ -574,78 +574,78 @@
 
                                                 {{-- 3. Power Ridge (upper) --}}
                                                 @if($power_ridge_outer)
-                                                    <img src="{{ asset('public/assets/tooth/png/Power-Ridge.png') }}" class="power-ridge-overlay" data-side="upper" style="position: absolute; width: 30px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 12; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                    <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" class="power-ridge-overlay" data-side="upper" style="position: absolute; width: 30px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 12; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
                                                     @php $lowerNumberOfelementsOuter++; @endphp
                                                 @endif
 
                                                 {{-- 2. Power Arm Attachment (upper) --}}
                                                 @if($power_arm_attachment_outer)
-                                                    <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.png') }}" class="power-arm-attachment-overlay" data-side="upper" style="position: absolute; width: 15px; height: 25px; left: 50%; transform: translateX(-50%); z-index: 11; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                    <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.webp') }}" class="power-arm-attachment-overlay" data-side="upper" style="position: absolute; width: 15px; height: 25px; left: 50%; transform: translateX(-50%); z-index: 11; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
                                                     @php $lowerNumberOfelementsOuter++; @endphp
                                                 @endif
 
                                                 {{-- 1. Show only one of Button Cutout, Precision Cut, I-Hook (upper) --}}
                                                 @if($buttonOuter)
-                                                    <img src="{{ asset('public/assets/tooth/png/buttons.png') }}" class="button-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                    <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" class="button-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
                                                     @php $lowerNumberOfelementsOuter++; @endphp
                                                 @elseif($precision_cut_outer)
                                                     @if($id >=17 && $id <= 24)
-                                                        <img src="{{ asset('public/assets/tooth/png/precisioncut-UR.png') }}" class="precision-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};" alt="precisioncut Outer">
+                                                        <img src="{{ asset('public/assets/tooth/png/precisioncut-UR.webp') }}" class="precision-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};" alt="precisioncut Outer">
                                                         @php $lowerNumberOfelementsOuter++; @endphp
                                                     @else
-                                                        <img src="{{ asset('public/assets/tooth/png/precisioncut-UL.png') }}" class="precision-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};" alt="precisioncut Outer">
+                                                        <img src="{{ asset('public/assets/tooth/png/precisioncut-UL.webp') }}" class="precision-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};" alt="precisioncut Outer">
                                                         @php $lowerNumberOfelementsOuter++; @endphp
                                                     @endif
                                                 @elseif($ihookOuter)
                                                     @if($id >=17 && $id <= 24)
-                                                        <img src="{{ asset('public/assets/tooth/png/I-hook-UR.png') }}" class="i-hook-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                        <img src="{{ asset('public/assets/tooth/png/I-hook-UR.webp') }}" class="i-hook-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
                                                         @php $lowerNumberOfelementsOuter++; @endphp
                                                     @else
-                                                        <img src="{{ asset('public/assets/tooth/png/I-hook-UL.png') }}" class="i-hook-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                        <img src="{{ asset('public/assets/tooth/png/I-hook-UL.webp') }}" class="i-hook-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
                                                         @php $lowerNumberOfelementsOuter++; @endphp
                                                     @endif
                                                 @endif
 
                                                 @if($bite_ramp_lower && in_array($id, $biteRampLowerIds))
-                                                    <img src="{{ asset('public/assets/tooth/png/Bite-Ramp-lower.png') }}" class="bite-ramp-overlay" style="position: absolute; width: 20px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">
+                                                    <img src="{{ asset('public/assets/tooth/png/Bite-Ramp-lower.webp') }}" class="bite-ramp-overlay" style="position: absolute; width: 20px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">
                                                 @endif
 
                                                 @if($bite_turbos_lower && in_array($id, $biteTurbosLowerIds))
-                                                    <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.png' ) }}" class="bite-turbos-overlay" style="position: absolute; width: 25px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">
+                                                    <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.webp' ) }}" class="bite-turbos-overlay" style="position: absolute; width: 25px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">
                                                 @endif
 
                                                 {{-- Inner Start --}}
                                                 @if($power_ridge_inner)
-                                                    <img src="{{ asset('public/assets/tooth/png/Power-Ridge.png') }}" class="power-ridge-overlay" data-side="lower" style="position: absolute; width: 30px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 12; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                    <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" class="power-ridge-overlay" data-side="lower" style="position: absolute; width: 30px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 12; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                     @php $lowerNumberOfelementsInner++; @endphp
                                                 @endif
 
                                                 @if($power_arm_attachment_outer)
-                                                    <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment-lower.png') }}" class="power-arm-attachment-overlay" data-side="lower" style="position: absolute; width: 15px; height: 25px; left: 50%; transform: translateX(-50%); z-index: 11; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                    <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment-lower.webp') }}" class="power-arm-attachment-overlay" data-side="lower" style="position: absolute; width: 15px; height: 25px; left: 50%; transform: translateX(-50%); z-index: 11; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                     @php $lowerNumberOfelementsInner++; @endphp
                                                 @endif
 
                                                 @if($buttonInner)
-                                                    <img src="{{ asset('public/assets/tooth/png/buttons.png') }}" class="button-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                    <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" class="button-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                     @php $lowerNumberOfelementsInner++; @endphp
                                                 @endif
 
                                                 @if($precisionCutInner)
                                                     @if($id >=17 && $id <= 24)
-                                                        <img src="{{ asset('public/assets/tooth/png/precisioncut-LR.png') }}" class="precision-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                        <img src="{{ asset('public/assets/tooth/png/precisioncut-LR.webp') }}" class="precision-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                         @php $lowerNumberOfelementsInner++; @endphp
                                                     @else
-                                                        <img src="{{ asset('public/assets/tooth/png/precisioncut-LL.png') }}" class="precision-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                        <img src="{{ asset('public/assets/tooth/png/precisioncut-LL.webp') }}" class="precision-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                         @php $lowerNumberOfelementsInner++; @endphp
                                                     @endif
                                                 @endif
 
                                                 @if($ihookInner)
                                                     @if($id >=17 && $id <= 24)
-                                                        <img src="{{ asset('public/assets/tooth/png/I-hook-LR.png') }}" class="i-hook-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                        <img src="{{ asset('public/assets/tooth/png/I-hook-LR.webp') }}" class="i-hook-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                         @php $lowerNumberOfelementsInner++; @endphp
                                                     @else
-                                                        <img src="{{ asset('public/assets/tooth/png/I-hook-LL.png') }}" class="i-hook-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                        <img src="{{ asset('public/assets/tooth/png/I-hook-LL.webp') }}" class="i-hook-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                         @php $lowerNumberOfelementsInner++; @endphp
                                                     @endif
                                                 @endif
@@ -2097,38 +2097,38 @@
 
                                     <label class="inline-item">
                                         <input type="radio" name="class-selector-section-2" class="class-selector-section-2" value="unerupted-teeth" checked="checked">
-                                        {{-- <img src="{{ asset('public/assets/tooth/png/precisioncut.png') }}"> --}}
-                                        <span>Missing or Unerupted teeth</span>
+                                        {{-- <img src="{{ asset('public/assets/tooth/png/precisioncut.webp') }}"> --}}
+                                        <span class="form-check-label">Missing or Unerupted teeth</span>
                                     </label>
 
                                     <label class="inline-item">
                                         <input type="radio" name="class-selector-section-2" class="class-selector-section-2" value="extracted-teeth"  >
-                                        <img src="{{ asset('public/assets/tooth/png/extracted.png') }}">
-                                        <span>To be Extracted</span>
+                                        <img src="{{ asset('public/assets/tooth/png/extracted.webp') }}">
+                                        <span class="form-check-label">To be Extracted</span>
                                     </label>
 
                                     <label class="inline-item">
                                         <input type="radio" name="class-selector-section-2" class="class-selector-section-2" value="tooth-movement-restrictions">
-                                        <img src="{{ asset('public/assets/tooth/png/movement.png') }}">
-                                        <span>Tooth Movement Restrictions</span>
+                                        <img src="{{ asset('public/assets/tooth/png/movement.webp') }}">
+                                        <span class="form-check-label">Tooth Movement Restrictions</span>
                                     </label>
 
                                     <label class="inline-item">
                                         <input type="radio" name="class-selector-section-2" class="class-selector-section-2" value="coil" >
-                                        <img src="{{ asset('public/assets/tooth/png/coil.png') }}" style="width: 36px">
-                                        <span>Open space for future Prosthesis</span>
+                                        <img src="{{ asset('public/assets/tooth/png/coil.webp') }}" style="width: 36px">
+                                        <span class="form-check-label">Open space for future Prosthesis</span>
                                     </label>
 
                                     <label class="inline-item">
                                         <input type="radio" name="class-selector-section-2" class="class-selector-section-2" value="pontic">
-                                        <img src="{{ asset('public/assets/tooth/png/pontic.png') }}" style="width: 36px;height: 36px;">
-                                        <span>Pontic</span>
+                                        <img src="{{ asset('public/assets/tooth/png/pontic.webp') }}" style="width: 36px;height: 36px;">
+                                        <span class="form-check-label">Pontic</span>
                                     </label>
 
                                     <label class="inline-item">
                                         <input type="radio" name="class-selector-section-2" class="class-selector-section-2" value="bridge">
-                                        <img src="{{ asset('public/assets/tooth/png/Bridge.png') }}" style="width: 48px">
-                                        <span>Bridge</span>
+                                        <img src="{{ asset('public/assets/tooth/png/Bridge.webp') }}" style="width: 48px">
+                                        <span class="form-check-label">Bridge</span>
                                     </label>
 
                                 </div>
@@ -2165,22 +2165,22 @@
 
                                                     $selected2 = isSelected($id, $allSelections2);
                                                     if ($unerupted_teeth && !$pontic) {
-                                                        $img2 = "public/assets/tooth/png/$tooth.png"; // Do not show image
+                                                        $img2 = "public/assets/tooth/png/$tooth.webp"; // Do not show image
                                                     } elseif ($pontic) {
-                                                        $img2 = "public/assets/tooth/coloured/$tooth.png";
+                                                        $img2 = "public/assets/tooth/coloured/$tooth.webp";
                                                     } else {
                                                         $img2 = $selected2
-                                                            ? "public/assets/tooth/png/selected/$tooth.png"
-                                                            : "public/assets/tooth/png/$tooth.png";
+                                                            ? "public/assets/tooth/png/selected/$tooth.webp"
+                                                            : "public/assets/tooth/png/$tooth.webp";
                                                     }
-                                                    // $img2 = $selected2 ? "public/assets/tooth/png/selected/$tooth.png" : "public/assets/tooth/png/$tooth.png";
+                                                    // $img2 = $selected2 ? "public/assets/tooth/png/selected/$tooth.webp" : "public/assets/tooth/png/$tooth.webp";
                                                 @endphp
 
                                                 @if($selected2)
                                                 <div class="tooth-wrapper-2" style="position: relative; display: inline-block;">
                                                 @endif
 
-                                                <img id="{{ $id }}" class="choose-tooth-section-2" data-id="{{ $id }}"  data-image="{{ $tooth }}.png" src="{{ asset($img2) }}" style="vertical-align: baseline;height: {{ $upperSize[$id] }};width: {{ $upperSize[$id] }}; margin-top: 10px; margin-bottom: 5px; {{ ($unerupted_teeth && !$pontic)  ? 'opacity:0' : ''}}">
+                                                <img id="{{ $id }}" class="choose-tooth-section-2" data-id="{{ $id }}"  data-image="{{ $tooth }}.webp" src="{{ asset($img2) }}" style="vertical-align: baseline;height: {{ $upperSize[$id] }};width: {{ $upperSize[$id] }}; margin-top: 10px; margin-bottom: 5px; {{ ($unerupted_teeth && !$pontic)  ? 'opacity:0' : ''}}">
 
                                                 @if($selected2)
                                                     @php
@@ -2188,22 +2188,22 @@
                                                     @endphp
 
                                                     @if($coil)
-                                                        <img class="section2-overlay coil-overlay" src="{{ asset('public/assets/tooth/png/coil.png') }}" alt="coil" data-side="upper" style="object-fit: contain; position: absolute; left: 50%; width: 50px; height: 24px; transform: translateX(-50%); z-index: 10; pointer-events: none; top: {{ $numberOfelementsSection2 == 1 ? '-16px' : ($numberOfelementsSection2 == 2 ? '-46px' : ($numberOfelementsSection2 == 3 ? '-74px' : '-102px')) }};">
+                                                        <img class="section2-overlay coil-overlay" src="{{ asset('public/assets/tooth/png/coil.webp') }}" alt="coil" data-side="upper" style="object-fit: contain; position: absolute; left: 50%; width: 50px; height: 24px; transform: translateX(-50%); z-index: 10; pointer-events: none; top: {{ $numberOfelementsSection2 == 1 ? '-16px' : ($numberOfelementsSection2 == 2 ? '-46px' : ($numberOfelementsSection2 == 3 ? '-74px' : '-102px')) }};">
                                                         @php $numberOfelementsSection2++; @endphp
                                                     @endif
 
                                                     @if($extracted_teeth)
-                                                        <img class="section2-overlay extracted-overlay" src="{{ asset('public/assets/tooth/png/extracted.png ') }}" alt="extracted" data-side="upper" style="object-fit: contain; position: absolute; left: 50%; width: 22px; height: 22px; transform: translateX(-50%); z-index: 10; pointer-events: none; top: {{ $numberOfelementsSection2 == 1 ? '-16px' : ($numberOfelementsSection2 == 2 ? '-46px' : ($numberOfelementsSection2 == 3 ? '-74px' : '-102px')) }};">
+                                                        <img class="section2-overlay extracted-overlay" src="{{ asset('public/assets/tooth/png/extracted.webp ') }}" alt="extracted" data-side="upper" style="object-fit: contain; position: absolute; left: 50%; width: 22px; height: 22px; transform: translateX(-50%); z-index: 10; pointer-events: none; top: {{ $numberOfelementsSection2 == 1 ? '-16px' : ($numberOfelementsSection2 == 2 ? '-46px' : ($numberOfelementsSection2 == 3 ? '-74px' : '-102px')) }};">
                                                         @php $numberOfelementsSection2++; @endphp
                                                     @endif
 
                                                     @if($tooth_movement_restrictions)
-                                                        <img class="section2-overlay movement-overlay" src="{{ asset('public/assets/tooth/png/movement.png ') }}" alt="movement" data-side="upper" style="object-fit: contain; position: absolute; left: 50%; width: 22px; height: 22px; transform: translateX(-50%); z-index: 10; pointer-events: none; top: {{ $numberOfelementsSection2 == 1 ? '-16px' : ($numberOfelementsSection2 == 2 ? '-46px' : ($numberOfelementsSection2 == 3 ? '-74px' : '-102px')) }};">
+                                                        <img class="section2-overlay movement-overlay" src="{{ asset('public/assets/tooth/png/movement.webp ') }}" alt="movement" data-side="upper" style="object-fit: contain; position: absolute; left: 50%; width: 22px; height: 22px; transform: translateX(-50%); z-index: 10; pointer-events: none; top: {{ $numberOfelementsSection2 == 1 ? '-16px' : ($numberOfelementsSection2 == 2 ? '-46px' : ($numberOfelementsSection2 == 3 ? '-74px' : '-102px')) }};">
                                                         @php $numberOfelementsSection2++; @endphp
                                                     @endif
 
                                                     @if($bridge)
-                                                        <img class="section2-overlay bridge-overlay" src="{{ asset('public/assets/tooth/png/Bridge.png') }}" alt="bridge" data-side="upper" style="position: absolute; left: 50%; width: 44px; height: 24px; transform: translateX(-50%); z-index: 11; pointer-events: none; object-fit: contain; top: {{ $numberOfelementsSection2 == 1 ? '-16px' : ($numberOfelementsSection2 == 2 ? '-46px' : ($numberOfelementsSection2 == 3 ? '-74px' : '-102px')) }};">
+                                                        <img class="section2-overlay bridge-overlay" src="{{ asset('public/assets/tooth/png/Bridge.webp') }}" alt="bridge" data-side="upper" style="position: absolute; left: 50%; width: 44px; height: 24px; transform: translateX(-50%); z-index: 11; pointer-events: none; object-fit: contain; top: {{ $numberOfelementsSection2 == 1 ? '-16px' : ($numberOfelementsSection2 == 2 ? '-46px' : ($numberOfelementsSection2 == 3 ? '-74px' : '-102px')) }};">
                                                         @php $numberOfelementsSection2++; @endphp
                                                     @endif
 
@@ -2230,43 +2230,43 @@
 
                                                     $selected2 = isSelected($id, $allSelections2);
                                                     if ($unerupted_teeth && !$pontic) {
-                                                        $img2 = "public/assets/tooth/png/$tooth.png";
+                                                        $img2 = "public/assets/tooth/png/$tooth.webp";
                                                     } elseif ($pontic) {
-                                                        $img2 = "public/assets/tooth/coloured/$tooth.png";
+                                                        $img2 = "public/assets/tooth/coloured/$tooth.webp";
                                                     } else {
                                                         $img2 = $selected2
-                                                            ? "public/assets/tooth/png/selected/$tooth.png"
-                                                            : "public/assets/tooth/png/$tooth.png";
+                                                            ? "public/assets/tooth/png/selected/$tooth.webp"
+                                                            : "public/assets/tooth/png/$tooth.webp";
                                                     }
-                                                    // $img2 = $selected2 ? "public/assets/tooth/png/selected/$tooth.png" : "public/assets/tooth/png/$tooth.png";
+                                                    // $img2 = $selected2 ? "public/assets/tooth/png/selected/$tooth.webp" : "public/assets/tooth/png/$tooth.webp";
                                                 @endphp
 
                                                 @if($selected2)
                                                     <div class="tooth-wrapper-2" style="position: relative; display: inline-block;">
                                                 @endif
-                                                <img id="{{ $id }}" class="choose-tooth-section-2" data-id="{{ $id }}"  data-image="{{ $tooth }}.png" src="{{ asset($img2) }}" style="vertical-align: baseline;height: {{ $lowerSize[$id] }};width: {{ $lowerSize[$id] }}; margin-bottom: 5px; {{ ($unerupted_teeth && !$pontic)  ? 'opacity:0' : ''}}">
+                                                <img id="{{ $id }}" class="choose-tooth-section-2" data-id="{{ $id }}"  data-image="{{ $tooth }}.webp" src="{{ asset($img2) }}" style="vertical-align: baseline;height: {{ $lowerSize[$id] }};width: {{ $lowerSize[$id] }}; margin-bottom: 5px; {{ ($unerupted_teeth && !$pontic)  ? 'opacity:0' : ''}}">
                                                 @if($selected2)
                                                     @php
                                                         $numberOfelementsSectionLower2 = 1;
                                                     @endphp
 
                                                     @if($coil)
-                                                        <img class="section2-overlay coil-overlay" src="{{ asset('public/assets/tooth/png/coil.png') }}" alt="coil" data-side="lower" style="object-fit: contain; position: absolute; left: 50%; width: 50px; height: 24px; transform: translateX(-50%); z-index: 10; pointer-events: none; bottom: {{ $numberOfelementsSectionLower2 == 1 ? '-16px' : ($numberOfelementsSectionLower2 == 2 ? '-46px' : ($numberOfelementsSectionLower2 == 3 ? '-74px' : '-102px')) }} ;">
+                                                        <img class="section2-overlay coil-overlay" src="{{ asset('public/assets/tooth/png/coil.webp') }}" alt="coil" data-side="lower" style="object-fit: contain; position: absolute; left: 50%; width: 50px; height: 24px; transform: translateX(-50%); z-index: 10; pointer-events: none; bottom: {{ $numberOfelementsSectionLower2 == 1 ? '-16px' : ($numberOfelementsSectionLower2 == 2 ? '-46px' : ($numberOfelementsSectionLower2 == 3 ? '-74px' : '-102px')) }} ;">
                                                         @php $numberOfelementsSectionLower2++; @endphp
                                                     @endif
 
                                                     @if($extracted_teeth)
-                                                        <img class="section2-overlay extracted-overlay" src="{{ asset('public/assets/tooth/png/extracted.png ') }}" alt="extracted" data-side="upper" style="object-fit: contain; position: absolute; left: 50%; width: 22px; height: 22px; transform: translateX(-50%); z-index: 10; pointer-events: none; bottom: {{ $numberOfelementsSectionLower2 == 1 ? '-16px' : ($numberOfelementsSectionLower2 == 2 ? '-46px' : ($numberOfelementsSectionLower2 == 3 ? '-74px' : '-102px')) }} ;">
+                                                        <img class="section2-overlay extracted-overlay" src="{{ asset('public/assets/tooth/png/extracted.webp ') }}" alt="extracted" data-side="upper" style="object-fit: contain; position: absolute; left: 50%; width: 22px; height: 22px; transform: translateX(-50%); z-index: 10; pointer-events: none; bottom: {{ $numberOfelementsSectionLower2 == 1 ? '-16px' : ($numberOfelementsSectionLower2 == 2 ? '-46px' : ($numberOfelementsSectionLower2 == 3 ? '-74px' : '-102px')) }} ;">
                                                         @php $numberOfelementsSectionLower2++; @endphp
                                                     @endif
 
                                                     @if($tooth_movement_restrictions)
-                                                        <img class="section2-overlay movement-overlay" src="{{ asset('public/assets/tooth/png/movement.png ') }}" alt="movement" data-side="upper" style="object-fit: contain; position: absolute; left: 50%; width: 22px; height: 22px; transform: translateX(-50%); z-index: 10; pointer-events: none; bottom: {{ $numberOfelementsSectionLower2 == 1 ? '-16px' : ($numberOfelementsSectionLower2 == 2 ? '-46px' : ($numberOfelementsSectionLower2 == 3 ? '-74px' : '-102px')) }} ;">
+                                                        <img class="section2-overlay movement-overlay" src="{{ asset('public/assets/tooth/png/movement.webp ') }}" alt="movement" data-side="upper" style="object-fit: contain; position: absolute; left: 50%; width: 22px; height: 22px; transform: translateX(-50%); z-index: 10; pointer-events: none; bottom: {{ $numberOfelementsSectionLower2 == 1 ? '-16px' : ($numberOfelementsSectionLower2 == 2 ? '-46px' : ($numberOfelementsSectionLower2 == 3 ? '-74px' : '-102px')) }} ;">
                                                         @php $numberOfelementsSectionLower2++; @endphp
                                                     @endif
 
                                                     @if($bridge)
-                                                        <img class="section2-overlay bridge-overlay" src="{{ asset('public/assets/tooth/png/Bridge.png') }}" alt="bridge" data-side="upper" style="position: absolute; left: 50%; width: 44px; height: 24px; transform: translateX(-50%); z-index: 11; pointer-events: none; object-fit: contain; bottom: {{ $numberOfelementsSectionLower2 == 1 ? '-16px' : ($numberOfelementsSectionLower2 == 2 ? '-46px' : ($numberOfelementsSectionLower2 == 3 ? '-74px' : '-102px')) }} ;">
+                                                        <img class="section2-overlay bridge-overlay" src="{{ asset('public/assets/tooth/png/Bridge.webp') }}" alt="bridge" data-side="upper" style="position: absolute; left: 50%; width: 44px; height: 24px; transform: translateX(-50%); z-index: 11; pointer-events: none; object-fit: contain; bottom: {{ $numberOfelementsSectionLower2 == 1 ? '-16px' : ($numberOfelementsSectionLower2 == 2 ? '-46px' : ($numberOfelementsSectionLower2 == 3 ? '-74px' : '-102px')) }} ;">
                                                         @php $numberOfelementsSectionLower2++; @endphp
                                                     @endif
 
@@ -2869,22 +2869,22 @@
                             <div class="col-xs-12">
                                 <div class="teeth-layout-wrapper" style="max-width: 1200px; margin: 0 auto;">
                                     <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:10px; padding:0.5rem 0;" id="classIIUpperArcNew-3">
-                                        <img id="1" class="choose-tooth-aligners-to-cover" data-id="1"  data-image="UR-8.png" src="{{ in_array(8, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-8.png') : asset('public/assets/tooth/png/UR-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="2" class="choose-tooth-aligners-to-cover" data-id="2"  data-image="UR-7.png" src="{{ in_array(7, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-7.png') : asset('public/assets/tooth/png/UR-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="3" class="choose-tooth-aligners-to-cover" data-id="3"  data-image="UR-6.png" src="{{ in_array(6, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-6.png') : asset('public/assets/tooth/png/UR-6.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="4" class="choose-tooth-aligners-to-cover" data-id="4"  data-image="UR-5.png" src="{{ in_array(5, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-5.png') : asset('public/assets/tooth/png/UR-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="5" class="choose-tooth-aligners-to-cover" data-id="5"  data-image="UR-4.png" src="{{ in_array(4, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-4.png') : asset('public/assets/tooth/png/UR-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="6" class="choose-tooth-aligners-to-cover" data-id="6"  data-image="UR-3.png" src="{{ in_array(3, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-3.png') : asset('public/assets/tooth/png/UR-3.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="7" class="choose-tooth-aligners-to-cover" data-id="7"  data-image="UR-2.png" src="{{ in_array(2, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-2.png') : asset('public/assets/tooth/png/UR-2.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="8" class="choose-tooth-aligners-to-cover" data-id="8"  data-image="UR-1.png" src="{{ in_array(1, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-1.png') : asset('public/assets/tooth/png/UR-1.png') }}" style="vertical-align: baseline;height: 65px;width: 65px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="9" class="choose-tooth-aligners-to-cover" data-id="9"  data-image="UL-1.png" src="{{ in_array(1, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-1.png') : asset('public/assets/tooth/png/UL-1.png') }}" style="vertical-align: baseline;height: 65px;width: 65px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="10" class="choose-tooth-aligners-to-cover" data-id="10"  data-image="UL-2.png" src="{{ in_array(2, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-2.png') : asset('public/assets/tooth/png/UL-2.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="11" class="choose-tooth-aligners-to-cover" data-id="11"  data-image="UL-3.png" src="{{ in_array(3, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-3.png') : asset('public/assets/tooth/png/UL-3.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="12" class="choose-tooth-aligners-to-cover" data-id="12"  data-image="UL-4.png" src="{{ in_array(4, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-4.png') : asset('public/assets/tooth/png/UR-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="13" class="choose-tooth-aligners-to-cover" data-id="13"  data-image="UL-5.png" src="{{ in_array(5, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-5.png') : asset('public/assets/tooth/png/UR-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="14" class="choose-tooth-aligners-to-cover" data-id="14"  data-image="UL-6.png" src="{{ in_array(6, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-6.png') : asset('public/assets/tooth/png/UR-6.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="15" class="choose-tooth-aligners-to-cover" data-id="15"  data-image="UL-7.png" src="{{ in_array(7, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-7.png') : asset('public/assets/tooth/png/UR-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="16" class="choose-tooth-aligners-to-cover" data-id="16"  data-image="UL-8.png" src="{{ in_array(8, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-8.png') : asset('public/assets/tooth/png/UR-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="1" class="choose-tooth-aligners-to-cover" data-id="1"  data-image="UR-8.webp" src="{{ in_array(8, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-8.webp') : asset('public/assets/tooth/png/UR-8.webp') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="2" class="choose-tooth-aligners-to-cover" data-id="2"  data-image="UR-7.webp" src="{{ in_array(7, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-7.webp') : asset('public/assets/tooth/png/UR-7.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="3" class="choose-tooth-aligners-to-cover" data-id="3"  data-image="UR-6.webp" src="{{ in_array(6, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-6.webp') : asset('public/assets/tooth/png/UR-6.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="4" class="choose-tooth-aligners-to-cover" data-id="4"  data-image="UR-5.webp" src="{{ in_array(5, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-5.webp') : asset('public/assets/tooth/png/UR-5.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="5" class="choose-tooth-aligners-to-cover" data-id="5"  data-image="UR-4.webp" src="{{ in_array(4, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-4.webp') : asset('public/assets/tooth/png/UR-4.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="6" class="choose-tooth-aligners-to-cover" data-id="6"  data-image="UR-3.webp" src="{{ in_array(3, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-3.webp') : asset('public/assets/tooth/png/UR-3.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="7" class="choose-tooth-aligners-to-cover" data-id="7"  data-image="UR-2.webp" src="{{ in_array(2, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-2.webp') : asset('public/assets/tooth/png/UR-2.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="8" class="choose-tooth-aligners-to-cover" data-id="8"  data-image="UR-1.webp" src="{{ in_array(1, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-1.webp') : asset('public/assets/tooth/png/UR-1.webp') }}" style="vertical-align: baseline;height: 65px;width: 65px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="9" class="choose-tooth-aligners-to-cover" data-id="9"  data-image="UL-1.webp" src="{{ in_array(1, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-1.webp') : asset('public/assets/tooth/png/UL-1.webp') }}" style="vertical-align: baseline;height: 65px;width: 65px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="10" class="choose-tooth-aligners-to-cover" data-id="10"  data-image="UL-2.webp" src="{{ in_array(2, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-2.webp') : asset('public/assets/tooth/png/UL-2.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="11" class="choose-tooth-aligners-to-cover" data-id="11"  data-image="UL-3.webp" src="{{ in_array(3, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-3.webp') : asset('public/assets/tooth/png/UL-3.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="12" class="choose-tooth-aligners-to-cover" data-id="12"  data-image="UL-4.webp" src="{{ in_array(4, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-4.webp') : asset('public/assets/tooth/png/UR-4.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="13" class="choose-tooth-aligners-to-cover" data-id="13"  data-image="UL-5.webp" src="{{ in_array(5, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-5.webp') : asset('public/assets/tooth/png/UR-5.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="14" class="choose-tooth-aligners-to-cover" data-id="14"  data-image="UL-6.webp" src="{{ in_array(6, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-6.webp') : asset('public/assets/tooth/png/UR-6.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="15" class="choose-tooth-aligners-to-cover" data-id="15"  data-image="UL-7.webp" src="{{ in_array(7, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-7.webp') : asset('public/assets/tooth/png/UR-7.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="16" class="choose-tooth-aligners-to-cover" data-id="16"  data-image="UL-8.webp" src="{{ in_array(8, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-8.webp') : asset('public/assets/tooth/png/UR-8.webp') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
                                     </div>
 
                                     <div class="teeth-divider" style="display:flex; align-items:center; justify-content:center; gap:1rem; margin: 0.75rem 0;">
@@ -2894,22 +2894,22 @@
                                     </div>
 
                                     <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:10px; position:relative; padding:0.5rem 0 25px;" id="classIILowerArc-3">
-                                        <img id="17" class="choose-tooth-aligners-to-cover" data-id="17"  data-image="LR-8.png"  src="{{ in_array(8, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-8.png') :  asset('public/assets/tooth/png/LR-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="18" class="choose-tooth-aligners-to-cover" data-id="18"  data-image="LR-7.png"  src="{{ in_array(7, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-7.png') :  asset('public/assets/tooth/png/LR-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="19" class="choose-tooth-aligners-to-cover" data-id="19"  data-image="LR-6.png"  src="{{ in_array(6, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-6.png') :  asset('public/assets/tooth/png/LR-6.png') }}" style="vertical-align: baseline;height: 63px;width: 63px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="20" class="choose-tooth-aligners-to-cover" data-id="20"  data-image="LR-5.png"  src="{{ in_array(5, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-5.png') :  asset('public/assets/tooth/png/LR-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="21" class="choose-tooth-aligners-to-cover" data-id="21"  data-image="LR-4.png"  src="{{ in_array(4, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-4.png') :  asset('public/assets/tooth/png/LR-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="22" class="choose-tooth-aligners-to-cover" data-id="22"  data-image="LR-3.png"  src="{{ in_array(3, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-3.png') :  asset('public/assets/tooth/png/LR-3.png') }}" style="vertical-align: baseline;height: 59px;width: 59px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="23" class="choose-tooth-aligners-to-cover" data-id="23"  data-image="LR-2.png"  src="{{ in_array(2, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-2.png') :  asset('public/assets/tooth/png/LR-2.png') }}" style="vertical-align: baseline;height: 54px;width: 54px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="24" class="choose-tooth-aligners-to-cover" data-id="24"  data-image="LR-1.png"  src="{{ in_array(1, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-1.png') :  asset('public/assets/tooth/png/LR-1.png') }}" style="vertical-align: baseline;height: 53px;width: 53px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="25" class="choose-tooth-aligners-to-cover" data-id="25"  data-image="LL-1.png"  src="{{ in_array(1, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-1.png') :  asset('public/assets/tooth/png/LL-1.png') }}" style="vertical-align: baseline;height: 53px;width: 53px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="26" class="choose-tooth-aligners-to-cover" data-id="26"  data-image="LL-2.png"  src="{{ in_array(2, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-2.png') :  asset('public/assets/tooth/png/LL-2.png') }}" style="vertical-align: baseline;height: 54px;width: 54px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="27" class="choose-tooth-aligners-to-cover" data-id="27"  data-image="LL-3.png"  src="{{ in_array(3, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-3.png') :  asset('public/assets/tooth/png/LL-3.png') }}" style="vertical-align: baseline;height: 59px;width: 59px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="28" class="choose-tooth-aligners-to-cover" data-id="28"  data-image="LL-4.png"  src="{{ in_array(4, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-4.png') :  asset('public/assets/tooth/png/LL-4.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="29" class="choose-tooth-aligners-to-cover" data-id="29"  data-image="LL-5.png"  src="{{ in_array(5, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-5.png') :  asset('public/assets/tooth/png/LL-5.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="30" class="choose-tooth-aligners-to-cover" data-id="30"  data-image="LL-6.png"  src="{{ in_array(6, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-6.png') :  asset('public/assets/tooth/png/LL-6.png') }}" style="vertical-align: baseline;height: 63px;width: 63px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="31" class="choose-tooth-aligners-to-cover" data-id="31"  data-image="LL-7.png"  src="{{ in_array(7, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-7.png') :  asset('public/assets/tooth/png/LL-7.png') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
-                                        <img id="32" class="choose-tooth-aligners-to-cover" data-id="32"  data-image="LL-8.png"  src="{{ in_array(8, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-8.png') :  asset('public/assets/tooth/png/LL-8.png') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="17" class="choose-tooth-aligners-to-cover" data-id="17"  data-image="LR-8.webp"  src="{{ in_array(8, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-8.webp') :  asset('public/assets/tooth/png/LR-8.webp') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="18" class="choose-tooth-aligners-to-cover" data-id="18"  data-image="LR-7.webp"  src="{{ in_array(7, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-7.webp') :  asset('public/assets/tooth/png/LR-7.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="19" class="choose-tooth-aligners-to-cover" data-id="19"  data-image="LR-6.webp"  src="{{ in_array(6, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-6.webp') :  asset('public/assets/tooth/png/LR-6.webp') }}" style="vertical-align: baseline;height: 63px;width: 63px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="20" class="choose-tooth-aligners-to-cover" data-id="20"  data-image="LR-5.webp"  src="{{ in_array(5, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-5.webp') :  asset('public/assets/tooth/png/LR-5.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="21" class="choose-tooth-aligners-to-cover" data-id="21"  data-image="LR-4.webp"  src="{{ in_array(4, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-4.webp') :  asset('public/assets/tooth/png/LR-4.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="22" class="choose-tooth-aligners-to-cover" data-id="22"  data-image="LR-3.webp"  src="{{ in_array(3, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-3.webp') :  asset('public/assets/tooth/png/LR-3.webp') }}" style="vertical-align: baseline;height: 59px;width: 59px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="23" class="choose-tooth-aligners-to-cover" data-id="23"  data-image="LR-2.webp"  src="{{ in_array(2, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-2.webp') :  asset('public/assets/tooth/png/LR-2.webp') }}" style="vertical-align: baseline;height: 54px;width: 54px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="24" class="choose-tooth-aligners-to-cover" data-id="24"  data-image="LR-1.webp"  src="{{ in_array(1, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-1.webp') :  asset('public/assets/tooth/png/LR-1.webp') }}" style="vertical-align: baseline;height: 53px;width: 53px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="25" class="choose-tooth-aligners-to-cover" data-id="25"  data-image="LL-1.webp"  src="{{ in_array(1, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-1.webp') :  asset('public/assets/tooth/png/LL-1.webp') }}" style="vertical-align: baseline;height: 53px;width: 53px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="26" class="choose-tooth-aligners-to-cover" data-id="26"  data-image="LL-2.webp"  src="{{ in_array(2, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-2.webp') :  asset('public/assets/tooth/png/LL-2.webp') }}" style="vertical-align: baseline;height: 54px;width: 54px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="27" class="choose-tooth-aligners-to-cover" data-id="27"  data-image="LL-3.webp"  src="{{ in_array(3, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-3.webp') :  asset('public/assets/tooth/png/LL-3.webp') }}" style="vertical-align: baseline;height: 59px;width: 59px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="28" class="choose-tooth-aligners-to-cover" data-id="28"  data-image="LL-4.webp"  src="{{ in_array(4, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-4.webp') :  asset('public/assets/tooth/png/LL-4.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="29" class="choose-tooth-aligners-to-cover" data-id="29"  data-image="LL-5.webp"  src="{{ in_array(5, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-5.webp') :  asset('public/assets/tooth/png/LL-5.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="30" class="choose-tooth-aligners-to-cover" data-id="30"  data-image="LL-6.webp"  src="{{ in_array(6, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-6.webp') :  asset('public/assets/tooth/png/LL-6.webp') }}" style="vertical-align: baseline;height: 63px;width: 63px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="31" class="choose-tooth-aligners-to-cover" data-id="31"  data-image="LL-7.webp"  src="{{ in_array(7, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-7.webp') :  asset('public/assets/tooth/png/LL-7.webp') }}" style="vertical-align: baseline;height: 60px;width: 60px; margin-top: 10px; margin-bottom: 5px;">
+                                        <img id="32" class="choose-tooth-aligners-to-cover" data-id="32"  data-image="LL-8.webp"  src="{{ in_array(8, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-8.webp') :  asset('public/assets/tooth/png/LL-8.webp') }}" style="vertical-align: baseline;height: 55px;width: 55px; margin-top: 10px; margin-bottom: 5px;">
                                     </div>
 
                                 </div>

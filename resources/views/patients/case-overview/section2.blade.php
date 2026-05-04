@@ -60,19 +60,19 @@ $lowerSize = [
                     <div style="width:{{$upperSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-end; gap:6px;">
 
                         @if($bridge)
-                            <img src="{{ asset('public/assets/tooth/png/Bridge.png') }}" style=" width: 20px;" alt="Power Ridge Outer">
+                            <img src="{{ asset('public/assets/tooth/png/Bridge.webp') }}" style=" width: 20px;" alt="Power Ridge Outer">
                         @endif
 
                         @if($tooth_movement_restrictions)
-                            <img src="{{ asset('public/assets/tooth/png/movement.png') }}" style=" height: 12px;" alt="Power Ridge Outer">
+                            <img src="{{ asset('public/assets/tooth/png/movement.webp') }}" style=" height: 12px;" alt="Power Ridge Outer">
                         @endif
 
                         @if($extracted_teeth)
-                            <img src="{{ asset('public/assets/tooth/png/extracted.png') }}" style="height: 12px;" alt="Button Outer">
+                            <img src="{{ asset('public/assets/tooth/png/extracted.webp') }}" style="height: 12px;" alt="Button Outer">
                         @endif
 
                         @if($coil)
-                            <img src="{{ asset('public/assets/tooth/png/coil.png') }}" style=" width: 20px;" alt="Power Arm Attachment Outer">
+                            <img src="{{ asset('public/assets/tooth/png/coil.webp') }}" style=" width: 20px;" alt="Power Arm Attachment Outer">
                         @endif
 
 
@@ -90,13 +90,13 @@ $lowerSize = [
                     $pontic = in_array($id, arr($patient->pontic));
                     $selected = isSelected($id, $allSelections2);
                     if ($unerupted_teeth && !$pontic) {
-                        $img = "public/assets/tooth/png/$tooth.png";// Do not show image
+                        $img = "public/assets/tooth/png/$tooth.webp";// Do not show image
                     } elseif ($pontic) {
-                        $img = "public/assets/tooth/coloured/$tooth.png";
+                        $img = "public/assets/tooth/coloured/$tooth.webp";
                     } else {
                         $img = $selected
-                            ? "public/assets/tooth/png/selected/$tooth.png"
-                            : "public/assets/tooth/png/$tooth.png";
+                            ? "public/assets/tooth/png/selected/$tooth.webp"
+                            : "public/assets/tooth/png/$tooth.webp";
                     }
                 @endphp
 
@@ -124,13 +124,13 @@ $lowerSize = [
                     $pontic = in_array($id, arr($patient->pontic));
                     $selected = isSelected($id, $allSelections2);
                     if ($unerupted_teeth && !$pontic) {
-                        $img = "public/assets/tooth/png/$tooth.png"; // Do not show image
+                        $img = "public/assets/tooth/png/$tooth.webp"; // Do not show image
                     } elseif ($pontic) {
-                        $img = "public/assets/tooth/coloured/$tooth.png";
+                        $img = "public/assets/tooth/coloured/$tooth.webp";
                     } else {
                         $img = $selected
-                            ? "public/assets/tooth/png/selected/$tooth.png"
-                            : "public/assets/tooth/png/$tooth.png";
+                            ? "public/assets/tooth/png/selected/$tooth.webp"
+                            : "public/assets/tooth/png/$tooth.webp";
                     }
                 @endphp
 
@@ -154,19 +154,19 @@ $lowerSize = [
                 {{-- <div style="width:{{$lowerSize[$id]}}; height:18px; display:flex; align-items:center; justify-content:center;"> --}}
                 <div style="width:{{$lowerSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-start; gap:6px;">
                     @if($coil)
-                        <img src="{{ asset('public/assets/tooth/png/coil.png') }}" style=" width: 20px;" alt="Power Arm Attachment Outer">
+                        <img src="{{ asset('public/assets/tooth/png/coil.webp') }}" style=" width: 20px;" alt="Power Arm Attachment Outer">
                     @endif
 
                     @if($extracted_teeth)
-                        <img src="{{ asset('public/assets/tooth/png/extracted.png') }}" style="height: 12px;" alt="Button Outer">
+                        <img src="{{ asset('public/assets/tooth/png/extracted.webp') }}" style="height: 12px;" alt="Button Outer">
                     @endif
 
                     @if($tooth_movement_restrictions)
-                        <img src="{{ asset('public/assets/tooth/png/movement.png') }}" style=" height: 12px;" alt="Power Ridge Outer">
+                        <img src="{{ asset('public/assets/tooth/png/movement.webp') }}" style=" height: 12px;" alt="Power Ridge Outer">
                     @endif
 
                     @if($bridge)
-                        <img src="{{ asset('public/assets/tooth/png/Bridge.png') }}" style=" width: 20px;" alt="Power Ridge Outer">
+                        <img src="{{ asset('public/assets/tooth/png/Bridge.webp') }}" style=" width: 20px;" alt="Power Ridge Outer">
                     @endif
 
                 </div>
@@ -182,24 +182,24 @@ $lowerSize = [
         <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:5px;" id="classIIUpperArcNew">
 
             <div class="tooth-wrapper" style="position: relative; display: inline-block;">
-                <img id="1" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-8.png') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px; margin-bottom: 3px;">
+                <img id="1" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-8.webp') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px; margin-bottom: 3px;">
             </div>
 
-            <img id="2" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-7.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="3" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-6.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="4" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-5.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="5" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-4.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="6" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-3.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="7" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-2.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="8" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-1.png') }}" style="vertical-align: baseline;width: 1.6vw; height: 1.6vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="9" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UL-1.png') }}" style="vertical-align: baseline;width: 1.6vw; height: 1.6vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="10" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UL-2.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="11" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UL-3.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="12" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-4.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="13" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-5.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="14" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-6.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="15" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-7.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
-            <img id="16" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-8.png') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="2" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-7.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="3" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-6.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="4" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-5.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="5" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-4.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="6" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-3.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="7" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-2.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="8" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-1.webp') }}" style="vertical-align: baseline;width: 1.6vw; height: 1.6vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="9" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UL-1.webp') }}" style="vertical-align: baseline;width: 1.6vw; height: 1.6vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="10" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UL-2.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="11" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UL-3.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="12" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-4.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="13" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-5.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="14" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-6.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="15" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-7.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+            <img id="16" class="choose-tooth" src="{{ asset('public/assets/tooth/png/UR-8.webp') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px; margin-bottom: 3px;">
         </div>
         <div class="teeth-divider" style="display:flex; align-items:center; justify-content:center; gap:1rem;">
             <span style="font-weight:bold;">R</span>
@@ -207,22 +207,22 @@ $lowerSize = [
             <span style="font-weight:bold;">L</span>
         </div>
         <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:5px; position:relative; padding:0.5rem 0 25px;" id="classIILowerArc">
-            <img id="17" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-8.png') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px;">
-            <img id="18" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-7.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
-            <img id="19" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-6.png') }}" style="vertical-align: baseline;width: 1.5vw; height: 1.5vw; margin-top: 5px;">
-            <img id="20" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-5.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
-            <img id="21" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-4.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
-            <img id="22" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-3.png') }}" style="vertical-align: baseline;width: 1.35vw; height: 1.35vw; margin-top: 5px;">
-            <img id="23" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-2.png') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px;">
-            <img id="24" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-1.png') }}" style="vertical-align: baseline;width: 1.15vw; height: 1.15vw; margin-top: 5px;">
-            <img id="25" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-1.png') }}" style="vertical-align: baseline;width: 1.15vw; height: 1.15vw; margin-top: 5px;">
-            <img id="26" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-2.png') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px;">
-            <img id="27" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-3.png') }}" style="vertical-align: baseline;width: 1.35vw; height: 1.35vw; margin-top: 5px;">
-            <img id="28" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-4.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
-            <img id="29" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-5.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
-            <img id="30" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-6.png') }}" style="vertical-align: baseline;width: 1.5vw; height: 1.5vw; margin-top: 5px;">
-            <img id="31" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-7.png') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
-            <img id="32" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-8.png') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px;">
+            <img id="17" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-8.webp') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px;">
+            <img id="18" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-7.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
+            <img id="19" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-6.webp') }}" style="vertical-align: baseline;width: 1.5vw; height: 1.5vw; margin-top: 5px;">
+            <img id="20" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-5.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
+            <img id="21" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-4.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
+            <img id="22" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-3.webp') }}" style="vertical-align: baseline;width: 1.35vw; height: 1.35vw; margin-top: 5px;">
+            <img id="23" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-2.webp') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px;">
+            <img id="24" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LR-1.webp') }}" style="vertical-align: baseline;width: 1.15vw; height: 1.15vw; margin-top: 5px;">
+            <img id="25" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-1.webp') }}" style="vertical-align: baseline;width: 1.15vw; height: 1.15vw; margin-top: 5px;">
+            <img id="26" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-2.webp') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px;">
+            <img id="27" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-3.webp') }}" style="vertical-align: baseline;width: 1.35vw; height: 1.35vw; margin-top: 5px;">
+            <img id="28" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-4.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
+            <img id="29" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-5.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
+            <img id="30" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-6.webp') }}" style="vertical-align: baseline;width: 1.5vw; height: 1.5vw; margin-top: 5px;">
+            <img id="31" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-7.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
+            <img id="32" class="choose-tooth"  src="{{  asset('public/assets/tooth/png/LL-8.webp') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px;">
         </div>
     </div>
 </div> --}}

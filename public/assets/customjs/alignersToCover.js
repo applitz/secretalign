@@ -75,7 +75,7 @@ function getAlignersToCoverStateNameFromSide(sideName) {
 
 function getAlignersToCoverLabel(toothId) {
     var imageName = $('.choose-tooth-aligners-to-cover[data-id="' + toothId + '"]').attr('data-image') || '';
-    return imageName.replace('.png', '');
+    return imageName.replace('.webp', '');
 }
 
 function getAlignersToCoverDefaultImageSrc($image) {

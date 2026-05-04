@@ -22,8 +22,11 @@
         <link href="{{ asset('public/qovex') }}/assets/css/app.min.css"  id="app-style"  rel="stylesheet" type="text/css" />
         <link href="{{ asset('public/css/custom.css') }}" rel="stylesheet" type="text/css" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
         <style>
-
+            :root {
+                --bs-font-sans-serif: "Roboto", sans-serif !important;
+            }
 
             body[data-layout=detached] .container-fluid {
                 max-width: 100%;
@@ -1252,9 +1255,9 @@
 
                 // switch to light version
                 if (p.dataset.planType === 'treatment') {
-                    p.style.backgroundImage = `url('${baseAssetPath}/Treatment-Plan-Service-light.svg')`;
+                    p.style.backgroundImage = `url('${baseAssetPath}/Treatment-Plan-Service-light.webp')`;
                 } else if (p.dataset.planType === 'aligners') {
-                    p.style.backgroundImage = `url('${baseAssetPath}/Aligners-light.svg')`;
+                    p.style.backgroundImage = `url('${baseAssetPath}/Aligners-light.webp')`;
                 }
             });
 
@@ -1265,9 +1268,9 @@
 
             // switch to colored version
             if (plan.dataset.planType === 'treatment') {
-                plan.style.backgroundImage = `url('${baseAssetPath}/Treatment-Plan-Service.svg')`;
+                plan.style.backgroundImage = `url('${baseAssetPath}/Treatment-Plan-Service.webp')`;
             } else if (plan.dataset.planType === 'aligners') {
-                plan.style.backgroundImage = `url('${baseAssetPath}/Aligners.svg')`;
+                plan.style.backgroundImage = `url('${baseAssetPath}/Aligners.webp')`;
             }
         }
 

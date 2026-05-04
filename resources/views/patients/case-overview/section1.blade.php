@@ -53,7 +53,7 @@ $lowerSize = [
         <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
 
             <div style="display:flex; flex-direction:row; justify-content:center; gap:5px; width:100%; margin-bottom: 8px;">
-                
+
                 @foreach($upperTeeth as $id => $tooth)
                     @php
                         $buttonOuter = in_array($id, arr($patient->button_outer));
@@ -66,30 +66,30 @@ $lowerSize = [
                     @endphp
                     <div style="width:{{$upperSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-end; gap:6px;">
                         @if($buttonOuter)
-                            <img src="{{ asset('public/assets/tooth/png/buttons.png') }}" style="width: 16px; height: 16px;" alt="Button Outer">
+                            <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Outer">
                         @endif
 
                         @if($ihookOuter)
                             @if($id >=1 && $id <= 8)
-                                <img src="{{ asset('public/assets/tooth/png/I-hook-UR.png') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
+                                <img src="{{ asset('public/assets/tooth/png/I-hook-UR.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
                             @else
-                                <img src="{{ asset('public/assets/tooth/png/I-hook-UL.png') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
+                                <img src="{{ asset('public/assets/tooth/png/I-hook-UL.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
                             @endif
                         @endif
                         @if($precision_cut_outer)
                             @if($id >=1 && $id <= 8)
-                                <img src="{{ asset('public/assets/tooth/png/precisioncut-UR.png') }}" style="width: 16px; height: 16px;" alt="precisioncut Outer">
+                                <img src="{{ asset('public/assets/tooth/png/precisioncut-UR.webp') }}" style="width: 16px; height: 16px;" alt="precisioncut Outer">
                             @else
-                                <img src="{{ asset('public/assets/tooth/png/precisioncut-UL.png') }}" style="width: 16px; height: 16px;" alt="precisioncut Outer">
+                                <img src="{{ asset('public/assets/tooth/png/precisioncut-UL.webp') }}" style="width: 16px; height: 16px;" alt="precisioncut Outer">
                             @endif
                         @endif
 
                         @if($power_arm_attachment_outer)
-                            <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.png') }}" style="width: 12px; height: 20px;" alt="Power Arm Attachment Outer">
+                            <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.webp') }}" style="width: 12px; height: 20px;" alt="Power Arm Attachment Outer">
                         @endif
 
                         @if($power_ridge_outer)
-                            <img src="{{ asset('public/assets/tooth/png/Power-Ridge.png') }}" style="width: 16px; height: 10px;" alt="Power Ridge Outer">
+                            <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" style="width: 16px; height: 10px;" alt="Power Ridge Outer">
                         @endif
                     </div>
                 @endforeach
@@ -100,8 +100,8 @@ $lowerSize = [
                     @php
                         $selected = isSelected($id, $allSelections);
                         $img = $selected
-                            ? "public/assets/tooth/png/selected/$tooth.png"
-                            : "public/assets/tooth/png/$tooth.png";
+                            ? "public/assets/tooth/png/selected/$tooth.webp"
+                            : "public/assets/tooth/png/$tooth.webp";
                     @endphp
                     <div style="width:{{$upperSize[$id]}}; height:{{$upperSize[$id]}}; display:flex; align-items:center; justify-content:center; position:relative;">
                         <img id="{{ $id }}"
@@ -115,10 +115,10 @@ $lowerSize = [
                             $bite_turbos = in_array($id, arr($patient->bite_turbos));
                         @endphp
                         @if($bite_ramp && in_array($id, $biteRampUpperIds))
-                            <img src="{{ asset('public/assets/tooth/png/Bite-Ramp.png') }}" style="width: 14px; height: 14px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); object-fit: contain; pointer-events: none;" alt="Bite Ramp Upper">
+                            <img src="{{ asset('public/assets/tooth/png/Bite-Ramp.webp') }}" style="width: 14px; height: 14px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); object-fit: contain; pointer-events: none;" alt="Bite Ramp Upper">
                         @endif
                         @if($bite_turbos && in_array($id, $biteTurbosUpperIds))
-                            <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.png') }}" style="width: 14px; height: 14px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); object-fit: contain; pointer-events: none;" alt="Bite Turbos Upper">
+                            <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.webp') }}" style="width: 14px; height: 14px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); object-fit: contain; pointer-events: none;" alt="Bite Turbos Upper">
                         @endif
                     </div>
                 @endforeach
@@ -137,34 +137,34 @@ $lowerSize = [
                     <div style="width:{{$upperSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-start; gap:6px;">
 
                         @if($power_ridge_inner)
-                            <img src="{{ asset('public/assets/tooth/png/Power-Ridge.png') }}" style="width: 16px; height: 10px;" alt="Power Arm Attachment Outer">
+                            <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" style="width: 16px; height: 10px;" alt="Power Arm Attachment Outer">
                         @endif
 
 
 
                         @if($power_arm_attachment_inner)
-                            <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment-lower.png') }}" style="width: 12px; height: 20px;" alt="Power Arm Attachment Inner">
+                            <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment-lower.webp') }}" style="width: 12px; height: 20px;" alt="Power Arm Attachment Inner">
                         @endif
 
 
                         @if($buttonInner)
-                            <img src="{{ asset('public/assets/tooth/png/buttons.png') }}" style="width: 16px; height: 16px;" alt="Button Inner">
+                            <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Inner">
                         @endif
 
 
                         @if($ihookInner)
                             @if($id >=1 && $id <= 8)
-                                <img src="{{ asset('public/assets/tooth/png/I-hook-LR.png') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
+                                <img src="{{ asset('public/assets/tooth/png/I-hook-LR.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
                             @else
-                                <img src="{{ asset('public/assets/tooth/png/I-hook-LL.png') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
+                                <img src="{{ asset('public/assets/tooth/png/I-hook-LL.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
                             @endif
                         @endif
 
                         @if($precisionCutInner)
                             @if($id >=1 && $id <= 8)
-                                <img src="{{ asset('public/assets/tooth/png/precisioncut-LR.png') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
+                                <img src="{{ asset('public/assets/tooth/png/precisioncut-LR.webp') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
                             @else
-                                <img src="{{ asset('public/assets/tooth/png/precisioncut-LL.png') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
+                                <img src="{{ asset('public/assets/tooth/png/precisioncut-LL.webp') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
                             @endif
                         @endif
                     </div>
@@ -193,31 +193,31 @@ $lowerSize = [
                     @endphp
                     <div style="width:{{$lowerSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-end; gap:6px;">
                         @if($buttonOuter)
-                            <img src="{{ asset('public/assets/tooth/png/buttons.png') }}" style="width: 16px; height: 16px;" alt="Button Outer">
+                            <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Outer">
                         @endif
 
                         @if($ihookOuter)
                             @if($id >=17 && $id <= 24)
-                                <img src="{{ asset('public/assets/tooth/png/I-hook-UR.png') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
+                                <img src="{{ asset('public/assets/tooth/png/I-hook-UR.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
                             @else
-                                <img src="{{ asset('public/assets/tooth/png/I-hook-UL.png') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
+                                <img src="{{ asset('public/assets/tooth/png/I-hook-UL.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
                             @endif
                         @endif
 
                         @if($precision_cut_outer)
                             @if($id >=16 && $id <= 24)
-                                <img src="{{ asset('public/assets/tooth/png/precisioncut-UR.png') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
+                                <img src="{{ asset('public/assets/tooth/png/precisioncut-UR.webp') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
                             @else
-                                <img src="{{ asset('public/assets/tooth/png/precisioncut-UL.png') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
+                                <img src="{{ asset('public/assets/tooth/png/precisioncut-UL.webp') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
                             @endif
                         @endif
 
                         @if($power_arm_attachment_outer)
-                            <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.png') }}" style="width: 12px; height: 20px;" alt="Power Arm Attachment Outer">
+                            <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.webp') }}" style="width: 12px; height: 20px;" alt="Power Arm Attachment Outer">
                         @endif
 
                         @if($power_ridge_outer)
-                            <img src="{{ asset('public/assets/tooth/png/Power-Ridge.png') }}" style="width: 16px; height: 10px;" alt="Power Ridge Outer">
+                            <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" style="width: 16px; height: 10px;" alt="Power Ridge Outer">
                         @endif
 
                     </div>
@@ -228,8 +228,8 @@ $lowerSize = [
                     @php
                         $selected = isSelected($id, $allSelections);
                         $img = $selected
-                            ? "public/assets/tooth/png/selected/$tooth.png"
-                            : "public/assets/tooth/png/$tooth.png";
+                            ? "public/assets/tooth/png/selected/$tooth.webp"
+                            : "public/assets/tooth/png/$tooth.webp";
                     @endphp
                     <div style="width:{{$lowerSize[$id]}}; height:{{$lowerSize[$id]}}; display:flex; align-items:center; justify-content:center; position:relative;">
                         <img id="{{ $id }}"
@@ -243,10 +243,10 @@ $lowerSize = [
                             $bite_turbos = in_array($id, arr($patient->bite_turbos));
                         @endphp
                         @if($bite_ramp && in_array($id, $biteRampLowerIds))
-                            <img src="{{ asset('public/assets/tooth/png/Bite-Ramp-lower.png') }}" style="width: 14px; height: 14px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); object-fit: contain; pointer-events: none;" alt="Bite Ramp Lower">
+                            <img src="{{ asset('public/assets/tooth/png/Bite-Ramp-lower.webp') }}" style="width: 14px; height: 14px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); object-fit: contain; pointer-events: none;" alt="Bite Ramp Lower">
                         @endif
                         @if($bite_turbos && in_array($id, $biteTurbosLowerIds))
-                            <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.png') }}" style="width: 14px; height: 14px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); object-fit: contain; pointer-events: none;" alt="Bite Turbos Lower">
+                            <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.webp') }}" style="width: 14px; height: 14px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); object-fit: contain; pointer-events: none;" alt="Bite Turbos Lower">
                         @endif
                     </div>
                 @endforeach
@@ -264,31 +264,31 @@ $lowerSize = [
                     <div style="width:{{$lowerSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-start; gap:6px;">
 
                          @if($power_ridge_inner)
-                            <img src="{{ asset('public/assets/tooth/png/Power-Ridge.png') }}" style="width: 16px; height: 10px;" alt="Power Ridge Inner">
+                            <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" style="width: 16px; height: 10px;" alt="Power Ridge Inner">
                         @endif
 
                         @if($power_arm_attachment_inner)
-                            <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment-lower.png') }}" style="width: 12px; height: 20px;" alt="Power Arm Attachment Inner">
+                            <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment-lower.webp') }}" style="width: 12px; height: 20px;" alt="Power Arm Attachment Inner">
                         @endif
 
 
                         @if($buttonInner)
-                            <img src="{{ asset('public/assets/tooth/png/buttons.png') }}" style="width: 16px; height: 16px;" alt="Button Inner">
+                            <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Inner">
                         @endif
 
                         @if($ihookInner)
                             @if($id >=17 && $id <= 24)
-                                <img src="{{ asset('public/assets/tooth/png/I-hook-LR.png') }}" style="width: 16px; height: 16px;" alt="I-Hook Inner">
+                                <img src="{{ asset('public/assets/tooth/png/I-hook-LR.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Inner">
                             @else
-                                <img src="{{ asset('public/assets/tooth/png/I-hook-LL.png') }}" style="width: 16px; height: 16px;" alt="I-Hook Inner">
+                                <img src="{{ asset('public/assets/tooth/png/I-hook-LL.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Inner">
                             @endif
                         @endif
 
                         @if($precisionCutInner)
                             @if($id >=16 && $id <= 24)
-                                <img src="{{ asset('public/assets/tooth/png/precisioncut-LR.png') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
+                                <img src="{{ asset('public/assets/tooth/png/precisioncut-LR.webp') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
                             @else
-                                <img src="{{ asset('public/assets/tooth/png/precisioncut-LL.png') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
+                                <img src="{{ asset('public/assets/tooth/png/precisioncut-LL.webp') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
                             @endif
                         @endif
                     </div>

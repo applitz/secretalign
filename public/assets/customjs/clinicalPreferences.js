@@ -381,7 +381,7 @@ function toggleButton(toothNumber, side) {
     if (existingButton.length > 0) {
         existingButton.remove();
     } else {
-        var buttonImg = $('<img src="' + baseUrl + '/public/assets/tooth/png/buttons.png" class="button-overlay" data-side="' + side + '" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10;">');
+        var buttonImg = $('<img src="' + baseUrl + '/public/assets/tooth/png/buttons.webp" class="button-overlay" data-side="' + side + '" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10;">');
         wrapper.append(buttonImg);
     }
 
@@ -392,12 +392,12 @@ function toggleButton(toothNumber, side) {
 function getPrecisionCutImageSrc(toothNumber, side) {
     var toothSide = setToothSide(toothNumber);
     if (!toothSide) {
-        return baseUrl + '/public/assets/tooth/png/precisioncut.png';
+        return baseUrl + '/public/assets/tooth/png/precisioncut.webp';
     }
     if(side === 'upper'){
-        return baseUrl + '/public/assets/tooth/png/precisioncut-U' + toothSide + '.png';
+        return baseUrl + '/public/assets/tooth/png/precisioncut-U' + toothSide + '.webp';
     } else {
-        return baseUrl + '/public/assets/tooth/png/precisioncut-L' + toothSide + '.png';
+        return baseUrl + '/public/assets/tooth/png/precisioncut-L' + toothSide + '.webp';
     }
 }
 
@@ -425,13 +425,13 @@ function getIHookImageSrc(toothNumber, side) {
     var toothSide = setToothSide(toothNumber);
 
     if (!toothSide) {
-        return baseUrl + '/public/assets/tooth/png/I-hook.png';
+        return baseUrl + '/public/assets/tooth/png/I-hook.webp';
     }
 
     if(side === 'upper'){
-        return baseUrl + '/public/assets/tooth/png/I-hook-U' + toothSide + '.png';
+        return baseUrl + '/public/assets/tooth/png/I-hook-U' + toothSide + '.webp';
     } else {
-        return baseUrl + '/public/assets/tooth/png/I-hook-L' + toothSide + '.png';
+        return baseUrl + '/public/assets/tooth/png/I-hook-L' + toothSide + '.webp';
     }
 }
 
@@ -464,7 +464,7 @@ function powerRidge(toothNumber, side){
     if (existing.length > 0) {
         existing.remove();
     } else {
-        var img = $('<img src="' + baseUrl + '/public/assets/tooth/png/Power-Ridge.png" class="power-ridge-overlay" data-side="' + side + '" style="position: absolute; width: 30px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 12;">');
+        var img = $('<img src="' + baseUrl + '/public/assets/tooth/png/Power-Ridge.webp" class="power-ridge-overlay" data-side="' + side + '" style="position: absolute; width: 30px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 12;">');
         wrapper.append(img);
     }
 
@@ -479,7 +479,7 @@ function powerArmAttachment(toothNumber, side){
     if (existing.length > 0) {
         existing.remove();
     } else {
-        var imgSrc = side === 'upper' ? baseUrl + '/public/assets/tooth/png/Power-Arm-Attachment.png' : baseUrl + '/public/assets/tooth/png/Power-Arm-Attachment-lower.png';
+        var imgSrc = side === 'upper' ? baseUrl + '/public/assets/tooth/png/Power-Arm-Attachment.webp' : baseUrl + '/public/assets/tooth/png/Power-Arm-Attachment-lower.webp';
         var img = $('<img src="' + imgSrc + '" class="power-arm-attachment-overlay" data-side="' + side + '" style="position: absolute; width: 15px; height: 25px; left: 50%; transform: translateX(-50%); z-index: 11;">');
         wrapper.append(img);
     }
@@ -494,9 +494,9 @@ function biteRamp(toothNumber, side){
     var imgSrc = '';
 
     if (upperTeeth.indexOf(toothNum) !== -1) {
-        imgSrc = baseUrl + '/public/assets/tooth/png/Bite-Ramp.png';
+        imgSrc = baseUrl + '/public/assets/tooth/png/Bite-Ramp.webp';
     } else if (lowerTeeth.indexOf(toothNum) !== -1) {
-        imgSrc = baseUrl + '/public/assets/tooth/png/Bite-Ramp-lower.png';
+        imgSrc = baseUrl + '/public/assets/tooth/png/Bite-Ramp-lower.webp';
     } else {
         showClinicalPreferencesInfoModal('Bite Ramp is only possible on teeth 1, 2, and 3.');
         refreshToothSelectedState(toothNumber);
@@ -513,7 +513,7 @@ function biteRamp(toothNumber, side){
         return;
     }
 
-    var img = $('<img src="' + imgSrc + '" class="bite-ramp-overlay" style="position: absolute; width: 20px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">');
+    var img = $('<img src="' + imgSrc + '" class="bite-ramp-overlay" style="position: absolute; width: 35px; height: 35px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">');
     wrapper.append(img);
     refreshToothSelectedState(toothNumber);
 }
@@ -537,7 +537,7 @@ function biteTurbos(toothNumber, side){
         return;
     }
 
-    var img = $('<img src="' + baseUrl + '/public/assets/tooth/png/Bite-Turbos.png" class="bite-turbos-overlay" style="position: absolute; width: 35px; height: 30px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">');
+    var img = $('<img src="' + baseUrl + '/public/assets/tooth/png/Bite-Turbos.webp" class="bite-turbos-overlay" style="position: absolute; width: 35px; height: 30px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">');
     wrapper.append(img);
     refreshToothSelectedState(toothNumber);
 }

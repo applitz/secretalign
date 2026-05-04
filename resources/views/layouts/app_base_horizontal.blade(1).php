@@ -1246,9 +1246,9 @@
 
                 // switch to light version
                 if (p.dataset.planType === 'treatment') {
-                    p.style.backgroundImage = `url('${baseAssetPath}/Treatment-Plan-Service-light.svg')`;
+                    p.style.backgroundImage = `url('${baseAssetPath}/Treatment-Plan-Service-light.webp')`;
                 } else if (p.dataset.planType === 'aligners') {
-                    p.style.backgroundImage = `url('${baseAssetPath}/Aligners-light.svg')`;
+                    p.style.backgroundImage = `url('${baseAssetPath}/Aligners-light.webp')`;
                 }
             });
 
@@ -1259,9 +1259,9 @@
 
             // switch to colored version
             if (plan.dataset.planType === 'treatment') {
-                plan.style.backgroundImage = `url('${baseAssetPath}/Treatment-Plan-Service.svg')`;
+                plan.style.backgroundImage = `url('${baseAssetPath}/Treatment-Plan-Service.webp')`;
             } else if (plan.dataset.planType === 'aligners') {
-                plan.style.backgroundImage = `url('${baseAssetPath}/Aligners.svg')`;
+                plan.style.backgroundImage = `url('${baseAssetPath}/Aligners.webp')`;
             }
         }
 
@@ -1297,7 +1297,7 @@
         //     });
         // });
     </script>
-    
+
     <script>
         document.getElementById('savePreviewBtn').addEventListener('click', function() {
         const form = document.getElementById('treatmentForm');
@@ -1330,7 +1330,7 @@
             if (data.success) {
                 const modal = bootstrap.Modal.getInstance(document.getElementById('treatmentModal'));
                 modal.hide();
-                window.open(`/staff/treatment/preview/${data.id}`, '_blank'); 
+                window.open(`/staff/treatment/preview/${data.id}`, '_blank');
             } else {
                 alert('Something went wrong while saving.');
             }
@@ -1343,6 +1343,6 @@
         });
     });
     </script>
-    
+
     </body>
 </html>

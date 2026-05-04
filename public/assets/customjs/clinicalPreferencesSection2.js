@@ -393,7 +393,7 @@ function coil(toothNumber){
     placeSection2Overlay(
         toothNumber,
         'coil-overlay',
-        '/public/assets/tooth/png/coil.png',
+        '/public/assets/tooth/png/coil.webp',
         50,
         24,
         'coil'
@@ -418,7 +418,7 @@ function extractedTeeth(toothNumber){
     placeSection2Overlay(
         toothNumber,
         'extracted-overlay',
-        '/public/assets/tooth/png/extracted.png',
+        '/public/assets/tooth/png/extracted.webp',
         22,
         22,
         'extracted'
@@ -429,7 +429,7 @@ function toothMovementRestrictions(toothNumber){
     placeSection2Overlay(
         toothNumber,
         'movement-overlay',
-        '/public/assets/tooth/png/movement.png',
+        '/public/assets/tooth/png/movement.webp',
         22,
         22,
         'movement'
@@ -501,7 +501,7 @@ function bridge(toothNumber){
 
     $('<img>', {
         class: 'section2-overlay bridge-overlay',
-        src: baseUrl + '/public/assets/tooth/png/Bridge.png',
+        src: baseUrl + '/public/assets/tooth/png/Bridge.webp',
         alt: 'bridge',
         'data-side': side
     }).css({
