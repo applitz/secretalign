@@ -76,6 +76,11 @@ function repositionSection2Overlays(wrapper, side) {
         }
     });
 
+    // Skip repositioning for bridge overlay as it's centered on the tooth
+    overlays = overlays.filter(function(el) {
+        return !el.hasClass('bridge-overlay');
+    });
+
     var baseOffset = 16;
     var gap = 6;
     var cumulativeOffset = baseOffset;
@@ -113,6 +118,10 @@ function getSection2MaxOverflow(layoutWrapper, side) {
         }
 
         wrapper.find('.section2-overlay[data-side="' + side + '"]').each(function() {
+            if ($(this).hasClass('bridge-overlay')) {
+                return;
+            }
+
             var offsetProp = side === 'upper' ? 'top' : 'bottom';
             var offsetValue = parseFloat($(this).css(offsetProp));
             var height = $(this).outerHeight() || parseInt($(this).css('height'), 10) || 20;
@@ -499,6 +508,11 @@ function bridge(toothNumber){
     tooth.removeAttr('data-section2-special');
     wrapper.find('.bridge-overlay[data-side="' + side + '"]').remove();
 
+    var toothRect = tooth[0].getBoundingClientRect();
+    var wrapperRect = wrapper[0].getBoundingClientRect();
+    var offsetLeft = toothRect.left - wrapperRect.left + toothRect.width / 2;
+    var offsetTop = toothRect.top - wrapperRect.top + toothRect.height / 2;
+
     $('<img>', {
         class: 'section2-overlay bridge-overlay',
         src: baseUrl + '/public/assets/tooth/png/Bridge.webp',
@@ -506,10 +520,11 @@ function bridge(toothNumber){
         'data-side': side
     }).css({
         position: 'absolute',
-        left: '50%',
-        width: '44px',
-        height: '24px',
-        transform: 'translateX(-50%)',
+        left: offsetLeft + 'px',
+        top: offsetTop + 'px',
+        width: '33px',
+        height: '20px',
+        transform: 'translate(-50%, -50%)',
         zIndex: 11,
         pointerEvents: 'none',
         objectFit: 'contain'
