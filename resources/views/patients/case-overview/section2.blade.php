@@ -55,13 +55,13 @@ $lowerSize = [
                         $tooth_movement_restrictions = in_array($id, arr($patient->tooth_movement_restrictions));
                         $coil = in_array($id, arr($patient->coil));
                         $pontic = in_array($id, arr($patient->pontic));
-                        $bridge = in_array($id, arr($patient->bridge));
+                        // $bridge = in_array($id, arr($patient->bridge));
                     @endphp
                     <div style="width:{{$upperSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-end; gap:6px;">
 
-                        @if($bridge)
+                        {{-- @if($bridge)
                             <img src="{{ asset('public/assets/tooth/png/Bridge.webp') }}" style=" width: 20px;" alt="Power Ridge Outer">
-                        @endif
+                        @endif --}}
 
                         @if($tooth_movement_restrictions)
                             <img src="{{ asset('public/assets/tooth/png/movement.webp') }}" style=" height: 12px;" alt="Power Ridge Outer">
@@ -89,6 +89,7 @@ $lowerSize = [
                     $unerupted_teeth = in_array($id, arr($patient->unerupted_teeth));
                     $pontic = in_array($id, arr($patient->pontic));
                     $selected = isSelected($id, $allSelections2);
+                    $bridge = in_array($id, arr($patient->bridge));
                     if ($unerupted_teeth && !$pontic) {
                         $img = "public/assets/tooth/png/$tooth.webp";// Do not show image
                     } elseif ($pontic) {
@@ -100,12 +101,18 @@ $lowerSize = [
                     }
                 @endphp
 
-                @if($img)
-                <img id="{{ $id }}"
-                    class="choose-tooth"
-                    src="{{ asset($img) }}"
-                    style="width:{{$upperSize[$id]}}; height:{{$upperSize[$id]}}; margin:5px 0; {{ ($unerupted_teeth && !$pontic) ? "opacity:0" : "" }}">
-                @endif
+                <div style="position:relative; display:inline-block;">
+                    @if($img)
+                    <img id="{{ $id }}"
+                        class="choose-tooth"
+                        src="{{ asset($img) }}"
+                        style="width:{{$upperSize[$id]}}; height:{{$upperSize[$id]}}; margin:5px 0; {{ (($unerupted_teeth && !$pontic) || $bridge )? "opacity:0" : "" }}">
+                    @endif
+                    @if($bridge)
+                    <img src="{{ asset('public/assets/tooth/png/Bridge.webp') }}" style="position:absolute; left:50%; top:50%; width: 20px; transform:translate(-50%,-50%); pointer-events:none; object-fit:contain;" alt="Bridge Overlay">
+                    @endif
+                </div>
+
             @endforeach
         </div>
 
@@ -123,6 +130,7 @@ $lowerSize = [
                     $unerupted_teeth = in_array($id, arr($patient->unerupted_teeth));
                     $pontic = in_array($id, arr($patient->pontic));
                     $selected = isSelected($id, $allSelections2);
+                    $bridge = in_array($id, arr($patient->bridge));
                     if ($unerupted_teeth && !$pontic) {
                         $img = "public/assets/tooth/png/$tooth.webp"; // Do not show image
                     } elseif ($pontic) {
@@ -134,25 +142,31 @@ $lowerSize = [
                     }
                 @endphp
 
-                <img id="{{ $id }}"
-                    class="choose-tooth"
-                    src="{{ asset($img) }}"
-                    style="width:{{$lowerSize[$id]}}; height:{{$lowerSize[$id]}}; margin:5px 0; {{ ($unerupted_teeth && !$pontic) ? "opacity:0" : "" }}">
+                <div style="position:relative; display:inline-block;">
+                    <img id="{{ $id }}"
+                        class="choose-tooth"
+                        src="{{ asset($img) }}"
+                        style="width:{{$lowerSize[$id]}}; height:{{$lowerSize[$id]}}; margin:5px 0; {{ (($unerupted_teeth && !$pontic) || $bridge ) ? "opacity:0" : "" }}">
+                    @if($bridge)
+                    <img src="{{ asset('public/assets/tooth/png/Bridge.webp') }}" style="position:absolute; left:50%; top:50%; width: 20px; transform:translate(-50%,-50%); pointer-events:none; object-fit:contain;" alt="Bridge Overlay">
+                    @endif
+                </div>
             @endforeach
         </div>
 
         <div style="display:flex; flex-direction:row; justify-content:center; gap:5px; width:100%;margin-top: 4px;">
             @foreach($lowerTeeth as $id => $tooth)
                 @php
-                     $unerupted_teeth = in_array($id, arr($patient->unerupted_teeth));
+                    $unerupted_teeth = in_array($id, arr($patient->unerupted_teeth));
                     $extracted_teeth = in_array($id, arr($patient->extracted_teeth));
                     $tooth_movement_restrictions = in_array($id, arr($patient->tooth_movement_restrictions));
                     $coil = in_array($id, arr($patient->coil));
                     $pontic = in_array($id, arr($patient->pontic));
-                    $bridge = in_array($id, arr($patient->bridge));
+                    // $bridge = in_array($id, arr($patient->bridge));
                 @endphp
                 {{-- <div style="width:{{$lowerSize[$id]}}; height:18px; display:flex; align-items:center; justify-content:center;"> --}}
                 <div style="width:{{$lowerSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-start; gap:6px;">
+
                     @if($coil)
                         <img src="{{ asset('public/assets/tooth/png/coil.webp') }}" style=" width: 20px;" alt="Power Arm Attachment Outer">
                     @endif
@@ -165,9 +179,9 @@ $lowerSize = [
                         <img src="{{ asset('public/assets/tooth/png/movement.webp') }}" style=" height: 12px;" alt="Power Ridge Outer">
                     @endif
 
-                    @if($bridge)
+                    {{-- @if($bridge)
                         <img src="{{ asset('public/assets/tooth/png/Bridge.webp') }}" style=" width: 20px;" alt="Power Ridge Outer">
-                    @endif
+                    @endif --}}
 
                 </div>
             @endforeach

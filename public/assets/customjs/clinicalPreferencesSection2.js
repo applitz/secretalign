@@ -285,7 +285,12 @@ function refreshSection2ToothSelectedState(tooth) {
         return;
     }
 
-    tooth.css('opacity', '');
+    if (specialOption === 'bridge') {
+        tooth.css('opacity', '0');
+    } else {
+        tooth.css('opacity', '');
+    }
+
     var hasOverlays = wrapper.find('.section2-overlay').length > 0;
 
     if (specialOption === 'pontic') {
@@ -522,8 +527,8 @@ function bridge(toothNumber){
         position: 'absolute',
         left: offsetLeft + 'px',
         top: offsetTop + 'px',
-        width: '33px',
-        height: '20px',
+        width: '45px',
+        height: '30px',
         transform: 'translate(-50%, -50%)',
         zIndex: 11,
         pointerEvents: 'none',

@@ -648,6 +648,7 @@ class RegisterPatient extends Controller
 
     public function submit(Request $request)
     {
+        // dd($request->all());
         $id = $request->post('patient_id');
         $phase = $request->post('treatment_plan_id');
         $preferred_package = @$request->post('client_preferred_package');

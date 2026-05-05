@@ -1821,10 +1821,12 @@ async function previewUpperStlFile(file_upper)
                         // Check if terms and conditions are accepted
                         if ($("input[name=terms_and_conditions]").is(":checked")) {
                             const advisor = $("#advisor").val();
-                            const comment = $("#comment").val();// Get advisor selection
+                            var comment = $("#comment").val();// Get advisor selection
                             const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
                             const setup_type = $('input[name="setup_type"]:checked').val();
-
+                            if (comment === undefined || comment === null) {
+                                comment = "";
+                            }
                             // Validate consultant agreement checkbox if advisor is selected
                             if (advisor && !consultantAgreementChecked) {
                                 toastError("You must agree to the additional consultation terms.");

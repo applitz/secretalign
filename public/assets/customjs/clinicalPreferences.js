@@ -513,7 +513,7 @@ function biteRamp(toothNumber, side){
         return;
     }
 
-    var img = $('<img src="' + imgSrc + '" class="bite-ramp-overlay" style="position: absolute; width: 35px; height: 35px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">');
+    var img = $('<img src="' + imgSrc + '" class="bite-ramp-overlay" style="position: absolute; width: 30px; height: 30px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">');
     wrapper.append(img);
     refreshToothSelectedState(toothNumber);
 }
