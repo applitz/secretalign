@@ -17,12 +17,18 @@ use App\Models\User;
 use App\Models\MeditLink;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use App\Http\Services\MovixtechService;
+use App\Models\PatientTreatmentPlan;
 
 class RegisterPatient extends Controller
 {
     public $hashids;
-    public function __construct()
+    protected $movixtechService;
+
+
+    public function __construct(MovixtechService $movixtechService)
     {
+        $this->movixtechService = $movixtechService;
         $this->middleware(['auth', 'auth.doctor']);
         $this->hashids = new Hashids();
         View::share("hashids", $this->hashids);
@@ -510,6 +516,9 @@ class RegisterPatient extends Controller
 
     public function save_patient_info(Request $request)
     {
+        $primaryCase = [];
+        $optionalCase = [];
+
         $first_name = $request->post('first_name');
         $last_name = $request->post('last_name');
         $dob = $request->post('dob');
@@ -519,6 +528,43 @@ class RegisterPatient extends Controller
             "last_name" => $last_name,
             "dob" => $dob,
         ]);
+
+        $patientDetails = DB::table('patients')
+                ->join('p_treatment_plans as tp', 'patients.id', '=', 'tp.patient_id')
+                ->where('patients.id', $request->post('patient_id'))
+                ->select(
+                    'tp.optional_movixtech_status',
+                    'tp.primary_movixtech_status'
+                )
+                ->first();
+
+        $objPatientTreatmentPlan = PatientTreatmentPlan::find($request->post('treatment_plan_id'));
+
+        if($patientDetails->primary_movixtech_status == null) {
+            $primaryCase = $this->movixtechService->createCaseAndGetPresignedLinks(
+                $request->post('first_name') . ' ' . $request->post('last_name'),
+                'Primary Scan'
+            );
+
+            $objPatientTreatmentPlan->primary_case_id = $primaryCase['case_id'];
+            $objPatientTreatmentPlan->primary_presigned_links_details = $primaryCase['presigned_links'];
+            $objPatientTreatmentPlan->primary_note = 'Primary Scan';
+            $objPatientTreatmentPlan->primary_movixtech_status = 'created';
+        }
+
+        if($patientDetails->optional_movixtech_status == null) {
+            $optionalCase = $this->movixtechService->createCaseAndGetPresignedLinks(
+                $request->post('first_name') . ' ' . $request->post('last_name'),
+                'Optional Scan'
+            );
+
+            $objPatientTreatmentPlan->optional_scan_case_id = $optionalCase['case_id'];
+            $objPatientTreatmentPlan->optional_presigned_links_details = $optionalCase['presigned_links'];
+            $objPatientTreatmentPlan->optional_scan_movix_note = 'Optional Scan';
+            $objPatientTreatmentPlan->optional_movixtech_status = 'created';
+        }
+        $objPatientTreatmentPlan->save();
+        // dd($primaryCase, $optionalCase);
         session(['patient_id' => $id]);
     }
     public function save_scan_data(Request $request)

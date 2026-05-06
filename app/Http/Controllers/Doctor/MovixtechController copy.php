@@ -15,19 +15,6 @@ use Illuminate\Support\Facades\Cache;
 class MovixtechController extends Controller
 {
 
-    // public function movixtech_create_case(Request $request)
-    // {
-    //     MovixProcessJob::dispatch([
-    //         'patient_id' => $request->patient_id,
-    //         'treatment_plan_id' => $request->treatment_plan_id,
-    //     ]);
-
-    //     return response()->json([
-    //         'status' => true,
-    //         'message' => 'Movix process started'
-    //     ]);
-    // }
-
     /**
      * Common API Request
      */
@@ -144,9 +131,7 @@ class MovixtechController extends Controller
         return $response['access'];
     }
 
-
     public function createCaseAndGetPresignedLinks($clientName, $note, $caseType = 'Primary Scan'){
-        dd($clientName, $note, $caseType);
         $data = [
             'note'   => $note,
             'client' => $clientName,
@@ -174,12 +159,6 @@ class MovixtechController extends Controller
                     ->select(
                         'id',
                         'patient_id',
-                        'primary_case_id',
-                        'primary_presigned_links_details',
-                        'primary_movixtech_status',
-                        'optional_scan_case_id',
-                        'optional_presigned_links_details',
-                        'optional_movixtech_status',
                         'fl_upper_arch',
                         'fl_lower_arch',
                         'optional_fl_upper_arch',
@@ -199,47 +178,55 @@ class MovixtechController extends Controller
         }
 
         $plan = $patientDetails->treatmentPlans->first();
-        // ❌ Both scans missing
-            if (empty($plan->fl_upper_arch) && empty($plan->fl_lower_arch) &&
-                empty($plan->optional_fl_upper_arch) && empty($plan->optional_fl_lower_arch))
-            {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'No valid scan files found'
-                ], 400);
 
-            }
+        $caseId = null;
+        $note = null;
+        $upperFile = null;
+        $lowerFile = null;
+        $clientName = $patientDetails->first_name . ' ' . $patientDetails->last_name;
 
         // ✅ Decide which scan to use
         if (!empty($plan->fl_upper_arch) && !empty($plan->fl_lower_arch)) {
             $upperFile = $plan->fl_upper_arch;
             $lowerFile = $plan->fl_lower_arch;
-            $caseId = $plan->primary_case_id;
-            $presignedLinks = $plan->primary_presigned_links_details;
-            $movixtechStatus = $plan->primary_movixtech_status;
+            $note = 'Primary Scan';
+        }
+        elseif (!empty($plan->optional_fl_upper_arch) && !empty($plan->optional_fl_lower_arch)) {
+            $upperFile = $plan->optional_fl_upper_arch;
+            $lowerFile = $plan->optional_fl_lower_arch;
+            $note = 'Optional Scan';
+            $clientName .= ' (Optional)';
+        }
+        else {
+            return response()->json([
+                'status' => false,
+                'message' => 'No valid scan files found'
+            ], 400);
         }
 
-
-        // ✅ Optional scan data
-        if (!empty($plan->optional_fl_upper_arch) || !empty($plan->optional_fl_lower_arch)) {
-
-            $optionalUpperFile = $plan->optional_fl_upper_arch;
-            $optionalLowerFile = $plan->optional_fl_lower_arch;
-
-            $optionalCaseId = $plan->optional_scan_case_id;
-            $optionalPresignedLinks = $plan->optional_presigned_links_details;
-            $optionalMovixtechStatus = $plan->optional_scan_movixtech_status;
+        // ✅ Single call only
+        $result  = $this->createCase(
+            $request->patient_id,
+            $request->treatment_plan_id,
+            $upperFile,
+            $lowerFile,
+            $clientName,
+            $note
+        );
+        if (!$result['status']) {
+            return response()->json([
+                'status' => false,
+                'message' => $result['message']
+            ], 500);
         }
-
-        // ✅ Primary scan data
-        if (!empty($plan->fl_upper_arch) || !empty($plan->fl_lower_arch)) {
-
-            $primaryUpperFile = $plan->fl_upper_arch;
-            $primaryLowerFile = $plan->fl_lower_arch;
-
-            $primaryCaseId = $plan->primary_case_id;
-            $primaryPresignedLinks = $plan->primary_presigned_links_details;
-            $primaryMovixtechStatus = $plan->primary_movixtech_status;
+        $caseId = $result['case_id'];
+        $runCase = $this->runCase($caseId);
+        if (empty($runCase) || (isset($runCase['success']) && !$runCase['success'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Case created but failed to run',
+                'case_id' => $caseId
+            ], 500);
         }
 
         return response()->json([

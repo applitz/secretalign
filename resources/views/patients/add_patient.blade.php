@@ -3899,6 +3899,7 @@ async function previewUpperStlFile(file_upper)
                     toastError("Enter required data.");
                     return false;
                 }
+
                 $.ajax({
                     type: "POST",
                     url: "{{ url('/patient/patient-info/save') }}",
@@ -3910,17 +3911,56 @@ async function previewUpperStlFile(file_upper)
                         "treatment_plan_id": "{{ $patient->id }}",
                         "patient_id": "{{ $patient->patient_id }}"
                     },
-                }).done(function(response) {
-                    $("#submit-prescription").attr('fn', 1);
-                    $("#pill-tab-li-treatment-type").click();
-                    // let tabEl = document.querySelector('#pill-tab-li-treatment-type');
-                    // let tab = new bootstrap.Tab(tabEl);
-                    // tab.show();
-                    toastSuccess("Patient Info Saved");
-                }).fail(function(response) {
-                    $("#submit-prescription").attr('fn', 0);
-                    toastError("Enable to save patient info");
+
+                    beforeSend: function () {
+                        $(".my-loader").show();
+                    },
+
+                    success: function(response) {
+                        $("#submit-prescription").attr('fn', 1);
+                        $("#pill-tab-li-treatment-type").click();
+
+                        toastSuccess("Patient Info Saved");
+                    },
+
+                    error: function(response) {
+                        $("#submit-prescription").attr('fn', 0);
+
+                        toastError("Unable to save patient info");
+                    },
+
+                    complete: function() {
+                        // Hide loader always
+                        $(".my-loader").hide();
+                    }
                 });
+
+                // $.ajax({
+                //     type: "POST",
+                //     url: "{{ url('/patient/patient-info/save') }}",
+                //     data: {
+                //         "_token": "{{ csrf_token() }}",
+                //         "first_name": first_name,
+                //         "last_name": last_name,
+                //         "dob": dob,
+                //         "treatment_plan_id": "{{ $patient->id }}",
+                //         "patient_id": "{{ $patient->patient_id }}"
+                //     },
+                // }).done(function(response) {
+                //     $("#submit-prescription").attr('fn', 1);
+                //     $("#pill-tab-li-treatment-type").click();
+                //     // let tabEl = document.querySelector('#pill-tab-li-treatment-type');
+                //     // let tab = new bootstrap.Tab(tabEl);
+                //     // tab.show();
+                //     toastSuccess("Patient Info Saved");
+                // }).fail(function(response) {
+                //     $("#submit-prescription").attr('fn', 0);
+                //     toastError("Enable to save patient info");
+                // })
+                // complete: function() {
+                //         // 👉 Hide loader always (success or error)
+                //         $(".my-loader").hide();
+                //     };
             });
 
             $("#submit-treatment-plan").on('click', function() {
