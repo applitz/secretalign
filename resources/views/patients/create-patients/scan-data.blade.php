@@ -244,11 +244,20 @@
         @endif
     @endif
 
+    <!-- Toggle Button -->
     <div class="mb-3">
-        Add additional Scans (Optional)
+        <button type="button" class="btn btn-outline-primary" id="toggleAdditionalScans">
+            <i class="fas fa-plus"></i> Add Additional Scans
+        </button>
     </div>
 
-    <div class="" id="additional-scans-optional">
+
+
+    <div id="additional-scans-optional" class="d-none">
+        <div class="mb-3">
+            Add additional Scans (Optional)
+        </div>
+
         <div class="row mb-3">
             {{-- Posterior Bite Turbos --}}
             <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-6 col-12 _dropzone_template" template-key="18">
@@ -313,6 +322,55 @@
 
                 </div>
             </div>
+        </div>
+
+        <div class="mb-3 ">
+            <a class="btn btn-primary order-from-button"
+                @if(Auth::user()->three_shape_access_token != null)
+                    href="javascript:void(0);" id="select-from-3shape"
+                @else
+                    href="{{url('/integration-3shape/obtain-authorization-code')}}"
+                @endif
+            >
+                <div class="d-flex align-items-center justify-content-center">
+                    <span>Import From</span>
+                    <img class="" src="{{asset('public/assets/communicate-logo-white.png')}}" width="92px" style="padding-left: 10px">
+                </div>
+            </a>
+
+
+            <a class="btn btn-primary order-from-button"
+                    @if(Auth::user()->medit_link_access_token != null)
+                            href="javascript:void(0);" id="select-from-medit-link"
+                    @else
+                        href="{{url('/integration-medit-link/obtain-authorization-code')}}"
+                    @endif
+            >
+                <div class="d-flex align-items-center justify-content-center">
+                    <span style="padding-left: 10px">Import From </span>
+                    <img class="ms-2" style="    padding-top: 8px; padding-right: 5px; padding-bottom: 7px;" src="{{asset('public/assets/medit-link-logo.svg')}}" width="52px">
+                </div>
+            </a>
+
+
+            @if(Auth::user()->shining3d_org_name == null )
+                <a class="btn btn-primary order-from-button" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#shining3d-org-name-modal" >
+                    <div class="d-flex align-items-center justify-content-center">
+                        <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D </span>
+                    </div>
+                </a>
+            @else
+                @php
+
+                @endphp
+                <a class="btn btn-primary order-from-button"   href="javascript:void(0);" data-mode="{{ $mode }}"  data-hash-code="{{ $hashCode ? trim($hashCode, '"') : '' }}"  id="select-from-shining3d-link" data-shining3d-user-id="{{ Auth::user()->shining3d_user_id }}" data-shining3d-access-token="{{ Auth::user()->shining3d_access_token }}" >
+                    <div class="d-flex align-items-center justify-content-center">
+                        <span>Import From</span>&nbsp;&nbsp;<span style="color:#004fec; font-weight: bold;">SHINING 3D</span>
+                    </div>
+                </a>
+            @endif
+
+
         </div>
     </div>
 
