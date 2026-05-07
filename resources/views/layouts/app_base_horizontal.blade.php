@@ -505,6 +505,11 @@
                                         <a class="dropdown-item" href="{{ url('/profile-settings') }}"><i class="bx bx-user font-size-16 align-middle me-1"></i>
                                             Profile</a>
 
+                                        @if(Auth::user()->role == 'doctor')
+                                            <a class="dropdown-item" href="{{ url('/clinical-preferences') }}"><i class="bx bx-user font-size-16 align-middle me-1"></i>
+                                            Clinical Preferences</a>
+                                        @endif
+
                                         <a class="dropdown-item text-danger" href="javascript:void(0);"  onclick="document.getElementById('logout-form').submit()"><i
                                                 class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> Logout</a>
                                                 <form method="POST" id="logout-form" action="{{ route('logout') }}">@csrf</form>

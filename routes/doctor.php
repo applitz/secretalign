@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Doctor\PatientsController;
 use App\Http\Controllers\Doctor\Shining3dController;
 use App\Http\Controllers\Doctor\MovixtechController;
+use App\Http\Controllers\Doctor\ClinicalPreferencesControllers;
 
 Route::middleware(['auth', 'auth.doctor'])->group(function () {
     Route::resource('patients', PatientsController::class);
+    Route::resource('clinical-preferences', ClinicalPreferencesController::class);
     Route::get('update-shiping-date', [PatientsController::class, 'updateShipingDate'])->name('update-shiping-date');
 
     Route::post('order-from-dental-monitoring', [PatientsController::class, 'orderFromDentalMonitoring'])->name('order-from-dental-monitoring');

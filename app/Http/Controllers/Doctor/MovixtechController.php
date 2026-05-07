@@ -144,6 +144,23 @@ class MovixtechController extends Controller
         return $response['access'];
     }
 
+    public function createCase($clientName, $note = null){
+        $data = [
+            'note'   => $note,
+            'client' => $clientName,
+        ];
+
+        $caseDetails = $this->movixRequest( 'POST', '/api/v1/base/cases/', $data);
+
+        if (empty($caseDetails['case_id'])) {
+            return [
+                'status' => false,
+                'message' => 'Case creation failed'
+            ];
+        }
+
+        $caseId = $caseDetails['case_id'];
+    }
 
     public function createCaseAndGetPresignedLinks($clientName, $note, $caseType = 'Primary Scan'){
         dd($clientName, $note, $caseType);
@@ -174,11 +191,7 @@ class MovixtechController extends Controller
                     ->select(
                         'id',
                         'patient_id',
-                        'primary_case_id',
-                        'primary_presigned_links_details',
                         'primary_movixtech_status',
-                        'optional_scan_case_id',
-                        'optional_presigned_links_details',
                         'optional_movixtech_status',
                         'fl_upper_arch',
                         'fl_lower_arch',
@@ -200,47 +213,33 @@ class MovixtechController extends Controller
 
         $plan = $patientDetails->treatmentPlans->first();
         // ❌ Both scans missing
-            if (empty($plan->fl_upper_arch) && empty($plan->fl_lower_arch) &&
-                empty($plan->optional_fl_upper_arch) && empty($plan->optional_fl_lower_arch))
-            {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'No valid scan files found'
-                ], 400);
+        if (empty($plan->fl_upper_arch) && empty($plan->fl_lower_arch) &&
+            empty($plan->optional_fl_upper_arch) && empty($plan->optional_fl_lower_arch))
+        {
+            return response()->json([
+                'status' => false,
+                'message' => 'No valid scan files found'
+            ], 400);
 
-            }
-
-        // ✅ Decide which scan to use
-        if (!empty($plan->fl_upper_arch) && !empty($plan->fl_lower_arch)) {
-            $upperFile = $plan->fl_upper_arch;
-            $lowerFile = $plan->fl_lower_arch;
-            $caseId = $plan->primary_case_id;
-            $presignedLinks = $plan->primary_presigned_links_details;
-            $movixtechStatus = $plan->primary_movixtech_status;
         }
-
+        $clientName = $patientDetails->first_name . ' ' . $patientDetails->last_name;
+        // ✅ Primary scan data
+        if (!empty($plan->fl_upper_arch) || !empty($plan->fl_lower_arch)) {
+            $primaryUpperFile = $plan->fl_upper_arch;
+            $primaryLowerFile = $plan->fl_lower_arch;
+            $primaryCaseId = $plan->primary_case_id;
+            $primaryMovixtechStatus = $plan->primary_movixtech_status;
+        }
 
         // ✅ Optional scan data
         if (!empty($plan->optional_fl_upper_arch) || !empty($plan->optional_fl_lower_arch)) {
-
             $optionalUpperFile = $plan->optional_fl_upper_arch;
             $optionalLowerFile = $plan->optional_fl_lower_arch;
-
             $optionalCaseId = $plan->optional_scan_case_id;
-            $optionalPresignedLinks = $plan->optional_presigned_links_details;
             $optionalMovixtechStatus = $plan->optional_scan_movixtech_status;
         }
 
-        // ✅ Primary scan data
-        if (!empty($plan->fl_upper_arch) || !empty($plan->fl_lower_arch)) {
 
-            $primaryUpperFile = $plan->fl_upper_arch;
-            $primaryLowerFile = $plan->fl_lower_arch;
-
-            $primaryCaseId = $plan->primary_case_id;
-            $primaryPresignedLinks = $plan->primary_presigned_links_details;
-            $primaryMovixtechStatus = $plan->primary_movixtech_status;
-        }
 
         return response()->json([
             'status' => true,
@@ -334,7 +333,7 @@ class MovixtechController extends Controller
 
 
 
-    public function createCase($patientId, $treatmentPlanId, $upperFile, $lowerFile, $clientName, $note = null)
+    public function createCaseOld($patientId, $treatmentPlanId, $upperFile, $lowerFile, $clientName, $note = null)
     {
         $data = [
             'note'   => $note,
@@ -423,14 +422,9 @@ class MovixtechController extends Controller
                 'application/octet-stream'
             )
             ->put($url);
-
         if (!$response->successful()) {
-            throw new Exception(
-                'Upload failed: ' .
-                $response->status() .
-                ' - ' .
-                $response->body()
-            );
+            return false;
+
         }
 
         return true;
