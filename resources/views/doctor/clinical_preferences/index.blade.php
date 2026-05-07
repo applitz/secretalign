@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Clinical Preferences</h4>
-                    <p class="text-muted">These clinical preferences apply by default to all of your SECRET patients. If you would like to make a patient specific request, please note this on the product order form during the submission process.</p>
+                    <!-- <p class="text-muted">These clinical preferences apply by default to all of your SECRET patients. If you would like to make a patient specific request, please note this on the product order form during the submission process.</p> -->
 
                     @if(session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
@@ -174,7 +174,6 @@
                                 @error('same_number_aligners_for_both_arches')<div class="text-danger">{{ $message }}</div>@enderror
 
                                 <div id="same-number-type-section" class="mt-3 {{ old('same_number_aligners_for_both_arches', $preference->same_number_aligners_for_both_arches ?? '') !== 'Yes' ? 'd-none' : '' }}">
-                                    <label class="form-label">If Yes</label>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="same_number_aligners_type" id="same_number_passive" value="Passive aligners"
                                             {{ old('same_number_aligners_type', $preference->same_number_aligners_type ?? '') === 'Passive aligners' ? 'checked' : '' }}>
