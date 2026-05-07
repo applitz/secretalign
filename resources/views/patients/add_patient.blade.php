@@ -341,6 +341,7 @@
 <form method="POST" action="{{ url('/patient/submit') }}" id="final-submit-form">
     @csrf
     <input type="hidden" name="client_preferred_package" value="select">
+    <input type="hidden" name="client_setup_type" value="1">
     <input type="hidden" name="treatment_plan_id" value="{{ $patient->id }}">
     <input type="hidden" name="patient_id" value="{{ $patient->patient_id }}">
 </form>
@@ -1003,6 +1004,74 @@ async function loadSTLUpper(url) {
             return geometry;
 }
 
+async function optionalLoadSTLUpper(url) {
+    const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+            }
+            const reader = response.body.getReader();
+            const contentLength = response.headers.get('Content-Length');
+            const total = contentLength ? parseInt(contentLength, 10) : null;
+            let loaded = 0;
+
+            const chunks = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                loaded += value.length;
+                if (total) {
+                    const percentComplete = (loaded / total * 100).toFixed(2);
+                    $("#optional-upper-arch-progress-bar").css({width: `${percentComplete}%`})
+                    $("#optional-upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                }
+            }
+            const arrayBuffer = new Uint8Array(loaded);
+            let offset = 0;
+            for (let chunk of chunks) {
+                arrayBuffer.set(chunk, offset);
+                offset += chunk.length;
+            }
+
+            const geometry = stl_loader1.parse(arrayBuffer.buffer);
+            return geometry;
+}
+
+async function optionalLoadSTLLower(url) {
+    const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+            }
+            const reader = response.body.getReader();
+            const contentLength = response.headers.get('Content-Length');
+            const total = contentLength ? parseInt(contentLength, 10) : null;
+            let loaded = 0;
+
+            const chunks = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                loaded += value.length;
+                if (total) {
+                    const percentComplete = (loaded / total * 100).toFixed(2);
+                    $("#optional-lower-arch-progress-bar").css({width: `${percentComplete}%`})
+                    $("#optional-lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                    // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
+                    // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
+                }
+            }
+            const arrayBuffer = new Uint8Array(loaded);
+            let offset = 0;
+            for (let chunk of chunks) {
+                arrayBuffer.set(chunk, offset);
+                offset += chunk.length;
+            }
+
+            const geometry = stl_loader2.parse(arrayBuffer.buffer);
+            return geometry;
+}
+
 async function loadSTLLower(url) {
     const response = await fetch(url);
             if (!response.ok) {
@@ -1153,6 +1222,214 @@ async function previewUpperStlFile(file_upper)
 }
             window.previewUpperStlFile = previewUpperStlFile;
 
+            async function previewOptionalUpperStlFile(file_upper)
+            {
+                try {
+                    container1 = document.getElementById( 'optional-stl-upper-arch-preview' );
+                    scene1 = new THREE.Scene();
+                    scene1.name = 'myscene1';
+                    scene1.background = new THREE.Color( 0xaaaaaa );
+                    camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+                    camera1.position.set(0, 0, 5);
+                    renderer1 = new THREE.WebGLRenderer({ antialias: true });
+                    material1 = new THREE.MeshNormalMaterial();
+                    controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
+                    controls1.enableDamping = true;
+                    THREE.Cache.enabled = true;
+
+                    const width = $("#upper-jaw-box").width() + 23;
+                    const height = $("#upper-jaw-box").height();
+
+                    renderer1.setSize( width, height );
+
+                    document.body.appendChild( renderer1.domElement );
+
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                    scene1.add(ambientLight);
+
+                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                    directionalLight.position.set(1, 1, 1).normalize();
+                    scene1.add(directionalLight);
+
+                    const geometry = await optionalLoadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+                    const mesh = new THREE.Mesh(geometry, material1)
+                    mesh.tag = 'base';
+                    scene1.add(mesh);
+                    camera1.position.z = 10;
+                    camera1.position.x = 0;
+                    camera1.position.y = -6;
+                    scene1.scale.set(0.02,0.02,0.02);
+
+                    controls1.update();
+                    animate1();
+                } catch (error) {}
+            }
+            window.previewOptionalUpperStlFile = previewOptionalUpperStlFile;
+
+            async function previewOptionalUpperPlyFile(file_upper)
+            {
+                try {
+                    container1 = document.getElementById( 'optional-stl-upper-arch-preview' );
+                    scene1 = new THREE.Scene();
+                    scene1.name = 'myscene1';
+                    scene1.background = new THREE.Color( 0xaaaaaa );
+                    camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+                    camera1.position.set(0, 0, 5);
+                    renderer1 = new THREE.WebGLRenderer({ antialias: true });
+
+                    material1 = new THREE.MeshStandardMaterial({
+                        vertexColors: THREE.VertexColors,
+                        flatShading: true
+                    });
+                    controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
+                    controls1.enableDamping = true;
+
+                    THREE.Cache.enabled = true;
+
+                    const width = $("#upper-jaw-box").width() + 23;
+                    const height = $("#upper-jaw-box").height();
+
+                    //modify renderer
+                    renderer1.setSize( width, height );
+
+                    //append renderer to body
+                    document.body.appendChild( renderer1.domElement );
+
+                    // Lighting
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                    scene1.add(ambientLight);
+
+                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                    directionalLight.position.set(1, 1, 1).normalize();
+                    scene1.add(directionalLight);
+                    const geometry = await loadPLYUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+                    geometry.computeVertexNormals();
+                    const mesh = new THREE.Mesh(geometry, material1)
+
+                    mesh.tag = 'base';
+
+                    scene1.add(mesh);
+                    camera1.position.z = 10;
+                    camera1.position.x = 0;
+                    camera1.position.y = -6;
+                    scene1.scale.set(0.02,0.02,0.02);
+
+                    controls1.update();
+                    animate1();
+                } catch (error) {}
+            }
+            window.previewOptionalUpperPlyFile = previewOptionalUpperPlyFile;
+
+
+            async function previewOptionalLowerStlFile(file_lower)
+            {
+                try {
+                    container2 = document.getElementById( 'optional-stl-lower-arch-preview' );
+                    scene2 = new THREE.Scene();
+                    scene2.name = 'myscene2';
+                    scene2.background = new THREE.Color( 0xaaaaaa );
+                    camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+                    camera2.position.set(0, 0, 5);
+                    renderer2 = new THREE.WebGLRenderer({ antialias: true });
+
+                    material2 = new THREE.MeshNormalMaterial();
+                    controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
+                    controls2.enableDamping = true;
+                    THREE.Cache.enabled = true;
+
+                    const width = $("#upper-jaw-box").width() + 23;
+                    const height = $("#upper-jaw-box").height();
+
+                    //modify renderer
+                    renderer2.setSize( width, height );
+
+
+                    //append renderer to body
+                    document.body.appendChild( renderer2.domElement );
+
+                    // Lighting
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                    scene2.add(ambientLight);
+
+                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                    directionalLight.position.set(1, 1, 1).normalize();
+                    scene2.add(directionalLight);
+
+                    const geometry = await optionalLoadSTLLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
+                    const mesh = new THREE.Mesh(geometry, material2)
+
+                    mesh.tag = 'base';
+                    scene2.add(mesh);
+
+                    console.log('scene updated');
+
+                    camera2.position.z = 10;
+                    camera2.position.x = 0;
+                    camera2.position.y = -6;
+                    scene2.scale.set(0.02,0.02,0.02);
+
+                    controls2.update();
+                    animate2();
+                } catch (error) {}
+            }
+            window.previewOptionalLowerStlFile = previewOptionalLowerStlFile;
+
+            async function previewOptionalLowerPlyFile(file_lower)
+            {
+                try {
+                    container2 = document.getElementById( 'optional-stl-lower-arch-preview' );
+                    scene2 = new THREE.Scene();
+                    scene2.name = 'myscene2';
+                    scene2.background = new THREE.Color( 0xaaaaaa );
+                    camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+                    camera2.position.set(0, 0, 5);
+                    renderer2 = new THREE.WebGLRenderer({ antialias: true });
+                    material2 = new THREE.MeshStandardMaterial({
+                        vertexColors: THREE.VertexColors,
+                        flatShading: true
+                    });
+                    controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
+                    controls2.enableDamping = true;
+                    THREE.Cache.enabled = true;
+
+
+                    const width = $("#upper-jaw-box").width() + 23;
+                    const height = $("#upper-jaw-box").height();
+
+                    //modify renderer
+                    renderer2.setSize( width, height );
+
+                    //append renderer to body
+                    document.body.appendChild( renderer2.domElement );
+                    // Lighting
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                    scene2.add(ambientLight);
+
+                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                    directionalLight.position.set(1, 1, 1).normalize();
+                    scene2.add(directionalLight);
+
+
+                    const geometry = await loadPLYLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
+                    geometry.computeVertexNormals();
+                    const mesh = new THREE.Mesh(geometry, material2)
+
+                    mesh.tag = 'base';
+                    scene2.add(mesh);
+
+                    console.log('scene updated');
+
+                    camera2.position.z = 10;
+                    camera2.position.x = 0;
+                    camera2.position.y = -6;
+                    scene2.scale.set(0.02,0.02,0.02);
+
+                    controls2.update();
+                    animate2();
+                } catch (error) {}
+            }
+            window.previewOptionalLowerPlyFile = previewOptionalLowerPlyFile;
+
             async function previewLowerStlFile(file_lower)
             {
                 try {
@@ -1258,9 +1535,6 @@ async function previewUpperStlFile(file_upper)
                     animate1();
                 } catch (error) {}
             }
-
-
-
             window.previewUpperPlyFile = previewUpperPlyFile;
 
             async function previewLowerPlyFile(file_lower)
@@ -1547,21 +1821,29 @@ async function previewUpperStlFile(file_upper)
                         // Check if terms and conditions are accepted
                         if ($("input[name=terms_and_conditions]").is(":checked")) {
                             const advisor = $("#advisor").val();
-                            const comment = $("#comment").val();// Get advisor selection
+                            var comment = $("#comment").val();// Get advisor selection
                             const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
-
+                            const setup_type = $('input[name="setup_type"]:checked').val();
+                            if (comment === undefined || comment === null) {
+                                comment = "";
+                            }
                             // Validate consultant agreement checkbox if advisor is selected
                             if (advisor && !consultantAgreementChecked) {
                                 toastError("You must agree to the additional consultation terms.");
                                 return;
                             }
 
+                            if (!setup_type) {
+                                toastError("You must select your preferred package.");
+                                return;
+                            }
+
                             // Submit the form
                             $("#final-submit-form").append(`<input type="hidden" name="advisor" value="${advisor}" />`);
-                        $("#final-submit-form").append(`<input type="hidden" name="comment" value="${comment}" />`);
+                            $("#final-submit-form").append(`<input type="hidden" name="comment" value="${comment}" />`);
 
-                        // Submit the form
-                        $("#final-submit-form").submit();
+                            // Submit the form
+                            $("#final-submit-form").submit();
                         } else {
                             toastError("You must accept the Packages and Terms & Conditions agreement.");
                         }
@@ -1588,6 +1870,11 @@ async function previewUpperStlFile(file_upper)
             "key11" : 'inactive',
             "key12" : 'inactive',
             "key13" : 'inactive',
+            "key14" : 'inactive',
+            "key15" : 'inactive',
+            "key16" : 'inactive',
+            "key18" : 'inactive',
+            "key19" : 'inactive',
         }
         const ui = {
             confirm: async (message) => editConfirm(message)
@@ -1671,6 +1958,16 @@ async function previewUpperStlFile(file_upper)
                         window.destroyPreview2();
                         $("#stl-lower-arch-preview").html("");
                     }
+
+                    if(key == 18) {
+                        window.destroyPreview1();
+                        $("#optional-stl-upper-arch-preview").html("");
+                    }
+                    if(key == 19) {
+                        window.destroyPreview2();
+                        $("#optional-stl-lower-arch-preview").html("");
+                    }
+
                     toastSuccess("File successfully removed")
                 } else {
                     toastError("Enable to remove file")
@@ -1710,6 +2007,21 @@ async function previewUpperStlFile(file_upper)
                                 window.previewLowerStlFile(response.fileName)
                             } else {
                                 window.previewLowerPlyFile(response.fileName)
+                            }
+                        }
+
+                        if(key == 18) {
+                            if(UPLOADEDFILE.split(".")[1] == 'stl') {
+                                window.previewOptionalUpperStlFile(response.fileName)
+                            } else {
+                                window.previewOptionalUpperPlyFile(response.fileName)
+                            }
+                        }
+                        if(key == 19) {
+                            if(UPLOADEDFILE.split(".")[1] == 'stl') {
+                                window.previewOptionalLowerStlFile(response.fileName)
+                            } else {
+                                window.previewOptionalLowerPlyFile(response.fileName)
                             }
                         }
                     } else {
@@ -3061,7 +3373,7 @@ async function previewUpperStlFile(file_upper)
                 var fileName = file.name;
                 var fileExtension = fileName.split('.').pop().toLowerCase(); // get file extension
 
-                if(key == 1 || key == 2) {
+                if(key == 1 || key == 2 || key == 18 || key == 19) {
                         if (fileExtension !== 'stl' && fileExtension !== 'ply') {
                             dropzone_reset_state(key, "Please drop a stl or ply file.")
                             return false;
@@ -3139,6 +3451,21 @@ async function previewUpperStlFile(file_upper)
         }
         if($("._dropzone_template #key13").attr('file') != "") {
             dropzone_active_state('13', $("._dropzone_template #key1").attr('file'))
+        }
+        if($("._dropzone_template #key14").attr('file') != "") {
+            dropzone_active_state('14', $("._dropzone_template #key14").attr('file'))
+        }
+        if($("._dropzone_template #key15").attr('file') != "") {
+            dropzone_active_state('15', $("._dropzone_template #key15").attr('file'))
+        }
+        if($("._dropzone_template #key16").length && $("._dropzone_template #key16").attr('file') != "") {
+            dropzone_active_state('16', $("._dropzone_template #key16").attr('file'))
+        }
+        if($("._dropzone_template #key18").attr('file') != "") {
+            dropzone_active_state('18', $("._dropzone_template #key18").attr('file'))
+        }
+        if($("._dropzone_template #key19").attr('file') != "") {
+            dropzone_active_state('19', $("._dropzone_template #key19").attr('file'))
         }
     });
     </script>
@@ -3549,6 +3876,11 @@ async function previewUpperStlFile(file_upper)
                     $("input[name=client_preferred_package]").val($(this).val());
                 }
             });
+            $(document).on('change', 'input[name=setup_type]', function () {
+                if($(this).is(":checked")) {
+                    $("input[name=client_setup_type]").val($(this).val());
+                }
+            });
 
             $("#submit-patient-info").on('click', function() {
                 var first_name = $("#first_name").val();
@@ -3567,6 +3899,7 @@ async function previewUpperStlFile(file_upper)
                     toastError("Enter required data.");
                     return false;
                 }
+
                 $.ajax({
                     type: "POST",
                     url: "{{ url('/patient/patient-info/save') }}",
@@ -3578,17 +3911,56 @@ async function previewUpperStlFile(file_upper)
                         "treatment_plan_id": "{{ $patient->id }}",
                         "patient_id": "{{ $patient->patient_id }}"
                     },
-                }).done(function(response) {
-                    $("#submit-prescription").attr('fn', 1);
-                    $("#pill-tab-li-treatment-type").click();
-                    // let tabEl = document.querySelector('#pill-tab-li-treatment-type');
-                    // let tab = new bootstrap.Tab(tabEl);
-                    // tab.show();
-                    toastSuccess("Patient Info Saved");
-                }).fail(function(response) {
-                    $("#submit-prescription").attr('fn', 0);
-                    toastError("Enable to save patient info");
+
+                    beforeSend: function () {
+                        $(".my-loader").show();
+                    },
+
+                    success: function(response) {
+                        $("#submit-prescription").attr('fn', 1);
+                        $("#pill-tab-li-treatment-type").click();
+
+                        toastSuccess("Patient Info Saved");
+                    },
+
+                    error: function(response) {
+                        $("#submit-prescription").attr('fn', 0);
+
+                        toastError("Unable to save patient info");
+                    },
+
+                    complete: function() {
+                        // Hide loader always
+                        $(".my-loader").hide();
+                    }
                 });
+
+                // $.ajax({
+                //     type: "POST",
+                //     url: "{{ url('/patient/patient-info/save') }}",
+                //     data: {
+                //         "_token": "{{ csrf_token() }}",
+                //         "first_name": first_name,
+                //         "last_name": last_name,
+                //         "dob": dob,
+                //         "treatment_plan_id": "{{ $patient->id }}",
+                //         "patient_id": "{{ $patient->patient_id }}"
+                //     },
+                // }).done(function(response) {
+                //     $("#submit-prescription").attr('fn', 1);
+                //     $("#pill-tab-li-treatment-type").click();
+                //     // let tabEl = document.querySelector('#pill-tab-li-treatment-type');
+                //     // let tab = new bootstrap.Tab(tabEl);
+                //     // tab.show();
+                //     toastSuccess("Patient Info Saved");
+                // }).fail(function(response) {
+                //     $("#submit-prescription").attr('fn', 0);
+                //     toastError("Enable to save patient info");
+                // })
+                // complete: function() {
+                //         // 👉 Hide loader always (success or error)
+                //         $(".my-loader").hide();
+                //     };
             });
 
             $("#submit-treatment-plan").on('click', function() {
@@ -3620,40 +3992,57 @@ async function previewUpperStlFile(file_upper)
                 });
             });
 
-            $("#submit-scan-data").on('click', function() {
+            $("#submit-scan-data").on('click', function(e) {
+                e.preventDefault();
                 var fl_upper_arch = $("#fl_upper_arch").val();
                 var fl_lower_arch = $("#fl_lower_arch").val();
-                if ($("#key1").attr('file') == '' || $("#key2").attr('file') == '') {
+
+                // Better file validation
+                if (!$("#key1").prop('files').length || !$("#key2").prop('files').length) {
                     toastError("Upload scan data files.");
                     $("#submit-prescription").attr('fn', 0);
                     return false;
                 }
-                $("#submit-prescription").attr('fn', 1);
-                // let tabEl = document.querySelector('#pill-tab-li3');
-                // let tab = new bootstrap.Tab(tabEl);
-                // tab.show();
-                 $("#pill-tab-li3").click();
-                $("#pill-tab-div2").removeClass('show active');
-                toastSuccess("Scan data Saved");
-                // $.ajax({
-                //     type: "POST",
-                //     url: "{{ url('/patient/scan-data/save') }}",
-                //     data: {
-                //         "_token": "{{ csrf_token() }}",
-                //         "fl_upper_arch": fl_upper_arch,
-                //         "fl_lower_arch": fl_lower_arch,
-                //         "treatment_plan_id": "{{ $patient->id }}",
-                //         "patient_id": "{{ $patient->patient_id }}"
-                //     },
-                // }).done(function (response) {
-                //     $("#submit-prescription").attr('fn', 1);
-                //     $("#pill-tab-li3").click();
-                //     toastSuccess("Patient Info Saved");
-                // }).fail(function (response) {
-                //     $("#submit-prescription").attr('fn', 0);
-                //     toastError("Enable to save patient info");
-                // });
+                // 👉 Show loader before request
+                $(".my-loader").show();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('/patient/movixtech/create_case') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        treatment_plan_id: "{{ $patient->id }}",
+                        patient_id: "{{ $patient->patient_id }}"
+                    },
+                    success: function (response) {
+                        // ✅ Check backend status
+                        if (response.status) {
+                            $("#submit-prescription").attr('fn', 1);
+                            $("#pill-tab-li3").click();
+                            $("#pill-tab-div2").removeClass('show active');
+                            toastSuccess(response.message || "Case created successfully");
+                        } else {
+                            $("#submit-prescription").attr('fn', 0);
+                            toastError(response.message || "Failed to process case");
+                        }
+                    },
+                    error: function (xhr) {
+                        let msg = "Something went wrong!";
+
+                        // ✅ Try to read backend error message
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            msg = xhr.responseJSON.message;
+                        }
+
+                        toastError(msg);
+                    },
+                    complete: function() {
+                        // 👉 Hide loader always (success or error)
+                        $(".my-loader").hide();
+                    }
+                });
             });
+
             //
             $("#submit-images").on('click', function() {
                 if (PHASE == '1' && ($("#key3").attr('file') == '' || $("#key4").attr('file') == '' || $("#key5").attr('file') == '' || $("#key6").attr('file') == '' || $("#key7").attr('file') == '' || $("#key8").attr('file') == '' || $("#key9").attr('file') == '' || $("#key10").attr('file') == '' || $("#key11").attr('file') == '' || $("#key12").attr('file') == '')) {
@@ -3737,6 +4126,46 @@ async function previewUpperStlFile(file_upper)
                 var clas = $("input[name=class]:checked").val() || '';
                 fd.append("class", clas);
                 var clas_notes = $("textarea[name=class_notes]").val();
+
+                var button_outer = $("input[name=feature_button_outer_ids]").val();
+                var button_inner = $("input[name=feature_button_inner_ids]").val();
+                var ihook_outer = $("input[name=feature_ihook_outer_ids]").val();
+                var ihook_inner = $("input[name=feature_ihook_inner_ids]").val();
+                var precision_cut_outer = $("input[name=feature_precision_cut_outer_ids]").val();
+                var precision_cut_inner = $("input[name=feature_precision_cut_inner_ids]").val();
+                var power_arm_attachment_outer = $("input[name=feature_power_arm_attachment_outer_ids]").val();
+                var power_arm_attachment_inner = $("input[name=feature_power_arm_attachment_inner_ids]").val();
+                var power_ridge_outer = $("input[name=feature_power_ridge_outer_ids]").val();
+                var power_ridge_inner = $("input[name=feature_power_ridge_inner_ids]").val();
+                var bite_turbos = $("input[name=feature_bite_turbos_ids]").val();
+                var bite_ramp = $("input[name=feature_bite_ramp_ids]").val();
+
+                var unerupted_teeth = $("input[name=feature_unerupted_teeth_ids]").val();
+                var extracted_teeth = $("input[name=feature_extracted_teethids]").val();
+                var tooth_movement_restrictions = $("input[name=feature_tooth_movement_restrictions_ids]").val();
+                var coil = $("input[name=feature_coil_ids]").val();
+                var pontic = $("input[name=feature_pontic_ids]").val();
+                var bridge = $("input[name=feature_bridge_ids]").val();
+
+                fd.append("button_outer", button_outer);
+                fd.append("button_inner", button_inner);
+                fd.append("ihook_outer", ihook_outer);
+                fd.append("ihook_inner", ihook_inner);
+                fd.append("precision_cut_outer", precision_cut_outer);
+                fd.append("precision_cut_inner", precision_cut_inner);
+                fd.append("power_arm_attachment_outer", power_arm_attachment_outer);
+                fd.append("power_arm_attachment_inner", power_arm_attachment_inner);
+                fd.append("power_ridge_outer", power_ridge_outer);
+                fd.append("power_ridge_inner", power_ridge_inner);
+                fd.append("bite_turbos", bite_turbos);
+                fd.append("bite_ramp", bite_ramp);
+
+                fd.append("unerupted_teeth", unerupted_teeth);
+                fd.append("extracted_teeth", extracted_teeth);
+                fd.append("tooth_movement_restrictions", tooth_movement_restrictions);
+                fd.append("coil", coil);
+                fd.append("pontic", pontic);
+                fd.append("bridge", bridge);
 
                 //pcp
                 var pcp_ur = $('input[name="pcp_ur"]:checked').map(function() {
@@ -3952,13 +4381,29 @@ async function previewUpperStlFile(file_upper)
                 var additional_attachments_notes = $("textarea[name=additional_attachments_notes]").val();
                 fd.append("additional_attachments_notes", additional_attachments_notes);
 
+                // var aesthetic_start = $("input[name=aesthetic_start]:checked").val();
+                var aesthetic_start = $("input[name='aesthetic_start']:checked").val();
+                fd.append("aesthetic_start", aesthetic_start);
+
+                var anterior_leveling = $("input[name='anterior_leveling']:checked").val();
+                fd.append("anterior_leveling", anterior_leveling);
+
                 var keep_already_place_attachments = $(
                     "input[name=keep_already_placed_attachments]:checked").val() || '0';
                 fd.append("keep_already_place_attachments", keep_already_place_attachments);
-                var aligner_trim_type_upper = $("select[name=trim_type_upper]").val();
+
+                var aligner_trim_type_upper = $("input[name='trim_type_upper']:checked").val(); //$("select[name=trim_type_upper]").val();
                 fd.append("aligner_trim_type_upper", aligner_trim_type_upper);
-                var aligner_trim_type_lower = $("select[name=trim_type_lower]").val();
+
+                var trim_type_upper_upper = $("select[name='trim_type_upper_upper']").val();
+                fd.append("trim_type_upper_upper", trim_type_upper_upper);
+
+                var aligner_trim_type_lower = $("input[name='trim_type_lower']:checked").val(); //$("select[name=trim_type_lower]").val();
                 fd.append("aligner_trim_type_lower", aligner_trim_type_lower);
+
+                var trim_type_lower_upper = $("select[name='trim_type_lower_upper']").val();
+                fd.append("trim_type_lower_upper", trim_type_lower_upper);
+
                 if (aligner_trim_type_lower == '' || aligner_trim_type_lower == undefined ||
                     aligner_trim_type_lower == null || aligner_trim_type_upper == '' ||
                     aligner_trim_type_upper == undefined || aligner_trim_type_upper == null) {
@@ -3971,22 +4416,45 @@ async function previewUpperStlFile(file_upper)
                 $("select[name=trim_type_lower]").removeClass('is-invalid')
 
                 //last aligners to cover
-                var tla_ur = $("input[name=tla_ur]:checked").map(function() {
-                    return $(this).data('number');
-                }).get();
+                function parseAlignersToCoverState(selector) {
+                    var raw = $(selector).val();
+
+                    if (!raw) {
+                        return [];
+                    }
+
+                    try {
+                        var parsed = JSON.parse(raw);
+                        return Array.isArray(parsed) ? parsed : [];
+                    } catch (e) {
+                        return [];
+                    }
+                }
+
+                var tla_ur = parseAlignersToCoverState("#tla_ur_state");
                 fd.append("tla_ur", JSON.stringify(tla_ur));
-                var tla_lr = $("input[name=tla_lr]:checked").map(function() {
-                    return $(this).data('number');
-                }).get();
+
+                var tla_lr = parseAlignersToCoverState("#tla_lr_state");
                 fd.append("tla_lr", JSON.stringify(tla_lr));
-                var tla_ul = $("input[name=tla_ul]:checked").map(function() {
-                    return $(this).data('number');
-                }).get();
+
+                var tla_ul = parseAlignersToCoverState("#tla_ul_state");
                 fd.append("tla_ul", JSON.stringify(tla_ul));
-                var tla_ll = $("input[name=tla_ll]:checked").map(function() {
-                    return $(this).data('number');
-                }).get();
+
+                var tla_ll = parseAlignersToCoverState("#tla_ll_state");
                 fd.append("tla_ll", JSON.stringify(tla_ll));
+
+                var upper_teeth_to_cover = tla_ur.length + tla_ul.length;
+                var lower_teeth_to_cover = tla_lr.length + tla_ll.length;
+
+                if (upper_teeth_to_cover > 0 && upper_teeth_to_cover < 4) {
+                    toastError("Please select at least 4 upper teeth to cover.");
+                    return false;
+                }
+
+                if (lower_teeth_to_cover > 0 && lower_teeth_to_cover < 4) {
+                    toastError("Please select at least 4 lower teeth to cover.");
+                    return false;
+                }
 
                 if (tla_ur.length == 0 && tla_lr.length == 0 && tla_ul.length == 0 && tla_ll.length == 0) {
                     toastError("Please mark the last tooth you want the aligners to cover (Special Instructions).");
@@ -4100,10 +4568,12 @@ async function previewUpperStlFile(file_upper)
 
 
 </script>
-
+<script src="{{  asset('public/assets/customjs/clinicalPreferences.js') }}"></script>
 <script src="{{ asset('public/assets/customjs/dm-integration.js') }}"></script>
 <script src="{{ asset('public/assets/customjs/add-patient.js') }}"></script>
 <script src="{{ asset('public/assets/customjs/shining3d.js') }}?v={{ time() }}"></script>
+<script src="{{  asset('public/assets/customjs/clinicalPreferencesSection2.js') }}"></script>
+<script src="{{  asset('public/assets/customjs/alignersToCover.js') }}?v={{ time() }}"></script>
 
 <script>
     $(document).ready(function() {
@@ -4118,6 +4588,16 @@ async function previewUpperStlFile(file_upper)
             $('#order-from-shining3d-modal').modal('show');
         }
 
+        $(document).ready(function () {
+            $('#text-info-modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // clicked element
+                var infoText = button.data('info');  // get data-info
+                var infoTitle = button.data('info-title');  // get data-info
+
+                $(this).find('#text-info').text(infoText); // set text
+                $(this).find('#text-info-title').text(infoTitle); // set text
+            });
+        });
         DmIntegration.init();
         AddPatient.init();
         Shining3d.init();

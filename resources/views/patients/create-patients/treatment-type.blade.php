@@ -3,7 +3,7 @@
     <div class="container py-3">
         <div class="row g-4">
             <div class="col-12 col-md-6" style="height:580px">
-                <div class="plan-box d-flex flex-column justify-content-end" data-plan-type="treatment" style="background-image: url('{{ asset('public') }}/assets/Treatment-Plan-Service-light.svg'); background-size: cover; background-position: center; " onclick="selectPlan(this)">
+                <div class="plan-box d-flex flex-column justify-content-end" data-plan-type="treatment" style="background-image: url('{{ asset('public') }}/assets/Treatment-Plan-Service-light.webp'); background-size: cover; background-position: center; " onclick="selectPlan(this)">
 
                     <div style="border-radius: 10px; background-color: #80C6C7; padding: 15px; text-align: justify;height: 160px;">
                         <div class="plan-title text-center text-white mb-2"  >Treatment Planning Service</div>
@@ -30,7 +30,7 @@
             </div>
 
             <div class="col-12 col-md-6" style="height:580px">
-                <div class="plan-box d-flex flex-column justify-content-end"  data-plan-type="aligners" style="background-image: url('{{ asset('public') }}/assets/Aligners-light.svg'); background-size: cover; background-position: center; " @if($change_plan == 'true') onclick="selectPlan(this)" @endif>
+                <div class="plan-box d-flex flex-column justify-content-end"  data-plan-type="aligners" style="background-image: url('{{ asset('public') }}/assets/Aligners-light.webp'); background-size: cover; background-position: center; " @if($change_plan == 'true') onclick="selectPlan(this)" @endif>
 
                     <div style="border-radius: 10px; background-color: #80C6C7; padding: 15px; text-align: justify; height: 160px;">
                         <div class="plan-title text-center text-white mb-2" >Aligners Full-Service</div>

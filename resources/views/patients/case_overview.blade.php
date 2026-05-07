@@ -1410,7 +1410,8 @@
             var filesLoaded = 0;
             var element = document.getElementById("progress-wrapper");
             var loadingBar = document.getElementById("loading-bar");
-            const buttons = document.querySelectorAll('.step-control');
+            // Scope step buttons to the primary viewer container only
+            const buttons = document.querySelectorAll('#hide-on-paste .step-control');
             // const labels = document.querySelectorAll('.step-trigger');
 
             var totalFiles = 2;
@@ -1499,7 +1500,8 @@
             camera.position.y = -6;
             scene.scale.set(0.02, 0.02, 0.02);
             controls.update();
-            const divs = document.querySelectorAll('.model-control');
+            // Scope model controls to the primary viewer container only
+            const divs = document.querySelectorAll('#hide-on-paste .model-control');
             divs.forEach(el => el.addEventListener('click', event => {
                 console.log(event.target.getAttribute("id"));
                 const objectid = event.target.getAttribute("id");

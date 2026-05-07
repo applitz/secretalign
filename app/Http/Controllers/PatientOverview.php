@@ -168,6 +168,7 @@ class PatientOverview extends Controller
             if ($data['patient']->treatment_link && $data['patient']->treatment_link !== '' && $data['patient']->treatment_link !== 'null') {
                 $data['stl_files'] = listPublicDriveFiles($data['patient']->treatment_link);
             }
+            // dd($data['stl_files']);
             $data['role'] = Auth::user()->role;
             return view("patients.case_overview", $data);
         }

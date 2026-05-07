@@ -110,7 +110,7 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
     $curl = curl_init();
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => $baseUri . '/api/cases/search?searchString=' . urlencode($searchString) . '&page=0',
+        CURLOPT_URL => $baseUri . '/api/v3/cases/search?searchString=' . urlencode($searchString) . '&page=0',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => [
             'Authorization: Bearer ' . $accessToken,
@@ -483,7 +483,7 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
     //                 $curl = curl_init();
 
     //                 curl_setopt_array($curl, array(
-    //                     CURLOPT_URL => $threeshape_region_uri.'/api/cases/search?searchString='.str_replace(" ", "%20", $three_shape_search_for_case).'&page=0',
+    //                     CURLOPT_URL => $threeshape_region_uri.'/api/v3/cases/search?searchString='.str_replace(" ", "%20", $three_shape_search_for_case).'&page=0',
     //                     CURLOPT_RETURNTRANSFER => true,
     //                     CURLOPT_ENCODING => '',
     //                     CURLOPT_MAXREDIRS => 10,

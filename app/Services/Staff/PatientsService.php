@@ -121,6 +121,9 @@ class PatientsService extends CommonFunction
                 // 'u.first_name as d_first_name',
                 // 'u.last_name as d_last_name',
                 DB::raw("CONCAT(u.first_name, ' ', u.last_name) as user_full_name"),
+                'u.postal_code',
+                'u.city',
+                'u.country',
                 'l.first_name as lab_first_name',
                 'l.last_name as lab_last_name'
             )
@@ -163,10 +166,17 @@ class PatientsService extends CommonFunction
 
                 'patientId' => $hashids->encode($patient->id),
                 'doctor' => $patient->user_full_name,
+                'country' => $patient->country,
                 'last_name' => $patient->last_name,
                 'first_name' => $patient->first_name,
                 'dob' => date_formate($patient->dob),
                 'treatment_type' => $patient->treatment_type == '2' ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-danger"> Aligners Full-Service </span>' : '<span class="badge fw-semi-bold rounded-pill status badge-soft-primary">Treatment Planning Service</span>',
+
+                'setup_type' => $patient->setup_type == '1'
+                                ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-danger">Final Setup with individual staging</span>'
+                                : ($patient->setup_type == '2'
+                                    ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-primary">Quick Setup</span>'
+                                    : ''),
                 'package' => '<span class="badge fw-semi-bold rounded-pill status badge-soft-primary">' . ($patient->pricing_package == 'AL-SECRET-CONFIDENCE' ? 'Confidence' : 'Select') . '</span>',
                 'status' => '<span class="badge fw-semi-bold rounded-pill status ' . (getPatientTreatmentPlanStatus($patient->status)) . '">'
                     . ($patient->status == "Waiting for Review from Advisor" ? "Waiting Advisor's Review" : ucfirst($patient->status))

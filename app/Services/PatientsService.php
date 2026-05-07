@@ -180,6 +180,11 @@ class PatientsService extends CommonFunction
                     . '</span>',
                 'due_date' => checkForRequestNewPlanExpriyDate($patient->id),
                 'treatment_type' => $patient->treatment_type == '2' ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-danger"> Aligners Full-Service </span>' : '<span class="badge fw-semi-bold rounded-pill status badge-soft-primary">Treatment Planning Service</span>',
+                'setup_type' => $patient->setup_type == '1'
+                                ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-danger">Final Setup with individual staging</span>'
+                                : ($patient->setup_type == '2'
+                                    ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-primary">Quick Setup</span>'
+                                    : ''),
                 'setup_approval_date' => $patient->setup_approval_date ? date_formate($patient->setup_approval_date) : '',
                 'case_overview' => '<a class="badge  badge-soft-primary text-600 btn-sm btn-reveal-sm transition-none" href="' . url('/patient/case-overview/' . $hashids->encode($patient->treatment_plan)) . '"
                                 data-boundary="viewport" aria-haspopup="true" aria-expanded="false">Case Overview</a>',

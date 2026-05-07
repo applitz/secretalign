@@ -298,7 +298,7 @@
                         </div>
                     @endif
 
-                    @if (@$patient->iframe_link && $patient->is_treatment_submitted == 1)
+                    @if ((@$patient->iframe_link && $patient->is_treatment_submitted == 1 && $patient->treatment_link != null) || $patient->treatment_link != null)
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading8">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"

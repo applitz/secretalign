@@ -67,7 +67,7 @@ class PatientDemo extends Controller
         }
         abort(403, 'Unauthorized request!');
     }
-    
+
     public function iframe(Request $request, $phase)
     {
         $whereClauses = [["tp.id", $this->hashids->decode($phase)], ["tp.is_deleted", 0],];

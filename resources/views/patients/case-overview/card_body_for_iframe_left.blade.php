@@ -70,21 +70,19 @@
                                 <ul class="list-group list-group-flush">
                                     @if ($patient->treat_upper_arch == 1)
                                         <li class="list-group-item">
-
-                                            <p class="text-muted mb-0"><i class="fas fa-check"></i> Treat Upper
-                                                Arch</p>
-
+                                            <p class="text-muted mb-0"><i class="fas fa-check"></i> Treat Upper Arch</p>
                                         </li>
                                     @endif
                                     @if ($patient->treat_lower_arch == 1)
                                         <li class="list-group-item">
-
-                                            <p class="text-muted mb-0"><i class="fas fa-check"></i> Treat Lower
-                                                Arch</p>
-
+                                            <p class="text-muted mb-0"><i class="fas fa-check"></i> Treat Lower Arch</p>
                                         </li>
                                     @endif
-                                    @if (@$patient->midline)
+                                </ul>
+
+                                @if (@$patient->midline)
+                                    <h5 class="card-title mt-2">Midline</h5>
+                                    <ul class="list-group list-group-flush">
                                         <li class="list-group-item">
 
                                             <p class="text-muted mb-0"><i class="fas fa-check"></i>
@@ -95,22 +93,36 @@
                                             @endif
 
                                         </li>
-                                    @endif
-                                    @if (@$patient->archform)
-                                        <li class="list-group-item">
+                                    </ul>
+                                @endif
 
+                                @if (@$patient->archform)
+                                    <h5 class="card-title mt-2">Archform</h5>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
                                             <p class="text-muted mb-0"><i class="fas fa-check"></i>
                                                 {{ ucfirst($patient->archform) }}
                                                 Archform</p>
                                             @if (@$patient->archform_notes)
                                                 <p class="text-muted mb-0">{{ $patient->archform_notes }}</p>
                                             @endif
-
                                         </li>
-                                    @endif
-                                    @if (@$patient->class)
-                                        <li class="list-group-item">
+                                    </ul>
+                                @endif
 
+                                @if (@$patient->class)
+                                    @php
+                                        $additional_attachments = [];
+                                        if (
+                                            $patient->additional_attachments != '' &&
+                                            $patient->additional_attachments != null
+                                        ) {
+                                            $additional_attachments = unserialize($patient->additional_attachments);
+                                        }
+                                    @endphp
+                                    <h5 class="card-title mt-2">Class</h5>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
                                             <p class="text-muted mb-0"><i class="fas fa-check"></i>
                                                 {{ ucfirst($patient->class) }} Class</p>
                                             @if (@$patient->class_notes)
@@ -118,8 +130,34 @@
                                             @endif
 
                                         </li>
+
+                                        @if (in_array('Bite Keeper', $additional_attachments))
+                                            <li class="list-group-item">
+                                                <p class="text-muted mb-0"><i class="fas fa-check"></i> Bite Keeper</p>
+                                            </li>
+                                        @endif
+
+                                        @if (in_array('Secret Wings', $additional_attachments))
+                                            <li class="list-group-item">
+                                                <p class="text-muted mb-0"><i class="fas fa-check"></i> Secret Wings</p>
+                                            </li>
+                                        @endif
+
+                                        @if (in_array('Secret Blocks', $additional_attachments))
+                                            <li class="list-group-item">
+                                                <p class="text-muted mb-0"><i class="fas fa-check"></i> Secret Blocks</p>
+                                            </li>
+                                        @endif
+                                    </ul>
+                                    <br>
+                                    @if($patient->is_new == '1')
+                                        @if($patient->button_outer != '' || $patient->button_inner != '' || $patient->ihook_outer != '' || $patient->ihook_inner != '' ||
+                                            $patient->precision_cut_outer != '' || $patient->precision_cut_inner != '' || $patient->power_arm_attachment_outer != '' || $patient->power_arm_attachment_inner != '' ||
+                                            $patient->power_ridge_outer != '' || $patient->power_ridge_inner != '' || $patient->bite_turbos != '' || $patient->bite_ramp != '')
+                                            @include('patients.case-overview.section1')
+                                        @endif
                                     @endif
-                                </ul>
+                                @endif
 
                                 <h5 class="card-title mt-2">Resolutions</h5>
                                 <ul class="list-group list-group-flush">
@@ -171,1626 +209,1579 @@
                                     @endif
                                 </ul>
 
-                                @php
-                                    $pcp_ur = [];
-                                    if ($patient->pcp_ur != '' && $patient->pcp_ur != null) {
-                                        $pcp_ur = unserialize($patient->pcp_ur);
-                                    }
-                                    $pcp_ul = [];
-                                    if ($patient->pcp_ul != '' && $patient->pcp_ul != null) {
-                                        $pcp_ul = unserialize($patient->pcp_ul);
-                                    }
-                                    $pcp_lr = [];
-                                    if ($patient->pcp_lr != '' && $patient->pcp_lr != null) {
-                                        $pcp_lr = unserialize($patient->pcp_lr);
-                                    }
-                                    $pcp_ll = [];
-                                    if ($patient->pcp_ll != '' && $patient->pcp_ll != null) {
-                                        $pcp_ll = unserialize($patient->pcp_ll);
-                                    }
-                                @endphp
-                                @if (count($pcp_ur) > 0 || count($pcp_ul) > 0 || count($pcp_lr) > 0 || count($pcp_ll) > 0)
-                                    <h5 class="mb-3 mt-2 card-title">Precision Cuts Placement</h5>
-                                    <div class="row ">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1  top left tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header">
-                                                                Right Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="pcp_ur" id="pcp_ur8"
-                                                                    @if (in_array(8, $pcp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="pcp_ur" id="pcp_ur7"
-                                                                    @if (in_array(7, $pcp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="pcp_ur" id="pcp_ur6"
-                                                                    @if (in_array(6, $pcp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="pcp_ur" id="pcp_ur5"
-                                                                    @if (in_array(5, $pcp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="pcp_ur" id="pcp_ur4"
-                                                                    @if (in_array(4, $pcp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="pcp_ur" id="pcp_ur3"
-                                                                    @if (in_array(3, $pcp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="pcp_ur" id="pcp_ur2"
-                                                                    @if (in_array(2, $pcp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="pcp_ur" id="pcp_ur1"
-                                                                    @if (in_array(1, $pcp_ur)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 top right tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header text-end">
-                                                                Left Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="pcp_ul" id="pcp_ul1"
-                                                                    @if (in_array(1, $pcp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="pcp_ul" id="pcp_ul2"
-                                                                    @if (in_array(2, $pcp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="pcp_ul" id="pcp_ul3"
-                                                                    @if (in_array(3, $pcp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="pcp_ul" id="pcp_ul4"
-                                                                    @if (in_array(4, $pcp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="pcp_ul" id="pcp_ul5"
-                                                                    @if (in_array(5, $pcp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="pcp_ul" id="pcp_ul6"
-                                                                    @if (in_array(6, $pcp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="pcp_ul" id="pcp_ul7"
-                                                                    @if (in_array(7, $pcp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="pcp_ul" id="pcp_ul8"
-                                                                    @if (in_array(8, $pcp_ul)) checked @endif
-                                                                    disabled>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="pcp_lr" id="pcp_lr8"
-                                                                    @if (in_array(8, $pcp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="pcp_lr" id="pcp_lr7"
-                                                                    @if (in_array(7, $pcp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="pcp_lr" id="pcp_lr6"
-                                                                    @if (in_array(6, $pcp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="pcp_lr" id="pcp_lr5"
-                                                                    @if (in_array(5, $pcp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="pcp_lr" id="pcp_lr4"
-                                                                    @if (in_array(4, $pcp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="pcp_lr" id="pcp_lr3"
-                                                                    @if (in_array(3, $pcp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="pcp_lr" id="pcp_lr2"
-                                                                    @if (in_array(2, $pcp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="pcp_lr" id="pcp_lr1"
-                                                                    @if (in_array(1, $pcp_lr)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                            <div class="card-footer">
-                                                                Right Lower
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 bottom right tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="pcp_ll" id="pcp_ll1"
-                                                                    @if (in_array(1, $pcp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="pcp_ll" id="pcp_ll2"
-                                                                    @if (in_array(2, $pcp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="pcp_ll" id="pcp_ll3"
-                                                                    @if (in_array(3, $pcp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="pcp_ll" id="pcp_ll4"
-                                                                    @if (in_array(4, $pcp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="pcp_ll" id="pcp_ll5"
-                                                                    @if (in_array(5, $pcp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="pcp_ll" id="pcp_ll6"
-                                                                    @if (in_array(6, $pcp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="pcp_ll" id="pcp_ll7"
-                                                                    @if (in_array(7, $pcp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="pcp_ll" id="pcp_ll8"
-                                                                    @if (in_array(8, $pcp_ll)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                            <div class="card-footer text-end">
-                                                                Left Lower
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                @if($patient->is_new == '1')
+                                    @if($patient->unerupted_teeth != '' || $patient->extracted_teeth != '' || $patient->tooth_movement_restrictions != '' || $patient->coil != '' || $patient->pontic != '' || $patient->bridge != '')
+                                         @include('patients.case-overview.section2')
+                                    @endif
                                 @endif
 
-                                @php
-                                    $ctp_ur = [];
-                                    if ($patient->ctp_ur != '' && $patient->ctp_ur != null) {
-                                        $ctp_ur = unserialize($patient->ctp_ur);
-                                    }
-                                    $ctp_ul = [];
-                                    if ($patient->ctp_ul != '' && $patient->ctp_ul != null) {
-                                        $ctp_ul = unserialize($patient->ctp_ul);
-                                    }
-                                    $ctp_lr = [];
-                                    if ($patient->ctp_lr != '' && $patient->ctp_lr != null) {
-                                        $ctp_lr = unserialize($patient->ctp_lr);
-                                    }
-                                    $ctp_ll = [];
-                                    if ($patient->ctp_ll != '' && $patient->ctp_ll != null) {
-                                        $ctp_ll = unserialize($patient->ctp_ll);
-                                    }
-                                @endphp
-                                @if (count($ctp_ur) > 0 || count($ctp_ul) > 0 || count($ctp_lr) > 0 || count($ctp_ll) > 0)
-                                    <h5 class="mb-3 mt-2 card-title">Cutouts Placement</h5>
-                                    <div class="row ">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1  top left tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header">
-                                                                Right Upper
+                                @if($patient->is_new == '0')
+                                    @php
+                                        $pcp_ur = [];
+                                        if ($patient->pcp_ur != '' && $patient->pcp_ur != null) {
+                                            $pcp_ur = unserialize($patient->pcp_ur);
+                                        }
+                                        $pcp_ul = [];
+                                        if ($patient->pcp_ul != '' && $patient->pcp_ul != null) {
+                                            $pcp_ul = unserialize($patient->pcp_ul);
+                                        }
+                                        $pcp_lr = [];
+                                        if ($patient->pcp_lr != '' && $patient->pcp_lr != null) {
+                                            $pcp_lr = unserialize($patient->pcp_lr);
+                                        }
+                                        $pcp_ll = [];
+                                        if ($patient->pcp_ll != '' && $patient->pcp_ll != null) {
+                                            $pcp_ll = unserialize($patient->pcp_ll);
+                                        }
+                                    @endphp
+                                    @if (count($pcp_ur) > 0 || count($pcp_ul) > 0 || count($pcp_lr) > 0 || count($pcp_ll) > 0)
+                                        <h5 class="mb-3 mt-2 card-title">Precision Cuts Placement</h5>
+                                        <div class="row ">
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1  top left tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header">
+                                                                    Right Upper
+                                                                </div>
+                                                                <div class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+                                                                    <input type="checkbox" class="tooth" data-number="8" name="pcp_ur" id="pcp_ur8" @if (in_array(8, $pcp_ur)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="7" name="pcp_ur" id="pcp_ur7" @if (in_array(7, $pcp_ur)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="6" name="pcp_ur" id="pcp_ur6" @if (in_array(6, $pcp_ur)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="5" name="pcp_ur" id="pcp_ur5" @if (in_array(5, $pcp_ur)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="4" name="pcp_ur" id="pcp_ur4" @if (in_array(4, $pcp_ur)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="3" name="pcp_ur" id="pcp_ur3" @if (in_array(3, $pcp_ur)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="2" name="pcp_ur" id="pcp_ur2" @if (in_array(2, $pcp_ur)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="1" name="pcp_ur" id="pcp_ur1" @if (in_array(1, $pcp_ur)) checked @endif disabled>
+                                                                </div>
                                                             </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 top right tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header text-end">
+                                                                    Left Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
 
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="ctp_ur" id="ctp_ur8"
-                                                                    @if (in_array(8, $ctp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="ctp_ur" id="ctp_ur7"
-                                                                    @if (in_array(7, $ctp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="ctp_ur" id="ctp_ur6"
-                                                                    @if (in_array(6, $ctp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="ctp_ur" id="ctp_ur5"
-                                                                    @if (in_array(5, $ctp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="ctp_ur" id="ctp_ur4"
-                                                                    @if (in_array(4, $ctp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="ctp_ur" id="ctp_ur3"
-                                                                    @if (in_array(3, $ctp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="ctp_ur" id="ctp_ur2"
-                                                                    @if (in_array(2, $ctp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="ctp_ur" id="ctp_ur1"
-                                                                    @if (in_array(1, $ctp_ur)) checked @endif
-                                                                    disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="pcp_ul" id="pcp_ul1"
+                                                                        @if (in_array(1, $pcp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="pcp_ul" id="pcp_ul2"
+                                                                        @if (in_array(2, $pcp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="pcp_ul" id="pcp_ul3"
+                                                                        @if (in_array(3, $pcp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="pcp_ul" id="pcp_ul4"
+                                                                        @if (in_array(4, $pcp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="pcp_ul" id="pcp_ul5"
+                                                                        @if (in_array(5, $pcp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="pcp_ul" id="pcp_ul6"
+                                                                        @if (in_array(6, $pcp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="pcp_ul" id="pcp_ul7"
+                                                                        @if (in_array(7, $pcp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="pcp_ul" id="pcp_ul8"
+                                                                        @if (in_array(8, $pcp_ul)) checked @endif
+                                                                        disabled>
+                                                                </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 top right tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header text-end">
-                                                                Left Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
 
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="ctp_ul" id="ctp_ul1"
-                                                                    @if (in_array(1, $ctp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="ctp_ul" id="ctp_ul2"
-                                                                    @if (in_array(2, $ctp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="ctp_ul" id="ctp_ul3"
-                                                                    @if (in_array(3, $ctp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="ctp_ul" id="ctp_ul4"
-                                                                    @if (in_array(4, $ctp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="ctp_ul" id="ctp_ul5"
-                                                                    @if (in_array(5, $ctp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="ctp_ul" id="ctp_ul6"
-                                                                    @if (in_array(6, $ctp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="ctp_ul" id="ctp_ul7"
-                                                                    @if (in_array(7, $ctp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="ctp_ul" id="ctp_ul8"
-                                                                    @if (in_array(8, $ctp_ul)) checked @endif
-                                                                    disabled>
-                                                            </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
 
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="ctp_lr" id="ctp_lr8"
-                                                                    @if (in_array(8, $ctp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="ctp_lr" id="ctp_lr7"
-                                                                    @if (in_array(7, $ctp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="ctp_lr" id="ctp_lr6"
-                                                                    @if (in_array(6, $ctp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="ctp_lr" id="ctp_lr5"
-                                                                    @if (in_array(5, $ctp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="ctp_lr" id="ctp_lr4"
-                                                                    @if (in_array(4, $ctp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="ctp_lr" id="ctp_lr3"
-                                                                    @if (in_array(3, $ctp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="ctp_lr" id="ctp_lr2"
-                                                                    @if (in_array(2, $ctp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="ctp_lr" id="ctp_lr1"
-                                                                    @if (in_array(1, $ctp_lr)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                            <div class="card-footer">
-                                                                Right Lower
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="pcp_lr" id="pcp_lr8"
+                                                                        @if (in_array(8, $pcp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="pcp_lr" id="pcp_lr7"
+                                                                        @if (in_array(7, $pcp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="pcp_lr" id="pcp_lr6"
+                                                                        @if (in_array(6, $pcp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="pcp_lr" id="pcp_lr5"
+                                                                        @if (in_array(5, $pcp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="pcp_lr" id="pcp_lr4"
+                                                                        @if (in_array(4, $pcp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="pcp_lr" id="pcp_lr3"
+                                                                        @if (in_array(3, $pcp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="pcp_lr" id="pcp_lr2"
+                                                                        @if (in_array(2, $pcp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="pcp_lr" id="pcp_lr1"
+                                                                        @if (in_array(1, $pcp_lr)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    Right Lower
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 bottom right tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="ctp_ll" id="ctp_ll1"
-                                                                    @if (in_array(1, $ctp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="ctp_ll" id="ctp_ll2"
-                                                                    @if (in_array(2, $ctp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="ctp_ll" id="ctp_ll3"
-                                                                    @if (in_array(3, $ctp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="ctp_ll" id="ctp_ll4"
-                                                                    @if (in_array(4, $ctp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="ctp_ll" id="ctp_ll5"
-                                                                    @if (in_array(5, $ctp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="ctp_ll" id="ctp_ll6"
-                                                                    @if (in_array(6, $ctp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="ctp_ll" id="ctp_ll7"
-                                                                    @if (in_array(7, $ctp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="ctp_ll" id="ctp_ll8"
-                                                                    @if (in_array(8, $ctp_ll)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                            <div class="card-footer text-end">
-                                                                Left Lower
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @php
-                                    $ihook_ur = [];
-                                    if (!empty($patient->ihook_ur)) {
-                                        $ihook_ur = @unserialize($patient->ihook_ur) ?: [];
-                                    }
-                                    $ihook_ul = [];
-                                    if (!empty($patient->ihook_ul)) {
-                                        $ihook_ul = @unserialize($patient->ihook_ul) ?: [];
-                                    }
-                                    $ihook_lr = [];
-                                    if (!empty($patient->ihook_lr)) {
-                                        $ihook_lr = @unserialize($patient->ihook_lr) ?: [];
-                                    }
-                                    $ihook_ll = [];
-                                    if (!empty($patient->ihook_ll)) {
-                                        $ihook_ll = @unserialize($patient->ihook_ll) ?: [];
-                                    }
-                                @endphp
-
-                                @if (count($ihook_ur) > 0 || count($ihook_ul) > 0 || count($ihook_lr) > 0 || count($ihook_ll) > 0)
-                                    <h5 class="mb-3 mt-2 card-title">I-Hook</h5>
-                                    <div class="row ">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1  top left tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header">
-                                                                Right Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="ihook_ur"
-                                                                    id="ihook_ur8"
-                                                                    @if (in_array(8, $ihook_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="ihook_ur"
-                                                                    id="ihook_ur7"
-                                                                    @if (in_array(7, $ihook_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="ihook_ur"
-                                                                    id="ihook_ur6"
-                                                                    @if (in_array(6, $ihook_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="ihook_ur"
-                                                                    id="ihook_ur5"
-                                                                    @if (in_array(5, $ihook_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="ihook_ur"
-                                                                    id="ihook_ur4"
-                                                                    @if (in_array(4, $ihook_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="ihook_ur"
-                                                                    id="ihook_ur3"
-                                                                    @if (in_array(3, $ihook_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="ihook_ur"
-                                                                    id="ihook_ur2"
-                                                                    @if (in_array(2, $ihook_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="ihook_ur"
-                                                                    id="ihook_ur1"
-                                                                    @if (in_array(1, $ihook_ur)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 top right tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header text-end">
-                                                                Left Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="ihook_ul"
-                                                                    id="ihook_ul1"
-                                                                    @if (in_array(1, $ihook_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="ihook_ul"
-                                                                    id="ihook_ul2"
-                                                                    @if (in_array(2, $ihook_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="ihook_ul"
-                                                                    id="ihook_ul3"
-                                                                    @if (in_array(3, $ihook_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="ihook_ul"
-                                                                    id="ihook_ul4"
-                                                                    @if (in_array(4, $ihook_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="ihook_ul"
-                                                                    id="ihook_ul5"
-                                                                    @if (in_array(5, $ihook_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="ihook_ul"
-                                                                    id="ihook_ul6"
-                                                                    @if (in_array(6, $ihook_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="ihook_ul"
-                                                                    id="ihook_ul7"
-                                                                    @if (in_array(7, $ihook_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="ihook_ul"
-                                                                    id="ihook_ul8"
-                                                                    @if (in_array(8, $ihook_ul)) checked @endif
-                                                                    disabled>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="ihook_lr"
-                                                                    id="ihook_lr8"
-                                                                    @if (in_array(8, $ihook_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="ihook_lr"
-                                                                    id="ihook_lr7"
-                                                                    @if (in_array(7, $ihook_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="ihook_lr"
-                                                                    id="ihook_lr6"
-                                                                    @if (in_array(6, $ihook_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="ihook_lr"
-                                                                    id="ihook_lr5"
-                                                                    @if (in_array(5, $ihook_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="ihook_lr"
-                                                                    id="ihook_lr4"
-                                                                    @if (in_array(4, $ihook_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="ihook_lr"
-                                                                    id="ihook_lr3"
-                                                                    @if (in_array(3, $ihook_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="ihook_lr"
-                                                                    id="ihook_lr2"
-                                                                    @if (in_array(2, $ihook_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="ihook_lr"
-                                                                    id="ihook_lr1"
-                                                                    @if (in_array(1, $ihook_lr)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                            <div class="card-footer">
-                                                                Right Lower
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 bottom right tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="ihook_ll"
-                                                                    id="ihook_ll1"
-                                                                    @if (in_array(1, $ihook_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="ihook_ll"
-                                                                    id="ihook_ll2"
-                                                                    @if (in_array(2, $ihook_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="ihook_ll"
-                                                                    id="ihook_ll3"
-                                                                    @if (in_array(3, $ihook_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="ihook_ll"
-                                                                    id="ihook_ll4"
-                                                                    @if (in_array(4, $ihook_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="ihook_ll"
-                                                                    id="ihook_ll5"
-                                                                    @if (in_array(5, $ihook_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="ihook_ll"
-                                                                    id="ihook_ll6"
-                                                                    @if (in_array(6, $ihook_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="ihook_ll"
-                                                                    id="ihook_ll7"
-                                                                    @if (in_array(7, $ihook_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="ihook_ll"
-                                                                    id="ihook_ll8"
-                                                                    @if (in_array(8, $ihook_ll)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                            <div class="card-footer text-end">
-                                                                Left Lower
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-
-
-                                @php
-                                    $ofp_ur = [];
-                                    if ($patient->ofp_ur != '' && $patient->ofp_ur != null) {
-                                        $ofp_ur = unserialize($patient->ofp_ur);
-                                    }
-                                    $ofp_ul = [];
-                                    if ($patient->ofp_ul != '' && $patient->ofp_ul != null) {
-                                        $ofp_ul = unserialize($patient->ofp_ul);
-                                    }
-                                    $ofp_lr = [];
-                                    if ($patient->ofp_lr != '' && $patient->ofp_lr != null) {
-                                        $ofp_lr = unserialize($patient->ofp_lr);
-                                    }
-                                    $ofp_ll = [];
-                                    if ($patient->ofp_ll != '' && $patient->ofp_ll != null) {
-                                        $ofp_ll = unserialize($patient->ofp_ll);
-                                    }
-                                @endphp
-
-                                @if (count($ofp_ur) > 0 || count($ofp_ul) > 0 || count($ofp_lr) > 0 || count($ofp_ll) > 0)
-                                    <h5 class="mb-3 mt-2 card-title">Open space for future Prosthesis</h5>
-                                    <div class="row ">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1  top left tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header">
-                                                                Right Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="ofp_ur"
-                                                                    id="ofp_ur8"
-                                                                    @if (in_array(8, $ofp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="ofp_ur"
-                                                                    id="ofp_ur7"
-                                                                    @if (in_array(7, $ofp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="ofp_ur"
-                                                                    id="ofp_ur6"
-                                                                    @if (in_array(6, $ofp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="ofp_ur"
-                                                                    id="ofp_ur5"
-                                                                    @if (in_array(5, $ofp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="ofp_ur"
-                                                                    id="ofp_ur4"
-                                                                    @if (in_array(4, $ofp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="ofp_ur"
-                                                                    id="ofp_ur3"
-                                                                    @if (in_array(3, $ofp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="ofp_ur"
-                                                                    id="ofp_ur2"
-                                                                    @if (in_array(2, $ofp_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="ofp_ur"
-                                                                    id="ofp_ur1"
-                                                                    @if (in_array(1, $ofp_ur)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 top right tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header text-end">
-                                                                Left Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="ofp_ul"
-                                                                    id="ofp_ul1"
-                                                                    @if (in_array(1, $ofp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="ofp_ul"
-                                                                    id="ofp_ul2"
-                                                                    @if (in_array(2, $ofp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="ofp_ul"
-                                                                    id="ofp_ul3"
-                                                                    @if (in_array(3, $ofp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="ofp_ul"
-                                                                    id="ofp_ul4"
-                                                                    @if (in_array(4, $ofp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="ofp_ul"
-                                                                    id="ofp_ul5"
-                                                                    @if (in_array(5, $ofp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="ofp_ul"
-                                                                    id="ofp_ul6"
-                                                                    @if (in_array(6, $ofp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="ofp_ul"
-                                                                    id="ofp_ul7"
-                                                                    @if (in_array(7, $ofp_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="ofp_ul"
-                                                                    id="ofp_ul8"
-                                                                    @if (in_array(8, $ofp_ul)) checked @endif
-                                                                    disabled>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="ofp_lr"
-                                                                    id="ofp_lr8"
-                                                                    @if (in_array(8, $ofp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="ofp_lr"
-                                                                    id="ofp_lr7"
-                                                                    @if (in_array(7, $ofp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="ofp_lr"
-                                                                    id="ofp_lr6"
-                                                                    @if (in_array(6, $ofp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="ofp_lr"
-                                                                    id="ofp_lr5"
-                                                                    @if (in_array(5, $ofp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="ofp_lr"
-                                                                    id="ofp_lr4"
-                                                                    @if (in_array(4, $ofp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="ofp_lr"
-                                                                    id="ofp_lr3"
-                                                                    @if (in_array(3, $ofp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="ofp_lr"
-                                                                    id="ofp_lr2"
-                                                                    @if (in_array(2, $ofp_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="ofp_lr"
-                                                                    id="ofp_lr1"
-                                                                    @if (in_array(1, $ofp_lr)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                            <div class="card-footer">
-                                                                Right Lower
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 bottom right tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="ofp_ll"
-                                                                    id="ofp_ll1"
-                                                                    @if (in_array(1, $ofp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="ofp_ll"
-                                                                    id="ofp_ll2"
-                                                                    @if (in_array(2, $ofp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="ofp_ll"
-                                                                    id="ofp_ll3"
-                                                                    @if (in_array(3, $ofp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="ofp_ll"
-                                                                    id="ofp_ll4"
-                                                                    @if (in_array(4, $ofp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="ofp_ll"
-                                                                    id="ofp_ll5"
-                                                                    @if (in_array(5, $ofp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="ofp_ll"
-                                                                    id="ofp_ll6"
-                                                                    @if (in_array(6, $ofp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="ofp_ll"
-                                                                    id="ofp_ll7"
-                                                                    @if (in_array(7, $ofp_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="ofp_ll"
-                                                                    id="ofp_ll8"
-                                                                    @if (in_array(8, $ofp_ll)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                            <div class="card-footer text-end">
-                                                                Left Lower
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @php
-                                    $tmr_ur = [];
-                                    if ($patient->tmr_ur != '' && $patient->tmr_ur != null) {
-                                        $tmr_ur = unserialize($patient->tmr_ur);
-                                    }
-                                    $tmr_ul = [];
-                                    if ($patient->tmr_ul != '' && $patient->tmr_ul != null) {
-                                        $tmr_ul = unserialize($patient->tmr_ul);
-                                    }
-                                    $tmr_lr = [];
-                                    if ($patient->tmr_lr != '' && $patient->tmr_lr != null) {
-                                        $tmr_lr = unserialize($patient->tmr_lr);
-                                    }
-                                    $tmr_ll = [];
-                                    if ($patient->tmr_ll != '' && $patient->tmr_ll != null) {
-                                        $tmr_ll = unserialize($patient->tmr_ll);
-                                    }
-                                @endphp
-                                @if (count($tmr_ur) > 0 || count($tmr_ul) > 0 || count($tmr_lr) > 0 || count($tmr_ll) > 0)
-                                    <h5 class="mb-3 mt-2 card-title">Tooth Movement Restrictions</h5>
-                                    <div class="row ">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1  top left tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header">
-                                                                Right Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="tmr_ur"
-                                                                    id="tmr_ur8"
-                                                                    @if (in_array(8, $tmr_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="tmr_ur"
-                                                                    id="tmr_ur7"
-                                                                    @if (in_array(7, $tmr_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="tmr_ur"
-                                                                    id="tmr_ur6"
-                                                                    @if (in_array(6, $tmr_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="tmr_ur"
-                                                                    id="tmr_ur5"
-                                                                    @if (in_array(5, $tmr_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="tmr_ur"
-                                                                    id="tmr_ur4"
-                                                                    @if (in_array(4, $tmr_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="tmr_ur"
-                                                                    id="tmr_ur3"
-                                                                    @if (in_array(3, $tmr_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="tmr_ur"
-                                                                    id="tmr_ur2"
-                                                                    @if (in_array(2, $tmr_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="tmr_ur"
-                                                                    id="tmr_ur1"
-                                                                    @if (in_array(1, $tmr_ur)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 top right tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header text-end">
-                                                                Left Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="tmr_ul"
-                                                                    id="tmr_ul1"
-                                                                    @if (in_array(1, $tmr_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="tmr_ul"
-                                                                    id="tmr_ul2"
-                                                                    @if (in_array(2, $tmr_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="tmr_ul"
-                                                                    id="tmr_ul3"
-                                                                    @if (in_array(3, $tmr_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="tmr_ul"
-                                                                    id="tmr_ul4"
-                                                                    @if (in_array(4, $tmr_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="tmr_ul"
-                                                                    id="tmr_ul5"
-                                                                    @if (in_array(5, $tmr_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="tmr_ul"
-                                                                    id="tmr_ul6"
-                                                                    @if (in_array(6, $tmr_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="tmr_ul"
-                                                                    id="tmr_ul7"
-                                                                    @if (in_array(7, $tmr_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="tmr_ul"
-                                                                    id="tmr_ul8"
-                                                                    @if (in_array(8, $tmr_ul)) checked @endif
-                                                                    disabled>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="tmr_lr"
-                                                                    id="tmr_lr8"
-                                                                    @if (in_array(8, $tmr_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="tmr_lr"
-                                                                    id="tmr_lr7"
-                                                                    @if (in_array(7, $tmr_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="tmr_lr"
-                                                                    id="tmr_lr6"
-                                                                    @if (in_array(6, $tmr_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="tmr_lr"
-                                                                    id="tmr_lr5"
-                                                                    @if (in_array(5, $tmr_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="tmr_lr"
-                                                                    id="tmr_lr4"
-                                                                    @if (in_array(4, $tmr_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="tmr_lr"
-                                                                    id="tmr_lr3"
-                                                                    @if (in_array(3, $tmr_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="tmr_lr"
-                                                                    id="tmr_lr2"
-                                                                    @if (in_array(2, $tmr_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="tmr_lr"
-                                                                    id="tmr_lr1"
-                                                                    @if (in_array(1, $tmr_lr)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                            <div class="card-footer">
-                                                                Right Lower
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 bottom right tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="tmr_ll"
-                                                                    id="tmr_ll1"
-                                                                    @if (in_array(1, $tmr_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="tmr_ll"
-                                                                    id="tmr_ll2"
-                                                                    @if (in_array(2, $tmr_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="tmr_ll"
-                                                                    id="tmr_ll3"
-                                                                    @if (in_array(3, $tmr_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="tmr_ll"
-                                                                    id="tmr_ll4"
-                                                                    @if (in_array(4, $tmr_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="tmr_ll"
-                                                                    id="tmr_ll5"
-                                                                    @if (in_array(5, $tmr_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="tmr_ll"
-                                                                    id="tmr_ll6"
-                                                                    @if (in_array(6, $tmr_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="tmr_ll"
-                                                                    id="tmr_ll7"
-                                                                    @if (in_array(7, $tmr_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="tmr_ll"
-                                                                    id="tmr_ll8"
-                                                                    @if (in_array(8, $tmr_ll)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                            <div class="card-footer text-end">
-                                                                Left Lower
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @php
-                                    $mut_ur = [];
-                                    if ($patient->mut_ur != '' && $patient->mut_ur != null) {
-                                        $mut_ur = unserialize($patient->mut_ur);
-                                    }
-                                    $mut_ul = [];
-                                    if ($patient->mut_ul != '' && $patient->mut_ul != null) {
-                                        $mut_ul = unserialize($patient->mut_ul);
-                                    }
-                                    $mut_lr = [];
-                                    if ($patient->mut_lr != '' && $patient->mut_lr != null) {
-                                        $mut_lr = unserialize($patient->mut_lr);
-                                    }
-                                    $mut_ll = [];
-                                    if ($patient->mut_ll != '' && $patient->mut_ll != null) {
-                                        $mut_ll = unserialize($patient->mut_ll);
-                                    }
-                                @endphp
-                                @if (count($mut_ur) > 0 || count($mut_ul) > 0 || count($mut_lr) > 0 || count($mut_ll) > 0)
-                                    <h5 class=" my-3 mt-2 card-title">Missing or Unerupted teeth</h5>
-                                    <div class="row ">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1 top left tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header">
-                                                                Right Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="mut_ur"
-                                                                    id="mut_ur8"
-                                                                    @if (in_array(8, $mut_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="mut_ur"
-                                                                    id="mut_ur7"
-                                                                    @if (in_array(7, $mut_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="mut_ur"
-                                                                    id="mut_ur6"
-                                                                    @if (in_array(6, $mut_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="mut_ur"
-                                                                    id="mut_ur5"
-                                                                    @if (in_array(5, $mut_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="mut_ur"
-                                                                    id="mut_ur4"
-                                                                    @if (in_array(4, $mut_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="mut_ur"
-                                                                    id="mut_ur3"
-                                                                    @if (in_array(3, $mut_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="mut_ur"
-                                                                    id="mut_ur2"
-                                                                    @if (in_array(2, $mut_ur)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="mut_ur"
-                                                                    id="mut_ur1"
-                                                                    @if (in_array(1, $mut_ur)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 top right tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header text-end">
-                                                                Left Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
-
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="mut_ul"
-                                                                    id="mut_ul1"
-                                                                    @if (in_array(1, $mut_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="mut_ul"
-                                                                    id="mut_ul2"
-                                                                    @if (in_array(2, $mut_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="mut_ul"
-                                                                    id="mut_ul3"
-                                                                    @if (in_array(3, $mut_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="mut_ul"
-                                                                    id="mut_ul4"
-                                                                    @if (in_array(4, $mut_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="mut_ul"
-                                                                    id="mut_ul5"
-                                                                    @if (in_array(5, $mut_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="mut_ul"
-                                                                    id="mut_ul6"
-                                                                    @if (in_array(6, $mut_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="mut_ul"
-                                                                    id="mut_ul7"
-                                                                    @if (in_array(7, $mut_ul)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="mut_ul"
-                                                                    id="mut_ul8"
-                                                                    @if (in_array(8, $mut_ul)) checked @endif
-                                                                    disabled>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="mut_lr"
-                                                                    id="mut_lr8"
-                                                                    @if (in_array(8, $mut_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="mut_lr"
-                                                                    id="mut_lr7"
-                                                                    @if (in_array(7, $mut_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="mut_lr"
-                                                                    id="mut_lr6"
-                                                                    @if (in_array(6, $mut_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="mut_lr"
-                                                                    id="mut_lr5"
-                                                                    @if (in_array(5, $mut_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="mut_lr"
-                                                                    id="mut_lr4"
-                                                                    @if (in_array(4, $mut_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="mut_lr"
-                                                                    id="mut_lr3"
-                                                                    @if (in_array(3, $mut_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="mut_lr"
-                                                                    id="mut_lr2"
-                                                                    @if (in_array(2, $mut_lr)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="mut_lr"
-                                                                    id="mut_lr1"
-                                                                    @if (in_array(1, $mut_lr)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                            <div class="card-footer">
-                                                                Right Lower
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 tw bottom right">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="mut_ll"
-                                                                    id="mut_ll1"
-                                                                    @if (in_array(1, $mut_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="mut_ll"
-                                                                    id="mut_ll2"
-                                                                    @if (in_array(2, $mut_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="mut_ll"
-                                                                    id="mut_ll3"
-                                                                    @if (in_array(3, $mut_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="mut_ll"
-                                                                    id="mut_ll4"
-                                                                    @if (in_array(4, $mut_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="mut_ll"
-                                                                    id="mut_ll5"
-                                                                    @if (in_array(5, $mut_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="mut_ll"
-                                                                    id="mut_ll6"
-                                                                    @if (in_array(6, $mut_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="mut_ll"
-                                                                    id="mut_ll7"
-                                                                    @if (in_array(7, $mut_ll)) checked @endif
-                                                                    disabled>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="mut_ll"
-                                                                    id="mut_ll8"
-                                                                    @if (in_array(8, $mut_ll)) checked @endif
-                                                                    disabled>
-                                                            </div>
-                                                            <div class="card-footer text-end">
-                                                                Left Lower
+                                                    <div class="col-xs-6 col-sm-6 px-1 bottom right tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+                                                                    <input type="checkbox" class="tooth" data-number="1" name="pcp_ll" id="pcp_ll1" @if (in_array(1, $pcp_ll)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="2" name="pcp_ll" id="pcp_ll2" @if (in_array(2, $pcp_ll)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="3" name="pcp_ll" id="pcp_ll3" @if (in_array(3, $pcp_ll)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="4" name="pcp_ll" id="pcp_ll4" @if (in_array(4, $pcp_ll)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="5" name="pcp_ll" id="pcp_ll5" @if (in_array(5, $pcp_ll)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="6" name="pcp_ll" id="pcp_ll6" @if (in_array(6, $pcp_ll)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="7" name="pcp_ll" id="pcp_ll7" @if (in_array(7, $pcp_ll)) checked @endif disabled>
+                                                                    <input type="checkbox" class="tooth" data-number="8" name="pcp_ll" id="pcp_ll8" @if (in_array(8, $pcp_ll)) checked @endif disabled>
+                                                                </div>
+                                                                <div class="card-footer text-end"> Left Lower </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endif
+                                    @endif
 
-                                @php
-                                    $tbe_ur = [];
-                                    if ($patient->tbe_ur != '' && $patient->tbe_ur != null) {
-                                        $tbe_ur = unserialize($patient->tbe_ur);
-                                    }
+                                    @php
+                                        $ctp_ur = [];
+                                        if ($patient->ctp_ur != '' && $patient->ctp_ur != null) {
+                                            $ctp_ur = unserialize($patient->ctp_ur);
+                                        }
+                                        $ctp_ul = [];
+                                        if ($patient->ctp_ul != '' && $patient->ctp_ul != null) {
+                                            $ctp_ul = unserialize($patient->ctp_ul);
+                                        }
+                                        $ctp_lr = [];
+                                        if ($patient->ctp_lr != '' && $patient->ctp_lr != null) {
+                                            $ctp_lr = unserialize($patient->ctp_lr);
+                                        }
+                                        $ctp_ll = [];
+                                        if ($patient->ctp_ll != '' && $patient->ctp_ll != null) {
+                                            $ctp_ll = unserialize($patient->ctp_ll);
+                                        }
+                                    @endphp
+                                    @if (count($ctp_ur) > 0 || count($ctp_ul) > 0 || count($ctp_lr) > 0 || count($ctp_ll) > 0)
+                                        <h5 class="mb-3 mt-2 card-title">Cutouts Placement</h5>
+                                        <div class="row ">
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1  top left tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header">
+                                                                    Right Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
 
-                                    $tbe_ul = [];
-                                    if ($patient->tbe_ul != '' && $patient->tbe_ul != null) {
-                                        $tbe_ul = unserialize($patient->tbe_ul);
-                                    }
-                                    $tbe_lr = [];
-                                    if ($patient->tbe_lr != '' && $patient->tbe_lr != null) {
-                                        $tbe_lr = unserialize($patient->tbe_lr);
-                                    }
-                                    $tbe_ll = [];
-                                    if ($patient->tbe_ll != '' && $patient->tbe_ll != null) {
-                                        $tbe_ll = unserialize($patient->tbe_ll);
-                                    }
-                                @endphp
-                                @if (count($tbe_ur) > 0 || count($tbe_ul) > 0 || count($tbe_lr) > 0 || count($tbe_ll) > 0)
-                                    <h5 class=" my-3 mt-2 card-title">To be Extracted</h5>
-                                    <div class="row ">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1 top left tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header">
-                                                                Right Upper
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="ctp_ur" id="ctp_ur8"
+                                                                        @if (in_array(8, $ctp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="ctp_ur" id="ctp_ur7"
+                                                                        @if (in_array(7, $ctp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="ctp_ur" id="ctp_ur6"
+                                                                        @if (in_array(6, $ctp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="ctp_ur" id="ctp_ur5"
+                                                                        @if (in_array(5, $ctp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="ctp_ur" id="ctp_ur4"
+                                                                        @if (in_array(4, $ctp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="ctp_ur" id="ctp_ur3"
+                                                                        @if (in_array(3, $ctp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="ctp_ur" id="ctp_ur2"
+                                                                        @if (in_array(2, $ctp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="ctp_ur" id="ctp_ur1"
+                                                                        @if (in_array(1, $ctp_ur)) checked @endif
+                                                                        disabled>
+                                                                </div>
                                                             </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 top right tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header text-end">
+                                                                    Left Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
 
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="tbe_ur"
-                                                                    id="tbe_ur8"
-                                                                    @if (in_array(8, $tbe_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="tbe_ur"
-                                                                    id="tbe_ur7"
-                                                                    @if (in_array(7, $tbe_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="tbe_ur"
-                                                                    id="tbe_ur6"
-                                                                    @if (in_array(6, $tbe_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="tbe_ur"
-                                                                    id="tbe_ur5"
-                                                                    @if (in_array(5, $tbe_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="tbe_ur"
-                                                                    id="tbe_ur4"
-                                                                    @if (in_array(4, $tbe_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="tbe_ur"
-                                                                    id="tbe_ur3"
-                                                                    @if (in_array(3, $tbe_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="tbe_ur"
-                                                                    id="tbe_ur2"
-                                                                    @if (in_array(2, $tbe_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="tbe_ur"
-                                                                    id="tbe_ur1"
-                                                                    @if (in_array(1, $tbe_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="ctp_ul" id="ctp_ul1"
+                                                                        @if (in_array(1, $ctp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="ctp_ul" id="ctp_ul2"
+                                                                        @if (in_array(2, $ctp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="ctp_ul" id="ctp_ul3"
+                                                                        @if (in_array(3, $ctp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="ctp_ul" id="ctp_ul4"
+                                                                        @if (in_array(4, $ctp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="ctp_ul" id="ctp_ul5"
+                                                                        @if (in_array(5, $ctp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="ctp_ul" id="ctp_ul6"
+                                                                        @if (in_array(6, $ctp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="ctp_ul" id="ctp_ul7"
+                                                                        @if (in_array(7, $ctp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="ctp_ul" id="ctp_ul8"
+                                                                        @if (in_array(8, $ctp_ul)) checked @endif
+                                                                        disabled>
+                                                                </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 tw top right">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header text-end">
-                                                                Left Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
 
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="tbe_ul"
-                                                                    id="tbe_ul1"
-                                                                    @if (in_array(1, $tbe_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="tbe_ul"
-                                                                    id="tbe_ul2"
-                                                                    @if (in_array(2, $tbe_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="tbe_ul"
-                                                                    id="tbe_ul3"
-                                                                    @if (in_array(3, $tbe_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="tbe_ul"
-                                                                    id="tbe_ul4"
-                                                                    @if (in_array(4, $tbe_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="tbe_ul"
-                                                                    id="tbe_ul5"
-                                                                    @if (in_array(5, $tbe_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="tbe_ul"
-                                                                    id="tbe_ul6"
-                                                                    @if (in_array(6, $tbe_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="tbe_ul"
-                                                                    id="tbe_ul7"
-                                                                    @if (in_array(7, $tbe_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="tbe_ul"
-                                                                    id="tbe_ul8"
-                                                                    @if (in_array(8, $tbe_ul)) checked @endif>
-                                                            </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
 
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="tbe_lr"
-                                                                    id="tbe_lr8"
-                                                                    @if (in_array(8, $tbe_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="tbe_lr"
-                                                                    id="tbe_lr7"
-                                                                    @if (in_array(7, $tbe_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="tbe_lr"
-                                                                    id="tbe_lr6"
-                                                                    @if (in_array(6, $tbe_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="tbe_lr"
-                                                                    id="tbe_lr5"
-                                                                    @if (in_array(5, $tbe_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="tbe_lr"
-                                                                    id="tbe_lr4"
-                                                                    @if (in_array(4, $tbe_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="tbe_lr"
-                                                                    id="tbe_lr3"
-                                                                    @if (in_array(3, $tbe_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="tbe_lr"
-                                                                    id="tbe_lr2"
-                                                                    @if (in_array(2, $tbe_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="tbe_lr"
-                                                                    id="tbe_lr1"
-                                                                    @if (in_array(1, $tbe_lr)) checked @endif>
-                                                            </div>
-                                                            <div class="card-footer">
-                                                                Right Lower
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="ctp_lr" id="ctp_lr8"
+                                                                        @if (in_array(8, $ctp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="ctp_lr" id="ctp_lr7"
+                                                                        @if (in_array(7, $ctp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="ctp_lr" id="ctp_lr6"
+                                                                        @if (in_array(6, $ctp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="ctp_lr" id="ctp_lr5"
+                                                                        @if (in_array(5, $ctp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="ctp_lr" id="ctp_lr4"
+                                                                        @if (in_array(4, $ctp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="ctp_lr" id="ctp_lr3"
+                                                                        @if (in_array(3, $ctp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="ctp_lr" id="ctp_lr2"
+                                                                        @if (in_array(2, $ctp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="ctp_lr" id="ctp_lr1"
+                                                                        @if (in_array(1, $ctp_lr)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    Right Lower
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 tw bottom right">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+                                                    <div class="col-xs-6 col-sm-6 px-1 bottom right tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
 
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="tbe_ll"
-                                                                    id="tbe_ll1"
-                                                                    @if (in_array(1, $tbe_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="tbe_ll"
-                                                                    id="tbe_ll2"
-                                                                    @if (in_array(2, $tbe_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="tbe_ll"
-                                                                    id="tbe_ll3"
-                                                                    @if (in_array(3, $tbe_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="tbe_ll"
-                                                                    id="tbe_ll4"
-                                                                    @if (in_array(4, $tbe_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="tbe_ll"
-                                                                    id="tbe_ll5"
-                                                                    @if (in_array(5, $tbe_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="tbe_ll"
-                                                                    id="tbe_ll6"
-                                                                    @if (in_array(6, $tbe_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="tbe_ll"
-                                                                    id="tbe_ll7"
-                                                                    @if (in_array(7, $tbe_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="tbe_ll"
-                                                                    id="tbe_ll8"
-                                                                    @if (in_array(8, $tbe_ll)) checked @endif>
-                                                            </div>
-                                                            <div class="card-footer text-end">
-                                                                Left Lower
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="ctp_ll" id="ctp_ll1"
+                                                                        @if (in_array(1, $ctp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="ctp_ll" id="ctp_ll2"
+                                                                        @if (in_array(2, $ctp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="ctp_ll" id="ctp_ll3"
+                                                                        @if (in_array(3, $ctp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="ctp_ll" id="ctp_ll4"
+                                                                        @if (in_array(4, $ctp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="ctp_ll" id="ctp_ll5"
+                                                                        @if (in_array(5, $ctp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="ctp_ll" id="ctp_ll6"
+                                                                        @if (in_array(6, $ctp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="ctp_ll" id="ctp_ll7"
+                                                                        @if (in_array(7, $ctp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="ctp_ll" id="ctp_ll8"
+                                                                        @if (in_array(8, $ctp_ll)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                                <div class="card-footer text-end">
+                                                                    Left Lower
+                                                                </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    @endif
+
+                                    @php
+                                        $ihook_ur = [];
+                                        if (!empty($patient->ihook_ur)) {
+                                            $ihook_ur = @unserialize($patient->ihook_ur) ?: [];
+                                        }
+                                        $ihook_ul = [];
+                                        if (!empty($patient->ihook_ul)) {
+                                            $ihook_ul = @unserialize($patient->ihook_ul) ?: [];
+                                        }
+                                        $ihook_lr = [];
+                                        if (!empty($patient->ihook_lr)) {
+                                            $ihook_lr = @unserialize($patient->ihook_lr) ?: [];
+                                        }
+                                        $ihook_ll = [];
+                                        if (!empty($patient->ihook_ll)) {
+                                            $ihook_ll = @unserialize($patient->ihook_ll) ?: [];
+                                        }
+                                    @endphp
+
+                                    @if (count($ihook_ur) > 0 || count($ihook_ul) > 0 || count($ihook_lr) > 0 || count($ihook_ll) > 0)
+                                        <h5 class="mb-3 mt-2 card-title">I-Hook</h5>
+                                        <div class="row ">
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1  top left tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header">
+                                                                    Right Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="ihook_ur"
+                                                                        id="ihook_ur8"
+                                                                        @if (in_array(8, $ihook_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="ihook_ur"
+                                                                        id="ihook_ur7"
+                                                                        @if (in_array(7, $ihook_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="ihook_ur"
+                                                                        id="ihook_ur6"
+                                                                        @if (in_array(6, $ihook_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="ihook_ur"
+                                                                        id="ihook_ur5"
+                                                                        @if (in_array(5, $ihook_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="ihook_ur"
+                                                                        id="ihook_ur4"
+                                                                        @if (in_array(4, $ihook_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="ihook_ur"
+                                                                        id="ihook_ur3"
+                                                                        @if (in_array(3, $ihook_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="ihook_ur"
+                                                                        id="ihook_ur2"
+                                                                        @if (in_array(2, $ihook_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="ihook_ur"
+                                                                        id="ihook_ur1"
+                                                                        @if (in_array(1, $ihook_ur)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 top right tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header text-end">
+                                                                    Left Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="ihook_ul"
+                                                                        id="ihook_ul1"
+                                                                        @if (in_array(1, $ihook_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="ihook_ul"
+                                                                        id="ihook_ul2"
+                                                                        @if (in_array(2, $ihook_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="ihook_ul"
+                                                                        id="ihook_ul3"
+                                                                        @if (in_array(3, $ihook_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="ihook_ul"
+                                                                        id="ihook_ul4"
+                                                                        @if (in_array(4, $ihook_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="ihook_ul"
+                                                                        id="ihook_ul5"
+                                                                        @if (in_array(5, $ihook_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="ihook_ul"
+                                                                        id="ihook_ul6"
+                                                                        @if (in_array(6, $ihook_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="ihook_ul"
+                                                                        id="ihook_ul7"
+                                                                        @if (in_array(7, $ihook_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="ihook_ul"
+                                                                        id="ihook_ul8"
+                                                                        @if (in_array(8, $ihook_ul)) checked @endif
+                                                                        disabled>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="ihook_lr"
+                                                                        id="ihook_lr8"
+                                                                        @if (in_array(8, $ihook_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="ihook_lr"
+                                                                        id="ihook_lr7"
+                                                                        @if (in_array(7, $ihook_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="ihook_lr"
+                                                                        id="ihook_lr6"
+                                                                        @if (in_array(6, $ihook_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="ihook_lr"
+                                                                        id="ihook_lr5"
+                                                                        @if (in_array(5, $ihook_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="ihook_lr"
+                                                                        id="ihook_lr4"
+                                                                        @if (in_array(4, $ihook_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="ihook_lr"
+                                                                        id="ihook_lr3"
+                                                                        @if (in_array(3, $ihook_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="ihook_lr"
+                                                                        id="ihook_lr2"
+                                                                        @if (in_array(2, $ihook_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="ihook_lr"
+                                                                        id="ihook_lr1"
+                                                                        @if (in_array(1, $ihook_lr)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    Right Lower
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 bottom right tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="ihook_ll"
+                                                                        id="ihook_ll1"
+                                                                        @if (in_array(1, $ihook_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="ihook_ll"
+                                                                        id="ihook_ll2"
+                                                                        @if (in_array(2, $ihook_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="ihook_ll"
+                                                                        id="ihook_ll3"
+                                                                        @if (in_array(3, $ihook_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="ihook_ll"
+                                                                        id="ihook_ll4"
+                                                                        @if (in_array(4, $ihook_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="ihook_ll"
+                                                                        id="ihook_ll5"
+                                                                        @if (in_array(5, $ihook_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="ihook_ll"
+                                                                        id="ihook_ll6"
+                                                                        @if (in_array(6, $ihook_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="ihook_ll"
+                                                                        id="ihook_ll7"
+                                                                        @if (in_array(7, $ihook_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="ihook_ll"
+                                                                        id="ihook_ll8"
+                                                                        @if (in_array(8, $ihook_ll)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                                <div class="card-footer text-end">
+                                                                    Left Lower
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    @php
+                                        $ofp_ur = [];
+                                        if ($patient->ofp_ur != '' && $patient->ofp_ur != null) {
+                                            $ofp_ur = unserialize($patient->ofp_ur);
+                                        }
+                                        $ofp_ul = [];
+                                        if ($patient->ofp_ul != '' && $patient->ofp_ul != null) {
+                                            $ofp_ul = unserialize($patient->ofp_ul);
+                                        }
+                                        $ofp_lr = [];
+                                        if ($patient->ofp_lr != '' && $patient->ofp_lr != null) {
+                                            $ofp_lr = unserialize($patient->ofp_lr);
+                                        }
+                                        $ofp_ll = [];
+                                        if ($patient->ofp_ll != '' && $patient->ofp_ll != null) {
+                                            $ofp_ll = unserialize($patient->ofp_ll);
+                                        }
+                                    @endphp
+
+                                    @if (count($ofp_ur) > 0 || count($ofp_ul) > 0 || count($ofp_lr) > 0 || count($ofp_ll) > 0)
+                                        <h5 class="mb-3 mt-2 card-title">Open space for future Prosthesis</h5>
+                                        <div class="row ">
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1  top left tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header">
+                                                                    Right Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="ofp_ur"
+                                                                        id="ofp_ur8"
+                                                                        @if (in_array(8, $ofp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="ofp_ur"
+                                                                        id="ofp_ur7"
+                                                                        @if (in_array(7, $ofp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="ofp_ur"
+                                                                        id="ofp_ur6"
+                                                                        @if (in_array(6, $ofp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="ofp_ur"
+                                                                        id="ofp_ur5"
+                                                                        @if (in_array(5, $ofp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="ofp_ur"
+                                                                        id="ofp_ur4"
+                                                                        @if (in_array(4, $ofp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="ofp_ur"
+                                                                        id="ofp_ur3"
+                                                                        @if (in_array(3, $ofp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="ofp_ur"
+                                                                        id="ofp_ur2"
+                                                                        @if (in_array(2, $ofp_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="ofp_ur"
+                                                                        id="ofp_ur1"
+                                                                        @if (in_array(1, $ofp_ur)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 top right tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header text-end">
+                                                                    Left Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="ofp_ul"
+                                                                        id="ofp_ul1"
+                                                                        @if (in_array(1, $ofp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="ofp_ul"
+                                                                        id="ofp_ul2"
+                                                                        @if (in_array(2, $ofp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="ofp_ul"
+                                                                        id="ofp_ul3"
+                                                                        @if (in_array(3, $ofp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="ofp_ul"
+                                                                        id="ofp_ul4"
+                                                                        @if (in_array(4, $ofp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="ofp_ul"
+                                                                        id="ofp_ul5"
+                                                                        @if (in_array(5, $ofp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="ofp_ul"
+                                                                        id="ofp_ul6"
+                                                                        @if (in_array(6, $ofp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="ofp_ul"
+                                                                        id="ofp_ul7"
+                                                                        @if (in_array(7, $ofp_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="ofp_ul"
+                                                                        id="ofp_ul8"
+                                                                        @if (in_array(8, $ofp_ul)) checked @endif
+                                                                        disabled>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="ofp_lr"
+                                                                        id="ofp_lr8"
+                                                                        @if (in_array(8, $ofp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="ofp_lr"
+                                                                        id="ofp_lr7"
+                                                                        @if (in_array(7, $ofp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="ofp_lr"
+                                                                        id="ofp_lr6"
+                                                                        @if (in_array(6, $ofp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="ofp_lr"
+                                                                        id="ofp_lr5"
+                                                                        @if (in_array(5, $ofp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="ofp_lr"
+                                                                        id="ofp_lr4"
+                                                                        @if (in_array(4, $ofp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="ofp_lr"
+                                                                        id="ofp_lr3"
+                                                                        @if (in_array(3, $ofp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="ofp_lr"
+                                                                        id="ofp_lr2"
+                                                                        @if (in_array(2, $ofp_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="ofp_lr"
+                                                                        id="ofp_lr1"
+                                                                        @if (in_array(1, $ofp_lr)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    Right Lower
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 bottom right tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="ofp_ll"
+                                                                        id="ofp_ll1"
+                                                                        @if (in_array(1, $ofp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="ofp_ll"
+                                                                        id="ofp_ll2"
+                                                                        @if (in_array(2, $ofp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="ofp_ll"
+                                                                        id="ofp_ll3"
+                                                                        @if (in_array(3, $ofp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="ofp_ll"
+                                                                        id="ofp_ll4"
+                                                                        @if (in_array(4, $ofp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="ofp_ll"
+                                                                        id="ofp_ll5"
+                                                                        @if (in_array(5, $ofp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="ofp_ll"
+                                                                        id="ofp_ll6"
+                                                                        @if (in_array(6, $ofp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="ofp_ll"
+                                                                        id="ofp_ll7"
+                                                                        @if (in_array(7, $ofp_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="ofp_ll"
+                                                                        id="ofp_ll8"
+                                                                        @if (in_array(8, $ofp_ll)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                                <div class="card-footer text-end">
+                                                                    Left Lower
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    @php
+                                        $tmr_ur = [];
+                                        if ($patient->tmr_ur != '' && $patient->tmr_ur != null) {
+                                            $tmr_ur = unserialize($patient->tmr_ur);
+                                        }
+                                        $tmr_ul = [];
+                                        if ($patient->tmr_ul != '' && $patient->tmr_ul != null) {
+                                            $tmr_ul = unserialize($patient->tmr_ul);
+                                        }
+                                        $tmr_lr = [];
+                                        if ($patient->tmr_lr != '' && $patient->tmr_lr != null) {
+                                            $tmr_lr = unserialize($patient->tmr_lr);
+                                        }
+                                        $tmr_ll = [];
+                                        if ($patient->tmr_ll != '' && $patient->tmr_ll != null) {
+                                            $tmr_ll = unserialize($patient->tmr_ll);
+                                        }
+                                    @endphp
+                                    @if (count($tmr_ur) > 0 || count($tmr_ul) > 0 || count($tmr_lr) > 0 || count($tmr_ll) > 0)
+                                        <h5 class="mb-3 mt-2 card-title">Tooth Movement Restrictions</h5>
+                                        <div class="row ">
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1  top left tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header">
+                                                                    Right Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="tmr_ur"
+                                                                        id="tmr_ur8"
+                                                                        @if (in_array(8, $tmr_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="tmr_ur"
+                                                                        id="tmr_ur7"
+                                                                        @if (in_array(7, $tmr_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="tmr_ur"
+                                                                        id="tmr_ur6"
+                                                                        @if (in_array(6, $tmr_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="tmr_ur"
+                                                                        id="tmr_ur5"
+                                                                        @if (in_array(5, $tmr_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="tmr_ur"
+                                                                        id="tmr_ur4"
+                                                                        @if (in_array(4, $tmr_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="tmr_ur"
+                                                                        id="tmr_ur3"
+                                                                        @if (in_array(3, $tmr_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="tmr_ur"
+                                                                        id="tmr_ur2"
+                                                                        @if (in_array(2, $tmr_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="tmr_ur"
+                                                                        id="tmr_ur1"
+                                                                        @if (in_array(1, $tmr_ur)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 top right tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header text-end">
+                                                                    Left Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="tmr_ul"
+                                                                        id="tmr_ul1"
+                                                                        @if (in_array(1, $tmr_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="tmr_ul"
+                                                                        id="tmr_ul2"
+                                                                        @if (in_array(2, $tmr_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="tmr_ul"
+                                                                        id="tmr_ul3"
+                                                                        @if (in_array(3, $tmr_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="tmr_ul"
+                                                                        id="tmr_ul4"
+                                                                        @if (in_array(4, $tmr_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="tmr_ul"
+                                                                        id="tmr_ul5"
+                                                                        @if (in_array(5, $tmr_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="tmr_ul"
+                                                                        id="tmr_ul6"
+                                                                        @if (in_array(6, $tmr_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="tmr_ul"
+                                                                        id="tmr_ul7"
+                                                                        @if (in_array(7, $tmr_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="tmr_ul"
+                                                                        id="tmr_ul8"
+                                                                        @if (in_array(8, $tmr_ul)) checked @endif
+                                                                        disabled>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="tmr_lr"
+                                                                        id="tmr_lr8"
+                                                                        @if (in_array(8, $tmr_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="tmr_lr"
+                                                                        id="tmr_lr7"
+                                                                        @if (in_array(7, $tmr_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="tmr_lr"
+                                                                        id="tmr_lr6"
+                                                                        @if (in_array(6, $tmr_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="tmr_lr"
+                                                                        id="tmr_lr5"
+                                                                        @if (in_array(5, $tmr_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="tmr_lr"
+                                                                        id="tmr_lr4"
+                                                                        @if (in_array(4, $tmr_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="tmr_lr"
+                                                                        id="tmr_lr3"
+                                                                        @if (in_array(3, $tmr_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="tmr_lr"
+                                                                        id="tmr_lr2"
+                                                                        @if (in_array(2, $tmr_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="tmr_lr"
+                                                                        id="tmr_lr1"
+                                                                        @if (in_array(1, $tmr_lr)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    Right Lower
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 bottom right tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="tmr_ll"
+                                                                        id="tmr_ll1"
+                                                                        @if (in_array(1, $tmr_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="tmr_ll"
+                                                                        id="tmr_ll2"
+                                                                        @if (in_array(2, $tmr_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="tmr_ll"
+                                                                        id="tmr_ll3"
+                                                                        @if (in_array(3, $tmr_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="tmr_ll"
+                                                                        id="tmr_ll4"
+                                                                        @if (in_array(4, $tmr_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="tmr_ll"
+                                                                        id="tmr_ll5"
+                                                                        @if (in_array(5, $tmr_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="tmr_ll"
+                                                                        id="tmr_ll6"
+                                                                        @if (in_array(6, $tmr_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="tmr_ll"
+                                                                        id="tmr_ll7"
+                                                                        @if (in_array(7, $tmr_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="tmr_ll"
+                                                                        id="tmr_ll8"
+                                                                        @if (in_array(8, $tmr_ll)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                                <div class="card-footer text-end">
+                                                                    Left Lower
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    @php
+                                        $mut_ur = [];
+                                        if ($patient->mut_ur != '' && $patient->mut_ur != null) {
+                                            $mut_ur = unserialize($patient->mut_ur);
+                                        }
+                                        $mut_ul = [];
+                                        if ($patient->mut_ul != '' && $patient->mut_ul != null) {
+                                            $mut_ul = unserialize($patient->mut_ul);
+                                        }
+                                        $mut_lr = [];
+                                        if ($patient->mut_lr != '' && $patient->mut_lr != null) {
+                                            $mut_lr = unserialize($patient->mut_lr);
+                                        }
+                                        $mut_ll = [];
+                                        if ($patient->mut_ll != '' && $patient->mut_ll != null) {
+                                            $mut_ll = unserialize($patient->mut_ll);
+                                        }
+                                    @endphp
+                                    @if (count($mut_ur) > 0 || count($mut_ul) > 0 || count($mut_lr) > 0 || count($mut_ll) > 0)
+                                        <h5 class=" my-3 mt-2 card-title">Missing or Unerupted teeth</h5>
+                                        <div class="row ">
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1 top left tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header">
+                                                                    Right Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="mut_ur"
+                                                                        id="mut_ur8"
+                                                                        @if (in_array(8, $mut_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="mut_ur"
+                                                                        id="mut_ur7"
+                                                                        @if (in_array(7, $mut_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="mut_ur"
+                                                                        id="mut_ur6"
+                                                                        @if (in_array(6, $mut_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="mut_ur"
+                                                                        id="mut_ur5"
+                                                                        @if (in_array(5, $mut_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="mut_ur"
+                                                                        id="mut_ur4"
+                                                                        @if (in_array(4, $mut_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="mut_ur"
+                                                                        id="mut_ur3"
+                                                                        @if (in_array(3, $mut_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="mut_ur"
+                                                                        id="mut_ur2"
+                                                                        @if (in_array(2, $mut_ur)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="mut_ur"
+                                                                        id="mut_ur1"
+                                                                        @if (in_array(1, $mut_ur)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 top right tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header text-end">
+                                                                    Left Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="mut_ul"
+                                                                        id="mut_ul1"
+                                                                        @if (in_array(1, $mut_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="mut_ul"
+                                                                        id="mut_ul2"
+                                                                        @if (in_array(2, $mut_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="mut_ul"
+                                                                        id="mut_ul3"
+                                                                        @if (in_array(3, $mut_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="mut_ul"
+                                                                        id="mut_ul4"
+                                                                        @if (in_array(4, $mut_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="mut_ul"
+                                                                        id="mut_ul5"
+                                                                        @if (in_array(5, $mut_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="mut_ul"
+                                                                        id="mut_ul6"
+                                                                        @if (in_array(6, $mut_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="mut_ul"
+                                                                        id="mut_ul7"
+                                                                        @if (in_array(7, $mut_ul)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="mut_ul"
+                                                                        id="mut_ul8"
+                                                                        @if (in_array(8, $mut_ul)) checked @endif
+                                                                        disabled>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="mut_lr"
+                                                                        id="mut_lr8"
+                                                                        @if (in_array(8, $mut_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="mut_lr"
+                                                                        id="mut_lr7"
+                                                                        @if (in_array(7, $mut_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="mut_lr"
+                                                                        id="mut_lr6"
+                                                                        @if (in_array(6, $mut_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="mut_lr"
+                                                                        id="mut_lr5"
+                                                                        @if (in_array(5, $mut_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="mut_lr"
+                                                                        id="mut_lr4"
+                                                                        @if (in_array(4, $mut_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="mut_lr"
+                                                                        id="mut_lr3"
+                                                                        @if (in_array(3, $mut_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="mut_lr"
+                                                                        id="mut_lr2"
+                                                                        @if (in_array(2, $mut_lr)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="mut_lr"
+                                                                        id="mut_lr1"
+                                                                        @if (in_array(1, $mut_lr)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    Right Lower
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw bottom right">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="mut_ll"
+                                                                        id="mut_ll1"
+                                                                        @if (in_array(1, $mut_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="mut_ll"
+                                                                        id="mut_ll2"
+                                                                        @if (in_array(2, $mut_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="mut_ll"
+                                                                        id="mut_ll3"
+                                                                        @if (in_array(3, $mut_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="mut_ll"
+                                                                        id="mut_ll4"
+                                                                        @if (in_array(4, $mut_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="mut_ll"
+                                                                        id="mut_ll5"
+                                                                        @if (in_array(5, $mut_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="mut_ll"
+                                                                        id="mut_ll6"
+                                                                        @if (in_array(6, $mut_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="mut_ll"
+                                                                        id="mut_ll7"
+                                                                        @if (in_array(7, $mut_ll)) checked @endif
+                                                                        disabled>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="mut_ll"
+                                                                        id="mut_ll8"
+                                                                        @if (in_array(8, $mut_ll)) checked @endif
+                                                                        disabled>
+                                                                </div>
+                                                                <div class="card-footer text-end">
+                                                                    Left Lower
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    @php
+                                        $tbe_ur = [];
+                                        if ($patient->tbe_ur != '' && $patient->tbe_ur != null) {
+                                            $tbe_ur = unserialize($patient->tbe_ur);
+                                        }
+
+                                        $tbe_ul = [];
+                                        if ($patient->tbe_ul != '' && $patient->tbe_ul != null) {
+                                            $tbe_ul = unserialize($patient->tbe_ul);
+                                        }
+                                        $tbe_lr = [];
+                                        if ($patient->tbe_lr != '' && $patient->tbe_lr != null) {
+                                            $tbe_lr = unserialize($patient->tbe_lr);
+                                        }
+                                        $tbe_ll = [];
+                                        if ($patient->tbe_ll != '' && $patient->tbe_ll != null) {
+                                            $tbe_ll = unserialize($patient->tbe_ll);
+                                        }
+                                    @endphp
+                                    @if (count($tbe_ur) > 0 || count($tbe_ul) > 0 || count($tbe_lr) > 0 || count($tbe_ll) > 0)
+                                        <h5 class=" my-3 mt-2 card-title">To be Extracted</h5>
+                                        <div class="row ">
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1 top left tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header">
+                                                                    Right Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="tbe_ur"
+                                                                        id="tbe_ur8"
+                                                                        @if (in_array(8, $tbe_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="tbe_ur"
+                                                                        id="tbe_ur7"
+                                                                        @if (in_array(7, $tbe_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="tbe_ur"
+                                                                        id="tbe_ur6"
+                                                                        @if (in_array(6, $tbe_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="tbe_ur"
+                                                                        id="tbe_ur5"
+                                                                        @if (in_array(5, $tbe_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="tbe_ur"
+                                                                        id="tbe_ur4"
+                                                                        @if (in_array(4, $tbe_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="tbe_ur"
+                                                                        id="tbe_ur3"
+                                                                        @if (in_array(3, $tbe_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="tbe_ur"
+                                                                        id="tbe_ur2"
+                                                                        @if (in_array(2, $tbe_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="tbe_ur"
+                                                                        id="tbe_ur1"
+                                                                        @if (in_array(1, $tbe_ur)) checked @endif>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw top right">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header text-end">
+                                                                    Left Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="tbe_ul"
+                                                                        id="tbe_ul1"
+                                                                        @if (in_array(1, $tbe_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="tbe_ul"
+                                                                        id="tbe_ul2"
+                                                                        @if (in_array(2, $tbe_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="tbe_ul"
+                                                                        id="tbe_ul3"
+                                                                        @if (in_array(3, $tbe_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="tbe_ul"
+                                                                        id="tbe_ul4"
+                                                                        @if (in_array(4, $tbe_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="tbe_ul"
+                                                                        id="tbe_ul5"
+                                                                        @if (in_array(5, $tbe_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="tbe_ul"
+                                                                        id="tbe_ul6"
+                                                                        @if (in_array(6, $tbe_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="tbe_ul"
+                                                                        id="tbe_ul7"
+                                                                        @if (in_array(7, $tbe_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="tbe_ul"
+                                                                        id="tbe_ul8"
+                                                                        @if (in_array(8, $tbe_ul)) checked @endif>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="tbe_lr"
+                                                                        id="tbe_lr8"
+                                                                        @if (in_array(8, $tbe_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="tbe_lr"
+                                                                        id="tbe_lr7"
+                                                                        @if (in_array(7, $tbe_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="tbe_lr"
+                                                                        id="tbe_lr6"
+                                                                        @if (in_array(6, $tbe_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="tbe_lr"
+                                                                        id="tbe_lr5"
+                                                                        @if (in_array(5, $tbe_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="tbe_lr"
+                                                                        id="tbe_lr4"
+                                                                        @if (in_array(4, $tbe_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="tbe_lr"
+                                                                        id="tbe_lr3"
+                                                                        @if (in_array(3, $tbe_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="tbe_lr"
+                                                                        id="tbe_lr2"
+                                                                        @if (in_array(2, $tbe_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="tbe_lr"
+                                                                        id="tbe_lr1"
+                                                                        @if (in_array(1, $tbe_lr)) checked @endif>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    Right Lower
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw bottom right">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="tbe_ll"
+                                                                        id="tbe_ll1"
+                                                                        @if (in_array(1, $tbe_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="tbe_ll"
+                                                                        id="tbe_ll2"
+                                                                        @if (in_array(2, $tbe_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="tbe_ll"
+                                                                        id="tbe_ll3"
+                                                                        @if (in_array(3, $tbe_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="tbe_ll"
+                                                                        id="tbe_ll4"
+                                                                        @if (in_array(4, $tbe_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="tbe_ll"
+                                                                        id="tbe_ll5"
+                                                                        @if (in_array(5, $tbe_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="tbe_ll"
+                                                                        id="tbe_ll6"
+                                                                        @if (in_array(6, $tbe_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="tbe_ll"
+                                                                        id="tbe_ll7"
+                                                                        @if (in_array(7, $tbe_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="tbe_ll"
+                                                                        id="tbe_ll8"
+                                                                        @if (in_array(8, $tbe_ll)) checked @endif>
+                                                                </div>
+                                                                <div class="card-footer text-end">
+                                                                    Left Lower
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
                                 @endif
 
                                 <h5 class="card-title mt-2">Occlusal Plane</h5>
@@ -1955,28 +1946,6 @@
 
                                             <p class="text-muted"><i class="fas fa-check"></i> Anterior Bite
                                                 Turbos</p>
-
-                                        </li>
-                                    @endif
-                                    @if (in_array('Bite Keeper', $additional_attachments))
-                                        <li class="list-group-item">
-
-                                            <p class="text-muted"><i class="fas fa-check"></i> Bite Keeper</p>
-
-                                        </li>
-                                    @endif
-                                    @if (in_array('Secret Wings', $additional_attachments))
-                                        <li class="list-group-item">
-
-                                            <p class="text-muted"><i class="fas fa-check"></i> Secret Wings</p>
-
-                                        </li>
-                                    @endif
-
-                                    @if (in_array('Secret Blocks', $additional_attachments))
-                                        <li class="list-group-item">
-
-                                            <p class="text-muted"><i class="fas fa-check"></i> Secret Blocks</p>
 
                                         </li>
                                     @endif
@@ -2416,6 +2385,7 @@
                                     @endif
                                 </ul>
                                 <ul class="list-group list-group-flush">
+
                                     @if (@$patient->keep_already_placed_attachments == 1)
                                         <li class="list-group-item">
 
@@ -2425,19 +2395,52 @@
 
                                         </li>
                                     @endif
+
+                                    @if (@$patient->aesthetic_start != null)
+                                        <li class="list-group-item">
+                                            <p class="text-muted"><strong> Aesthetic start:</strong>
+                                                {{ $patient->aesthetic_start == '0' ? 'No' : 'Yes' }}
+                                            </p>
+                                        </li>
+                                    @endif
+
+                                    @if (@$patient->anterior_leveling != null)
+                                        <li class="list-group-item">
+                                            <p class="text-muted">
+                                                <strong> Primary Esthetic Objective for Anterior Leveling</strong><br>
+                                                @if($patient->anterior_leveling == '0')
+                                                    <strong> Incisal Edge Harmony: </strong>Prioritize a consistent smile arc and incisal symmetry (potential gingival discrepancies will be managed post-treatment).
+                                                @else
+                                                    <strong> Gingival Margin Symmetry: </strong>Prioritize level gingival zeniths (incisal edge discrepancies will be managed via restorative bonding/enameloplasty).
+                                                @endif
+                                            </p>
+                                        </li>
+                                    @endif
+
                                     <li class="list-group-item">
-
-                                        <p class="text-muted">Trim Upper:</strong>
-                                            {{ @$patient->trim_type_upper }}
+                                        <p class="text-muted">
+                                            <strong> Trim Upper:</strong>
+                                            {{ $patient->trim_type_upper }}
                                         </p>
-
+                                        @if($patient->trim_type_upper == 'Straight' && $patient->trim_type_upper_straight_upper != null)
+                                        <p class="text-muted">
+                                            {{ $patient->trim_type_upper_straight_upper == '0' ? 'Standard (1-1.5mm beyond the gingival margins)' : 'High Trim Line (2.5-3mm beyond the gingival margins)'  }}
+                                        </p>
+                                        @endif
                                     </li>
+
                                     <li class="list-group-item">
 
-                                        <p class="text-muted">Trim Lower:</strong>
-                                            {{ @$patient->trim_type_lower }}
+                                        <p class="text-muted">
+                                            <strong>Trim Lower:</strong>
+                                            {{ $patient->trim_type_lower }}
                                         </p>
 
+                                        @if($patient->trim_type_lower == 'Straight' && $patient->trim_type_upper_straight_upper != null)
+                                        <p class="text-muted">
+                                            {{ $patient->trim_type_lower_straight_lower == '0' ? 'Standard (1-1.5mm beyond the gingival margins)' : 'High Trim Line (2.5-3mm beyond the gingival margins)'  }}
+                                        </p>
+                                        @endif
                                     </li>
                                 </ul>
 
@@ -2460,195 +2463,244 @@
                                         $tla_ll = unserialize($patient->tla_ll);
                                     }
                                 @endphp
+
                                 @if (count($tla_ur) > 0 || count($tla_ul) > 0 || count($tla_lr) > 0 || count($tla_ll) > 0)
                                     <h5 class=" my-3 mt-2 card-title">Last tooth to cover</h5>
                                     <div class="row ">
                                         <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1 top left tw">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header">
-                                                                Right Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
+                                            @if($patient->is_new  == '0')
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1 top left tw">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header">
+                                                                    Right Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
 
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="tla_ur"
-                                                                    id="tla_ur8"
-                                                                    @if (in_array(8, $tla_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="tla_ur"
-                                                                    id="tla_ur7"
-                                                                    @if (in_array(7, $tla_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="tla_ur"
-                                                                    id="tla_ur6"
-                                                                    @if (in_array(6, $tla_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="tla_ur"
-                                                                    id="tla_ur5"
-                                                                    @if (in_array(5, $tla_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="tla_ur"
-                                                                    id="tla_ur4"
-                                                                    @if (in_array(4, $tla_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="tla_ur"
-                                                                    id="tla_ur3"
-                                                                    @if (in_array(3, $tla_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="tla_ur"
-                                                                    id="tla_ur2"
-                                                                    @if (in_array(2, $tla_ur)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="tla_ur"
-                                                                    id="tla_ur1"
-                                                                    @if (in_array(1, $tla_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="tla_ur"
+                                                                        id="tla_ur8"
+                                                                        @if (in_array(8, $tla_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="tla_ur"
+                                                                        id="tla_ur7"
+                                                                        @if (in_array(7, $tla_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="tla_ur"
+                                                                        id="tla_ur6"
+                                                                        @if (in_array(6, $tla_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="tla_ur"
+                                                                        id="tla_ur5"
+                                                                        @if (in_array(5, $tla_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="tla_ur"
+                                                                        id="tla_ur4"
+                                                                        @if (in_array(4, $tla_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="tla_ur"
+                                                                        id="tla_ur3"
+                                                                        @if (in_array(3, $tla_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="tla_ur"
+                                                                        id="tla_ur2"
+                                                                        @if (in_array(2, $tla_ur)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="tla_ur"
+                                                                        id="tla_ur1"
+                                                                        @if (in_array(1, $tla_ur)) checked @endif>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw top right">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div class="card-header text-end">
+                                                                    Left Upper
+                                                                </div>
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="tla_ul"
+                                                                        id="tla_ul1"
+                                                                        @if (in_array(1, $tla_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="tla_ul"
+                                                                        id="tla_ul2"
+                                                                        @if (in_array(2, $tla_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="tla_ul"
+                                                                        id="tla_ul3"
+                                                                        @if (in_array(3, $tla_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="tla_ul"
+                                                                        id="tla_ul4"
+                                                                        @if (in_array(4, $tla_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="tla_ul"
+                                                                        id="tla_ul5"
+                                                                        @if (in_array(5, $tla_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="tla_ul"
+                                                                        id="tla_ul6"
+                                                                        @if (in_array(6, $tla_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="tla_ul"
+                                                                        id="tla_ul7"
+                                                                        @if (in_array(7, $tla_ul)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="tla_ul"
+                                                                        id="tla_ul8"
+                                                                        @if (in_array(8, $tla_ul)) checked @endif>
+                                                                </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 tw top right">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div class="card-header text-end">
-                                                                Left Upper
-                                                            </div>
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
 
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="tla_ul"
-                                                                    id="tla_ul1"
-                                                                    @if (in_array(1, $tla_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="tla_ul"
-                                                                    id="tla_ul2"
-                                                                    @if (in_array(2, $tla_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="tla_ul"
-                                                                    id="tla_ul3"
-                                                                    @if (in_array(3, $tla_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="tla_ul"
-                                                                    id="tla_ul4"
-                                                                    @if (in_array(4, $tla_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="tla_ul"
-                                                                    id="tla_ul5"
-                                                                    @if (in_array(5, $tla_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="tla_ul"
-                                                                    id="tla_ul6"
-                                                                    @if (in_array(6, $tla_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="tla_ul"
-                                                                    id="tla_ul7"
-                                                                    @if (in_array(7, $tla_ul)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="tla_ul"
-                                                                    id="tla_ul8"
-                                                                    @if (in_array(8, $tla_ul)) checked @endif>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 px-1 tw bottom left">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div
-                                                                class="card-body d-flex justify-content-between left-jaw px-0 px-md-2">
-
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="tla_lr"
-                                                                    id="tla_lr8"
-                                                                    @if (in_array(8, $tla_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="tla_lr"
-                                                                    id="tla_lr7"
-                                                                    @if (in_array(7, $tla_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="tla_lr"
-                                                                    id="tla_lr6"
-                                                                    @if (in_array(6, $tla_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="tla_lr"
-                                                                    id="tla_lr5"
-                                                                    @if (in_array(5, $tla_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="tla_lr"
-                                                                    id="tla_lr4"
-                                                                    @if (in_array(4, $tla_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="tla_lr"
-                                                                    id="tla_lr3"
-                                                                    @if (in_array(3, $tla_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="tla_lr"
-                                                                    id="tla_lr2"
-                                                                    @if (in_array(2, $tla_lr)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="tla_lr"
-                                                                    id="tla_lr1"
-                                                                    @if (in_array(1, $tla_lr)) checked @endif>
-                                                            </div>
-                                                            <div class="card-footer">
-                                                                Right Lower
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="tla_lr"
+                                                                        id="tla_lr8"
+                                                                        @if (in_array(8, $tla_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="tla_lr"
+                                                                        id="tla_lr7"
+                                                                        @if (in_array(7, $tla_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="tla_lr"
+                                                                        id="tla_lr6"
+                                                                        @if (in_array(6, $tla_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="tla_lr"
+                                                                        id="tla_lr5"
+                                                                        @if (in_array(5, $tla_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="tla_lr"
+                                                                        id="tla_lr4"
+                                                                        @if (in_array(4, $tla_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="tla_lr"
+                                                                        id="tla_lr3"
+                                                                        @if (in_array(3, $tla_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="tla_lr"
+                                                                        id="tla_lr2"
+                                                                        @if (in_array(2, $tla_lr)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="tla_lr"
+                                                                        id="tla_lr1"
+                                                                        @if (in_array(1, $tla_lr)) checked @endif>
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    Right Lower
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 px-1 tw bottom right">
-                                                    <div class="teeth-wrapper">
-                                                        <div class="card shadow-none border-0">
-                                                            <div
-                                                                class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
+                                                    <div class="col-xs-6 col-sm-6 px-1 tw bottom right">
+                                                        <div class="teeth-wrapper">
+                                                            <div class="card shadow-none border-0">
+                                                                <div
+                                                                    class="card-body d-flex justify-content-between right-jaw px-0 px-md-2">
 
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="1" name="tla_ll"
-                                                                    id="tla_ll1"
-                                                                    @if (in_array(1, $tla_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="2" name="tla_ll"
-                                                                    id="tla_ll2"
-                                                                    @if (in_array(2, $tla_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="3" name="tla_ll"
-                                                                    id="tla_ll3"
-                                                                    @if (in_array(3, $tla_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="4" name="tla_ll"
-                                                                    id="tla_ll4"
-                                                                    @if (in_array(4, $tla_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="5" name="tla_ll"
-                                                                    id="tla_ll5"
-                                                                    @if (in_array(5, $tla_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="6" name="tla_ll"
-                                                                    id="tla_ll6"
-                                                                    @if (in_array(6, $tla_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="7" name="tla_ll"
-                                                                    id="tla_ll7"
-                                                                    @if (in_array(7, $tla_ll)) checked @endif>
-                                                                <input type="checkbox" class="tooth"
-                                                                    data-number="8" name="tla_ll"
-                                                                    id="tla_ll8"
-                                                                    @if (in_array(8, $tla_ll)) checked @endif>
-                                                            </div>
-                                                            <div class="card-footer text-end">
-                                                                Left Lower
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="1" name="tla_ll"
+                                                                        id="tla_ll1"
+                                                                        @if (in_array(1, $tla_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="2" name="tla_ll"
+                                                                        id="tla_ll2"
+                                                                        @if (in_array(2, $tla_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="3" name="tla_ll"
+                                                                        id="tla_ll3"
+                                                                        @if (in_array(3, $tla_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="4" name="tla_ll"
+                                                                        id="tla_ll4"
+                                                                        @if (in_array(4, $tla_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="5" name="tla_ll"
+                                                                        id="tla_ll5"
+                                                                        @if (in_array(5, $tla_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="6" name="tla_ll"
+                                                                        id="tla_ll6"
+                                                                        @if (in_array(6, $tla_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="7" name="tla_ll"
+                                                                        id="tla_ll7"
+                                                                        @if (in_array(7, $tla_ll)) checked @endif>
+                                                                    <input type="checkbox" class="tooth"
+                                                                        data-number="8" name="tla_ll"
+                                                                        id="tla_ll8"
+                                                                        @if (in_array(8, $tla_ll)) checked @endif>
+                                                                </div>
+                                                                <div class="card-footer text-end">
+                                                                    Left Lower
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            @else
+                                                <div class="row">
+                                                    <div class="teeth-layout-wrapper" style="max-width: 1200px; margin: 0 auto;">
+                                                        <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:5px;" id="classIIUpperArcNew">
+                                                            <img id="1" class="choose-tooth" src="{{ in_array(8, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-8.webp') : asset('public/assets/tooth/png/UR-8.webp') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="2" class="choose-tooth" src="{{ in_array(7, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-7.webp') : asset('public/assets/tooth/png/UR-7.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="3" class="choose-tooth" src="{{ in_array(6, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-6.webp') : asset('public/assets/tooth/png/UR-6.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="4" class="choose-tooth" src="{{ in_array(5, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-5.webp') : asset('public/assets/tooth/png/UR-5.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="5" class="choose-tooth" src="{{ in_array(4, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-4.webp') : asset('public/assets/tooth/png/UR-4.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="6" class="choose-tooth" src="{{ in_array(3, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-3.webp') : asset('public/assets/tooth/png/UR-3.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="7" class="choose-tooth" src="{{ in_array(2, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-2.webp') : asset('public/assets/tooth/png/UR-2.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="8" class="choose-tooth" src="{{ in_array(1, $tla_ur) ?  asset('public/assets/tooth/coloured/UR-1.webp') : asset('public/assets/tooth/png/UR-1.webp') }}" style="vertical-align: baseline;width: 1.6vw; height: 1.6vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="9" class="choose-tooth" src="{{ in_array(1, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-1.webp') : asset('public/assets/tooth/png/UL-1.webp') }}" style="vertical-align: baseline;width: 1.6vw; height: 1.6vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="10" class="choose-tooth" src="{{ in_array(2, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-2.webp') : asset('public/assets/tooth/png/UL-2.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="11" class="choose-tooth" src="{{ in_array(3, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-3.webp') : asset('public/assets/tooth/png/UL-3.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="12" class="choose-tooth" src="{{ in_array(4, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-4.webp') : asset('public/assets/tooth/png/UR-4.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="13" class="choose-tooth" src="{{ in_array(5, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-5.webp') : asset('public/assets/tooth/png/UR-5.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="14" class="choose-tooth" src="{{ in_array(6, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-6.webp') : asset('public/assets/tooth/png/UR-6.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="15" class="choose-tooth" src="{{ in_array(7, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-7.webp') : asset('public/assets/tooth/png/UR-7.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px; margin-bottom: 3px;">
+                                                            <img id="16" class="choose-tooth" src="{{ in_array(8, $tla_ul) ?  asset('public/assets/tooth/coloured/UL-8.webp') : asset('public/assets/tooth/png/UR-8.webp') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px; margin-bottom: 3px;">
+                                                        </div>
+                                                        <div class="teeth-divider" style="display:flex; align-items:center; justify-content:center; gap:1rem;">
+                                                            <span style="font-weight:bold;">R</span>
+                                                            <span style="flex:1; height:1px; background: rgba(177, 175, 175, 0.70);"></span>
+                                                            <span style="font-weight:bold;">L</span>
+                                                        </div>
+                                                        <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:5px; position:relative; padding:0.5rem 0 25px;" id="classIILowerArc">
+                                                            <img id="17" class="choose-tooth"  src="{{ in_array(8, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-8.webp') :  asset('public/assets/tooth/png/LR-8.webp') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px;">
+                                                            <img id="18" class="choose-tooth"  src="{{ in_array(7, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-7.webp') :  asset('public/assets/tooth/png/LR-7.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
+                                                            <img id="19" class="choose-tooth"  src="{{ in_array(6, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-6.webp') :  asset('public/assets/tooth/png/LR-6.webp') }}" style="vertical-align: baseline;width: 1.5vw; height: 1.5vw; margin-top: 5px;">
+                                                            <img id="20" class="choose-tooth"  src="{{ in_array(5, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-5.webp') :  asset('public/assets/tooth/png/LR-5.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
+                                                            <img id="21" class="choose-tooth"  src="{{ in_array(4, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-4.webp') :  asset('public/assets/tooth/png/LR-4.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
+                                                            <img id="22" class="choose-tooth"  src="{{ in_array(3, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-3.webp') :  asset('public/assets/tooth/png/LR-3.webp') }}" style="vertical-align: baseline;width: 1.35vw; height: 1.35vw; margin-top: 5px;">
+                                                            <img id="23" class="choose-tooth"  src="{{ in_array(2, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-2.webp') :  asset('public/assets/tooth/png/LR-2.webp') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px;">
+                                                            <img id="24" class="choose-tooth"  src="{{ in_array(1, $tla_lr) ?  asset('public/assets/tooth/coloured/LR-1.webp') :  asset('public/assets/tooth/png/LR-1.webp') }}" style="vertical-align: baseline;width: 1.15vw; height: 1.15vw; margin-top: 5px;">
+                                                            <img id="25" class="choose-tooth"  src="{{ in_array(1, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-1.webp') :  asset('public/assets/tooth/png/LL-1.webp') }}" style="vertical-align: baseline;width: 1.15vw; height: 1.15vw; margin-top: 5px;">
+                                                            <img id="26" class="choose-tooth"  src="{{ in_array(2, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-2.webp') :  asset('public/assets/tooth/png/LL-2.webp') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px;">
+                                                            <img id="27" class="choose-tooth"  src="{{ in_array(3, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-3.webp') :  asset('public/assets/tooth/png/LL-3.webp') }}" style="vertical-align: baseline;width: 1.35vw; height: 1.35vw; margin-top: 5px;">
+                                                            <img id="28" class="choose-tooth"  src="{{ in_array(4, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-4.webp') :  asset('public/assets/tooth/png/LL-4.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
+                                                            <img id="29" class="choose-tooth"  src="{{ in_array(5, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-5.webp') :  asset('public/assets/tooth/png/LL-5.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
+                                                            <img id="30" class="choose-tooth"  src="{{ in_array(6, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-6.webp') :  asset('public/assets/tooth/png/LL-6.webp') }}" style="vertical-align: baseline;width: 1.5vw; height: 1.5vw; margin-top: 5px;">
+                                                            <img id="31" class="choose-tooth"  src="{{ in_array(7, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-7.webp') :  asset('public/assets/tooth/png/LL-7.webp') }}" style="vertical-align: baseline;width: 1.3vw; height: 1.3vw; margin-top: 5px;">
+                                                            <img id="32" class="choose-tooth"  src="{{ in_array(8, $tla_ll) ?  asset('public/assets/tooth/coloured/LL-8.webp') :  asset('public/assets/tooth/png/LL-8.webp') }}" style="vertical-align: baseline;width: 1.2vw; height: 1.2vw; margin-top: 5px;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 @endif

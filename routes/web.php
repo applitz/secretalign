@@ -4,7 +4,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CasePhaseController;
 use App\Http\Controllers\CronJobController;
 use App\Http\Controllers\DataProcessingDocument;
-
+use App\Http\Controllers\Doctor\MovixtechController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\FinishedOrders;
 use App\Http\Controllers\IntegrationController;
@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Artisan;
 //Route::get('/update-phases', [CasePhaseController::class, 'duration_test']);
 
 Route::get('/test', [App\Http\Controllers\HomeController::class, 'testNemotech']);
-
+Route::post('movix-webhook', [MovixtechController::class, 'movixWebhook'])->name('movix-webhook');
 Route::get('/file/{filename}', function ($filename) {
     $path = storage_path('app/public/attachments/' . $filename);
     Log::info($path);
@@ -158,6 +158,7 @@ Route::get('/patient/edit/{treatment_plan_id}', [RegisterPatient::class, 'edit']
 Route::post('/patient/patient-info/save', [RegisterPatient::class, 'save_patient_info']);
 Route::post('/patient/patient-info/selected-plan', [RegisterPatient::class, 'selected_plan']);
 Route::post('/patient/images/save', [RegisterPatient::class, 'save_images']);
+
 Route::post('/patient/scan-data/save', [RegisterPatient::class, 'save_scan_data']);
 Route::post('/patient/prescription/save', [RegisterPatient::class, 'save_prescription']);
 Route::post('/patient/submit', [RegisterPatient::class, 'submit']);

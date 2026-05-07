@@ -166,7 +166,10 @@ class UserController extends Controller
                 'shining3d_org_name' => $shining3d_org_name,
                 'phone_number' => $request->input('phone_number'),
                 "billing_address" => $request->input('billing_address'),
-                "shipping_address" => $request->input('shipping_address')
+                "shipping_address" => $request->input('shipping_address'),
+                "postal_code" => $request->input('postal_code'),
+                "city" => $request->input('city'),
+                "country" => $request->input('country')
             ]);
             if(Auth::user()->role == 'doctor') {
                 foreach (DB::table('users')->where('role', 'staff')->pluck('id')->toArray() as $u) {
@@ -272,13 +275,26 @@ class UserController extends Controller
             "file" => "required|file|mimes:jpg,jpeg,png,webp,gif",
         ]);
         if($request->hasFile("file")) {
+            $oldFile = Auth::user()->photo;
             $file = $request->file('file');
-            $fileName = mt_rand(1, 1000) . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(storage_path() . '/app/public/Profiles', $fileName);
-            DB::table('users')->where('id', $id)->update([
-                "photo" => $fileName,
-            ]);
-            return redirect()->back()->with('success', 'You have successfully changed your profile picture');
+            // $fileName = mt_rand(1, 1000) . time() . '.' . $file->getClientOriginalExtension();
+            // $file->move(storage_path() . '/app/public/Profiles', $fileName);
+            $fileName = uploadWebpImage($file, storage_path() . '/app/public/Profiles');
+
+            if($fileName && $fileName != null ){
+
+                if (!empty($oldFile)) {
+                    $oldFilePath = storage_path('app/public/Profiles/' . $oldFile);
+                    if (File::exists($oldFilePath)) {
+                        File::delete($oldFilePath);
+                    }
+                }
+                DB::table('users')->where('id', $id)->update([
+                    "photo" => $fileName,
+                ]);
+                return redirect()->back()->with('success', 'You have successfully changed your profile picture');
+            }
+            return redirect()->back()->with('error', 'Something goes to wrong.');
         }
         return redirect()->back()->with('error', 'enable to upload file');
     }

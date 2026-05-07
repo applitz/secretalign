@@ -145,4 +145,44 @@ function getSimseToken($firstName,$lastName,$dob,$userId){
     return $simseToken;
 }
 
+// Safely explode values
+function arr($value) {
+return !empty($value) ? explode(',', $value) : [];
+}
+// Check if tooth is selected
+function isSelected($tooth, $arrays) {
+    foreach ($arrays as $arr) {
+        if (in_array($tooth, $arr)) return true;
+    }
+    return false;
+}
+
+if (!function_exists('uploadWebpImage')) {
+    function uploadWebpImage($file, $uploadPath, $fileName = null)
+    {
+        if (!$file) {
+            return null;
+        }
+        $uploadPath = rtrim($uploadPath, '/');
+        $manager = new \Intervention\Image\ImageManager(
+            new \Intervention\Image\Drivers\Gd\Driver()
+        );
+
+        $image = $manager->read($file);
+        if ($fileName == null) {
+            $fileName = time() . rand(100, 999) . '.webp';
+        }
+
+        // create folder if not exists
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        $fullPath = $uploadPath . '/' . $fileName;
+
+        file_put_contents($fullPath, (string) $image->toWebp(70));
+
+        return $fileName;
+    }
+}
 ?>

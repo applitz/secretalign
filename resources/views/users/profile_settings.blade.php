@@ -68,14 +68,47 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label" for="shipping_address">Shipping Address</label>
-                            <textarea
-                                class="form-control @error('shipping_address')
-                                is-invalid
-                            @enderror"
-                                name="shipping_address" id="shipping_address" placeholder="Shipping Address">{{ $user->shipping_address }}</textarea>
+                            <textarea class="form-control @error('shipping_address') is-invalid @enderror" name="shipping_address" id="shipping_address" placeholder="Shipping Address">{{ $user->shipping_address }} </textarea>
                             @error('shipping_address')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="postal_code">Postal Code</label>
+                            <input type="text" class="form-control @error('postal_code') is-invalid @enderror" name="postal_code" id="postal_code" placeholder="Postal Code" value="{{ old('postal_code', $user->postal_code) }}">
+                            @error('postal_code')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="city">City</label>
+                            <input type="text"
+                                class="form-control @error('city') is-invalid @enderror"
+                                name="city"
+                                id="city"
+                                placeholder="City"
+                                value="{{ old('city', $user->city) }}">
+
+                            @error('city')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="country">Country</label>
+                            <input type="text"
+                                class="form-control @error('country') is-invalid @enderror"
+                                name="country"
+                                id="country"
+                                placeholder="Country"
+                                value="{{ old('country', $user->country) }}">
+
+                            @error('country')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

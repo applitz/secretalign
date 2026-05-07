@@ -15,12 +15,13 @@ use Hashids\Hashids;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use App\Models\MeditLink;
-use Exception;
-use Illuminate\Support\Facades\Log;
 
 class RegisterPatient extends Controller
 {
     public $hashids;
+    protected $movixtechService;
+
+
     public function __construct()
     {
         $this->middleware(['auth', 'auth.doctor']);
@@ -157,7 +158,7 @@ class RegisterPatient extends Controller
                                     $dataShining3d['doctorId'] = $userId;
                                     $dataShining3d['orgType'] = $clinic['orgType'];
 
-                                    Log::info('SHINING 3D connection successful', ['user_id' => Auth::id(), 'clinic' => $clinic, 'shining3d_user_id' => $userId, 'org_code' => $orgCode]);
+                                    // Log::info('SHINING 3D connection successful', ['user_id' => Auth::id(), 'clinic' => $clinic, 'shining3d_user_id' => $userId, 'org_code' => $orgCode]);
                                 }
                             }
                             $scanError = 'Failed to find clinic in SHINING 3D.';
@@ -221,6 +222,7 @@ class RegisterPatient extends Controller
                                 }
                             }
         if (@$patient) {
+
             $hashids = new Hashids();
             $hashCode = $hashids->encode($patient->id);
             $mode = "edit";
@@ -292,7 +294,7 @@ class RegisterPatient extends Controller
                                     $dataShining3d['doctorId'] = $userId;
                                     $dataShining3d['orgType'] = $clinic['orgType'];
 
-                                    Log::info('SHINING 3D connection successful', ['user_id' => Auth::id(), 'clinic' => $clinic, 'shining3d_user_id' => $userId, 'org_code' => $orgCode]);
+                                    // Log::info('SHINING 3D connection successful', ['user_id' => Auth::id(), 'clinic' => $clinic, 'shining3d_user_id' => $userId, 'org_code' => $orgCode]);
                                 }
                             }
                             $scanError = 'Failed to find clinic in SHINING 3D.';
@@ -509,6 +511,9 @@ class RegisterPatient extends Controller
 
     public function save_patient_info(Request $request)
     {
+        $primaryCase = [];
+        $optionalCase = [];
+
         $first_name = $request->post('first_name');
         $last_name = $request->post('last_name');
         $dob = $request->post('dob');
@@ -539,9 +544,11 @@ class RegisterPatient extends Controller
             "fl_general_upload_drive_link" => $request->post("hyperlink"),
         ]);
     }
+
+
+
     public function save_prescription(Request $request)
     {
-        //dd($request->all());
         $data = [];
         $data['treat_upper_arch'] = $request->post('upper_arch');
         $data['treat_lower_arch'] = $request->post('lower_arch');
@@ -559,6 +566,26 @@ class RegisterPatient extends Controller
         $data['ctp_lr'] = serialize(json_decode($request->post('ctp_lr')));
         $data['ctp_ul'] = serialize(json_decode($request->post('ctp_ul')));
         $data['ctp_ll'] = serialize(json_decode($request->post('ctp_ll')));
+
+        $data['button_inner'] = implode(',', json_decode($request->post('button_inner'), true) ?? []);
+        $data['button_outer'] = implode(',', json_decode($request->post('button_outer'), true) ?? []);
+        $data['ihook_outer'] = implode(',', json_decode($request->post('ihook_outer'), true) ?? []);
+        $data['ihook_inner'] = implode(',', json_decode($request->post('ihook_inner'), true) ?? []);
+        $data['precision_cut_outer'] = implode(',', json_decode($request->post('precision_cut_outer'), true) ?? []);
+        $data['precision_cut_inner'] = implode(',', json_decode($request->post('precision_cut_inner'), true) ?? []);
+        $data['power_arm_attachment_outer'] = implode(',', json_decode($request->post('power_arm_attachment_outer'), true) ?? []);
+        $data['power_arm_attachment_inner'] = implode(',', json_decode($request->post('power_arm_attachment_inner'), true) ?? []);
+        $data['power_ridge_outer'] = implode(',', json_decode($request->post('power_ridge_outer'), true) ?? []);
+        $data['power_ridge_inner'] = implode(',', json_decode($request->post('power_ridge_inner'), true) ?? []);
+        $data['bite_turbos'] = implode(',', json_decode($request->post('bite_turbos'), true) ?? []);
+        $data['bite_ramp'] = implode(',', json_decode($request->post('bite_ramp'), true) ?? []);
+
+        $data['unerupted_teeth'] = implode(',', json_decode($request->post('unerupted_teeth'), true) ?? []);
+        $data['extracted_teeth'] = implode(',', json_decode($request->post('extracted_teeth'), true) ?? []);
+        $data['tooth_movement_restrictions'] = implode(',', json_decode($request->post('tooth_movement_restrictions'), true) ?? []);
+        $data['coil'] = implode(',', json_decode($request->post('coil'), true) ?? []);
+        $data['pontic'] = implode(',', json_decode($request->post('pontic'), true) ?? []);
+        $data['bridge'] = implode(',', json_decode($request->post('bridge'), true) ?? []);
 
         $data['ihook_ur'] = serialize(json_decode($request->post('ihook_ur')));
         $data['ihook_lr'] = serialize(json_decode($request->post('ihook_lr')));
@@ -603,11 +630,19 @@ class RegisterPatient extends Controller
         $data['resolutions_notes'] = $request->post('resolution_notes');
         $data['occlusal_plane'] = $request->post('occlusal_plane');
         $data['occlusal_plane_notes'] = $request->post('occlusal_plane_notes');
+
+        $data['aesthetic_start'] = $request->post('aesthetic_start');
+        $data['anterior_leveling'] = $request->post('anterior_leveling');
+
         $data['additional_attachments'] = serialize(json_decode($request->post('additional_attachments')));
         $data['additional_attachments_notes'] = $request->post('additional_attachments_notes');
         $data['keep_already_placed_attachments'] = $request->post('keep_already_place_attachments');
+
         $data['trim_type_upper'] = $request->post('aligner_trim_type_upper');
+        $data['trim_type_upper_straight_upper'] = $request->post('trim_type_upper_upper');
         $data['trim_type_lower'] = $request->post('aligner_trim_type_lower');
+        $data['trim_type_lower_straight_lower'] = $request->post('trim_type_lower_upper');
+
         $data['is_prescription_submitted'] = 1;
         $id = $request->post('patient_id');
         $treatment_plan_id = $request->post('treatment_plan_id');
@@ -617,9 +652,11 @@ class RegisterPatient extends Controller
 
     public function submit(Request $request)
     {
+        // dd($request->all());
         $id = $request->post('patient_id');
         $phase = $request->post('treatment_plan_id');
         $preferred_package = @$request->post('client_preferred_package');
+        $setup_type = @$request->post('client_setup_type');
         $comment = $request->comment;
         $advisor_id = $request->advisor;
         // dd($advisor_id === null , $advisor_id === '');
@@ -666,6 +703,7 @@ class RegisterPatient extends Controller
                 }
                 DB::table('patients')->where('id', $patient->patient_id)->update([
                     "pricing_package" => $package,
+                    "setup_type" => $setup_type,
                 ]);
             }
 
