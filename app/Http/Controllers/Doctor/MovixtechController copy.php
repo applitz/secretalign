@@ -517,6 +517,7 @@ class MovixtechController extends Controller
 
         if ($request->webhook_type === 'case_done') {
             $caseId = $request->case_id;
+            dd($caseId);
             if (empty($caseId)) {
                 return response()->json([
                     'status' => false,

@@ -228,6 +228,7 @@ class MovixtechController extends Controller
         }
         $clientName = $patientDetails->first_name . ' ' . $patientDetails->last_name;
         $patientId = $patientDetails->id;
+        $objPatientTreatmentPlan = PatientTreatmentPlan::find($request->treatment_plan_id);
         // ✅ Primary scan data
         if (!empty($plan->fl_upper_arch) || !empty($plan->fl_lower_arch)) {
             $primaryUpperFile = $plan->fl_upper_arch;
@@ -270,7 +271,11 @@ class MovixtechController extends Controller
                 ];
             }
             $runCase = $this->runCase($primaryCaseId);
-
+            $objPatientTreatmentPlan->primary_case_id = $primaryCaseId;
+            $objPatientTreatmentPlan->primary_client = $clientName;
+            $objPatientTreatmentPlan->primary_note = 'Primary Scan';
+            $objPatientTreatmentPlan->primary_movixtech_status = 'Processing';
+            $objPatientTreatmentPlan->primary_movix_note = null;
         }
 
         // ✅ Optional scan data
@@ -314,7 +319,13 @@ class MovixtechController extends Controller
                 ];
             }
             $runOptionalCase = $this->runCase($optionalCaseId);
+            $objPatientTreatmentPlan->optional_scan_case_id = $runOptionalCase;
+            $objPatientTreatmentPlan->optional_scan_client = $clientName;
+            $objPatientTreatmentPlan->optional_scan_note = 'Optional Scan';
+            $objPatientTreatmentPlan->optional_scan_movix_note = null;
+            $objPatientTreatmentPlan->optional_movixtech_status = 'Processing';
         }
+        $objPatientTreatmentPlan->save();
         return response()->json([
             'status' => true,
             'message' => 'Case created and started successfully',
@@ -596,6 +607,7 @@ class MovixtechController extends Controller
 
         if ($request->webhook_type === 'case_done') {
             $caseId = $request->case_id;
+
             if (empty($caseId)) {
                 return response()->json([
                     'status' => false,
@@ -603,12 +615,30 @@ class MovixtechController extends Controller
                 ], 200);
             }
             // ✅ Find record
-            $case = PatientTreatmentPlan::where('primary_case_id', $caseId)->first();
+            $case = PatientTreatmentPlan::
+                    where('primary_case_id', $caseId)
+                    ->orWhere('optional_scan_case_id', $caseId)
+                    ->first();
 
             if (!$case) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Case not found'
+                ], 404);
+            }
+
+            if($case->primary_case_id == $caseId){
+                $caseType = 'primary';
+            } elseif($case->optional_scan_case_id == $caseId){
+                $caseType = 'optional';
+            } else {
+                $caseType = null;
+            }
+
+            if (!$caseType) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Invalid Case ID'
                 ], 404);
             }
 
@@ -645,26 +675,38 @@ class MovixtechController extends Controller
                 }
             }
 
-            // ✅ Prepare update data
-            $updateData = [
-                'primary_movix_note' => $message,
-            ];
+            if($caseType == 'optional'){
+                // ✅ Prepare update data
+                $updateData = [
+                    'optional_scan_movix_note' => $message,
+                ];
+            }
+
+            if($caseType == 'primary'){
+                // ✅ Prepare update data
+                $updateData = [
+                    'primary_movix_note' => $message,
+                ];
+            }
+
 
             // ✅ Call getViewerLink API
             $getViewerLink = $this->getViewerLink($caseId);
-            $logData = [
-                'title' => 'getViewerLink',
-                'data'     => $getViewerLink,
-            ];
-            File::append(
-                $filePath,
-                json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL
-            );
+
             // ✅ Append (NOT replace)
             if (!empty($getViewerLink) && !empty($getViewerLink['url'])) {
+                if($caseType == 'optional'){
+                    $updateData['optional_scan_movix_link'] = $getViewerLink['url'];
+                    $updateData['optional_scan_movix_link_expires_at'] = Carbon::parse($getViewerLink['expires_at']);
+                    $updateData['optional_movixtech_status'] = 'Completed';
+                }
 
-                $updateData['primary_movix_link'] = $getViewerLink['url'];
-                $updateData['primary_movix_link_expires_at'] = Carbon::parse($getViewerLink['expires_at']);
+                if($caseType == 'primary'){
+                    $updateData['primary_movix_link'] = $getViewerLink['url'];
+                    $updateData['primary_movix_link_expires_at'] = Carbon::parse($getViewerLink['expires_at']);
+                    $updateData['primary_movixtech_status'] = 'Completed';
+                }
+
             }
             // ✅ Single DB update (better)
             $case->update($updateData);
