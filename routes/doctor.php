@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Doctor\PatientsController;
 use App\Http\Controllers\Doctor\Shining3dController;
 use App\Http\Controllers\Doctor\MovixtechController;
-use App\Http\Controllers\Doctor\ClinicalPreferencesControllers;
+use App\Http\Controllers\Doctor\ClinicalPreferencesController;
 
 Route::middleware(['auth', 'auth.doctor'])->group(function () {
     Route::resource('patients', PatientsController::class);
