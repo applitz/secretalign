@@ -158,8 +158,12 @@ class MovixtechController extends Controller
                 'message' => 'Case creation failed'
             ];
         }
-
-        $caseId = $caseDetails['case_id'];
+        return [
+                'status' => true,
+                'message' => 'Case created successfully',
+                'data' => $caseDetails,
+        ];
+        // $caseId = $caseDetails['case_id'];
     }
 
     public function createCaseAndGetPresignedLinks($clientName, $note, $caseType = 'Primary Scan'){
@@ -223,12 +227,50 @@ class MovixtechController extends Controller
 
         }
         $clientName = $patientDetails->first_name . ' ' . $patientDetails->last_name;
+        $patientId = $patientDetails->id;
         // ✅ Primary scan data
         if (!empty($plan->fl_upper_arch) || !empty($plan->fl_lower_arch)) {
             $primaryUpperFile = $plan->fl_upper_arch;
             $primaryLowerFile = $plan->fl_lower_arch;
             $primaryCaseId = $plan->primary_case_id;
             $primaryMovixtechStatus = $plan->primary_movixtech_status;
+            $createCaseResponse = $this->createCase($clientName, 'Primary Scan');
+
+             if (!$createCaseResponse['status']) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Failed to create case for primary scan: ' . $createCaseResponse['message']
+                ], 500);
+            }
+            $primaryCaseId = $createCaseResponse['data']['case_id'];
+            $presignedLinks = $this->getPresignedLinks($primaryCaseId);
+            if (empty($presignedLinks['upper_jaw']['url']) ||  empty($presignedLinks['lower_jaw']['url'])) {
+                return [
+                    'status' => false,
+                    'message' => 'Presigned URL missing'
+                ];
+            }
+
+            $upperPath = storage_path("PatientFiles/Patient{$patientId}/".$primaryUpperFile);
+            $lowerPath = storage_path("PatientFiles/Patient{$patientId}/".$primaryLowerFile);
+
+            if (!file_exists($upperPath) || !file_exists($lowerPath)) {
+                return [
+                    'status' => false,
+                    'message' => 'File not found'
+                ];
+            }
+
+            $uploadToPresignedUrlUpper = $this->uploadToPresignedUrl($presignedLinks['upper_jaw']['url'], $upperPath);
+            $uploadToPresignedUrlLower = $this->uploadToPresignedUrl($presignedLinks['lower_jaw']['url'], $lowerPath);
+            if($uploadToPresignedUrlUpper === false || $uploadToPresignedUrlLower === false){
+                return [
+                    'status' => false,
+                    'message' => 'Failed to upload files to presigned URLs'
+                ];
+            }
+            $runCase = $this->runCase($primaryCaseId);
+
         }
 
         // ✅ Optional scan data
@@ -237,14 +279,45 @@ class MovixtechController extends Controller
             $optionalLowerFile = $plan->optional_fl_lower_arch;
             $optionalCaseId = $plan->optional_scan_case_id;
             $optionalMovixtechStatus = $plan->optional_scan_movixtech_status;
+            $createCaseResponse = $this->createCase($clientName, 'Optional Scan');
+            if (!$createCaseResponse['status']) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Failed to create case for optional scan: ' . $createCaseResponse['message']
+                ], 500);
+            }
+            $optionalCaseId = $createCaseResponse['data']['case_id'];
+            $optionalPresignedLinks = $this->getPresignedLinks($optionalCaseId);
+            if (empty($optionalPresignedLinks['upper_jaw']['url']) ||  empty($optionalPresignedLinks['lower_jaw']['url'])) {
+                return [
+                    'status' => false,
+                    'message' => 'Presigned URL missing'
+                ];
+            }
+
+            $upperPath = storage_path("PatientFiles/Patient{$patientId}/".$optionalUpperFile);
+            $lowerPath = storage_path("PatientFiles/Patient{$patientId}/".$optionalLowerFile);
+
+            if (!file_exists($upperPath) || !file_exists($lowerPath)) {
+                return [
+                    'status' => false,
+                    'message' => 'File not found'
+                ];
+            }
+
+            $uploadToPresignedUrlUpperOptional = $this->uploadToPresignedUrl($optionalPresignedLinks['upper_jaw']['url'], $upperPath);
+            $uploadToPresignedUrlLowerOptional = $this->uploadToPresignedUrl($optionalPresignedLinks['lower_jaw']['url'], $lowerPath);
+            if($uploadToPresignedUrlUpperOptional === false || $uploadToPresignedUrlLowerOptional === false){
+                return [
+                    'status' => false,
+                    'message' => 'Failed to upload files to presigned URLs'
+                ];
+            }
+            $runOptionalCase = $this->runCase($optionalCaseId);
         }
-
-
-
         return response()->json([
             'status' => true,
             'message' => 'Case created and started successfully',
-            'case_id' => $caseId
         ]);
     }
 
@@ -424,7 +497,6 @@ class MovixtechController extends Controller
             ->put($url);
         if (!$response->successful()) {
             return false;
-
         }
 
         return true;
