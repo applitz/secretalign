@@ -319,7 +319,7 @@ class MovixtechController extends Controller
                 ];
             }
             $runOptionalCase = $this->runCase($optionalCaseId);
-            $objPatientTreatmentPlan->optional_scan_case_id = $runOptionalCase;
+            $objPatientTreatmentPlan->optional_scan_case_id = $optionalCaseId;
             $objPatientTreatmentPlan->optional_scan_client = $clientName;
             $objPatientTreatmentPlan->optional_scan_note = 'Optional Scan';
             $objPatientTreatmentPlan->optional_scan_movix_note = null;
