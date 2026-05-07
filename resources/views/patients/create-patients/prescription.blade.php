@@ -13,6 +13,13 @@
         </div>
 
     </div>
+    @php
+        $preferredSizeIssues = $patient->tooth_size_issues ?: ($doctorClinicalPreference->ipr_preference ?? '');
+        $preferredLocationUpper = $patient->location_upper ?: ($doctorClinicalPreference->ipr_location_upper ?? '');
+        $preferredLocationLower = $patient->location_lower ?: ($doctorClinicalPreference->ipr_location_lower ?? '');
+        $preferredLimits = $patient->limits ?: ($doctorClinicalPreference->ipr_max_limit ?? '');
+        $preferredResolutionNotes = $patient->resolutions_notes ?: ($doctorClinicalPreference->resolutions_notes ?? '');
+    @endphp
     <div class="accordion border-x border-top rounded mb-3" id="accordionFaq">
         <div class="card shadow-none border-bottom rounded-bottom-0 mb-0">
             <div class="card-header p-0" id="faqAccordionHeading1">
@@ -1273,14 +1280,14 @@
                         <label>Please select one of the following options.</label>
                         <div class="form-check">
                             <input class="form-check-input" id="size_issues1" type="radio"
-                                name="size_issues" value="IPR" @if ($patient->tooth_size_issues ==
+                                name="size_issues" value="IPR" @if ($preferredSizeIssues ==
                             'IPR') checked @endif />
                             <label class="form-check-label" for="size_issues1">IPR</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" id="size_issues2" type="radio"
                                 name="size_issues" value="Restorative (No IPR)"
-                                @if($patient->tooth_size_issues == 'Restorative (No IPR)')
+                                @if($preferredSizeIssues == 'Restorative (No IPR)')
                             checked @endif />
                             <label class="form-check-label" for="size_issues2">Restorative (No
                                 IPR)</label>
@@ -1288,23 +1295,23 @@
                         <div class="form-check">
                             <input class="form-check-input" id="size_issues3" type="radio"
                                 name="size_issues" value="Accept best fit (No IPR/Restorative)"
-                                @if($patient->tooth_size_issues == 'Accept best fit (No
+                                @if($preferredSizeIssues == 'Accept best fit (No
                             IPR/Restorative)') checked @endif />
                             <label class="form-check-label" for="size_issues3">Accept best fit (No IPR/Restorative)</label>
                         </div>
                     </div>
                     <hr>
-                    <div id="presc-location-section" class="{{ $patient->tooth_size_issues == 'IPR' ? '' : 'd-none'}}">
+                    <div id="presc-location-section" class="{{ $preferredSizeIssues == 'IPR' ? '' : 'd-none'}}">
                     <h5>Location</h5>
                     <div class="mb-3">
                         <label>Upper</label>
                         <select id="location_upper" name="location_upper" class="form-select">
                             <option value="" selected disabled>Select</option>
-                            <option value="3-3" @if ($patient->location_upper == '3-3') selected
+                            <option value="3-3" @if ($preferredLocationUpper == '3-3') selected
                                 @endif>3-3</option>
-                            <option value="4-4" @if ($patient->location_upper == '4-4') selected
+                            <option value="4-4" @if ($preferredLocationUpper == '4-4') selected
                                 @endif>4-4</option>
-                            <option value="6-6" @if ($patient->location_upper == '6-6') selected
+                            <option value="6-6" @if ($preferredLocationUpper == '6-6') selected
                                 @endif>6-6</option>
                         </select>
                     </div>
@@ -1312,22 +1319,22 @@
                         <label>Lower</label>
                         <select id="location_lower" name="location_lower" class="form-select">
                             <option value="" selected disabled>Select</option>
-                            <option value="3-3" @if ($patient->location_lower == '3-3') selected
+                            <option value="3-3" @if ($preferredLocationLower == '3-3') selected
                                 @endif>3-3</option>
-                            <option value="4-4" @if ($patient->location_lower == '4-4') selected
+                            <option value="4-4" @if ($preferredLocationLower == '4-4') selected
                                 @endif>4-4</option>
-                            <option value="6-6" @if ($patient->location_lower == '6-6') selected
+                            <option value="6-6" @if ($preferredLocationLower == '6-6') selected
                                 @endif>6-6</option>
                         </select>
                     </div>
                     <hr>
                     </div>
-                    <div id="pres-limits-section"  class="{{ $patient->tooth_size_issues == 'IPR' ? '' : 'd-none'}}">
+                    <div id="pres-limits-section"  class="{{ $preferredSizeIssues == 'IPR' ? '' : 'd-none'}}">
                         <h5>Limits</h5>
                         <div class="mb-3">
                             <label>Maximum Ant. IPR/Contact 0.1-0.6mm</label>
                             <input class="form-control" type="number" name="limits"
-                                value="{{ $patient->limits }}" id="limits" step="0.05" min="0.1"
+                                value="{{ $preferredLimits }}" id="limits" step="0.05" min="0.1"
                                 max="0.6">
                         </div>
                         <hr>
@@ -2285,7 +2292,7 @@
                     <div class="mb-3" style="text-align: left">
                         <label>Notes</label>
                         <textarea name="resolution_notes" id="resolution_notes"
-                            class="form-control"></textarea>
+                            class="form-control">{{ $preferredResolutionNotes }}</textarea>
                     </div>
                 </div>
             </div>

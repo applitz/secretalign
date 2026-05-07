@@ -221,6 +221,34 @@
                                     <label class="form-label">Maximum Ant. IPR/Contact 0.1-0.6mm</label>
                                     <input class="form-control" type="number" name="ipr_max_limit" step="0.05" min="0.1" max="0.6" value="{{ old('ipr_max_limit', $preference->ipr_max_limit ?? '') }}">
                                     @error('ipr_max_limit')<div class="text-danger">{{ $message }}</div>@enderror
+
+                                    <div class="mt-3">
+                                        <label class="form-label">Location Upper</label>
+                                        <select class="form-select" name="ipr_location_upper">
+                                            <option value="">Select</option>
+                                            @foreach(['3-3', '4-4', '6-6'] as $location)
+                                                <option value="{{ $location }}" {{ old('ipr_location_upper', $preference->ipr_location_upper ?? '') === $location ? 'selected' : '' }}>{{ $location }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('ipr_location_upper')<div class="text-danger">{{ $message }}</div>@enderror
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <label class="form-label">Location Lower</label>
+                                        <select class="form-select" name="ipr_location_lower">
+                                            <option value="">Select</option>
+                                            @foreach(['3-3', '4-4', '6-6'] as $location)
+                                                <option value="{{ $location }}" {{ old('ipr_location_lower', $preference->ipr_location_lower ?? '') === $location ? 'selected' : '' }}>{{ $location }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('ipr_location_lower')<div class="text-danger">{{ $message }}</div>@enderror
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <label class="form-label">Resolutions Notes</label>
+                                        <textarea class="form-control" name="resolutions_notes" rows="3">{{ old('resolutions_notes', $preference->resolutions_notes ?? '') }}</textarea>
+                                        @error('resolutions_notes')<div class="text-danger">{{ $message }}</div>@enderror
+                                    </div>
                                 </div>
                             </div>
 
