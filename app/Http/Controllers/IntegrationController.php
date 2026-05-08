@@ -278,7 +278,13 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
         // solved by Tapas Web Solution x dotprogrammers
         $token = DB::table('medit_links')
                 ->where('user_id', Auth::user()->id)
-                ->get();
+                ->orderByDesc('id')
+                ->first();
+
+        if (!$token || empty($token->medit_link_access_token) || empty($token->medit_link_group_uuid)) {
+            Log::warning('MeditLink token/group missing for case search', ['user_id' => Auth::id()]);
+            return view("layouts.medit_link_patients", compact("results"))->render();
+        }
 
 //        Log::info($token);
         //$medit_client_id
@@ -303,9 +309,9 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
               CURLOPT_HTTPHEADER => array(
                // 'Host: '.env('MEDIT_LINK_OPENAPI_SERVER').'openapi-resources.meditlink.com',
                'Host: openapi-resources.meditlink.com',
-                'Authorization: Bearer '.$token[0]->medit_link_access_token,
+                'Authorization: Bearer '.$token->medit_link_access_token,
                 'x-meditlink-client-id: '.env('MEDIT_LINK_CLIENT_ID'),
-                'x-meditlink-group-uuid: '.$token[0]->medit_link_group_uuid,
+                'x-meditlink-group-uuid: '.$token->medit_link_group_uuid,
                 'Content-Type: application/json'
               ),
             ));

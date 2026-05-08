@@ -238,14 +238,17 @@ class PatientFileController extends Controller
         $patient_id = $request->post('patient_id');
         $treatment_plan_id = $request->post('treatment_plan_id');
         $caseUuid = $request->post('uuid');
+        $importTarget = $request->post('import_target') === 'optional' ? 'optional' : 'main';
         $data = [];
         $case = $this->MeditLinkGetCase($caseUuid);
+        $upperColumn = $importTarget === 'optional' ? 'optional_fl_upper_arch' : 'fl_upper_arch';
+        $lowerColumn = $importTarget === 'optional' ? 'optional_fl_lower_arch' : 'fl_lower_arch';
 
         if($case->upper_arch_uuid) {
-            $data['upper'] = $this->MeditLinkSaveSTL($patient_id, $treatment_plan_id, 'fl_upper_arch', $case->upper_arch_uuid,$case->patient_name,$case->patient_code);
+            $data['upper'] = $this->MeditLinkSaveSTL($patient_id, $treatment_plan_id, $upperColumn, $case->upper_arch_uuid,$case->patient_name,$case->patient_code);
         }
         if($case->lower_arch_uuid) {
-            $data['lower'] = $this->MeditLinkSaveSTL($patient_id, $treatment_plan_id, 'fl_lower_arch', $case->lower_arch_uuid,$case->patient_name,$case->patient_code);
+            $data['lower'] = $this->MeditLinkSaveSTL($patient_id, $treatment_plan_id, $lowerColumn, $case->lower_arch_uuid,$case->patient_name,$case->patient_code);
         }
                  $name_parts = explode(" ", $case->patient_name);
         // $data['first_name']=$name_parts[0];
@@ -322,12 +325,15 @@ class PatientFileController extends Controller
         $caseId = $request->post('case_id');
         $hash_upper = @$request->post('hash_upper');
         $hash_lower = @$request->post('hash_lower');
+        $importTarget = $request->post('import_target') === 'optional' ? 'optional' : 'main';
+        $upperColumn = $importTarget === 'optional' ? 'optional_fl_upper_arch' : 'fl_upper_arch';
+        $lowerColumn = $importTarget === 'optional' ? 'optional_fl_lower_arch' : 'fl_lower_arch';
         $data = [];
         if(!empty($hash_upper)) {
-            $data["upper"] = $this->ThreeShapeSaveSTL($patient_id, $treatment_plan_id, "fl_upper_arch", $caseId, $hash_upper);
+            $data["upper"] = $this->ThreeShapeSaveSTL($patient_id, $treatment_plan_id, $upperColumn, $caseId, $hash_upper);
         }
         if(!empty($hash_lower)) {
-            $data["lower"] = $this->ThreeShapeSaveSTL($patient_id, $treatment_plan_id, "fl_lower_arch", $caseId, $hash_lower);
+            $data["lower"] = $this->ThreeShapeSaveSTL($patient_id, $treatment_plan_id, $lowerColumn, $caseId, $hash_lower);
         }
         return response()->json($data);
     }

@@ -1611,7 +1611,35 @@ async function previewUpperStlFile(file_upper)
             @endif
             @endif
 
-            function downloadMeditLinkStlFiles($uuid)
+            function applyImportedScans(response, importTarget = 'main')
+            {
+                if (importTarget === 'optional') {
+                    if (response.upper) {
+                        $('#key18').attr('file', response.upper);
+                        window.dropzone_active_state('18', response.upper);
+                        previewOptionalUpperStlFile(response.upper);
+                    }
+                    if (response.lower) {
+                        $('#key19').attr('file', response.lower);
+                        window.dropzone_active_state('19', response.lower);
+                        previewOptionalLowerStlFile(response.lower);
+                    }
+                    return;
+                }
+
+                if (response.upper) {
+                    $('#key1').attr('file', response.upper);
+                    window.dropzone_active_state('1', response.upper);
+                    previewUpperStlFile(response.upper);
+                }
+                if (response.lower) {
+                    $('#key2').attr('file', response.lower);
+                    window.dropzone_active_state('2', response.lower);
+                    previewLowerStlFile(response.lower);
+                }
+            }
+
+            function downloadMeditLinkStlFiles($uuid, importTarget = 'main')
             {
                 $.ajax({
                         type: "POST",
@@ -1621,6 +1649,7 @@ async function previewUpperStlFile(file_upper)
                             "patient_id" : "{{ $patient->patient_id }}",
                             "treatment_plan_id" : "{{ $patient->id }}",
                             "uuid" : $uuid,
+                            "import_target" : importTarget
                         },
                         beforeSend: function () {
                             showLoader();
@@ -1628,17 +1657,8 @@ async function previewUpperStlFile(file_upper)
                     }).done(function (response) {
 
                         if(response.upper || response.lower) {
-                            if(response.upper) {
-                                $('#key1').attr('file', response.upper);
-                                window.dropzone_active_state('1', response.upper)
-                                previewUpperStlFile(response.upper)
-                            }
-                            if(response.lower) {
-                                $('#key2').attr('file', response.lower);
-                                window.dropzone_active_state('2', response.lower)
-                                previewLowerStlFile(response.lower)
-                            }
-                                                        if(response.patient_name){
+                            applyImportedScans(response, importTarget);
+                            if(response.patient_name){
                                     document.getElementById('first_name').value = response.first_name;
                                     document.getElementById('last_name').value = response.last_name;
                             }
@@ -1657,7 +1677,7 @@ async function previewUpperStlFile(file_upper)
                     });
             }
 
-            function download3ShapeStlFiles($case_id, $hash_upper, $hash_lower)
+            function download3ShapeStlFiles($case_id, $hash_upper, $hash_lower, importTarget = 'main')
             {
                 $.ajax({
                         type: "POST",
@@ -1669,6 +1689,7 @@ async function previewUpperStlFile(file_upper)
                             "case_id" : $case_id,
                             "hash_upper" : $hash_upper,
                             "hash_lower" : $hash_lower,
+                            "import_target" : importTarget
                         },
                         beforeSend: function () {
                             showLoader();
@@ -1676,16 +1697,7 @@ async function previewUpperStlFile(file_upper)
                     }).done(function (response) {
 
                         if(response.upper || response.lower) {
-                            if(response.upper) {
-                                $('#key1').attr('file', response.upper);
-                                window.dropzone_active_state('1', response.upper)
-                                previewUpperStlFile(response.upper)
-                            }
-                            if(response.lower) {
-                                $('#key2').attr('file', response.lower);
-                                window.dropzone_active_state('2', response.lower)
-                                previewLowerStlFile(response.lower)
-                            }
+                            applyImportedScans(response, importTarget);
                             $("#3shape-section").addClass('d-none');
                             $("#medit-link-section").addClass('d-none')
                             $("#patient-wizard").removeClass('d-none');
@@ -1699,13 +1711,15 @@ async function previewUpperStlFile(file_upper)
             }
 
         $(document).ready(function () {
+            let activeImportTarget = 'main';
 
             @if(@$medit_data->case_uuid)
                     downloadMeditLinkStlFiles('{{@$medit_data->case_uuid}}')
                     @endif
 
 
-            $("#select-from-3shape").on('click', function () {
+            $(document).on('click', '.import-from-3shape', function () {
+                activeImportTarget = $(this).data('import-target') || 'main';
                 $("#3shape-section").removeClass('d-none');
                 $("#medit-link-section").addClass('d-none');
                 $("#patient-wizard").addClass('d-none');
@@ -1718,7 +1732,8 @@ async function previewUpperStlFile(file_upper)
                     });
 
 
-                    $("#select-from-medit-link").on('click', function () {
+                    $(document).on('click', '.import-from-medit-link', function () {
+                        activeImportTarget = $(this).data('import-target') || 'main';
                         $("#medit-link-section").removeClass('d-none')
                         $("#3shape-section").addClass('d-none')
                         $("#patient-wizard").addClass('d-none')
@@ -1734,12 +1749,12 @@ async function previewUpperStlFile(file_upper)
                         const hash_upper = $(this).attr('hash-upper'),
                         hash_lower = $(this).attr('hash-lower'),
                         case_id = $(this).attr('case-id');
-                        download3ShapeStlFiles(case_id, hash_upper, hash_lower);
+                        download3ShapeStlFiles(case_id, hash_upper, hash_lower, activeImportTarget);
                     });
 
                     $(document).on('click', '.download-medit-link-stl-files', function () {
                         const uuid = $(this).attr('data-uuid');
-                        downloadMeditLinkStlFiles(uuid)
+                        downloadMeditLinkStlFiles(uuid, activeImportTarget)
                     })
 
 

@@ -146,10 +146,10 @@
 
     <div class="mb-3 ">
         <a
-        class="btn btn-primary order-from-button"
+        class="btn btn-primary order-from-button import-from-3shape"
         @if(Auth::user()->three_shape_access_token != null)
         href="javascript:void(0);"
-        id="select-from-3shape"
+        data-import-target="main"
         @else
         href="{{url('/integration-3shape/obtain-authorization-code')}}"
         @endif
@@ -161,9 +161,9 @@
         </a>
 
 
-        <a class="btn btn-primary order-from-button"
+        <a class="btn btn-primary order-from-button import-from-medit-link"
                 @if(Auth::user()->medit_link_access_token != null)
-                        href="javascript:void(0);" id="select-from-medit-link"
+                        href="javascript:void(0);" data-import-target="main"
                 @else
                     href="{{url('/integration-medit-link/obtain-authorization-code')}}"
                 @endif
@@ -325,9 +325,9 @@
         </div>
 
         <div class="mb-3 ">
-            <a class="btn btn-primary order-from-button"
+            <a class="btn btn-primary order-from-button import-from-3shape"
                 @if(Auth::user()->three_shape_access_token != null)
-                    href="javascript:void(0);" id="select-from-3shape"
+                    href="javascript:void(0);" data-import-target="optional"
                 @else
                     href="{{url('/integration-3shape/obtain-authorization-code')}}"
                 @endif
@@ -339,9 +339,9 @@
             </a>
 
 
-            <a class="btn btn-primary order-from-button"
+            <a class="btn btn-primary order-from-button import-from-medit-link"
                     @if(Auth::user()->medit_link_access_token != null)
-                            href="javascript:void(0);" id="select-from-medit-link"
+                            href="javascript:void(0);" data-import-target="optional"
                     @else
                         href="{{url('/integration-medit-link/obtain-authorization-code')}}"
                     @endif
