@@ -36,6 +36,9 @@ class ClinicalPreferencesController extends Controller
             'en_masse_distalization' => 'required|string',
             'ipr_preference' => 'required|string',
             'ipr_max_limit' => 'required_if:ipr_preference,IPR|nullable|numeric|between:0.1,0.6',
+            'ipr_location_upper' => 'required_if:ipr_preference,IPR|nullable|string|in:3-3,4-4,6-6',
+            'ipr_location_lower' => 'required_if:ipr_preference,IPR|nullable|string|in:3-3,4-4,6-6',
+            'resolutions_notes' => 'nullable|string',
             'additional_comments' => 'nullable|string',
         ]);
 
@@ -57,6 +60,9 @@ class ClinicalPreferencesController extends Controller
             'en_masse_distalization',
             'ipr_preference',
             'ipr_max_limit',
+            'ipr_location_upper',
+            'ipr_location_lower',
+            'resolutions_notes',
             'additional_comments',
         ]);
 
@@ -66,6 +72,8 @@ class ClinicalPreferencesController extends Controller
 
         if ($data['ipr_preference'] !== 'IPR') {
             $data['ipr_max_limit'] = null;
+            $data['ipr_location_upper'] = null;
+            $data['ipr_location_lower'] = null;
         }
 
         DoctorClinicalPreference::updateOrCreate(

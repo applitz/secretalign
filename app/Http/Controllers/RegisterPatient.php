@@ -15,6 +15,7 @@ use Hashids\Hashids;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use App\Models\MeditLink;
+use App\Models\DoctorClinicalPreference;
 
 class RegisterPatient extends Controller
 {
@@ -110,6 +111,7 @@ class RegisterPatient extends Controller
     }
     public function edit(Request $request, $treatment_plan_id)
     {
+        $doctorClinicalPreference = DoctorClinicalPreference::where('doctor_id', Auth::id())->first();
         $baseUrl = null;
         $code = null;
         $changePlan = 'true';
@@ -228,11 +230,11 @@ class RegisterPatient extends Controller
             $mode = "edit";
             if ($patient->is_submitted == 1) {
                 if ($patient->is_editable == 1) {
-                    return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code', 'hashCode', 'dataShining3d', 'scanError'));
+                    return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code', 'hashCode', 'dataShining3d', 'scanError', 'doctorClinicalPreference'));
                 }
 
             } else {
-                 return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code', 'hashCode', 'dataShining3d', 'scanError'));
+                 return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code', 'hashCode', 'dataShining3d', 'scanError', 'doctorClinicalPreference'));
             }
         }
         abort(403, "Unauthorized request!");
@@ -249,6 +251,7 @@ class RegisterPatient extends Controller
     }
     public function create(Request $request)
     {
+        $doctorClinicalPreference = DoctorClinicalPreference::where('doctor_id', Auth::id())->first();
         $dataShining3d = [];
         $scanError = null;
         $baseUrl = null;
@@ -477,7 +480,7 @@ class RegisterPatient extends Controller
             $hashCode = $hashids->encode($patient->id);
     // dd($dataShining3d);
         $changePlan = 'true';
-        return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code', 'dataShining3d', 'scanError', 'hashCode'));
+        return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code', 'dataShining3d', 'scanError', 'hashCode', 'doctorClinicalPreference'));
     }
 
     protected function delete_patient_storage_dir($patient_id)
