@@ -1866,6 +1866,7 @@ async function loadPLYLower(url) {
                         }
                     });
             }
+
             $(document).on('click', '.download-3shape-stl-files-additional',function () {
                 const hash_upper = $(this).attr('hash-upper'),
                 hash_lower = $(this).attr('hash-lower'),
@@ -1942,9 +1943,7 @@ async function loadPLYLower(url) {
                                 window.dropzone_active_state('2', response.lower)
                                 previewLowerStlFile(response.lower)
                             }
-                            $("#3shape-section").addClass('d-none');
-                            $("#medit-link-section").addClass('d-none')
-                            $("#patient-wizard").removeClass('d-none');
+                            $("#3shape-section-Modal").modal('hide');
                             hideLoader();
                         }
                         else {
