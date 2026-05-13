@@ -13,6 +13,7 @@ var AdditionalScan = function() {
 
         // optional-select-from-3shape
         $("#optional-select-from-3shape").on("click", function (e) {
+            alert("fdhf");
             e.preventDefault();
             $("#optional-3shape-section-Modal").modal("show");
         });
