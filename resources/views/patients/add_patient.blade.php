@@ -1826,12 +1826,12 @@ async function loadPLYLower(url) {
                             if(response.upper) {
                                 $('#key18').attr('file', response.upper);
                                 window.dropzone_active_state('18', response.upper)
-                                previewUpperStlFile(response.upper)
+                                previewOptionalUpperStlFile(response.upper)
                             }
                             if(response.lower) {
                                 $('#key19').attr('file', response.lower);
                                 window.dropzone_active_state('19', response.lower)
-                                previewLowerStlFile(response.lower)
+                                previewOptionalLowerStlFile(response.lower)
                             }
                             $("#optional-3shape-section-Modal").modal('hide');
                             hideLoader();
