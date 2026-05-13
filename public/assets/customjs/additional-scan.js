@@ -33,9 +33,12 @@ var AdditionalScan = function() {
             three_shape_search_for_case = $("#3shape-search-additional input[name=additional_three_shape_search_for_case]").val();
             $.ajax({
                 type: "POST",
-                url: "{{ url('/integrations/3shape-search-cases') }}",
+                headers: {
+                    'X-CSRF-TOKEN': $('input[name="_token"]').val(),
+                },
+                url: baseUrl  + "/integrations/3shape-search-cases",
                 data: {
-                    "_token" : "{{ csrf_token() }}",
+                    "_token" : $('meta[name="csrf-token"]').attr('content'),
                     "case_id" : case_id,
                     "patient_id" : patient_id,
                     "three_shape_case_id" : three_shape_case_id,

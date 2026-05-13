@@ -10,6 +10,7 @@
       <div class="modal-body">
         <p class="card-title-desc">Search with case id or by patient. Click on case to download stl files.</p>
         <form class="mt-2" method="GET" id="3shape-search-additional">
+            @csrf
             <input type="hidden" name="additional_patient_id" value="{{ $patient->patient_id }}">
             <input type="hidden" name="additional_case_id" value="{{ $patient->id }}">
             <div class="row">
