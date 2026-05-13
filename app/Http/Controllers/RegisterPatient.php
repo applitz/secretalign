@@ -109,6 +109,7 @@ class RegisterPatient extends Controller
     }
     public function edit(Request $request, $treatment_plan_id)
     {
+        $type = $request->has('type') ? $request->get('type') : 'primary';
         $baseUrl = null;
         $code = null;
         $changePlan = 'true';

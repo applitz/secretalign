@@ -830,7 +830,7 @@
 
 @endif
 
-    @if( request()->get('code') && request()->get('matchNode') && request()->get('codeChallenge') && request()->get('domain'))
+    @if( request()->get('code') && request()->get('matchNode') && request()->get('codeChallenge') && request()->get('domain') && request()->get('type') == 'primary' )
     <!--  Order From shining3d Modal Start -->
         <div class="modal fade" id="order-from-shining3d-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -839,6 +839,182 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="orderFromShining3dLabel">
                             Import From Shining3d
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div id="shining3d-error" class="alert alert-danger py-1" style="display:none; font-size: 14px;"></div>
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="scanType" class="form-label">Select Region
+                                            <a href="{{ route('shining3d-region-details') }}" class="text-info" target="_blank" rel="noopener noreferrer">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </label>
+                                        <select id="scanRegion" class="form-select">
+                                            <option value="https://ffapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ffapi.shining3d.com' ? 'selected="selected"' : '' }}> Europe </option>
+                                            <option value="https://hzapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://hzapi.shining3d.com' ? 'selected="selected"' : '' }}> China</option>
+                                            <option value="https://ruapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ruapi.shining3d.com' ? 'selected="selected"' : '' }}> Russia </option>
+                                            <option value="https://sapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://sapi.shining3d.com' ? 'selected="selected"' : '' }}> USA</option>
+                                            <option value="https://tkapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://tkapi.shining3d.com' ? 'selected="selected"' : '' }}> Asia-Pacific</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="startDate" class="form-label">Start Date</label>
+                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['startDate'] ? date('d-m-Y', strtotime($dataShining3d['startDate'])) : '' }}" placeholder="Select start date">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="endDate" class="form-label">End Date</label>
+                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['endDate'] ? date('d-m-Y', strtotime($dataShining3d['endDate'])) : '' }}" placeholder="Select end date">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-doctor-id" value="{{ $dataShining3d['doctorId'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-auth-token" value="{{ $dataShining3d['authToken'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-org-type" value="{{ $dataShining3d['orgType'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-org-code" value="{{ $dataShining3d['orgCode'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-csrf-token" value="{{ $dataShining3d['csrfToken'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-base-url" value="{{ $dataShining3d['baseUrl'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-patient-id" value="{{  $patient->patient_id }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-treatment-plan-id" value="{{ $patient->id }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3" id="caseSearchRow" >
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped align-middle">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Patient Name</th>
+                                                    <th>Phone</th>
+                                                    <th>Sex</th>
+                                                    <th>Lab Name</th>
+                                                     <th>Status</th>
+                                                    <th>Created At</th>
+                                                    <th>Scan Files</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="shining3dOrderTable">
+                                                @if(!empty($dataShining3d['orderList']['result']) && count($dataShining3d['orderList']['result']) > 0)
+                                                    @foreach($dataShining3d['orderList']['result'] as $order)
+
+                                                        @php
+                                                            // -------------------------
+                                                            // Patient details
+                                                            // -------------------------
+                                                            $patientName = $order['patient']['name'] ?? '-';
+
+                                                            if (!empty($order['patient']['phone'])) {
+                                                                $phone = '+' . ($order['patient']['phoneArea'] ?? '') . ' ' . $order['patient']['phone'];
+                                                            } else {
+                                                                $phone = '-';
+                                                            }
+
+                                                            $sex     = $order['patient']['sex'] ?? '-';
+                                                            $labName = $order['lab']['name'] ?? '-';
+
+                                                            // -------------------------
+                                                            // Created date
+                                                            // -------------------------
+                                                            $createdAt = !empty($order['createOn'])
+                                                                ? \Carbon\Carbon::parse($order['createOn'])->format('d-m-Y')
+                                                                : '-';
+
+                                                            // -------------------------
+                                                            // Status mapping
+                                                            // -------------------------
+                                                            $statusText  = $order['status'] ?? 'unknown';
+                                                            $statusClass = 'secondary';
+
+                                                            switch ($statusText) {
+                                                                case 'waitDelivery':
+                                                                    $statusText  = 'Waiting for Delivery';
+                                                                    $statusClass = 'warning';
+                                                                    break;
+
+                                                                case 'delivered':
+                                                                    $statusText  = 'Delivered';
+                                                                    $statusClass = 'info';
+                                                                    break;
+
+                                                                case 'completed':
+                                                                    $statusText  = 'Completed';
+                                                                    $statusClass = 'success';
+                                                                    break;
+
+                                                                case 'cancelled':
+                                                                    $statusText  = 'Cancelled';
+                                                                    $statusClass = 'danger';
+                                                                    break;
+                                                            }
+                                                        @endphp
+
+                                                        <tr>
+                                                            <td>{{ $patientName }}</td>
+                                                            <td>{{ $phone }}</td>
+                                                            <td>{{ $sex }}</td>
+                                                            <td>{{ $labName }}</td>
+                                                            <td>
+                                                                <span class="badge bg-{{ $statusClass }}">
+                                                                    {{ $statusText }}
+                                                                </span>
+                                                            </td>
+                                                            <td>{{ $createdAt }}</td>
+                                                            <td>
+                                                                <button class="btn btn-sm btn-primary view-scan get-scan-btn"
+                                                                        data-id="{{ $order['id'] }}">
+                                                                    Get Scan
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                    @endforeach
+                                                @else
+                                                    <tr>
+                                                        <td colspan="7" class="text-center text-muted">
+                                                            No orders found for selected date range.
+                                                        </td>
+                                                    </tr>
+                                                @endif
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
+                        {{-- <button type="button" class="btn btn-danger" data-base-url="{{ $dataShining3d['baseUrl']}}" data-csrf-token="{{ $dataShining3d['csrfToken']}}"  data-org-type="{{ $dataShining3d['orgType']}}" data-org-code="{{ $dataShining3d['orgCode']}}" data-doctor-id="{{ $dataShining3d['doctorId']}}" data-auth-token="{{ $dataShining3d['authToken']}}" id="order-from-shining3d">Get Sacn</button> --}}
+                        <button type="button" class="btn btn-danger" id="order-from-shining3d">Get Sacn</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    <!-- Order From shining3d Modal End -->
+    @endif
+
+    @if( request()->get('code') && request()->get('matchNode') && request()->get('codeChallenge') && request()->get('domain') && request()->get('type') == 'additional' )
+         <!--  Order From shining3d Modal Start -->
+        <div class="modal fade" id="order-from-shining3d-additional-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderFromShining3dLabel">
+                            Import From Shining3d 111
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -4648,7 +4824,7 @@ async function loadPLYLower(url) {
                 // } else {
                 //     redirectUri = "{{ url('/patient/edit') }}/" + hashCode;
                 // }
-                redirectUri = "{{ url('/patient/edit') }}/" + hashCode;
+                redirectUri = "{{ url('/patient/edit') }}/" + hashCode + "?type=primary";;
                 const shining3dAuthUrl =
                     'https://dental3dcloud.com/p/index?' +
                     'codeChallenge={{ config("shining3d.shining3d_code_challenge") }}' +
@@ -4709,10 +4885,16 @@ async function loadPLYLower(url) {
         const matchNode = params.get('matchNode');
         const codeChallenge = params.get('codeChallenge');
         const domain = params.get('domain');
+        const type = params.get('type');
 
-        if (code && matchNode && codeChallenge && domain) {
+        if (code && matchNode && codeChallenge && domain && type === 'primary') {
             $('#order-from-shining3d-modal').modal('show');
         }
+
+        if (code && matchNode && codeChallenge && domain && type === 'additional') {
+            $('#order-from-shining3d-additional-modal').modal('show');
+        }
+
         AdditionalScan.init();
         Scan.init();
         DmIntegration.init();
