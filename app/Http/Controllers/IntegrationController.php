@@ -571,9 +571,9 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
                 return view("layouts.three_shape_patients_additional", compact("results"))->render();
             }
         } catch (Exception $e) {
-        // return response()->json(['error' => $e->getMessage()], 500);
-        Log::info($e->getMessage());
-        return redirect('/integrations/3shape-disable')->with('success', 'Session expired');
+            // return response()->json(['error' => $e->getMessage()], 500);
+            Log::info($e->getMessage());
+            return redirect('/integrations/3shape-disable')->with('success', 'Session expired');
         }
     }
 private function fetchThreeShapeCase($baseUri, $caseId, $accessToken)

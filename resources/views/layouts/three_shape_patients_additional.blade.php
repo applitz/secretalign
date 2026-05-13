@@ -1,6 +1,6 @@
 
-<input type="text" name="patient_id_additional" value="{{ $patient->patient_id }}">
-<input type="text" name="treatment_plan_id_additional" value="{{ $patient->id }}">
+{{-- <input type="text" name="patient_id_additional" value="{{ @$patient->patient_id }}">
+<input type="text" name="treatment_plan_id_additional" value="{{ @$patient->id }}"> --}}
 <thead>
     <tr>
         <th>Case ID</th>
