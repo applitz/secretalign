@@ -36,7 +36,7 @@ var AdditionalScan = function() {
                 headers: {
                     'X-CSRF-TOKEN': $('input[name="_token"]').val(),
                 },
-                url: baseUrl  + "/integrations/3shape-search-cases",
+                url: baseUrl  + "/integrations/3shape-search-cases-additional",
                 data: {
                     "_token" : $('meta[name="csrf-token"]').attr('content'),
                     "case_id" : case_id,

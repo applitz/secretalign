@@ -510,38 +510,72 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
     //     return view("layouts.three_shape_patients", compact("results"))->render();
     // }
     public function ThreeShapeSearchCase(Request $request)
-{
-    $threeshape_region_uri = 'https://eumetadata.3shapecommunicate.com';
+    {
+        $threeshape_region_uri = 'https://eumetadata.3shapecommunicate.com';
 
-    try {
-        // Refresh or validate the token
-        $token = $this->refreshThreeShapeToken();
+        try {
+            // Refresh or validate the token
+            $token = $this->refreshThreeShapeToken();
 
-        if ($token) {
-            $three_shape_case_id = trim($request->post('three_shape_case_id'));
-            $three_shape_search_for_case = trim($request->post('three_shape_search_for_patient'));
-            $results = [];
+            if ($token) {
+                $three_shape_case_id = trim($request->post('three_shape_case_id'));
+                $three_shape_search_for_case = trim($request->post('three_shape_search_for_patient'));
+                $results = [];
 
-            if (!empty($three_shape_case_id)) {
-                $response = $this->fetchThreeShapeCase($threeshape_region_uri, $three_shape_case_id, $token->three_shape_access_token);
-                if (@$response->Id == $three_shape_case_id) {
-                    $results = [$response];
+                if (!empty($three_shape_case_id)) {
+                    $response = $this->fetchThreeShapeCase($threeshape_region_uri, $three_shape_case_id, $token->three_shape_access_token);
+                    if (@$response->Id == $three_shape_case_id) {
+                        $results = [$response];
+                    }
+                } elseif (!empty($three_shape_search_for_case)) {
+                    $response = $this->searchThreeShapeCases($threeshape_region_uri, $three_shape_search_for_case, $token->three_shape_access_token);
+                    if (@$response->Count > 0) {
+                        $results = $response->Cases ?? [];
+                    }
                 }
-            } elseif (!empty($three_shape_search_for_case)) {
-                $response = $this->searchThreeShapeCases($threeshape_region_uri, $three_shape_search_for_case, $token->three_shape_access_token);
-                if (@$response->Count > 0) {
-                    $results = $response->Cases ?? [];
-                }
+
+                return view("layouts.three_shape_patients", compact("results"))->render();
             }
-
-            return view("layouts.three_shape_patients", compact("results"))->render();
+        } catch (Exception $e) {
+        // return response()->json(['error' => $e->getMessage()], 500);
+        Log::info($e->getMessage());
+        return redirect('/integrations/3shape-disable')->with('success', 'Session expired');
         }
-    } catch (Exception $e) {
-       // return response()->json(['error' => $e->getMessage()], 500);
-       Log::info($e->getMessage());
-      return redirect('/integrations/3shape-disable')->with('success', 'Session expired');
     }
-}
+
+    public function ThreeShapeSearchCaseAdditional(Request $request)
+    {
+        $threeshape_region_uri = 'https://eumetadata.3shapecommunicate.com';
+
+        try {
+            // Refresh or validate the token
+            $token = $this->refreshThreeShapeToken();
+
+            if ($token) {
+                $three_shape_case_id = trim($request->post('three_shape_case_id'));
+                $three_shape_search_for_case = trim($request->post('three_shape_search_for_patient'));
+                $results = [];
+
+                if (!empty($three_shape_case_id)) {
+                    $response = $this->fetchThreeShapeCase($threeshape_region_uri, $three_shape_case_id, $token->three_shape_access_token);
+                    if (@$response->Id == $three_shape_case_id) {
+                        $results = [$response];
+                    }
+                } elseif (!empty($three_shape_search_for_case)) {
+                    $response = $this->searchThreeShapeCases($threeshape_region_uri, $three_shape_search_for_case, $token->three_shape_access_token);
+                    if (@$response->Count > 0) {
+                        $results = $response->Cases ?? [];
+                    }
+                }
+
+                return view("layouts.three_shape_patients_additional", compact("results"))->render();
+            }
+        } catch (Exception $e) {
+        // return response()->json(['error' => $e->getMessage()], 500);
+        Log::info($e->getMessage());
+        return redirect('/integrations/3shape-disable')->with('success', 'Session expired');
+        }
+    }
 private function fetchThreeShapeCase($baseUri, $caseId, $accessToken)
 {
     $curl = curl_init();

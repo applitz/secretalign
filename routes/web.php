@@ -263,6 +263,9 @@ Route::get('/integrations/3shape-disable', [IntegrationController::class, 'Disab
 Route::get('/integration-3shape/obtain-authorization-code', [IntegrationController::class, 'ThreeShapeObtainAuthorizationCode']);
 Route::get('/integration-3shape', [IntegrationController::class, 'ThreeShapeObtainAuthorizationCodeCallback']);
 Route::post('/integrations/3shape-search-cases', [IntegrationController::class, 'ThreeShapeSearchCase']);
+
+Route::post('/integrations/3shape-search-cases-additional', [IntegrationController::class, 'ThreeShapeSearchCaseAdditional']);
+
 Route::get('/integrations/medit-link-disable', [IntegrationController::class, 'DisableMeditLinkIntegration']);
 Route::get('/integration-medit-link/obtain-authorization-code', [IntegrationController::class, 'MeditLinkObtainAuthorizationCode']);
 Route::get('/integration-medit-link', [IntegrationController::class, 'MeditLinkObtainAuthorizationCodeCallback']);
