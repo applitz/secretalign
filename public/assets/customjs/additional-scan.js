@@ -22,8 +22,7 @@ var AdditionalScan = function() {
             $("#optional-3shape-section-Modal").modal("hide");
         });
 
-
-        $("#additional-3shape-search").on('click', function (e) {
+        $(document).on('click', '#additional-3shape-search', function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
 
@@ -49,6 +48,7 @@ var AdditionalScan = function() {
                     showLoader();
                 },
                 success: function (response) {
+                    console.log(response);
                     $("#3shape-search-result-additional").html(response);
                 },
                 complete: function () {
