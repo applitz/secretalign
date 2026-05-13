@@ -1801,8 +1801,48 @@ async function loadPLYLower(url) {
                 const hash_upper = $(this).attr('hash-upper'),
                 hash_lower = $(this).attr('hash-lower'),
                 case_id = $(this).attr('case-id');
-                download3ShapeStlFiles(case_id, hash_upper, hash_lower);
+                download3ShapeStlFilesAdditional(case_id, hash_upper, hash_lower);
             });
+
+            function download3ShapeStlFilesAdditional($case_id, $hash_upper, $hash_lower)
+            {
+                $.ajax({
+                        type: "POST",
+                        url: "{{url('/patient/file/download-3shape')}}",
+                        data: {
+                            "_token" : "{{ csrf_token() }}",
+                            "patient_id" : "{{ $patient->patient_id }}",
+                            "treatment_plan_id" : "{{ $patient->id }}",
+                            "case_id" : $case_id,
+                            "hash_upper" : $hash_upper,
+                            "hash_lower" : $hash_lower,
+                        },
+                        beforeSend: function () {
+                            showLoader();
+                        }
+                    }).done(function (response) {
+
+                        if(response.upper || response.lower) {
+                            if(response.upper) {
+                                $('#key18').attr('file', response.upper);
+                                window.dropzone_active_state('18', response.upper)
+                                previewUpperStlFile(response.upper)
+                            }
+                            if(response.lower) {
+                                $('#key19').attr('file', response.lower);
+                                window.dropzone_active_state('19', response.lower)
+                                previewLowerStlFile(response.lower)
+                            }
+                            $("#optional-3shape-section-Modal").modal('hide');
+                            hideLoader();
+                        }
+                        else {
+                            hideLoader();
+                            toastError("Error while downloading files.");
+                        }
+                    });
+            }
+
 
             function download3ShapeStlFiles($case_id, $hash_upper, $hash_lower)
             {
