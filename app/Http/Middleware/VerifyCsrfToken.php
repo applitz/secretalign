@@ -21,6 +21,7 @@ class VerifyCsrfToken extends Middleware
         'demo/patient/file/revert/*',
         'handle-dropzone-files',
         'notifications',
+        'patient/file/download-3shape-additional',
         'login',
         'logout',
     ];
