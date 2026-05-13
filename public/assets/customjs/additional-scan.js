@@ -70,6 +70,7 @@ var AdditionalScan = function() {
             const modal = $("#optional-3shape-section-Modal");
             const patient_id = modal.find('input[name="additional_case_id"]').val();
             const treatment_plan_id = modal.find('input[name="additional_patient_id"]').val();
+            console.log(patient_id, treatment_plan_id, case_id, hash_upper, hash_lower);
             $.ajax({
                 type: "POST",
                 headers: {
