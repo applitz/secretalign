@@ -75,7 +75,7 @@ var AdditionalScan = function() {
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: baseUrl + "/patient/file/download-3shape",
+                url: baseUrl + "/patient/file/download-3shape-additional",
 
                 data: {
                     "_token" : $('meta[name="csrf-token"]').attr('content'),

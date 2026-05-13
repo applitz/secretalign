@@ -171,6 +171,7 @@ Route::get('/patient/mesh/fetch/{patient_id}/{filename}', [PatientFileController
 
 //save stl
 Route::post('/patient/file/download-3shape', [PatientFileController::class, 'ThreeShapeDownloadSTL']);
+Route::post('/patient/file/download-3shape-additional', [PatientFileController::class, 'ThreeShapeDownloadSTLAdditional']);
 Route::post('/patient/file/download-medit-link', [PatientFileController::class, 'MeditLinkDownloadSTL']);
 
 //stripe checkout

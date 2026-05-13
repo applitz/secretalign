@@ -333,6 +333,11 @@ class PatientFileController extends Controller
         return response()->json($data);
     }
 
+    public function ThreeShapeDownloadSTLAdditional(Request $request)
+    {
+        dd($request->all());
+    }
+
 
 
     public function file_upload(Request $request, $patient_id, $treatment_plan_id)
