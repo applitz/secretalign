@@ -1014,7 +1014,7 @@
 
                     <div class="modal-header">
                         <h5 class="modal-title" id="orderFromShining3dLabel">
-                            Import From Shining3d 111
+                            Import From Shining3d
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -1172,7 +1172,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
                         {{-- <button type="button" class="btn btn-danger" data-base-url="{{ $dataShining3d['baseUrl']}}" data-csrf-token="{{ $dataShining3d['csrfToken']}}"  data-org-type="{{ $dataShining3d['orgType']}}" data-org-code="{{ $dataShining3d['orgCode']}}" data-doctor-id="{{ $dataShining3d['doctorId']}}" data-auth-token="{{ $dataShining3d['authToken']}}" id="order-from-shining3d">Get Sacn</button> --}}
-                        <button type="button" class="btn btn-danger" id="order-from-shining3d">Get Sacn</button>
+                        <button type="button" class="btn btn-danger" id="order-from-shining3d-additional">Get Sacn</button>
                     </div>
 
                 </div>
