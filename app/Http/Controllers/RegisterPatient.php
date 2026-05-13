@@ -109,6 +109,20 @@ class RegisterPatient extends Controller
     }
     public function edit(Request $request, $treatment_plan_id)
     {
+        $type = '';
+
+        // check if "additional" exists
+        if (strpos($treatment_plan_id, 'additional') !== false) {
+
+            $type = 'additional';
+
+            // remove "-additional" from id
+            $treatment_plan_id = str_replace('-additional', '', $treatment_plan_id);
+
+            // optional: convert into integer
+            $treatment_plan_id = (int) $treatment_plan_id;
+        }
+        dd($treatment_plan_id, $type);
         $baseUrl = null;
         $code = null;
         $changePlan = 'true';
