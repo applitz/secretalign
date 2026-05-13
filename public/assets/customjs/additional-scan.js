@@ -21,6 +21,34 @@ var AdditionalScan = function() {
         $("#optional-cancel-3shape-select").on("click", function () {
             $("#optional-3shape-section-Modal").modal("hide");
         });
+
+
+        $("#3shape-search-additional").on('submit', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            const case_id = $("#3shape-search-additional input[name=additional_case_id]").val(),
+            patient_id = $("#3shape-search-additional input[name=additional_patient_id]").val(),
+
+            three_shape_case_id = $("#3shape-search-additional input[name=additional_three_shape_case_id]").val(),
+            three_shape_search_for_case = $("#3shape-search-additional input[name=additional_three_shape_search_for_case]").val();
+            $.ajax({
+                type: "POST",
+                url: "{{ url('/integrations/3shape-search-cases') }}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "case_id" : case_id,
+                    "patient_id" : patient_id,
+                    "three_shape_case_id" : three_shape_case_id,
+                    "three_shape_search_for_patient" : three_shape_search_for_case,
+                },
+                beforeSend: function () {
+                    showLoader();
+                }
+            }).done(function (response) {
+                $("#3shape-search-result-additional").html(response);
+                hideLoader();
+            });
+        });
     }
 
     return {
