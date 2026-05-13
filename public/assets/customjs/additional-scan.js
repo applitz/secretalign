@@ -11,9 +11,15 @@ var AdditionalScan = function() {
             }
             // optional-select-from-3shape
             $("#optional-select-from-3shape").on('click', function () {
-                $("#3shape-section").removeClass('d-none');
-                $("#medit-link-section").addClass('d-none');
+                $("#optional-3shape-section").removeClass('d-none');
+                $("#optional-medit-link-section").addClass('d-none');
                 $("#patient-wizard").addClass('d-none');
+            });
+
+            $("#optional-cancel-3shape-select").on('click', function () {
+                $("#optional-3shape-section").addClass('d-none');
+                $("#optional-medit-link-section").addClass('d-none')
+                $("#patient-wizard").removeClass('d-none');
             });
 
         });

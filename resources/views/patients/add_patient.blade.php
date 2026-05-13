@@ -183,8 +183,142 @@
     </div>
 </div>
 
+<div class="row gx-0 d-none" id="optional-3shape-section">
+    <div class="col-12 ">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">3Shape communicate Scan data 111</h4>
+                <p class="card-title-desc">Search with case id or by patient. Click on case to download stl files.</p>
+                <form class="mt-2" method="GET" id="3shape-search">
+                    <input type="hidden" name="_patient_id" value="{{ $patient->patient_id }}">
+                    <input type="hidden" name="_case_id" value="{{ $patient->id }}">
+                    <div class="row">
+                      <div class="col-md-3 mb-3">
+                        <div class="row align-items-center g-3">
+                          <div class="col-12">
+                            <h6 class="text-700 mb-0">Case ID: </h6>
+                          </div>
+                          <div class="col-12 position-relative">
+                            <input type="text" class="form-control" name="_three_shape_case_id">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 mb-3">
+                        <div class="row align-items-center g-3">
+                          <div class="col-12">
+                            <h6 class="text-700 mb-0">Search for case: </h6>
+                          </div>
+                          <div class="col-12 position-relative">
+                            <input type="text" class="form-control" name="_three_shape_search_for_case">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 mb-3">
+                        <div class="btn-group">
+                            <button class="btn btn-primary waves-effect waves-light" type="submit">Search</button>
+                            <a class="btn btn-warning waves-effect waves-light" href="javascript:void(0);" id="optional-cancel-3shape-select">Cancel</a>
+                        </div>
+                        @if(Auth::user()->three_shape_access_token != null)
+                            <a class="btn btn-danger float-end" href="{{url('/integrations/3shape-disable')}}">
+                               <div class="d-flex align-items-center justify-content-center ">
+                                <span>Logout From</span>
+                                <img class="ms- 1" src="{{asset('public/assets/communicate-logo-white.png')}}" width="75px">
+                               </div>
+                            </a>
+                         @endif
+                      </div>
+                    </div>
+                  </form>
+
+                  <div class="table-rep-plugin">
+                    <div class="table-responsive mb-0">
+                        <table id="3shape-search-result" class="table table-striped">
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="row gx-0 d-none" id="medit-link-section">
+    <div class="col-12 ">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Medit Link Scan data</h4>
+                <p class="card-title-desc">Search with case registration/modification dates and case name. Click on case to download stl files.</p>
+                <form class="mt-2" method="GET" id="medit-link-search">
+                    <input type="hidden" name="_patient_id" value="{{ $patient->patient_id }}">
+                    <input type="hidden" name="_case_id" value="{{ $patient->id }}">
+                    <div class="row">
+                      <div class="col-md-3 mb-3">
+                        <div class="row align-items-center g-3">
+                          <div class="col-12">
+                            <h6 class="text-700 mb-0">Start Date: </h6>
+                          </div>
+                          <div class="col-12 position-relative">
+                            <input type="text" class="form-control pickr" name="_medit_link_start_date" value="{{date("Y-m-d", strtotime("-1 month"))}}">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 mb-3">
+                        <div class="row align-items-center g-3">
+                          <div class="col-12">
+                            <h6 class="text-700 mb-0">End Date: </h6>
+                          </div>
+                          <div class="col-12 position-relative">
+                            <input type="text" class="form-control pickr" name="_medit_link_end_date" value="{{date("Y-m-d")}}">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 mb-3">
+                        <div class="row align-items-center g-3">
+                          <div class="col-12">
+                            <h6 class="text-700 mb-0">Search for case: </h6>
+                          </div>
+                          <div class="col-12 position-relative">
+                            <input type="text" class="form-control" name="_medit_link_search_for_case">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 mb-3">
+                        <div class="btn-group">
+                            <button class="btn btn-primary waves-effect waves-light" type="submit">Search</button>
+                            <a class="btn btn-warning waves-effect waves-light" href="javascript:void(0);" id="cancel-medit-link-select">Cancel</a>
+                        </div>
+                        @if(Auth::user()->medit_link_access_token != null)
+                            <a class="btn btn-danger float-end" href="{{url('/integrations/medit-link-disable')}}">
+                               <div class="d-flex align-items-center justify-content-center ">
+                                <span>Logout From</span>
+                                <img class="ms-2"  src="{{asset('public/assets/medit-link-logo.svg')}}" width="52px">
+                               </div>
+                            </a>
+                         @endif
+                      </div>
+                    </div>
+                  </form>
+
+                  <div class="table-rep-plugin">
+                    <div class="table-responsive mb-0">
+                        <table id="medit-link-search-result" class="table table-striped">
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row gx-0 d-none" id="optional-medit-link-section">
     <div class="col-12 ">
         <div class="card">
             <div class="card-body">
@@ -335,6 +469,8 @@
         </div>
     </div>
 </div>
+
+
 
 
 
