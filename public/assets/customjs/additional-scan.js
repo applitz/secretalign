@@ -74,7 +74,8 @@ var AdditionalScan = function() {
             $.ajax({
                 type: "POST",
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'X-Requested-With': 'XMLHttpRequest'
                 },
                 url: baseUrl + "/patient/file/download-3shape-additional",
 
