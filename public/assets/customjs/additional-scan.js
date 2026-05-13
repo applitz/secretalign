@@ -9,17 +9,17 @@ var AdditionalScan = function() {
             } else {
                 $(this).text("- Hide Additional Scans");
             }
-            // optional-select-from-3shape
-            $("#optional-select-from-3shape").on("click", function (e) {
-                e.preventDefault();
-                $("#optional-3shape-section-Modal").modal("show");
-            });
+        });
 
-            // Cancel button
-            $("#optional-cancel-3shape-select").on("click", function () {
-                $("#optional-3shape-section-Modal").modal("hide");
-            });
+        // optional-select-from-3shape
+        $("#optional-select-from-3shape").on("click", function (e) {
+            e.preventDefault();
+            $("#optional-3shape-section-Modal").modal("show");
+        });
 
+        // Cancel button
+        $("#optional-cancel-3shape-select").on("click", function () {
+            $("#optional-3shape-section-Modal").modal("hide");
         });
     }
 
