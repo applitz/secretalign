@@ -1797,6 +1797,12 @@ async function loadPLYLower(url) {
                         }
                     });
             }
+            $(document).on('click', '.download-3shape-stl-files-additional',function () {
+                const hash_upper = $(this).attr('hash-upper'),
+                hash_lower = $(this).attr('hash-lower'),
+                case_id = $(this).attr('case-id');
+                download3ShapeStlFiles(case_id, hash_upper, hash_lower);
+            });
 
             function download3ShapeStlFiles($case_id, $hash_upper, $hash_lower)
             {
