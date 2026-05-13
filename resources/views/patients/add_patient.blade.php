@@ -203,7 +203,7 @@
                         <h6 class="text-700 mb-0">Case ID: </h6>
                         </div>
                         <div class="col-12 position-relative">
-                        <input type="text" class="form-control" name="_three_shape_case_id">
+                        <input type="text" class="form-control" id="_three_shape_case_id"  name="_three_shape_case_id">
                         </div>
                     </div>
                 </div>
@@ -213,7 +213,7 @@
                         <h6 class="text-700 mb-0">Search for case: </h6>
                         </div>
                         <div class="col-12 position-relative">
-                        <input type="text" class="form-control" name="_three_shape_search_for_case">
+                        <input type="text" class="form-control" id="_three_shape_search_for_case" name="_three_shape_search_for_case">
                         </div>
                     </div>
                 </div>
