@@ -67,6 +67,9 @@ var AdditionalScan = function() {
 
         function download3ShapeStlFilesAdditional(case_id, hash_upper, hash_lower)
         {
+            const modal = $("#optional-3shape-section-Modal");
+            const additional_patient_id = modal.find('input[name="additional_case_id"]').val();
+            const treatment_plan_id_additional = modal.find('input[name="additional_patient_id"]').val();
             $.ajax({
                 type: "POST",
 
@@ -77,7 +80,7 @@ var AdditionalScan = function() {
                 url: baseUrl + "/patient/file/download-3shape",
 
                 data: {
-                    patient_id: $("input[name='patient_id_additional']").val(),
+                    patient_id: $("input[name='additional_patient_id']").val(),
                     treatment_plan_id: $("input[name='treatment_plan_id_additional']").val(),
                     case_id: case_id,
                     hash_upper: hash_upper,
