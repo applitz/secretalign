@@ -81,7 +81,7 @@
     <div class="mb-3 ">
 
         @if(Auth::user()->three_shape_access_token != null)
-            <button type="button" class="btn btn-primary order-from-button" id="optional-select-from-3shape">
+            <button type="button" class="btn btn-primary " id="optional-select-from-3shape">
         @else
             <a class="btn btn-primary order-from-button" href="{{ url('/integration-3shape/obtain-authorization-code') }}">
         @endif
