@@ -11,8 +11,8 @@
         <p class="card-title-desc">Search with case id or by patient. Click on case to download stl files.</p>
 
             @csrf
-            <input type="text" name="additional_patient_id" value="{{ $patient->patient_id }}">
-            <input type="text" name="additional_case_id" value="{{ $patient->id }}">
+            <input type="hidden" name="additional_patient_id" value="{{ $patient->patient_id }}">
+            <input type="hidden" name="additional_case_id" value="{{ $patient->id }}">
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <div class="row align-items-center g-3">
