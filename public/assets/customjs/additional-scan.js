@@ -10,10 +10,9 @@ var AdditionalScan = function() {
                 $(this).text("- Hide Additional Scans");
             }
             // optional-select-from-3shape
-            $("#optional-select-from-3shape").on('click', function () {
-                $("#optional-3shape-section").removeClass('d-none');
-                $("#optional-medit-link-section").addClass('d-none');
-                $("#patient-wizard").addClass('d-none');
+            $("#optional-select-from-3shape").on('click', function (e) {
+                e.preventDefault();
+               $("#optional-3shape-section-Modal").modal('show');
             });
 
             $("#optional-cancel-3shape-select").on('click', function () {
