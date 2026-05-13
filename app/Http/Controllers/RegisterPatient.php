@@ -127,6 +127,14 @@ class RegisterPatient extends Controller
         $code = null;
         $changePlan = 'true';
         $dataShining3d = [];
+        $dataShining3d['endDate'] = null;
+        $dataShining3d['startDate'] = null;
+        $dataShining3d['orderList'] = [];
+        $dataShining3d['baseUrl'] = null;
+        $dataShining3d['authToken'] = null;
+        $dataShining3d['orgCode'] = null;
+        $dataShining3d['doctorId'] = null;
+        $dataShining3d['orgType'] = null;
         $scanError = null;
         $baseUrl = null;
         $code = null;
