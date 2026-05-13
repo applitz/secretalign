@@ -1038,6 +1038,74 @@ async function loadSTLLower(url) {
             return geometry;
 }
 
+async function optionalLoadSTLUpper(url) {
+    const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+            }
+            const reader = response.body.getReader();
+            const contentLength = response.headers.get('Content-Length');
+            const total = contentLength ? parseInt(contentLength, 10) : null;
+            let loaded = 0;
+
+            const chunks = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                loaded += value.length;
+                if (total) {
+                    const percentComplete = (loaded / total * 100).toFixed(2);
+                    $("#optional-upper-arch-progress-bar").css({width: `${percentComplete}%`})
+                    $("#optional-upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                }
+            }
+            const arrayBuffer = new Uint8Array(loaded);
+            let offset = 0;
+            for (let chunk of chunks) {
+                arrayBuffer.set(chunk, offset);
+                offset += chunk.length;
+            }
+
+            const geometry = stl_loader1.parse(arrayBuffer.buffer);
+            return geometry;
+}
+
+async function optionalLoadSTLLower(url) {
+    const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+            }
+            const reader = response.body.getReader();
+            const contentLength = response.headers.get('Content-Length');
+            const total = contentLength ? parseInt(contentLength, 10) : null;
+            let loaded = 0;
+
+            const chunks = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                loaded += value.length;
+                if (total) {
+                    const percentComplete = (loaded / total * 100).toFixed(2);
+                    $("#optional-lower-arch-progress-bar").css({width: `${percentComplete}%`})
+                    $("#optional-lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                    // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
+                    // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
+                }
+            }
+            const arrayBuffer = new Uint8Array(loaded);
+            let offset = 0;
+            for (let chunk of chunks) {
+                arrayBuffer.set(chunk, offset);
+                offset += chunk.length;
+            }
+
+            const geometry = stl_loader2.parse(arrayBuffer.buffer);
+            return geometry;
+}
+
 async function loadPLYUpper(url) {
     const response = await fetch(url);
             if (!response.ok) {
@@ -1109,49 +1177,258 @@ async function loadPLYLower(url) {
 }
 
 
-async function previewUpperStlFile(file_upper)
-{
-    try {
-        container1 = document.getElementById( 'stl-upper-arch-preview' );
-        scene1 = new THREE.Scene();
-        scene1.name = 'myscene1';
-        scene1.background = new THREE.Color( 0xaaaaaa );
-        camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-        camera1.position.set(0, 0, 5);
-        renderer1 = new THREE.WebGLRenderer({ antialias: true });
-        material1 = new THREE.MeshNormalMaterial();
-        controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
-        controls1.enableDamping = true;
-        THREE.Cache.enabled = true;
+            async function previewUpperStlFile(file_upper)
+            {
+                try {
+                    container1 = document.getElementById( 'stl-upper-arch-preview' );
+                    scene1 = new THREE.Scene();
+                    scene1.name = 'myscene1';
+                    scene1.background = new THREE.Color( 0xaaaaaa );
+                    camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+                    camera1.position.set(0, 0, 5);
+                    renderer1 = new THREE.WebGLRenderer({ antialias: true });
+                    material1 = new THREE.MeshNormalMaterial();
+                    controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
+                    controls1.enableDamping = true;
+                    THREE.Cache.enabled = true;
 
-        const width = $("#upper-jaw-box").width() + 23;
-        const height = $("#upper-jaw-box").height();
+                    const width = $("#upper-jaw-box").width() + 23;
+                    const height = $("#upper-jaw-box").height();
 
-        renderer1.setSize( width, height );
+                    renderer1.setSize( width, height );
 
-        document.body.appendChild( renderer1.domElement );
+                    document.body.appendChild( renderer1.domElement );
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene1.add(ambientLight);
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                    scene1.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(1, 1, 1).normalize();
-        scene1.add(directionalLight);
+                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                    directionalLight.position.set(1, 1, 1).normalize();
+                    scene1.add(directionalLight);
 
-        const geometry = await loadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
-        const mesh = new THREE.Mesh(geometry, material1)
-        mesh.tag = 'base';
-        scene1.add(mesh);
-        camera1.position.z = 10;
-        camera1.position.x = 0;
-        camera1.position.y = -6;
-        scene1.scale.set(0.02,0.02,0.02);
+                    const geometry = await loadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+                    const mesh = new THREE.Mesh(geometry, material1)
+                    mesh.tag = 'base';
+                    scene1.add(mesh);
+                    camera1.position.z = 10;
+                    camera1.position.x = 0;
+                    camera1.position.y = -6;
+                    scene1.scale.set(0.02,0.02,0.02);
 
-        controls1.update();
-        animate1();
-    } catch (error) {}
-}
+                    controls1.update();
+                    animate1();
+                } catch (error) {}
+            }
             window.previewUpperStlFile = previewUpperStlFile;
+
+
+            async function previewOptionalUpperStlFile(file_upper)
+            {
+                try {
+                    container1 = document.getElementById( 'optional-stl-upper-arch-preview' );
+                    scene1 = new THREE.Scene();
+                    scene1.name = 'myscene1';
+                    scene1.background = new THREE.Color( 0xaaaaaa );
+                    camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+                    camera1.position.set(0, 0, 5);
+                    renderer1 = new THREE.WebGLRenderer({ antialias: true });
+                    material1 = new THREE.MeshNormalMaterial();
+                    controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
+                    controls1.enableDamping = true;
+                    THREE.Cache.enabled = true;
+
+                    const width = $("#upper-jaw-box").width() + 23;
+                    const height = $("#upper-jaw-box").height();
+
+                    renderer1.setSize( width, height );
+
+                    document.body.appendChild( renderer1.domElement );
+
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                    scene1.add(ambientLight);
+
+                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                    directionalLight.position.set(1, 1, 1).normalize();
+                    scene1.add(directionalLight);
+
+                    const geometry = await optionalLoadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+                    const mesh = new THREE.Mesh(geometry, material1)
+                    mesh.tag = 'base';
+                    scene1.add(mesh);
+                    camera1.position.z = 10;
+                    camera1.position.x = 0;
+                    camera1.position.y = -6;
+                    scene1.scale.set(0.02,0.02,0.02);
+
+                    controls1.update();
+                    animate1();
+                } catch (error) {}
+            }
+            window.previewOptionalUpperStlFile = previewOptionalUpperStlFile;
+
+            async function previewOptionalUpperPlyFile(file_upper)
+            {
+                try {
+                    container1 = document.getElementById( 'optional-stl-upper-arch-preview' );
+                    scene1 = new THREE.Scene();
+                    scene1.name = 'myscene1';
+                    scene1.background = new THREE.Color( 0xaaaaaa );
+                    camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+                    camera1.position.set(0, 0, 5);
+                    renderer1 = new THREE.WebGLRenderer({ antialias: true });
+
+                    material1 = new THREE.MeshStandardMaterial({
+                        vertexColors: THREE.VertexColors,
+                        flatShading: true
+                    });
+                    controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
+                    controls1.enableDamping = true;
+
+                    THREE.Cache.enabled = true;
+
+                    const width = $("#upper-jaw-box").width() + 23;
+                    const height = $("#upper-jaw-box").height();
+
+                    //modify renderer
+                    renderer1.setSize( width, height );
+
+                    //append renderer to body
+                    document.body.appendChild( renderer1.domElement );
+
+                    // Lighting
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                    scene1.add(ambientLight);
+
+                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                    directionalLight.position.set(1, 1, 1).normalize();
+                    scene1.add(directionalLight);
+                    const geometry = await loadPLYUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+                    geometry.computeVertexNormals();
+                    const mesh = new THREE.Mesh(geometry, material1)
+
+                    mesh.tag = 'base';
+
+                    scene1.add(mesh);
+                    camera1.position.z = 10;
+                    camera1.position.x = 0;
+                    camera1.position.y = -6;
+                    scene1.scale.set(0.02,0.02,0.02);
+
+                    controls1.update();
+                    animate1();
+                } catch (error) {}
+            }
+            window.previewOptionalUpperPlyFile = previewOptionalUpperPlyFile;
+
+
+            async function previewOptionalLowerStlFile(file_lower)
+            {
+                try {
+                    container2 = document.getElementById( 'optional-stl-lower-arch-preview' );
+                    scene2 = new THREE.Scene();
+                    scene2.name = 'myscene2';
+                    scene2.background = new THREE.Color( 0xaaaaaa );
+                    camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+                    camera2.position.set(0, 0, 5);
+                    renderer2 = new THREE.WebGLRenderer({ antialias: true });
+
+                    material2 = new THREE.MeshNormalMaterial();
+                    controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
+                    controls2.enableDamping = true;
+                    THREE.Cache.enabled = true;
+
+                    const width = $("#upper-jaw-box").width() + 23;
+                    const height = $("#upper-jaw-box").height();
+
+                    //modify renderer
+                    renderer2.setSize( width, height );
+
+
+                    //append renderer to body
+                    document.body.appendChild( renderer2.domElement );
+
+                    // Lighting
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                    scene2.add(ambientLight);
+
+                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                    directionalLight.position.set(1, 1, 1).normalize();
+                    scene2.add(directionalLight);
+
+                    const geometry = await optionalLoadSTLLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
+                    const mesh = new THREE.Mesh(geometry, material2)
+
+                    mesh.tag = 'base';
+                    scene2.add(mesh);
+
+                    console.log('scene updated');
+
+                    camera2.position.z = 10;
+                    camera2.position.x = 0;
+                    camera2.position.y = -6;
+                    scene2.scale.set(0.02,0.02,0.02);
+
+                    controls2.update();
+                    animate2();
+                } catch (error) {}
+            }
+            window.previewOptionalLowerStlFile = previewOptionalLowerStlFile;
+
+            async function previewOptionalLowerPlyFile(file_lower)
+            {
+                try {
+                    container2 = document.getElementById( 'optional-stl-lower-arch-preview' );
+                    scene2 = new THREE.Scene();
+                    scene2.name = 'myscene2';
+                    scene2.background = new THREE.Color( 0xaaaaaa );
+                    camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+                    camera2.position.set(0, 0, 5);
+                    renderer2 = new THREE.WebGLRenderer({ antialias: true });
+                    material2 = new THREE.MeshStandardMaterial({
+                        vertexColors: THREE.VertexColors,
+                        flatShading: true
+                    });
+                    controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
+                    controls2.enableDamping = true;
+                    THREE.Cache.enabled = true;
+
+
+                    const width = $("#upper-jaw-box").width() + 23;
+                    const height = $("#upper-jaw-box").height();
+
+                    //modify renderer
+                    renderer2.setSize( width, height );
+
+                    //append renderer to body
+                    document.body.appendChild( renderer2.domElement );
+                    // Lighting
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                    scene2.add(ambientLight);
+
+                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                    directionalLight.position.set(1, 1, 1).normalize();
+                    scene2.add(directionalLight);
+
+
+                    const geometry = await loadPLYLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
+                    geometry.computeVertexNormals();
+                    const mesh = new THREE.Mesh(geometry, material2)
+
+                    mesh.tag = 'base';
+                    scene2.add(mesh);
+
+                    console.log('scene updated');
+
+                    camera2.position.z = 10;
+                    camera2.position.x = 0;
+                    camera2.position.y = -6;
+                    scene2.scale.set(0.02,0.02,0.02);
+
+                    controls2.update();
+                    animate2();
+                } catch (error) {}
+            }
+            window.previewOptionalLowerPlyFile = previewOptionalLowerPlyFile;
 
             async function previewLowerStlFile(file_lower)
             {
@@ -1547,9 +1824,11 @@ async function previewUpperStlFile(file_upper)
                         // Check if terms and conditions are accepted
                         if ($("input[name=terms_and_conditions]").is(":checked")) {
                             const advisor = $("#advisor").val();
-                            const comment = $("#comment").val();// Get advisor selection
+                            var comment = $("#comment").val();// Get advisor selection
                             const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
-
+                            if (comment === undefined || comment === null) {
+                                comment = "";
+                            }
                             // Validate consultant agreement checkbox if advisor is selected
                             if (advisor && !consultantAgreementChecked) {
                                 toastError("You must agree to the additional consultation terms.");
@@ -1588,6 +1867,11 @@ async function previewUpperStlFile(file_upper)
             "key11" : 'inactive',
             "key12" : 'inactive',
             "key13" : 'inactive',
+            "key14" : 'inactive',
+            "key15" : 'inactive',
+            "key16" : 'inactive',
+            "key18" : 'inactive',
+            "key19" : 'inactive',
         }
         const ui = {
             confirm: async (message) => editConfirm(message)
@@ -1671,6 +1955,15 @@ async function previewUpperStlFile(file_upper)
                         window.destroyPreview2();
                         $("#stl-lower-arch-preview").html("");
                     }
+
+                    if(key == 18) {
+                        window.destroyPreview1();
+                        $("#optional-stl-upper-arch-preview").html("");
+                    }
+                    if(key == 19) {
+                        window.destroyPreview2();
+                        $("#optional-stl-lower-arch-preview").html("");
+                    }
                     toastSuccess("File successfully removed")
                 } else {
                     toastError("Enable to remove file")
@@ -1710,6 +2003,21 @@ async function previewUpperStlFile(file_upper)
                                 window.previewLowerStlFile(response.fileName)
                             } else {
                                 window.previewLowerPlyFile(response.fileName)
+                            }
+                        }
+
+                        if(key == 18) {
+                            if(UPLOADEDFILE.split(".")[1] == 'stl') {
+                                window.previewOptionalUpperStlFile(response.fileName)
+                            } else {
+                                window.previewOptionalUpperPlyFile(response.fileName)
+                            }
+                        }
+                        if(key == 19) {
+                            if(UPLOADEDFILE.split(".")[1] == 'stl') {
+                                window.previewOptionalLowerStlFile(response.fileName)
+                            } else {
+                                window.previewOptionalLowerPlyFile(response.fileName)
                             }
                         }
                     } else {
@@ -3061,7 +3369,7 @@ async function previewUpperStlFile(file_upper)
                 var fileName = file.name;
                 var fileExtension = fileName.split('.').pop().toLowerCase(); // get file extension
 
-                if(key == 1 || key == 2) {
+                if(key == 1 || key == 2 || key == 18 || key == 19) {
                         if (fileExtension !== 'stl' && fileExtension !== 'ply') {
                             dropzone_reset_state(key, "Please drop a stl or ply file.")
                             return false;
@@ -3139,6 +3447,21 @@ async function previewUpperStlFile(file_upper)
         }
         if($("._dropzone_template #key13").attr('file') != "") {
             dropzone_active_state('13', $("._dropzone_template #key1").attr('file'))
+        }
+        if($("._dropzone_template #key14").attr('file') != "") {
+            dropzone_active_state('14', $("._dropzone_template #key14").attr('file'))
+        }
+        if($("._dropzone_template #key15").attr('file') != "") {
+            dropzone_active_state('15', $("._dropzone_template #key15").attr('file'))
+        }
+        if($("._dropzone_template #key16").length && $("._dropzone_template #key16").attr('file') != "") {
+            dropzone_active_state('16', $("._dropzone_template #key16").attr('file'))
+        }
+        if($("._dropzone_template #key18").attr('file') != "") {
+            dropzone_active_state('18', $("._dropzone_template #key18").attr('file'))
+        }
+        if($("._dropzone_template #key19").attr('file') != "") {
+            dropzone_active_state('19', $("._dropzone_template #key19").attr('file'))
         }
     });
     </script>
@@ -4101,6 +4424,7 @@ async function previewUpperStlFile(file_upper)
 
 </script>
 
+<script src="{{ asset('public/assets/customjs/additional-scan.js') }}"></script>
 <script src="{{ asset('public/assets/customjs/dm-integration.js') }}"></script>
 <script src="{{ asset('public/assets/customjs/add-patient.js') }}"></script>
 <script src="{{ asset('public/assets/customjs/shining3d.js') }}?v={{ time() }}"></script>
@@ -4117,7 +4441,7 @@ async function previewUpperStlFile(file_upper)
         if (code && matchNode && codeChallenge && domain) {
             $('#order-from-shining3d-modal').modal('show');
         }
-
+        AdditionalScan.init();
         DmIntegration.init();
         AddPatient.init();
         Shining3d.init();

@@ -415,6 +415,15 @@ class PatientFileController extends Controller
                 $column = "fl_notes";
             }
 
+            if ($request->get('key') == 18) {
+                $column = "optional_fl_upper_arch";
+            }
+
+            if ($request->get('key') == 19) {
+                $column = "optional_fl_lower_arch";
+            }
+
+
             if ($column != '') {
                 DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
                     $column => $filename,
