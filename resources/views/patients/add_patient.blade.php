@@ -185,7 +185,7 @@
 
 <!-- Confirmation Modal -->
 <div class="modal fade" id="optional-3shape-section-Modal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">3Shape communicate Scan data</h5>
@@ -246,7 +246,6 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="proceedToInputBtn">Yes, Continue</button>
       </div>
     </div>
   </div>
