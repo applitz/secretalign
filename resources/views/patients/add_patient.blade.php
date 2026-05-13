@@ -4673,7 +4673,7 @@ async function loadPLYLower(url) {
                 // } else {
                 //     redirectUri = "{{ url('/patient/edit') }}/" + hashCode;
                 // }
-                redirectUri = "{{ url('/patient/edit') }}/" + hashCode + "type=additional";
+                redirectUri = "{{ url('/patient/edit') }}/" + hashCode + "?type=additional";
                 const shining3dAuthUrl =
                     'https://dental3dcloud.com/p/index?' +
                     'codeChallenge={{ config("shining3d.shining3d_code_challenge") }}' +
