@@ -1972,10 +1972,14 @@ async function loadPLYLower(url) {
                         $("#3shape-section-Modal").modal("show");
                     });
 
+                    // $("#cancel-3shape-select").on('click', function () {
+                    //     $("#3shape-section").addClass('d-none');
+                    //     $("#medit-link-section").addClass('d-none')
+                    //     $("#patient-wizard").removeClass('d-none');
+                    // });
+
                     $("#cancel-3shape-select").on('click', function () {
-                        $("#3shape-section").addClass('d-none');
-                        $("#medit-link-section").addClass('d-none')
-                        $("#patient-wizard").removeClass('d-none');
+                        $("#3shape-section-Modal").modal("hide");
                     });
 
 
