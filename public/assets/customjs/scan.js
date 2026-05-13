@@ -8,6 +8,9 @@ var Scan = function() {
 
         $("#select-from-3shape").on('click', function (e) {
             e.preventDefault();
+            $("#_three_shape_case_id").val("");
+            $("#_three_shape_search_for_case").val("");
+            $("#3shape-search-result").empty();
             $("#3shape-section-Modal").modal("show");
         });
 

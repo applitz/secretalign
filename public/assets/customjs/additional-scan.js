@@ -14,6 +14,9 @@ var AdditionalScan = function() {
         // optional-select-from-3shape
         $("#optional-select-from-3shape").on("click", function (e) {
             e.preventDefault();
+            $("#additional_three_shape_case_id").val("");
+            $("#additional_three_shape_search_for_case").val("");
+            $("#3shape-search-result-additional").empty();
             $("#optional-3shape-section-Modal").modal("show");
         });
 
