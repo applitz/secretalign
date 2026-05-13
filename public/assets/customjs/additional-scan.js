@@ -9,6 +9,12 @@ var AdditionalScan = function() {
             } else {
                 $(this).text("- Hide Additional Scans");
             }
+            // optional-select-from-3shape
+            $("#optional-select-from-3shape").on('click', function () {
+                $("#3shape-section").removeClass('d-none');
+                $("#medit-link-section").addClass('d-none');
+                $("#patient-wizard").addClass('d-none');
+            });
 
         });
     }
