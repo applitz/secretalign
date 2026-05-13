@@ -13,7 +13,6 @@ var AdditionalScan = function() {
 
         // optional-select-from-3shape
         $("#optional-select-from-3shape").on("click", function (e) {
-            alert("fdhf");
             e.preventDefault();
             $("#optional-3shape-section-Modal").modal("show");
         });
@@ -69,42 +68,57 @@ var AdditionalScan = function() {
         function download3ShapeStlFilesAdditional(case_id, hash_upper, hash_lower)
         {
             $.ajax({
-                    type: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': $('input[name="_token"]').val(),
-                    },
-                    url: baseUrl + "/patient/file/download-3shape",
-                    data: {
-                        "patient_id" : $("input[name='patient_id_additional']").val(),
-                        "treatment_plan_id" : $("input[name='treatment_plan_id_additional']").val(),
-                        case_id: case_id,
-                        hash_upper: hash_upper,
-                        hash_lower: hash_lower,
-                    },
-                    beforeSend: function () {
-                        showLoader();
-                    }
-                }).done(function (response) {
+                type: "POST",
 
+                headers: {
+                    'X-CSRF-TOKEN': $('input[name="_token"]').val(),
+                },
+
+                url: baseUrl + "/patient/file/download-3shape",
+
+                data: {
+                    patient_id: $("input[name='patient_id_additional']").val(),
+                    treatment_plan_id: $("input[name='treatment_plan_id_additional']").val(),
+                    case_id: case_id,
+                    hash_upper: hash_upper,
+                    hash_lower: hash_lower,
+                },
+
+                beforeSend: function () {
+                    showLoader();
+                },
+
+                success: function (response) {
+                    console.log(response);
                     if(response.upper || response.lower) {
+
                         if(response.upper) {
                             $('#key18').attr('file', response.upper);
-                            window.dropzone_active_state('1', response.upper)
-                            previewUpperStlFile(response.upper)
+                            window.dropzone_active_state('1', response.upper);
+                            previewUpperStlFile(response.upper);
                         }
+
                         if(response.lower) {
                             $('#key19').attr('file', response.lower);
-                            window.dropzone_active_state('2', response.lower)
-                            previewLowerStlFile(response.lower)
+                            window.dropzone_active_state('2', response.lower);
+                            previewLowerStlFile(response.lower);
                         }
+
                         $("#optional-3shape-section-Modal").modal("hide");
-                        hideLoader();
-                    }
-                    else {
-                        hideLoader();
+
+                    } else {
                         toastError("Error while downloading files.");
                     }
-                });
+                },
+
+                error: function(xhr) {
+                    toastError(xhr.responseJSON?.message || "Something went wrong.");
+                },
+
+                complete: function () {
+                    hideLoader();
+                }
+            });
         }
     }
 
