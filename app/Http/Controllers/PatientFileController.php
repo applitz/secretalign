@@ -317,6 +317,7 @@ class PatientFileController extends Controller
 
     public function ThreeShapeDownloadSTL(Request $request)
     {
+        dd($request->all());
         $patient_id = $request->post('patient_id');
         $treatment_plan_id = $request->post('treatment_plan_id');
         $caseId = $request->post('case_id');
