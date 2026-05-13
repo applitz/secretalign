@@ -72,11 +72,9 @@ var AdditionalScan = function() {
             const treatment_plan_id = modal.find('input[name="additional_patient_id"]').val();
             $.ajax({
                 type: "POST",
-
-                headers: {
-                    'X-CSRF-TOKEN': $('input[name="_token"]').val(),
-                },
-
+                // headers: {
+                //     'X-CSRF-TOKEN': $('input[name="_token"]').val(),
+                // },
                 url: baseUrl + "/patient/file/download-3shape",
 
                 data: {
