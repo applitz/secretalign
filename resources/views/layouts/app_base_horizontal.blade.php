@@ -6,7 +6,7 @@
         <title>Dashboard | Secret Clear Aligner</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- App favicon -->
         <link rel="shortcut icon" href="{{ asset('public') }}/assets/favicon.png">
 
