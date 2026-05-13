@@ -9,7 +9,7 @@
       </div>
       <div class="modal-body">
         <p class="card-title-desc">Search with case id or by patient. Click on case to download stl files.</p>
-        <form class="mt-2" method="GET" id="3shape-search-additional">
+
             @csrf
             <input type="hidden" name="additional_patient_id" value="{{ $patient->patient_id }}">
             <input type="hidden" name="additional_case_id" value="{{ $patient->id }}">
@@ -38,7 +38,7 @@
             <div class="row">
                 <div class="col-md-12 mb-3">
                 <div class="btn-group">
-                    <button class="btn btn-primary waves-effect waves-light" type="submit">Search</button>
+                    <button class="btn btn-primary waves-effect waves-light" type="button" id="additional-3shape-search">Search</button>
                     <button type="button" class="btn btn-warning waves-effect waves-light" id="optional-cancel-3shape-select">
                         Cancel
                     </button>
@@ -54,7 +54,7 @@
                     @endif
                 </div>
             </div>
-        </form>
+
 
         <div class="table-rep-plugin">
             <div class="table-responsive mb-0">

@@ -1,3 +1,6 @@
+
+<input type="text" name="patient_id_additional" value="{{ $patient->patient_id }}">
+<input type="text" name="treatment_plan_id_additional" value="{{ $patient->id }}">
 <thead>
     <tr>
         <th>Case ID</th>
@@ -24,11 +27,7 @@
             }
         }
     @endphp
-    <tr class="download-3shape-stl-files" style="cursor: pointer"
-    hash-upper="{{$scan_upper_arch}}"
-    hash-lower="{{$scan_lower_arch}}"
-    case-id="{{$patient->Id}}"
-    data-bs-toggle="tooltip"
+    <tr class="download-3shape-stl-files-additional" style="cursor: pointer" hash-upper="{{$scan_upper_arch}}" hash-lower="{{$scan_lower_arch}}" case-id="{{$patient->Id}}" data-bs-toggle="tooltip"
     data-bs-placement="top" title="" data-bs-original-title="Click to Download Files" aria-label="View">
         <td>{{$patient->Id}}</td>
         <td>{{@$patient->PatientName}}</td>

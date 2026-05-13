@@ -332,6 +332,8 @@ class PatientFileController extends Controller
         return response()->json($data);
     }
 
+
+
     public function file_upload(Request $request, $patient_id, $treatment_plan_id)
     {
         if (DB::table('p_treatment_plans')->where('patient_id', $patient_id)->where('id', $treatment_plan_id)->exists()) {

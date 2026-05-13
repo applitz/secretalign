@@ -23,35 +23,88 @@ var AdditionalScan = function() {
         });
 
 
-        $("#3shape-search-additional").on('submit', function (e) {
+        $("#additional-3shape-search").on('click', function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            const case_id = $("#3shape-search-additional input[name=additional_case_id]").val(),
-            patient_id = $("#3shape-search-additional input[name=additional_patient_id]").val(),
 
-            three_shape_case_id = $("#3shape-search-additional input[name=additional_three_shape_case_id]").val(),
-            three_shape_search_for_case = $("#3shape-search-additional input[name=additional_three_shape_search_for_case]").val();
+            const modal = $("#optional-3shape-section-Modal");
+            const case_id = modal.find('input[name="additional_case_id"]').val();
+            const patient_id = modal.find('input[name="additional_patient_id"]').val();
+            const three_shape_case_id = modal.find('input[name="additional_three_shape_case_id"]').val();
+            const three_shape_search_for_case = modal.find('input[name="additional_three_shape_search_for_case"]').val();
+
             $.ajax({
                 type: "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('input[name="_token"]').val(),
                 },
-                url: baseUrl  + "/integrations/3shape-search-cases-additional",
+                url: baseUrl + "/integrations/3shape-search-cases-additional",
                 data: {
-                    "_token" : $('meta[name="csrf-token"]').attr('content'),
-                    "case_id" : case_id,
-                    "patient_id" : patient_id,
-                    "three_shape_case_id" : three_shape_case_id,
-                    "three_shape_search_for_patient" : three_shape_search_for_case,
+                    case_id: case_id,
+                    patient_id: patient_id,
+                    three_shape_case_id: three_shape_case_id,
+                    three_shape_search_for_patient: three_shape_search_for_case,
                 },
                 beforeSend: function () {
                     showLoader();
+                },
+                success: function (response) {
+                    $("#3shape-search-result-additional").html(response);
+                },
+                complete: function () {
+                    hideLoader();
                 }
-            }).done(function (response) {
-                $("#3shape-search-result-additional").html(response);
-                hideLoader();
             });
+
         });
+
+        $(document).on('click', '.download-3shape-stl-files-additional',function () {
+            const hash_upper = $(this).attr('hash-upper'),
+            hash_lower = $(this).attr('hash-lower'),
+            case_id = $(this).attr('case-id');
+            download3ShapeStlFilesAdditional(case_id, hash_upper, hash_lower);
+        });
+
+        function download3ShapeStlFilesAdditional(case_id, hash_upper, hash_lower)
+        {
+            $.ajax({
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('input[name="_token"]').val(),
+                    },
+                    url: baseUrl + "/patient/file/download-3shape",
+                    data: {
+                        "patient_id" : $("input[name='patient_id_additional']").val(),
+                        "treatment_plan_id" : $("input[name='treatment_plan_id_additional']").val(),
+                        case_id: case_id,
+                        hash_upper: hash_upper,
+                        hash_lower: hash_lower,
+                    },
+                    beforeSend: function () {
+                        showLoader();
+                    }
+                }).done(function (response) {
+
+                    if(response.upper || response.lower) {
+                        if(response.upper) {
+                            $('#key18').attr('file', response.upper);
+                            window.dropzone_active_state('1', response.upper)
+                            previewUpperStlFile(response.upper)
+                        }
+                        if(response.lower) {
+                            $('#key19').attr('file', response.lower);
+                            window.dropzone_active_state('2', response.lower)
+                            previewLowerStlFile(response.lower)
+                        }
+                        $("#optional-3shape-section-Modal").modal("hide");
+                        hideLoader();
+                    }
+                    else {
+                        hideLoader();
+                        toastError("Error while downloading files.");
+                    }
+                });
+        }
     }
 
     return {
