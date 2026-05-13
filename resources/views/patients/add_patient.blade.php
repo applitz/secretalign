@@ -4661,6 +4661,31 @@ async function loadPLYLower(url) {
 
                 window.location.href = shining3dAuthUrl;
             });
+
+            $(document).on('click', '#select-from-shining3d-link-additional', function () {
+                const mode = $(this).attr('data-mode'); // 'add' or 'edit'
+                const hashCode = $(this).attr('data-hash-code');
+
+                let redirectUri;
+
+                // if (mode === 'add') {
+                //     redirectUri = "{{ config('shining3d.shining3d_redirect_uri') }}";
+                // } else {
+                //     redirectUri = "{{ url('/patient/edit') }}/" + hashCode;
+                // }
+                redirectUri = "{{ url('/patient/edit') }}/" + hashCode + "type=additional";
+                const shining3dAuthUrl =
+                    'https://dental3dcloud.com/p/index?' +
+                    'codeChallenge={{ config("shining3d.shining3d_code_challenge") }}' +
+                    '&codeChallengeMethod={{ config("shining3d.shining3d_code_challenge_method") }}' +
+                    '&redirectUri=' + encodeURIComponent(redirectUri) +
+                    '&responseType=code' +
+                    '&appId={{ config("shining3d.shining3d_app_id") }}' +
+                    '&thirdUserID={{ Auth::user()->id }}' +
+                    '&thirdUserName={{ Auth::user()->shining3d_org_name }}';
+
+                window.location.href = shining3dAuthUrl;
+            });
         });
 
 
