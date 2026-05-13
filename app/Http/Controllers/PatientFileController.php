@@ -317,7 +317,6 @@ class PatientFileController extends Controller
 
     public function ThreeShapeDownloadSTL(Request $request)
     {
-        dd($request->all());
         $patient_id = $request->post('patient_id');
         $treatment_plan_id = $request->post('treatment_plan_id');
         $caseId = $request->post('case_id');
@@ -331,11 +330,6 @@ class PatientFileController extends Controller
             $data["lower"] = $this->ThreeShapeSaveSTL($patient_id, $treatment_plan_id, "fl_lower_arch", $caseId, $hash_lower);
         }
         return response()->json($data);
-    }
-
-    public function ThreeShapeDownloadSTLAdditional(Request $request)
-    {
-        dd($request->all());
     }
 
 
