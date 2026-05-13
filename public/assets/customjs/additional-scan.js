@@ -78,6 +78,7 @@ var AdditionalScan = function() {
                 url: baseUrl + "/patient/file/download-3shape",
 
                 data: {
+                    "_token" : $('meta[name="csrf-token"]').attr('content'),
                     "patient_id": patient_id,
                     "treatment_plan_id": treatment_plan_id,
                     "case_id": case_id,
