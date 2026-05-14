@@ -75,6 +75,38 @@ var AdditionalScan = function() {
             // $("#patient-wizard").removeClass('d-none');
             $("#medit-link-additional-Modal").modal("hide");
         });
+
+        $(document).on('click', '#medit-link-search-additional-button', function (e) {
+            e.preventDefault()
+            e.stopImmediatePropagation()
+            const case_id = $("#medit-link-search input[name=additional_medit_link_case_id]").val(),
+            patient_id = $("#medit-link-search input[name=additional_medit_link_patient_id]").val(),
+            medit_link_search_for_case = $("#medit-link-search input[name=additional_medit_link_medit_link_search_for_case]").val(),
+            medit_link_start_date = $("#medit-link-search input[name=additional_medit_link_medit_link_start_date]").val(),
+            medit_link_end_date = $("#medit-link-search input[name=additional_medit_link_medit_link_end_date]").val()
+
+            $.ajax({
+                type: "POST",
+                url: "{{ url('/integrations/medit-link-search-cases-additional') }}",
+                headers: {
+                    'X-CSRF-TOKEN': $('input[name="_token"]').val(),
+                },
+                data: {
+                    "case_id" : case_id,
+                    "patient_id" : patient_id,
+                    "medit_link_search_for_case" : medit_link_search_for_case,
+                    "medit_link_start_date" : medit_link_start_date,
+                    "medit_link_end_date" : medit_link_end_date
+                },
+                beforeSend: function () {
+                    showLoader();
+                }
+            }).done(function (response) {
+                $("#medit-link-search-result").html(response);
+                hideLoader();
+            })
+        });
+
     }
     return {
         init: function(){

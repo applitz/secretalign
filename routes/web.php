@@ -271,6 +271,7 @@ Route::get('/integrations/medit-link-disable', [IntegrationController::class, 'D
 Route::get('/integration-medit-link/obtain-authorization-code', [IntegrationController::class, 'MeditLinkObtainAuthorizationCode']);
 Route::get('/integration-medit-link', [IntegrationController::class, 'MeditLinkObtainAuthorizationCodeCallback']);
 Route::post('/integrations/medit-link-search-cases', [IntegrationController::class, 'MeditLinkSearchCase']);
+Route::post('/integrations/medit-link-search-cases-additional', [IntegrationController::class, 'MeditLinkSearchCaseAdditional']);
 Route::get('/integrations/medit-link/receive-data', [MeditLinkController::class, 'receiveData']);
 
 //events

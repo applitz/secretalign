@@ -82,9 +82,9 @@
                 <p class="card-title-desc">
                     Search with case registration/modification dates and case name. Click on case to download stl files.
                 </p>
-                <form class="mt-2" method="GET" id="medit-link-search">
-                    <input type="hidden" name="_patient_id" value="{{ $patient->patient_id }}">
-                    <input type="hidden" name="_case_id" value="{{ $patient->id }}">
+                    @csrf
+                    <input type="hidden" name="additional_medit_link_patient_id" value="{{ $patient->patient_id }}">
+                    <input type="hidden" name="additional_medit_link_case_id" value="{{ $patient->id }}">
                     <div class="row">
                         <div class="col-md-3 mb-3">
                         <div class="row align-items-center g-3">
@@ -92,7 +92,7 @@
                             <h6 class="text-700 mb-0">Start Date: </h6>
                             </div>
                             <div class="col-12 position-relative">
-                            <input type="text" class="form-control pickr" name="_medit_link_start_date" value="{{date("Y-m-d", strtotime("-1 month"))}}">
+                            <input type="text" class="form-control pickr" name="additional_medit_link_medit_link_start_date" value="{{date("Y-m-d", strtotime("-1 month"))}}">
                             </div>
                         </div>
                         </div>
@@ -102,7 +102,7 @@
                             <h6 class="text-700 mb-0">End Date: </h6>
                             </div>
                             <div class="col-12 position-relative">
-                            <input type="text" class="form-control pickr" name="_medit_link_end_date" value="{{date("Y-m-d")}}">
+                            <input type="text" class="form-control pickr" name="additional_medit_link_medit_link_end_date" value="{{date("Y-m-d")}}">
                             </div>
                         </div>
                         </div>
@@ -112,7 +112,7 @@
                             <h6 class="text-700 mb-0">Search for case: </h6>
                             </div>
                             <div class="col-12 position-relative">
-                            <input type="text" class="form-control" name="_medit_link_search_for_case">
+                            <input type="text" class="form-control" name="additional_medit_link_medit_link_search_for_case">
                             </div>
                         </div>
                         </div>
@@ -120,7 +120,7 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                         <div class="btn-group">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit">Search</button>
+                            <button class="btn btn-primary waves-effect waves-light" id="medit-link-search-additional-button" type="button">Search</button>
                             <a class="btn btn-warning waves-effect waves-light" href="javascript:void(0);" id="cancel-medit-link-select">Cancel</a>
                         </div>
                         @if(Auth::user()->medit_link_access_token != null)
@@ -133,7 +133,7 @@
                             @endif
                         </div>
                     </div>
-                </form>
+
 
                 <div class="table-rep-plugin">
                     <div class="table-responsive mb-0">

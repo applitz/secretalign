@@ -274,19 +274,16 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
     {
         $results = [];
 
-         Log::info($request);
+
         // solved by Tapas Web Solution x dotprogrammers
         $token = DB::table('medit_links')
                 ->where('user_id', Auth::user()->id)
                 ->get();
 
-//        Log::info($token);
-        //$medit_client_id
             $medit_link_search_for_case = @$request->post('medit_link_search_for_case') ? $request->post('medit_link_search_for_case') : "";
             $medit_link_start_date = $request->post('medit_link_start_date') ? strtotime(date("Y-m-d", strtotime($request->post('medit_link_start_date')))."T00:00:00Z") * 1000 : "";
             $medit_link_end_date = $request->post('medit_link_end_date') ? strtotime(date("Y-m-d", strtotime($request->post('medit_link_end_date')))."T23:59:59Z") * 1000 : "";
             $curl = curl_init();
-          //  dd(env('MEDIT_LINK_CLIENT_ID'));
 
             curl_setopt_array($curl, array(
              // CURLOPT_URL => 'https://'.env('MEDIT_LINK_OPENAPI_SERVER').'openapi-resources.meditlink.com/v1/cases/search?schema=latest&size=100&page=0&start='.$medit_link_start_date.'&end='.$medit_link_end_date.'&name='.urlencode($medit_link_search_for_case).'&status=',
@@ -322,6 +319,57 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
             }
         return view("layouts.medit_link_patients", compact("results"))->render();
     }
+
+    public function MeditLinkSearchCaseAdditional(Request $request)
+    {
+        $results = [];
+
+
+        // solved by Tapas Web Solution x dotprogrammers
+        $token = DB::table('medit_links')
+                ->where('user_id', Auth::user()->id)
+                ->get();
+
+            $medit_link_search_for_case = @$request->post('medit_link_search_for_case') ? $request->post('medit_link_search_for_case') : "";
+            $medit_link_start_date = $request->post('medit_link_start_date') ? strtotime(date("Y-m-d", strtotime($request->post('medit_link_start_date')))."T00:00:00Z") * 1000 : "";
+            $medit_link_end_date = $request->post('medit_link_end_date') ? strtotime(date("Y-m-d", strtotime($request->post('medit_link_end_date')))."T23:59:59Z") * 1000 : "";
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+             // CURLOPT_URL => 'https://'.env('MEDIT_LINK_OPENAPI_SERVER').'openapi-resources.meditlink.com/v1/cases/search?schema=latest&size=100&page=0&start='.$medit_link_start_date.'&end='.$medit_link_end_date.'&name='.urlencode($medit_link_search_for_case).'&status=',
+            //CURLOPT_URL => 'https://stage-openapi-resources.meditlink.com/v1/cases/search?schema=latest&size=100&page=0&start='.$medit_link_start_date.'&end='.$medit_link_end_date.'&name='.$medit_link_search_for_case.'&status=',
+            CURLOPT_URL => 'https://openapi-resources.meditlink.com/v1/cases/search?schema=latest&size=100&page=0&start=' . $medit_link_start_date . '&end=' . $medit_link_end_date . '&name=' . urlencode($medit_link_search_for_case) . '&status=',
+
+            CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => '',
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 0,
+              CURLOPT_FOLLOWLOCATION => true,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => 'GET',
+              CURLOPT_HTTPHEADER => array(
+               // 'Host: '.env('MEDIT_LINK_OPENAPI_SERVER').'openapi-resources.meditlink.com',
+               'Host: openapi-resources.meditlink.com',
+                'Authorization: Bearer '.$token[0]->medit_link_access_token,
+                'x-meditlink-client-id: '.env('MEDIT_LINK_CLIENT_ID'),
+                'x-meditlink-group-uuid: '.$token[0]->medit_link_group_uuid,
+                'Content-Type: application/json'
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            curl_close($curl);
+
+            $response = json_decode($response);
+            log::info("THis is it".json_encode($response));
+            // solved by Tapas Web Solution x dotprogrammers
+
+            if(@$response->numberOfElements > 0) {
+                $results = $response->content;
+            }
+        return view("layouts.medit_link_patients_additional", compact("results"))->render();
+    }
+
     public function SetupThreeShapeIntegration()
     {
         return view("integration.3shape_integration");

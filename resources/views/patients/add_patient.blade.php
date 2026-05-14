@@ -2177,7 +2177,7 @@ async function loadPLYLower(url) {
                             $("#medit-link-search-result").html(response);
                             hideLoader();
                         })
-                    })
+                    });
 
                     // $("#3shape-search").on('submit', function (e) {
                     //     e.preventDefault();
