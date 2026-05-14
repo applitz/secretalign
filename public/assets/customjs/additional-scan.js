@@ -87,7 +87,7 @@ var AdditionalScan = function() {
 
             $.ajax({
                 type: "POST",
-                url: "{{ url('/integrations/medit-link-search-cases-additional') }}",
+                url:  baseUrl + "/integrations/medit-link-search-cases-additional",
                 headers: {
                     'X-CSRF-TOKEN': $('input[name="_token"]').val(),
                 },
@@ -102,7 +102,7 @@ var AdditionalScan = function() {
                     showLoader();
                 }
             }).done(function (response) {
-                $("#medit-link-search-result").html(response);
+                $("#medit-link-search-result-additional").html(response);
                 hideLoader();
             })
         });

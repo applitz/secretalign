@@ -137,7 +137,7 @@
 
                 <div class="table-rep-plugin">
                     <div class="table-responsive mb-0">
-                        <table id="medit-link-search-result" class="table table-striped">
+                        <table id="medit-link-search-result-additional" class="table table-striped">
 
                         </table>
                     </div>
