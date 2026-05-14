@@ -263,7 +263,7 @@
 
         @endif
     @endif
-    @if(Auth::user()->email == 'info@zahnspangehome.at')
+    @if((Auth::user()->email == 'info@zahnspangehome.at') || (Auth::user()->email == 'izdeensbah222@gmail.com'))
     @include('patients.create-patients.additional-scan')
     @endif
     <div class="mb-3 text-end">

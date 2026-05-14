@@ -44,7 +44,7 @@ class Shining3dController extends Controller
             'doctorID' => $request->input('doctorId'),
             'orgCode' => $request->input('orgCode'),
             'page' => 1,
-            'pageSize' => 10,
+            'pageSize' => 20,
             'startOn' => $stardDate,
             'endOn' => $endDate,
         ]);

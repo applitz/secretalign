@@ -156,8 +156,6 @@ class RegisterPatient extends Controller
                                 $dataDistribution = $clinic['dataDistribution'];
                                 $dataShining3d['dataDistribution'] = $dataDistribution;
                                 if(count($dataDistribution) > 0){
-
-
                                     $dataShining3d['orderList'] = getOrderList($baseUrl, $connectionAuthorization['result'], $orgCode, $userId, $clinic['orgType'], $dataShining3d['startDate'], $dataShining3d['endDate']);
                                     $dataShining3d['baseUrl'] = $baseUrl;
                                     $dataShining3d['authToken'] = $connectionAuthorization['result'];
