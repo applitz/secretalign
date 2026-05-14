@@ -87,24 +87,28 @@ var AdditionalScan = function() {
 
             $.ajax({
                 type: "POST",
-                url:  baseUrl + "/integrations/medit-link-search-cases-additional",
-                headers: {
-                    'X-CSRF-TOKEN': $('input[name="_token"]').val(),
-                },
+                url: baseUrl + "/integrations/medit-link-search-cases-additional",
                 data: {
-                    "case_id" : case_id,
-                    "patient_id" : patient_id,
-                    "medit_link_search_for_case" : medit_link_search_for_case,
-                    "medit_link_start_date" : medit_link_start_date,
-                    "medit_link_end_date" : medit_link_end_date
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    case_id: case_id,
+                    patient_id: patient_id,
+                    medit_link_search_for_case: medit_link_search_for_case,
+                    medit_link_start_date: medit_link_start_date,
+                    medit_link_end_date: medit_link_end_date
                 },
                 beforeSend: function () {
                     showLoader();
+                },
+                success: function (response) {
+                    $("#medit-link-search-result-additional").html(response);
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                },
+                complete: function () {
+                    hideLoader();
                 }
-            }).done(function (response) {
-                $("#medit-link-search-result-additional").html(response);
-                hideLoader();
-            })
+            });
         });
 
     }
