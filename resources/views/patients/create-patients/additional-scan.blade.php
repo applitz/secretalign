@@ -75,13 +75,18 @@
 <!-- Toggle Button -->
 <div class="mb-3">
     <button type="button" class="btn btn-outline-primary" id="toggleAdditionalScans">
-        <i class="fas fa-plus"></i> Add Additional Scans
+        @if(request('type') == 'additional')
+            - Hide Additional Scans
+        @else
+            + Add Additional Scans
+        @endif
+
     </button>
 </div>
 
 
 
-<div id="additional-scans-optional" class="d-none">
+<div id="additional-scans-optional" class="@if(request('type') == 'additional') @else d-none @endif">
     <div class="mb-3">
         Add additional Scans (Optional)
     </div>
