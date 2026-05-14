@@ -7,13 +7,14 @@ var Scan = function() {
         // })
         $("#select-from-medit-link").on('click', function () {
             $("#medit-link-Modal").modal("show");
-        })
+        });
 
         $("#cancel-medit-link-select").on('click', function () {
-            $("#3shape-section").addClass('d-none');
-            $("#medit-link-section").addClass('d-none')
-            $("#patient-wizard").removeClass('d-none');
-        })
+            // $("#3shape-section").addClass('d-none');
+            // $("#medit-link-section").addClass('d-none')
+            // $("#patient-wizard").removeClass('d-none');
+            $("#medit-link-Modal").modal("hide");
+        });
     }
     var addScan = function() {
         // $("#select-from-3shape").on('click', function () {

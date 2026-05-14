@@ -64,9 +64,22 @@ var AdditionalScan = function() {
 
     }
 
+    var meditScan = function() {
+        $("#select-from-medit-link-additional").on('click', function () {
+            $("#medit-link-additional-Modal").modal("show");
+        });
+
+        $("#cancel-medit-link-additional-select").on('click', function () {
+            // $("#3shape-section").addClass('d-none');
+            // $("#medit-link-section").addClass('d-none')
+            // $("#patient-wizard").removeClass('d-none');
+            $("#medit-link-additional-Modal").modal("hide");
+        });
+    }
     return {
         init: function(){
             add();
+            meditScan();
         },
     }
 }();
