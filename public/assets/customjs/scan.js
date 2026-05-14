@@ -1,4 +1,20 @@
 var Scan = function() {
+    var meditScan = function() {
+        // $("#select-from-medit-link").on('click', function () {
+        //     $("#medit-link-section").removeClass('d-none')
+        //     $("#3shape-section").addClass('d-none')
+        //     $("#patient-wizard").addClass('d-none')
+        // })
+        $("#select-from-medit-link").on('click', function () {
+            $("#medit-link-Modal").modal("show");
+        })
+
+        $("#cancel-medit-link-select").on('click', function () {
+            $("#3shape-section").addClass('d-none');
+            $("#medit-link-section").addClass('d-none')
+            $("#patient-wizard").removeClass('d-none');
+        })
+    }
     var addScan = function() {
         // $("#select-from-3shape").on('click', function () {
         //     $("#3shape-section").removeClass('d-none');
@@ -89,6 +105,7 @@ var Scan = function() {
     return {
         init: function(){
             addScan();
+            meditScan();
         },
     }
 }();

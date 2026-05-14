@@ -167,9 +167,7 @@
 
             <div class="d-flex align-items-center justify-content-center">
                 <span>Import From</span>
-                <img src="{{ asset('public/assets/communicate-logo-white.png') }}"
-                    width="92px"
-                    style="padding-left: 10px">
+                <img src="{{ asset('public/assets/communicate-logo-white.png') }}" width="92px" style="padding-left: 10px">
             </div>
 
         @if(Auth::user()->three_shape_access_token != null)
@@ -181,14 +179,14 @@
 
         <a class="btn btn-primary order-from-button"
                 @if(Auth::user()->medit_link_access_token != null)
-                        href="javascript:void(0);" id="select-from-medit-link"
+                        href="javascript:void(0);" id="select-from-medit-link-additional"
                 @else
                     href="{{url('/integration-medit-link/obtain-authorization-code')}}"
                 @endif
         >
             <div class="d-flex align-items-center justify-content-center">
                 <span style="padding-left: 10px">Import From </span>
-                <img class="ms-2" style="    padding-top: 8px; padding-right: 5px; padding-bottom: 7px;" src="{{asset('public/assets/medit-link-logo.svg')}}" width="52px">
+                <img class="ms-2" style="padding-top: 8px; padding-right: 5px; padding-bottom: 7px;" src="{{asset('public/assets/medit-link-logo.svg')}}" width="52px">
             </div>
         </a>
 
