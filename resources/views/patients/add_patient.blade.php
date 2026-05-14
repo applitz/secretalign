@@ -4191,6 +4191,32 @@ async function loadPLYLower(url) {
                 $('#startDate').val(formatDMY(start));
             });
 
+             $(document).on('change', '#startDate-additional', function () {
+                const startValue = this.value;
+                if (!startValue) return;
+
+                const start = parseDMY(startValue);
+
+                const end = new Date(start);
+                end.setDate(end.getDate() + 3);
+
+                $('#endDate-additional').val(formatDMY(end));
+            });
+
+
+            // document.getElementById("endDate").addEventListener("change", function () {
+            $(document).on('change', '#endDate-additional', function () {
+                const endValue = this.value;
+                if (!endValue) return;
+
+                const end = parseDMY(endValue);
+
+                const start = new Date(end);
+                start.setDate(start.getDate() - 3);
+
+                $('#startDate-additional').val(formatDMY(start));
+            });
+
             $(document).on('change', 'input[name=pricing_package]', function () {
                 if($(this).is(":checked")) {
                     $("input[name=client_preferred_package]").val($(this).val());
