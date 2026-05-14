@@ -1887,20 +1887,35 @@ async function loadPLYLower(url) {
 
 
             @if(@$patient->fl_upper_arch!='')
+                @if(explode(".", @$patient->fl_upper_arch)[1] == 'stl')
+                    previewUpperStlFile("{{@$patient->fl_upper_arch}}")
+                @else
+                    previewUpperPlyFile("{{@$patient->fl_upper_arch}}")
+                @endif
+            @endif
 
-            @if(explode(".", @$patient->fl_upper_arch)[1] == 'stl')
-            previewUpperStlFile("{{@$patient->fl_upper_arch}}")
-            @else
-            previewUpperPlyFile("{{@$patient->fl_upper_arch}}")
+            @if(@$patient->optional_fl_upper_arch!='')
+                @if(explode(".", @$patient->optional_fl_upper_arch)[1] == 'stl')
+                    previewUpperStlFile("{{@$patient->optional_fl_upper_arch}}")
+                @else
+                    previewUpperPlyFile("{{@$patient->optional_fl_upper_arch}}")
+                @endif
             @endif
-            @endif
+
             @if(@$patient->fl_lower_arch!='')
-
-            @if(explode(".", @$patient->fl_lower_arch)[1] == 'stl')
-            previewLowerStlFile("{{@$patient->fl_lower_arch}}")
-            @else
-            previewLowerPlyFile("{{@$patient->fl_lower_arch}}")
+                @if(explode(".", @$patient->fl_lower_arch)[1] == 'stl')
+                    previewLowerStlFile("{{@$patient->fl_lower_arch}}")
+                @else
+                    previewLowerPlyFile("{{@$patient->fl_lower_arch}}")
+                @endif
             @endif
+
+            @if(@$patient->optional_fl_lower_arch!='')
+                @if(explode(".", @$patient->optional_fl_lower_arch)[1] == 'stl')
+                    previewLowerStlFile("{{@$patient->optional_fl_lower_arch}}")
+                @else
+                    previewLowerPlyFile("{{@$patient->optional_fl_lower_arch}}")
+                @endif
             @endif
 
             function downloadMeditLinkStlFiles($uuid)
