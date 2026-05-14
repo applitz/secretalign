@@ -480,8 +480,8 @@ var Shining3d = function() {
             const orgCode = $("#order-from-shining3d-label-model-shining3d-org-code-additional").val();
             const patientId = $("#order-from-shining3d-label-model-shining3d-patient-id-additional").val();
             const treatmentPlanId = $("#order-from-shining3d-label-model-shining3d-treatment-plan-id-additional").val();
-            const domainUrl = $('#scanRegion').val();
-            const error = $('#shining3d-error');
+            const domainUrl = $('#scanRegion-additional').val();
+            const error = $('#shining3d-error-additional');
 
             $.ajax({
                 url: baseUrl + '/data-download-shining3d-order-additional',
