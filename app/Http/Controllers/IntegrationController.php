@@ -322,9 +322,8 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
 
     public function MeditLinkSearchCaseAdditional(Request $request)
     {
+        dd($request->all());
         $results = [];
-
-
         // solved by Tapas Web Solution x dotprogrammers
         $token = DB::table('medit_links')
                 ->where('user_id', Auth::user()->id)
