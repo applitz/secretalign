@@ -220,12 +220,12 @@ var Shining3d = function() {
 
         $(document).on('click', '#order-from-shining3d-additional', function () {
             $(".my-loader").show();
-            const btn   = $('#order-from-shining3d');
-            const error = $('#shining3d-error');
+            const btn   = $('#order-from-shining3d-additional');
+            const error = $('#shining3d-error-additional');
 
-            const region = $('#scanRegion').val();
-            const start  = $('#startDate').val();
-            const end    = $('#endDate').val();
+            const region = $('#scanRegion-additional').val();
+            const start  = $('#startDate-additional').val();
+            const end    = $('#endDate-additional').val();
 
             // const domainUrl = $(this).attr('data-base-url');
             // const authToken = $(this).attr('data-auth-token');
@@ -233,10 +233,10 @@ var Shining3d = function() {
             // const doctorId = $(this).attr('data-doctor-id');
             // const orgType = $(this).attr('data-org-type');
 
-            const authToken = $("#order-from-shining3d-label-model-shining3d-auth-token").val();
-            const orgCode = $("#order-from-shining3d-label-model-shining3d-org-code").val();
-            const doctorId = $("#order-from-shining3d-label-model-shining3d-doctor-id").val();
-            const orgType = $("#order-from-shining3d-label-model-shining3d-org-type").val();
+            const authToken = $("#order-from-shining3d-label-model-shining3d-auth-token-additional").val();
+            const orgCode = $("#order-from-shining3d-label-model-shining3d-org-code-additional").val();
+            const doctorId = $("#order-from-shining3d-label-model-shining3d-doctor-id-additional").val();
+            const orgType = $("#order-from-shining3d-label-model-shining3d-org-type-additional").val();
             // Reset message
             error.hide().removeClass('alert-success alert-danger').text('');
 
@@ -294,7 +294,7 @@ var Shining3d = function() {
 
                         showSuccess('Orders fetched successfully from Shining3D.');
 
-                        let tbody = $('#shining3dOrderTable');
+                        let tbody = $('#shining3dOrderTable-additional');
                         tbody.empty();
 
                         if (!response.result || response.result.length === 0) {

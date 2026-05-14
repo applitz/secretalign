@@ -1020,7 +1020,7 @@
                     </div>
 
                     <div class="modal-body">
-                        <div id="shining3d-error" class="alert alert-danger py-1" style="display:none; font-size: 14px;"></div>
+                        <div id="shining3d-error-additional" class="alert alert-danger py-1" style="display:none; font-size: 14px;"></div>
                             @csrf
                             <div class="row">
                                 <div class="col-md-4">
@@ -1030,7 +1030,7 @@
                                                 <i class="fas fa-info-circle"></i>
                                             </a>
                                         </label>
-                                        <select id="scanRegion" class="form-select">
+                                        <select id="scanRegion-additional" class="form-select">
                                             <option value="https://ffapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ffapi.shining3d.com' ? 'selected="selected"' : '' }}> Europe </option>
                                             <option value="https://hzapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://hzapi.shining3d.com' ? 'selected="selected"' : '' }}> China</option>
                                             <option value="https://ruapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ruapi.shining3d.com' ? 'selected="selected"' : '' }}> Russia </option>
@@ -1042,23 +1042,23 @@
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label for="startDate" class="form-label">Start Date</label>
-                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['startDate'] ? date('d-m-Y', strtotime($dataShining3d['startDate'])) : '' }}" placeholder="Select start date">
+                                        <label for="startDate-additional" class="form-label">Start Date</label>
+                                        <input type="text" id="startDate-additional" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['startDate'] ? date('d-m-Y', strtotime($dataShining3d['startDate'])) : '' }}" placeholder="Select start date">
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label for="endDate" class="form-label">End Date</label>
-                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['endDate'] ? date('d-m-Y', strtotime($dataShining3d['endDate'])) : '' }}" placeholder="Select end date">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-doctor-id" value="{{ $dataShining3d['doctorId'] }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-auth-token" value="{{ $dataShining3d['authToken'] }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-org-type" value="{{ $dataShining3d['orgType'] }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-org-code" value="{{ $dataShining3d['orgCode'] }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-csrf-token" value="{{ $dataShining3d['csrfToken'] }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-base-url" value="{{ $dataShining3d['baseUrl'] }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-patient-id" value="{{  $patient->patient_id }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-treatment-plan-id" value="{{ $patient->id }}">
+                                        <label for="endDate-additional" class="form-label">End Date</label>
+                                        <input type="text" id="endDate-additional" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['endDate'] ? date('d-m-Y', strtotime($dataShining3d['endDate'])) : '' }}" placeholder="Select end date">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-doctor-id-additional" value="{{ $dataShining3d['doctorId'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-auth-token-additional" value="{{ $dataShining3d['authToken'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-org-type-additional" value="{{ $dataShining3d['orgType'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-org-code-additional" value="{{ $dataShining3d['orgCode'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-csrf-token-additional" value="{{ $dataShining3d['csrfToken'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-base-url-additional" value="{{ $dataShining3d['baseUrl'] }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-patient-id-additional" value="{{  $patient->patient_id }}">
+                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-treatment-plan-id-additional" value="{{ $patient->id }}">
                                     </div>
                                 </div>
                             </div>
@@ -1078,7 +1078,7 @@
                                                     <th>Scan Files</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="shining3dOrderTable">
+                                            <tbody id="shining3dOrderTable-additional">
                                                 @if(!empty($dataShining3d['orderList']['result']) && count($dataShining3d['orderList']['result']) > 0)
                                                     @foreach($dataShining3d['orderList']['result'] as $order)
 
@@ -1181,100 +1181,6 @@
         </div>
     <!-- Order From shining3d Modal End -->
     @endif
-    {{-- <!--  Order From shining3d Modal Start -->
-        <div class="modal fade" id="order-from-shining3d-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl">
-                <div class="modal-content">
-
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="orderFromShining3dLabel">
-                            Order From Shining3d
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div id="shining3d-error" class="alert alert-danger py-1" style="display:none; font-size: 14px;"></div>
-                            @csrf
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="scanType" class="form-label">Select Region</label>
-                                        <select id="scanRegion" class="form-select">
-                                            <option value="">-- Select Region Based on Your Location --</option>
-
-                                            <option value="frankfurt">
-                                                Europe (Frankfurt) – Recommended for EU countries
-                                            </option>
-
-                                            <option value="hz">
-                                                China (Hangzhou) – Mainland China users
-                                            </option>
-
-                                            <option value="ru">
-                                                Russia – Users located in Russia
-                                            </option>
-
-                                            <option value="silicon">
-                                                USA (Silicon Valley) – North America users
-                                            </option>
-
-                                            <option value="tokyo">
-                                                Japan (Tokyo) – Japan & East Asia users
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="startDate" class="form-label">Start Date</label>
-                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" placeholder="Select start date">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="endDate" class="form-label">End Date</label>
-                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" placeholder="Select end date">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mt-3" id="caseSearchRow" style="display:none;">
-                                <div class="col-12">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped align-middle">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>Patient Name</th>
-                                                    <th>Phone</th>
-                                                    <th>Sex</th>
-                                                    <th>Lab Name</th>
-                                                     <th>Status</th>
-                                                    <th>Created At</th>
-                                                    <th>Scan Files</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="shining3dOrderTable">
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
-                        <button type="button" class="btn btn-danger" id="order-from-shining3d">Get Sacn</button>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-    <!-- Order From shining3d Modal End --> --}}
 @stop
 
 @section('javascript')
