@@ -79,11 +79,11 @@ var AdditionalScan = function() {
         $(document).on('click', '#medit-link-search-additional-button', function (e) {
             e.preventDefault()
             e.stopImmediatePropagation()
-            const case_id = $("#medit-link-search input[name=additional_medit_link_case_id]").val(),
-            patient_id = $("#medit-link-search input[name=additional_medit_link_patient_id]").val(),
-            medit_link_search_for_case = $("#medit-link-search input[name=additional_medit_link_medit_link_search_for_case]").val(),
-            medit_link_start_date = $("#medit-link-search input[name=additional_medit_link_medit_link_start_date]").val(),
-            medit_link_end_date = $("#medit-link-search input[name=additional_medit_link_medit_link_end_date]").val()
+            const case_id = $("#medit-link-additional-Modal input[name=additional_medit_link_case_id]").val(),
+            patient_id = $("#medit-link-additional-Modal input[name=additional_medit_link_patient_id]").val(),
+            medit_link_search_for_case = $("#medit-link-additional-Modal input[name=additional_medit_link_medit_link_search_for_case]").val(),
+            medit_link_start_date = $("#medit-link-additional-Modal input[name=additional_medit_link_medit_link_start_date]").val(),
+            medit_link_end_date = $("#medit-link-additional-Modal input[name=additional_medit_link_medit_link_end_date]").val()
 
             $.ajax({
                 type: "POST",
