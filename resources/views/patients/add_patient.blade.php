@@ -1896,9 +1896,9 @@ async function loadPLYLower(url) {
 
             @if(@$patient->optional_fl_upper_arch!='')
                 @if(explode(".", @$patient->optional_fl_upper_arch)[1] == 'stl')
-                    previewUpperStlFile("{{@$patient->optional_fl_upper_arch}}")
+                    previewOptionalUpperStlFile("{{@$patient->optional_fl_upper_arch}}")
                 @else
-                    previewUpperPlyFile("{{@$patient->optional_fl_upper_arch}}")
+                    previewOptionalUpperPlyFile("{{@$patient->optional_fl_upper_arch}}")
                 @endif
             @endif
 
@@ -1912,9 +1912,9 @@ async function loadPLYLower(url) {
 
             @if(@$patient->optional_fl_lower_arch!='')
                 @if(explode(".", @$patient->optional_fl_lower_arch)[1] == 'stl')
-                    previewLowerStlFile("{{@$patient->optional_fl_lower_arch}}")
+                    previewOptionalLowerStlFile("{{@$patient->optional_fl_lower_arch}}")
                 @else
-                    previewLowerPlyFile("{{@$patient->optional_fl_lower_arch}}")
+                    previewOptionalLowerPlyFile("{{@$patient->optional_fl_lower_arch}}")
                 @endif
             @endif
 
