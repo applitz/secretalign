@@ -75,7 +75,7 @@
 <!-- Toggle Button -->
 <div class="mb-3">
     <button type="button" class="btn btn-outline-primary" id="toggleAdditionalScans">
-        @if(request('type') == 'additional')
+        @if((request('type') == 'additional') || ($patient->optional_fl_upper_arch != null) || ($patient->optional_fl_lower_arch != null))
             - Hide Additional Scans
         @else
             + Add Additional Scans
@@ -86,7 +86,7 @@
 
 
 
-<div id="additional-scans-optional" class="@if(request('type') == 'additional') @else d-none @endif">
+<div id="additional-scans-optional" class="@if((request('type') == 'additional') || ($patient->optional_fl_upper_arch != null) || ($patient->optional_fl_lower_arch != null)) @else d-none @endif">
     <div class="mb-3">
         Add additional Scans (Optional)
     </div>
