@@ -207,6 +207,208 @@ class Shining3dController extends Controller
         return response()->json(['status' => 'error', 'message' => 'Failed to get CSRF token'], 500);
     }
 
+    public function dataDownloadAdditional(Request $request)
+    {
+        $csrfToken  = getDynamicEncryptionToken($request->input('domainUrl'));
+        $patientId = $request->input('patientId');
+        $treatmentPlanId = $request->input('treatmentPlanId');
+
+        $body = json_encode([
+            "orgCode" =>  $request->input('orgCode'),
+            "id" =>  $request->input('orderId'),
+            "attachType" => "full_stl"
+        ]);
+
+        $encryptedBody = $this->encryptRequestBody($body, $csrfToken['result']);
+
+        if($csrfToken['status'] == 'success') {
+            $response = Http::withHeaders([
+                'X-Auth-Token'     => $request->input('authToken'),
+                'X-Auth-AppKey'    => config('shining3d.shining3d_app_key'),
+                'X-Auth-AppID'     => config('shining3d.shining3d_app_id'),
+                'isCsrf'         => 'true',
+                'X-Encrypt-AES'  => 'true',
+                'X-Auth-CSRF'      => $csrfToken['result'] ,
+                'Content-Type'   => 'text/plain', // IMPORTANT
+            ])
+            ->withBody($encryptedBody, 'text/plain')
+            ->post($request->input('domainUrl') . '/sdk/dental/order/dataDownload');
+
+            // If response is JSON
+            $json = $response->json();
+
+            if ($json['status'] !== 'success') {
+                return response()->json($json, 400);
+            }
+
+            $downloadUrl = $json['result'][0]['downloadURL'];
+            $filename    = $json['result'][0]['filename'];
+
+            $dataUpload = $this->dataUploadAdditional($downloadUrl, $patientId, $treatmentPlanId);
+            $hashids = new Hashids();
+            return response()->json([
+                'status' => 'success',
+                'file'   => $filename,
+                'upload' => $dataUpload,
+                'hashCode'   => $hashids->encode($treatmentPlanId)
+            ]);
+        }
+        return response()->json(['status' => 'error', 'message' => 'Failed to get CSRF token'], 500);
+    }
+
+    public function dataUploadAdditional($link, $patientId, $treatmentPlanId)
+    {
+        try {
+
+
+            // 📂 Storage path for ZIP + extracted STL
+            $storagePath = storage_path('app/stl-files/' . $patientId . '/');
+            if (!File::exists($storagePath)) {
+                File::makeDirectory($storagePath, 0777, true);
+            }
+
+            // 2️⃣ Download ZIP file
+            $zipPath = $storagePath . 'stl_' . time() . '.zip';
+
+            $response = Http::timeout(300)->get($link);
+
+            if (!$response->successful()) {
+                return "Failed to download ZIP file";
+            }
+
+            file_put_contents($zipPath, $response->body());
+
+            // 3️⃣ Unzip file
+            $zip = new ZipArchive;
+
+            if ($zip->open($zipPath) === TRUE) {
+                $zip->extractTo($storagePath);
+                $zip->close();
+            } else {
+                return "Failed to unzip file";
+            }
+
+            $files = File::allFiles($storagePath);
+            $lowerArchFile = null;
+            $upperArchFile = null;
+
+            foreach ($files as $file) {
+                $fileName = $file->getFilename();
+
+                if (str_ends_with($fileName, 'LowerJaw.stl')) {
+                    $lowerArchFile = $file->getRealPath();
+                }
+
+                if (str_ends_with($fileName, 'UpperJaw.stl')) {
+                    $upperArchFile = $file->getRealPath();
+                }
+            }
+            $result = $this->uploadStlFilesOnserverAdditional($patientId, $treatmentPlanId, $upperArchFile, $lowerArchFile);
+
+            if (File::exists($zipPath)) {
+                File::delete($zipPath);
+            }
+
+            // Delete extracted STL temp folder
+            File::deleteDirectory($storagePath);
+
+            return $result;
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function uploadStlFilesOnserverAdditional($patientId, $treatmentPlanId, $upperArch, $lowerArch)
+    {
+        try {
+
+            // Create patient directory
+            $directory = $this->mkDr($patientId);
+            if (!$directory || !is_dir($directory)) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Failed to create patient directory',
+                ];
+            }
+
+            $uploadedFiles = [];
+            $errors = [];
+
+            // Upload Upper Arch STL
+            if ($upperArch && file_exists($upperArch)) {
+                $upperFileName = 'upper_arch_' . time() . '_' . uniqid() . '.stl';
+                $upperFilePath = $directory . DIRECTORY_SEPARATOR . $upperFileName;
+
+                if (copy($upperArch, $upperFilePath)) {
+                    $uploadedFiles['upper_arch'] = $upperFileName;
+                } else {
+                    $errors[] = 'Failed to upload upper arch STL file';
+                }
+            } else {
+                $uploadedFiles['upper_arch'] = $plan->optional_fl_upper_arch ?? null;
+            }
+
+            // Upload Lower Arch STL
+            if ($lowerArch && file_exists($lowerArch)) {
+                $lowerFileName = 'lower_arch_' . time() . '_' . uniqid() . '.stl';
+                $lowerFilePath = $directory . DIRECTORY_SEPARATOR . $lowerFileName;
+
+                if (copy($lowerArch, $lowerFilePath)) {
+                    $uploadedFiles['lower_arch'] = $lowerFileName;
+                } else {
+                    $errors[] = 'Failed to upload lower arch STL file';
+                }
+            } else {
+                $uploadedFiles['lower_arch'] = $plan->optional_fl_lower_arch ?? null;
+            }
+
+            // Check if there were any upload errors
+            if (!empty($errors)) {
+                return [
+                    'status' => 'error',
+                    'message' => implode(', ', $errors),
+                    'files' => $uploadedFiles,
+                ];
+            }
+
+            // Update database columns
+            $updateResult = DB::table('p_treatment_plans')
+                ->where('id', $treatmentPlanId)
+                ->update([
+                    'optional_fl_upper_arch' => $uploadedFiles['upper_arch'],
+                    'optional_fl_lower_arch' => $uploadedFiles['lower_arch'],
+                    'updated_at' => now(),
+                ]);
+
+            if ($updateResult) {
+
+                return [
+                    'status' => 'success',
+                    'message' => 'STL files uploaded and database updated successfully',
+                    'files' => $uploadedFiles,
+                ];
+            } else {
+                return [
+                    'status' => 'error',
+                    'message' => 'Failed to update database with file information',
+                    'files' => $uploadedFiles,
+                ];
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Error uploading STL files', [
+                'patient_id' => $patientId,
+                'treatment_plan_id' => $treatmentPlanId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return [
+                'status' => 'error',
+                'message' => 'An error occurred while uploading STL files: ' . $e->getMessage(),
+            ];
+        }
+    }
     public function dataUpload($link, $patientId, $treatmentPlanId)
     {
         try {

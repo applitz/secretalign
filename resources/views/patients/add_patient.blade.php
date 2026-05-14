@@ -1145,7 +1145,7 @@
                                                             </td>
                                                             <td>{{ $createdAt }}</td>
                                                             <td>
-                                                                <button class="btn btn-sm btn-primary view-scan get-scan-btn"
+                                                                <button class="btn btn-sm btn-primary view-scan-additional get-scan-btn"
                                                                         data-id="{{ $order['id'] }}">
                                                                     Get Scan
                                                                 </button>

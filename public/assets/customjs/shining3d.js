@@ -355,7 +355,7 @@ var Shining3d = function() {
                                     </span>
                                 `;
                                 let scanBtn = `
-                                    <button class="btn btn-sm btn-primary view-scan"
+                                    <button class="btn btn-sm btn-primary view-scan-additional"
                                             data-id="${order.id}">
                                         View
                                     </button>
@@ -423,6 +423,68 @@ var Shining3d = function() {
 
             $.ajax({
                 url: baseUrl + '/data-download-shining3d-order',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    orderId: orderId,
+                    authToken : authToken,
+                    csrfToken: csrfToken,
+                    orgCode: orgCode,
+                    patientId: patientId,
+                    treatmentPlanId: treatmentPlanId,
+                    domainUrl: domainUrl,
+                    _token: $('input[name="_token"]').val()
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
+                        $(".my-loader").hide();
+                        showSuccess('Scan data fetched successfully.');
+                        setTimeout(function () {
+                            $("#order-from-shining3d-modal").modal('hide');
+                            window.location.href = baseUrl + '/patient/edit/' + response.hashCode + '?tab=pill-tab-div2';
+                        }, 2000); // 2000 milliseconds = 2 seconds
+                    } else {
+                        showError(response.message || 'API returned an error.');
+                    }
+                },
+
+                error: function () {
+                    $(".my-loader").hide();
+                    showError('Unable to fetch data. Please try again.');
+                    // btn.prop('disabled', false).text('Get Scan');
+                }
+            });
+
+            function showError(message) {
+                error
+                    .removeClass('alert-success')
+                    .addClass('alert-danger')
+                    .text(message)
+                    .show();
+            }
+
+            function showSuccess(message) {
+                error
+                    .removeClass('alert-danger')
+                    .addClass('alert-success')
+                    .text(message)
+                    .show();
+            }
+        });
+
+        $(document).on('click', '.view-scan-additional', function () {
+            $(".my-loader").show();
+            const orderId = $(this).data('id');
+            const authToken = $("#order-from-shining3d-label-model-shining3d-auth-token-additional").val();
+            const csrfToken = $('#order-from-shining3d-label-model-shining3d-csrf-token-additional').val();
+            const orgCode = $("#order-from-shining3d-label-model-shining3d-org-code-additional").val();
+            const patientId = $("#order-from-shining3d-label-model-shining3d-patient-id-additional").val();
+            const treatmentPlanId = $("#order-from-shining3d-label-model-shining3d-treatment-plan-id-additional").val();
+            const domainUrl = $('#scanRegion').val();
+            const error = $('#shining3d-error');
+
+            $.ajax({
+                url: baseUrl + '/data-download-shining3d-order-additional',
                 type: 'POST',
                 dataType: 'json',
                 data: {
