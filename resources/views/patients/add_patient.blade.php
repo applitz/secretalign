@@ -1279,14 +1279,12 @@
 
     function animate1() {
         requestAnimationFrame( animate1 );
-        container1.appendChild( renderer1.domElement );
         controls1.update();
         renderer1.render( scene1, camera1 );
 
     };
     function animate2() {
         requestAnimationFrame( animate2 );
-        container2.appendChild( renderer2.domElement );
         controls2.update();
         renderer2.render( scene2, camera2 );
 
@@ -1333,14 +1331,12 @@
 
     function animateOptional1() {
         requestAnimationFrame( animateOptional1 );
-        optionalContainer1.appendChild( optionalRenderer1.domElement );
         optionalControls1.update();
         optionalRenderer1.render( optionalScene1, optionalCamera1 );
     };
 
     function animateOptional2() {
         requestAnimationFrame( animateOptional2 );
-        optionalContainer2.appendChild( optionalRenderer2.domElement );
         optionalControls2.update();
         optionalRenderer2.render( optionalScene2, optionalCamera2 );
     };
@@ -1610,7 +1606,7 @@
 
             renderer1.setSize( width, height );
 
-            document.body.appendChild( renderer1.domElement );
+            container1.appendChild( renderer1.domElement );
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene1.add(ambientLight);
@@ -1848,9 +1844,7 @@
             //modify renderer
             renderer2.setSize( width, height );
 
-
-            //append renderer to body
-            document.body.appendChild( renderer2.domElement );
+            container2.appendChild( renderer2.domElement );
 
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -1905,8 +1899,7 @@
             //modify renderer
             renderer1.setSize( width, height );
 
-            //append renderer to body
-            document.body.appendChild( renderer1.domElement );
+            container1.appendChild( renderer1.domElement );
 
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -1958,8 +1951,7 @@
             //modify renderer
             renderer2.setSize( width, height );
 
-            //append renderer to body
-            document.body.appendChild( renderer2.domElement );
+            container2.appendChild( renderer2.domElement );
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene2.add(ambientLight);
