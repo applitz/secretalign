@@ -79,22 +79,22 @@
 
         <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-6 col-12 _dropzone_template" template-key="1">
             <input class="d-none" name="file1" id="key1" file="{{ @$patient->fl_upper_arch }}" data-field="1" type="file">
-            <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="upper-jaw-box" key="1" style="background-image: url('{{asset('public/assets/vector/upper-jaw.png')}}')">
+            <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="upper-jaw-box" key="1" style="background-image: url('{{asset('public/assets/vector/upper-jaw.webp')}}')">
                 <div class="_dropzone_added _dropzone_added_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text></span>
-                    <img src="{{asset('public/assets')}}/check-mark.png" style="width: 50px;height: 50px;">
+                    <img src="{{asset('public/assets')}}/check-mark.webp" style="width: 50px;height: 50px;">
                 </div>
                 <div class="_dropzone_hover _dropzone_hover_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text>Drag & drop file</span>
-                    <img src="{{asset('public/assets')}}/download-circular-button.png" style="width: 50px;height: 50px;">
+                    <img src="{{asset('public/assets')}}/download-circular-button.webp" style="width: 50px;height: 50px;">
                 </div>
                 <div class="_dropzone_loading _dropzone_loading_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text>Uploading...</span>
-                    <img src="{{asset('public/assets')}}/circle-loading.png" class="_dropzone_loading_animation" style="width: 50px;height: 50px;">
+                    <img src="{{asset('public/assets')}}/circle-loading.webp" class="_dropzone_loading_animation" style="width: 50px;height: 50px;">
                 </div>
                 <div class="_dropzone_remove _dropzone_remove_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text>Delete file</span>
-                    <img src="{{asset('public/assets')}}/x-mark.png" style="width: 50px; height: 50px;">
+                    <img src="{{asset('public/assets')}}/x-mark.webp" style="width: 50px; height: 50px;">
                 </div>
 
             </div>
@@ -112,22 +112,22 @@
 
         <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-6 col-12 _dropzone_template" template-key="2">
             <input class="d-none" name="file2" id="key2" file="{{ @$patient->fl_lower_arch }}" data-field="2" type="file">
-            <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="lower-jaw-box" key="2" style="background-image: url('{{asset('public/assets/vector/down-jaw.png')}}')">
+            <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="lower-jaw-box" key="2" style="background-image: url('{{asset('public/assets/vector/down-jaw.webp')}}')">
                 <div class="_dropzone_added _dropzone_added_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text></span>
-                    <img src="{{asset('public/assets')}}/check-mark.png" style="width: 50px;height: 50px;">
+                    <img src="{{asset('public/assets')}}/check-mark.webp" style="width: 50px;height: 50px;">
                 </div>
                 <div class="_dropzone_hover _dropzone_hover_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text>Drag & drop file</span>
-                    <img src="{{asset('public/assets')}}/download-circular-button.png" style="width: 50px;height: 50px;">
+                    <img src="{{asset('public/assets')}}/download-circular-button.webp" style="width: 50px;height: 50px;">
                 </div>
                 <div class="_dropzone_loading _dropzone_loading_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text>Uploading...</span>
-                    <img src="{{asset('public/assets')}}/circle-loading.png" class="_dropzone_loading_animation" style="width: 50px;height: 50px;">
+                    <img src="{{asset('public/assets')}}/circle-loading.webp" class="_dropzone_loading_animation" style="width: 50px;height: 50px;">
                 </div>
                 <div class="_dropzone_remove _dropzone_remove_hidden d-flex flex-column align-items-center justify-content-center">
                     <span class="text-white fw-semibold" data-text>Delete file</span>
-                    <img src="{{asset('public/assets')}}/x-mark.png" style="width: 50px; height: 50px;">
+                    <img src="{{asset('public/assets')}}/x-mark.webp" style="width: 50px; height: 50px;">
                 </div>
 
             </div>

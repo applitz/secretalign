@@ -27,6 +27,7 @@ var Patients = function() {
                 { 'title': 'First Name', "data": "first_name", orderable: false, searchable: true },
                 { 'title': 'Birth Date', "data": "dob", orderable: false, searchable: true },
                 { 'title': 'Treatment Type', "data": "treatment_type", orderable: false, searchable: false },
+                { 'title': 'Setup Type', "data": "setup_type", orderable: false, searchable: false },
                 { 'title': 'Package', "data": "package", orderable: false, searchable: false },
                 { 'title': 'Status', "data": "status", orderable: false, searchable: false },
                 { 'title': 'Case Holder', "data": "case_holder", orderable: false, searchable: false },

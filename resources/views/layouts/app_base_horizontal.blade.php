@@ -1263,9 +1263,9 @@
 
             // switch to colored version
             if (plan.dataset.planType === 'treatment') {
-                plan.style.backgroundImage = `url('${baseAssetPath}/Treatment-Plan-Service.svg')`;
+                plan.style.backgroundImage = `url('${baseAssetPath}/Treatment-Plan-Service.webp')`;
             } else if (plan.dataset.planType === 'aligners') {
-                plan.style.backgroundImage = `url('${baseAssetPath}/Aligners.svg')`;
+                plan.style.backgroundImage = `url('${baseAssetPath}/Aligners.webp')`;
             }
         }
 

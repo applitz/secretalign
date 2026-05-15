@@ -30,6 +30,7 @@ var Patients = function() {
                 { 'title': 'Case Holder', "data": "case_holder", orderable: false, searchable: false },
                 { 'title': 'Due Date', "data": "due_date", orderable: false, searchable: false },
                 { 'title': 'Treatment Type', "data": "treatment_type", orderable: false, searchable: false },
+                { 'title': 'Setup Type', "data": "setup_type", orderable: false, searchable: false },
                 { 'title': 'Setup Approval Date', "data": "setup_approval_date", orderable: false, searchable: false },
                 { 'title': '', "data": "case_overview", orderable: false, searchable: false },
                 { 'title': 'Continue Treatment', "data": "continue_treatment", orderable: false, searchable: false },
