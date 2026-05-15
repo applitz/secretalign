@@ -1271,7 +1271,9 @@
     import { OrbitControls } from '{{asset("public/assets/three/examples/jsm/controls/OrbitControls.js")}}';
 
     var container1, scene1, camera1, renderer1, material1, controls1,
-    container2, scene2, camera2, renderer2, material2, controls2;
+    container2, scene2, camera2, renderer2, material2, controls2,
+    optionalContainer1, optionalScene1, optionalCamera1, optionalRenderer1, optionalMaterial1, optionalControls1,
+    optionalContainer2, optionalScene2, optionalCamera2, optionalRenderer2, optionalMaterial2, optionalControls2;
     const stl_loader1 = new STLLoader()
     const stl_loader2 = new STLLoader()
     const ply_loader1 = new PLYLoader()
@@ -1279,16 +1281,26 @@
 
     function animate1() {
         requestAnimationFrame( animate1 );
-        container1.appendChild( renderer1.domElement );
         controls1.update();
         renderer1.render( scene1, camera1 );
 
     };
     function animate2() {
         requestAnimationFrame( animate2 );
-        container2.appendChild( renderer2.domElement );
         controls2.update();
         renderer2.render( scene2, camera2 );
+
+    };
+    function animateOptional1() {
+        requestAnimationFrame( animateOptional1 );
+        optionalControls1.update();
+        optionalRenderer1.render( optionalScene1, optionalCamera1 );
+
+    };
+    function animateOptional2() {
+        requestAnimationFrame( animateOptional2 );
+        optionalControls2.update();
+        optionalRenderer2.render( optionalScene2, optionalCamera2 );
 
     };
     function destroyPreview1() {
@@ -1557,8 +1569,8 @@ window.destroyPreview1 = destroyPreview1;
             const height = $("#upper-jaw-box").height();
 
             renderer1.setSize( width, height );
-
-            document.body.appendChild( renderer1.domElement );
+            container1.innerHTML = '';
+            container1.appendChild( renderer1.domElement );
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene1.add(ambientLight);
@@ -1585,43 +1597,43 @@ window.destroyPreview1 = destroyPreview1;
     async function previewOptionalUpperStlFile(file_upper)
     {
         try {
-            container1 = document.getElementById( 'optional-stl-upper-arch-preview' );
-            scene1 = new THREE.Scene();
-            scene1.name = 'myscene1';
-            scene1.background = new THREE.Color( 0xaaaaaa );
-            camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-            camera1.position.set(0, 0, 5);
-            renderer1 = new THREE.WebGLRenderer({ antialias: true });
-            material1 = new THREE.MeshNormalMaterial();
-            controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
-            controls1.enableDamping = true;
+            optionalContainer1 = document.getElementById( 'optional-stl-upper-arch-preview' );
+            optionalContainer1.innerHTML = '';
+            optionalScene1 = new THREE.Scene();
+            optionalScene1.name = 'optional-myscene1';
+            optionalScene1.background = new THREE.Color( 0xaaaaaa );
+            optionalCamera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            optionalCamera1.position.set(0, 0, 5);
+            optionalRenderer1 = new THREE.WebGLRenderer({ antialias: true });
+            optionalMaterial1 = new THREE.MeshNormalMaterial();
+            optionalControls1 = new OrbitControls(optionalCamera1, optionalRenderer1.domElement, { enableRotate: true });
+            optionalControls1.enableDamping = true;
             THREE.Cache.enabled = true;
 
             const width = $("#upper-jaw-box").width() + 23;
             const height = $("#upper-jaw-box").height();
 
-            renderer1.setSize( width, height );
-
-            document.body.appendChild( renderer1.domElement );
+            optionalRenderer1.setSize( width, height );
+            optionalContainer1.appendChild( optionalRenderer1.domElement );
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene1.add(ambientLight);
+            optionalScene1.add(ambientLight);
 
             const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
             directionalLight.position.set(1, 1, 1).normalize();
-            scene1.add(directionalLight);
+            optionalScene1.add(directionalLight);
 
             const geometry = await optionalLoadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
-            const mesh = new THREE.Mesh(geometry, material1)
+            const mesh = new THREE.Mesh(geometry, optionalMaterial1)
             mesh.tag = 'base';
-            scene1.add(mesh);
-            camera1.position.z = 10;
-            camera1.position.x = 0;
-            camera1.position.y = -6;
-            scene1.scale.set(0.02,0.02,0.02);
+            optionalScene1.add(mesh);
+            optionalCamera1.position.z = 10;
+            optionalCamera1.position.x = 0;
+            optionalCamera1.position.y = -6;
+            optionalScene1.scale.set(0.02,0.02,0.02);
 
-            controls1.update();
-            animate1();
+            optionalControls1.update();
+            animateOptional1();
         } catch (error) {}
     }
     window.previewOptionalUpperStlFile = previewOptionalUpperStlFile;
@@ -1800,12 +1812,9 @@ window.destroyPreview1 = destroyPreview1;
             const width = $("#upper-jaw-box").width() + 23;
             const height = $("#upper-jaw-box").height();
 
-            //modify renderer
             renderer2.setSize( width, height );
-
-
-            //append renderer to body
-            document.body.appendChild( renderer2.domElement );
+            container2.innerHTML = '';
+            container2.appendChild( renderer2.domElement );
 
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -1857,11 +1866,9 @@ window.destroyPreview1 = destroyPreview1;
             const width = $("#upper-jaw-box").width() + 23;
             const height = $("#upper-jaw-box").height();
 
-            //modify renderer
             renderer1.setSize( width, height );
-
-            //append renderer to body
-            document.body.appendChild( renderer1.domElement );
+            container1.innerHTML = '';
+            container1.appendChild( renderer1.domElement );
 
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -1910,11 +1917,9 @@ window.destroyPreview1 = destroyPreview1;
             const width = $("#upper-jaw-box").width() + 23;
             const height = $("#upper-jaw-box").height();
 
-            //modify renderer
             renderer2.setSize( width, height );
-
-            //append renderer to body
-            document.body.appendChild( renderer2.domElement );
+            container2.innerHTML = '';
+            container2.appendChild( renderer2.domElement );
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene2.add(ambientLight);
