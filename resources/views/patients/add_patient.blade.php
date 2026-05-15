@@ -1279,12 +1279,14 @@
 
     function animate1() {
         requestAnimationFrame( animate1 );
+        container1.appendChild( renderer1.domElement );
         controls1.update();
         renderer1.render( scene1, camera1 );
 
     };
     function animate2() {
         requestAnimationFrame( animate2 );
+        container2.appendChild( renderer2.domElement );
         controls2.update();
         renderer2.render( scene2, camera2 );
 
@@ -1306,7 +1308,7 @@
         material1 = null;
         controls1 = null;
     }
-    window.destroyPreview1 = destroyPreview1;
+window.destroyPreview1 = destroyPreview1;
 
     function destroyPreview2() {
         container2.removeChild(renderer2.domElement);
@@ -1328,56 +1330,6 @@
         controls2 = null;
     }
     window.destroyPreview2 = destroyPreview2;
-
-    function animateOptional1() {
-        requestAnimationFrame( animateOptional1 );
-        optionalControls1.update();
-        optionalRenderer1.render( optionalScene1, optionalCamera1 );
-    };
-
-    function animateOptional2() {
-        requestAnimationFrame( animateOptional2 );
-        optionalControls2.update();
-        optionalRenderer2.render( optionalScene2, optionalCamera2 );
-    };
-
-    function destroyOptionalPreview1() {
-        optionalContainer1.removeChild(optionalRenderer1.domElement);
-        optionalScene1.traverse((object) => {
-            if (object.isMesh) {
-                object.geometry.dispose();
-                object.material.dispose();
-            }
-        });
-
-        optionalControls1.dispose();
-        optionalContainer1 = null;
-        optionalScene1 = null;
-        optionalCamera1 = null;
-        optionalRenderer1 = null;
-        optionalMaterial1 = null;
-        optionalControls1 = null;
-    }
-    window.destroyOptionalPreview1 = destroyOptionalPreview1;
-
-    function destroyOptionalPreview2() {
-        optionalContainer2.removeChild(optionalRenderer2.domElement);
-        optionalScene2.traverse((object) => {
-            if (object.isMesh) {
-                object.geometry.dispose();
-                object.material.dispose();
-            }
-        });
-
-        optionalControls2.dispose();
-        optionalContainer2 = null;
-        optionalScene2 = null;
-        optionalCamera2 = null;
-        optionalRenderer2 = null;
-        optionalMaterial2 = null;
-        optionalControls2 = null;
-    }
-    window.destroyOptionalPreview2 = destroyOptionalPreview2;
 
 
     async function loadSTLUpper(url) {
@@ -1606,7 +1558,7 @@
 
             renderer1.setSize( width, height );
 
-            container1.appendChild( renderer1.domElement );
+            document.body.appendChild( renderer1.domElement );
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene1.add(ambientLight);
@@ -1633,42 +1585,43 @@
     async function previewOptionalUpperStlFile(file_upper)
     {
         try {
-            optionalContainer1 = document.getElementById( 'optional-stl-upper-arch-preview' );
-            optionalScene1 = new THREE.Scene();
-            optionalScene1.name = 'optional-myscene1';
-            optionalScene1.background = new THREE.Color( 0xaaaaaa );
-            optionalCamera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-            optionalCamera1.position.set(0, 0, 5);
-            optionalRenderer1 = new THREE.WebGLRenderer({ antialias: true });
-            optionalMaterial1 = new THREE.MeshNormalMaterial();
-            optionalControls1 = new OrbitControls(optionalCamera1, optionalRenderer1.domElement, { enableRotate: true });
-            optionalControls1.enableDamping = true;
+            container1 = document.getElementById( 'optional-stl-upper-arch-preview' );
+            scene1 = new THREE.Scene();
+            scene1.name = 'myscene1';
+            scene1.background = new THREE.Color( 0xaaaaaa );
+            camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            camera1.position.set(0, 0, 5);
+            renderer1 = new THREE.WebGLRenderer({ antialias: true });
+            material1 = new THREE.MeshNormalMaterial();
+            controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
+            controls1.enableDamping = true;
             THREE.Cache.enabled = true;
 
             const width = $("#upper-jaw-box").width() + 23;
             const height = $("#upper-jaw-box").height();
 
-            optionalRenderer1.setSize( width, height );
-            optionalContainer1.appendChild( optionalRenderer1.domElement );
+            renderer1.setSize( width, height );
+
+            document.body.appendChild( renderer1.domElement );
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            optionalScene1.add(ambientLight);
+            scene1.add(ambientLight);
 
             const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
             directionalLight.position.set(1, 1, 1).normalize();
-            optionalScene1.add(directionalLight);
+            scene1.add(directionalLight);
 
             const geometry = await optionalLoadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
-            const mesh = new THREE.Mesh(geometry, optionalMaterial1)
+            const mesh = new THREE.Mesh(geometry, material1)
             mesh.tag = 'base';
-            optionalScene1.add(mesh);
-            optionalCamera1.position.z = 10;
-            optionalCamera1.position.x = 0;
-            optionalCamera1.position.y = -6;
-            optionalScene1.scale.set(0.02,0.02,0.02);
+            scene1.add(mesh);
+            camera1.position.z = 10;
+            camera1.position.x = 0;
+            camera1.position.y = -6;
+            scene1.scale.set(0.02,0.02,0.02);
 
-            optionalControls1.update();
-            animateOptional1();
+            controls1.update();
+            animate1();
         } catch (error) {}
     }
     window.previewOptionalUpperStlFile = previewOptionalUpperStlFile;
@@ -1676,48 +1629,53 @@
     async function previewOptionalUpperPlyFile(file_upper)
     {
         try {
-            optionalContainer1 = document.getElementById( 'optional-stl-upper-arch-preview' );
-            optionalScene1 = new THREE.Scene();
-            optionalScene1.name = 'optional-myscene1';
-            optionalScene1.background = new THREE.Color( 0xaaaaaa );
-            optionalCamera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-            optionalCamera1.position.set(0, 0, 5);
-            optionalRenderer1 = new THREE.WebGLRenderer({ antialias: true });
+            container1 = document.getElementById( 'optional-stl-upper-arch-preview' );
+            scene1 = new THREE.Scene();
+            scene1.name = 'myscene1';
+            scene1.background = new THREE.Color( 0xaaaaaa );
+            camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            camera1.position.set(0, 0, 5);
+            renderer1 = new THREE.WebGLRenderer({ antialias: true });
 
-            optionalMaterial1 = new THREE.MeshStandardMaterial({
+            material1 = new THREE.MeshStandardMaterial({
                 vertexColors: THREE.VertexColors,
                 flatShading: true
             });
-            optionalControls1 = new OrbitControls(optionalCamera1, optionalRenderer1.domElement, { enableRotate: true });
-            optionalControls1.enableDamping = true;
+            controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
+            controls1.enableDamping = true;
 
             THREE.Cache.enabled = true;
 
             const width = $("#upper-jaw-box").width() + 23;
             const height = $("#upper-jaw-box").height();
 
-            optionalRenderer1.setSize( width, height );
-            optionalContainer1.appendChild( optionalRenderer1.domElement );
+            //modify renderer
+            renderer1.setSize( width, height );
 
+            //append renderer to body
+            document.body.appendChild( renderer1.domElement );
+
+            // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            optionalScene1.add(ambientLight);
+            scene1.add(ambientLight);
 
             const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
             directionalLight.position.set(1, 1, 1).normalize();
-            optionalScene1.add(directionalLight);
+            scene1.add(directionalLight);
             const geometry = await loadPLYUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
             geometry.computeVertexNormals();
-            const mesh = new THREE.Mesh(geometry, optionalMaterial1)
+            const mesh = new THREE.Mesh(geometry, material1)
 
             mesh.tag = 'base';
-            optionalScene1.add(mesh);
-            optionalCamera1.position.z = 10;
-            optionalCamera1.position.x = 0;
-            optionalCamera1.position.y = -6;
-            optionalScene1.scale.set(0.02,0.02,0.02);
 
-            optionalControls1.update();
-            animateOptional1();
+            scene1.add(mesh);
+            camera1.position.z = 10;
+            camera1.position.x = 0;
+            camera1.position.y = -6;
+            scene1.scale.set(0.02,0.02,0.02);
+
+            controls1.update();
+            animate1();
         } catch (error) {}
     }
     window.previewOptionalUpperPlyFile = previewOptionalUpperPlyFile;
@@ -1726,47 +1684,52 @@
     async function previewOptionalLowerStlFile(file_lower)
     {
         try {
-            optionalContainer2 = document.getElementById( 'optional-stl-lower-arch-preview' );
-            optionalScene2 = new THREE.Scene();
-            optionalScene2.name = 'optional-myscene2';
-            optionalScene2.background = new THREE.Color( 0xaaaaaa );
-            optionalCamera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-            optionalCamera2.position.set(0, 0, 5);
-            optionalRenderer2 = new THREE.WebGLRenderer({ antialias: true });
+            container2 = document.getElementById( 'optional-stl-lower-arch-preview' );
+            scene2 = new THREE.Scene();
+            scene2.name = 'myscene2';
+            scene2.background = new THREE.Color( 0xaaaaaa );
+            camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            camera2.position.set(0, 0, 5);
+            renderer2 = new THREE.WebGLRenderer({ antialias: true });
 
-            optionalMaterial2 = new THREE.MeshNormalMaterial();
-            optionalControls2 = new OrbitControls(optionalCamera2, optionalRenderer2.domElement, { enableRotate: true });
-            optionalControls2.enableDamping = true;
+            material2 = new THREE.MeshNormalMaterial();
+            controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
+            controls2.enableDamping = true;
             THREE.Cache.enabled = true;
 
             const width = $("#upper-jaw-box").width() + 23;
             const height = $("#upper-jaw-box").height();
 
-            optionalRenderer2.setSize( width, height );
-            optionalContainer2.appendChild( optionalRenderer2.domElement );
+            //modify renderer
+            renderer2.setSize( width, height );
 
+
+            //append renderer to body
+            document.body.appendChild( renderer2.domElement );
+
+            // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            optionalScene2.add(ambientLight);
+            scene2.add(ambientLight);
 
             const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
             directionalLight.position.set(1, 1, 1).normalize();
-            optionalScene2.add(directionalLight);
+            scene2.add(directionalLight);
 
             const geometry = await optionalLoadSTLLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
-            const mesh = new THREE.Mesh(geometry, optionalMaterial2)
+            const mesh = new THREE.Mesh(geometry, material2)
 
             mesh.tag = 'base';
-            optionalScene2.add(mesh);
+            scene2.add(mesh);
 
             console.log('scene updated');
 
-            optionalCamera2.position.z = 10;
-            optionalCamera2.position.x = 0;
-            optionalCamera2.position.y = -6;
-            optionalScene2.scale.set(0.02,0.02,0.02);
+            camera2.position.z = 10;
+            camera2.position.x = 0;
+            camera2.position.y = -6;
+            scene2.scale.set(0.02,0.02,0.02);
 
-            optionalControls2.update();
-            animateOptional2();
+            controls2.update();
+            animate2();
         } catch (error) {}
     }
     window.previewOptionalLowerStlFile = previewOptionalLowerStlFile;
@@ -1774,50 +1737,55 @@
     async function previewOptionalLowerPlyFile(file_lower)
     {
         try {
-            optionalContainer2 = document.getElementById( 'optional-stl-lower-arch-preview' );
-            optionalScene2 = new THREE.Scene();
-            optionalScene2.name = 'optional-myscene2';
-            optionalScene2.background = new THREE.Color( 0xaaaaaa );
-            optionalCamera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-            optionalCamera2.position.set(0, 0, 5);
-            optionalRenderer2 = new THREE.WebGLRenderer({ antialias: true });
-            optionalMaterial2 = new THREE.MeshStandardMaterial({
+            container2 = document.getElementById( 'optional-stl-lower-arch-preview' );
+            scene2 = new THREE.Scene();
+            scene2.name = 'myscene2';
+            scene2.background = new THREE.Color( 0xaaaaaa );
+            camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            camera2.position.set(0, 0, 5);
+            renderer2 = new THREE.WebGLRenderer({ antialias: true });
+            material2 = new THREE.MeshStandardMaterial({
                 vertexColors: THREE.VertexColors,
                 flatShading: true
             });
-            optionalControls2 = new OrbitControls(optionalCamera2, optionalRenderer2.domElement, { enableRotate: true });
-            optionalControls2.enableDamping = true;
+            controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
+            controls2.enableDamping = true;
             THREE.Cache.enabled = true;
+
 
             const width = $("#upper-jaw-box").width() + 23;
             const height = $("#upper-jaw-box").height();
 
-            optionalRenderer2.setSize( width, height );
-            optionalContainer2.appendChild( optionalRenderer2.domElement );
+            //modify renderer
+            renderer2.setSize( width, height );
 
+            //append renderer to body
+            document.body.appendChild( renderer2.domElement );
+            // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            optionalScene2.add(ambientLight);
+            scene2.add(ambientLight);
 
             const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
             directionalLight.position.set(1, 1, 1).normalize();
-            optionalScene2.add(directionalLight);
+            scene2.add(directionalLight);
+
 
             const geometry = await loadPLYLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
             geometry.computeVertexNormals();
-            const mesh = new THREE.Mesh(geometry, optionalMaterial2)
+            const mesh = new THREE.Mesh(geometry, material2)
 
             mesh.tag = 'base';
-            optionalScene2.add(mesh);
+            scene2.add(mesh);
 
             console.log('scene updated');
 
-            optionalCamera2.position.z = 10;
-            optionalCamera2.position.x = 0;
-            optionalCamera2.position.y = -6;
-            optionalScene2.scale.set(0.02,0.02,0.02);
+            camera2.position.z = 10;
+            camera2.position.x = 0;
+            camera2.position.y = -6;
+            scene2.scale.set(0.02,0.02,0.02);
 
-            optionalControls2.update();
-            animateOptional2();
+            controls2.update();
+            animate2();
         } catch (error) {}
     }
     window.previewOptionalLowerPlyFile = previewOptionalLowerPlyFile;
@@ -1844,7 +1812,9 @@
             //modify renderer
             renderer2.setSize( width, height );
 
-            container2.appendChild( renderer2.domElement );
+
+            //append renderer to body
+            document.body.appendChild( renderer2.domElement );
 
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -1899,7 +1869,8 @@
             //modify renderer
             renderer1.setSize( width, height );
 
-            container1.appendChild( renderer1.domElement );
+            //append renderer to body
+            document.body.appendChild( renderer1.domElement );
 
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -1951,7 +1922,8 @@
             //modify renderer
             renderer2.setSize( width, height );
 
-            container2.appendChild( renderer2.domElement );
+            //append renderer to body
+            document.body.appendChild( renderer2.domElement );
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene2.add(ambientLight);
@@ -2343,11 +2315,11 @@
                     }
 
                     if(key == 18) {
-                        window.destroyOptionalPreview1();
+                        window.destroyPreview1();
                         $("#optional-stl-upper-arch-preview").html("");
                     }
                     if(key == 19) {
-                        window.destroyOptionalPreview2();
+                        window.destroyPreview2();
                         $("#optional-stl-lower-arch-preview").html("");
                     }
                     toastSuccess("File successfully removed")
@@ -3726,21 +3698,21 @@
         var file = $("._dropzone_template #key" + key).attr('file');
 
         var imageUrl="{{asset('storage/PatientFiles/Patient')}}{{$patient->patient_id}}/"+file;
-        if (file) {
-            fetch(imageUrl)
-                .then(response => response.blob()) // Convert the image to a blob
-                .then(blob => {
-                    const file = new File([blob], "editedImage.jpg", { type: blob.type }); // Create a new File object
-                    // Open image editor and pass the file object
-                    openImageEditor(file, function(croppedFile) {
-                        dropzone_upload(key, croppedFile); // Upload the edited image
-                    });
-                })
-                .catch(err => console.error("Error fetching the image: ", err));
+    if (file) {
+  fetch(imageUrl)
+            .then(response => response.blob()) // Convert the image to a blob
+            .then(blob => {
+                const file = new File([blob], "editedImage.jpg", { type: blob.type }); // Create a new File object
+                // Open image editor and pass the file object
+                openImageEditor(file, function(croppedFile) {
+                    dropzone_upload(key, croppedFile); // Upload the edited image
+                });
+            })
+            .catch(err => console.error("Error fetching the image: ", err));
 
-        } else {
-            console.error("No file found for editing in the dropzone.");
-        }
+    } else {
+        console.error("No file found for editing in the dropzone.");
+    }
           });
 
 
