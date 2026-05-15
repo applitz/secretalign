@@ -1270,9 +1270,6 @@
     import { PLYLoader } from "{{asset('public/assets/three/examples/jsm/loaders/PLYLoader.js')}}";
     import { OrbitControls } from '{{asset("public/assets/three/examples/jsm/controls/OrbitControls.js")}}';
 
-
-
-
     var container1, scene1, camera1, renderer1, material1, controls1,
     container2, scene2, camera2, renderer2, material2, controls2;
     const stl_loader1 = new STLLoader()
@@ -1311,946 +1308,940 @@
         material1 = null;
         controls1 = null;
     }
+    window.destroyPreview1 = destroyPreview1;
 
-window.destroyPreview1 = destroyPreview1;
+    function destroyPreview2() {
+        container2.removeChild(renderer2.domElement);
 
-function destroyPreview2() {
-    container2.removeChild(renderer2.domElement);
+        scene2.traverse((object) => {
+            if (object.isMesh) {
+                object.geometry.dispose();
+                object.material.dispose();
+            }
+        });
 
-    scene2.traverse((object) => {
-        if (object.isMesh) {
-            object.geometry.dispose();
-            object.material.dispose();
+        controls2.dispose();
+
+        container2 = null;
+        scene2 = null;
+        camera2 = null;
+        renderer2 = null;
+        material2 = null;
+        controls2 = null;
+    }
+    window.destroyPreview2 = destroyPreview2;
+
+    function animateOptional1() {
+        requestAnimationFrame( animateOptional1 );
+        optionalContainer1.appendChild( optionalRenderer1.domElement );
+        optionalControls1.update();
+        optionalRenderer1.render( optionalScene1, optionalCamera1 );
+    };
+
+    function animateOptional2() {
+        requestAnimationFrame( animateOptional2 );
+        optionalContainer2.appendChild( optionalRenderer2.domElement );
+        optionalControls2.update();
+        optionalRenderer2.render( optionalScene2, optionalCamera2 );
+    };
+
+    function destroyOptionalPreview1() {
+        optionalContainer1.removeChild(optionalRenderer1.domElement);
+        optionalScene1.traverse((object) => {
+            if (object.isMesh) {
+                object.geometry.dispose();
+                object.material.dispose();
+            }
+        });
+
+        optionalControls1.dispose();
+        optionalContainer1 = null;
+        optionalScene1 = null;
+        optionalCamera1 = null;
+        optionalRenderer1 = null;
+        optionalMaterial1 = null;
+        optionalControls1 = null;
+    }
+    window.destroyOptionalPreview1 = destroyOptionalPreview1;
+
+    function destroyOptionalPreview2() {
+        optionalContainer2.removeChild(optionalRenderer2.domElement);
+        optionalScene2.traverse((object) => {
+            if (object.isMesh) {
+                object.geometry.dispose();
+                object.material.dispose();
+            }
+        });
+
+        optionalControls2.dispose();
+        optionalContainer2 = null;
+        optionalScene2 = null;
+        optionalCamera2 = null;
+        optionalRenderer2 = null;
+        optionalMaterial2 = null;
+        optionalControls2 = null;
+    }
+    window.destroyOptionalPreview2 = destroyOptionalPreview2;
+
+
+    async function loadSTLUpper(url) {
+        const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+                }
+                const reader = response.body.getReader();
+                const contentLength = response.headers.get('Content-Length');
+                const total = contentLength ? parseInt(contentLength, 10) : null;
+                let loaded = 0;
+
+                const chunks = [];
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    loaded += value.length;
+                    if (total) {
+                        const percentComplete = (loaded / total * 100).toFixed(2);
+                        $("#upper-arch-progress-bar").css({width: `${percentComplete}%`})
+                        $("#upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                    }
+                }
+                const arrayBuffer = new Uint8Array(loaded);
+                let offset = 0;
+                for (let chunk of chunks) {
+                    arrayBuffer.set(chunk, offset);
+                    offset += chunk.length;
+                }
+
+                const geometry = stl_loader1.parse(arrayBuffer.buffer);
+                return geometry;
+    }
+
+    async function loadSTLLower(url) {
+        const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+                }
+                const reader = response.body.getReader();
+                const contentLength = response.headers.get('Content-Length');
+                const total = contentLength ? parseInt(contentLength, 10) : null;
+                let loaded = 0;
+
+                const chunks = [];
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    loaded += value.length;
+                    if (total) {
+                        const percentComplete = (loaded / total * 100).toFixed(2);
+                        $("#lower-arch-progress-bar").css({width: `${percentComplete}%`})
+                        $("#lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                        // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
+                        // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
+                    }
+                }
+                const arrayBuffer = new Uint8Array(loaded);
+                let offset = 0;
+                for (let chunk of chunks) {
+                    arrayBuffer.set(chunk, offset);
+                    offset += chunk.length;
+                }
+
+                const geometry = stl_loader2.parse(arrayBuffer.buffer);
+                return geometry;
+    }
+
+    async function optionalLoadSTLUpper(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
         }
+        const reader = response.body.getReader();
+        const contentLength = response.headers.get('Content-Length');
+        const total = contentLength ? parseInt(contentLength, 10) : null;
+        let loaded = 0;
+
+        const chunks = [];
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            loaded += value.length;
+            if (total) {
+                const percentComplete = (loaded / total * 100).toFixed(2);
+                $("#optional-upper-arch-progress-bar").css({width: `${percentComplete}%`})
+                $("#optional-upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+            }
+        }
+        const arrayBuffer = new Uint8Array(loaded);
+        let offset = 0;
+        for (let chunk of chunks) {
+            arrayBuffer.set(chunk, offset);
+            offset += chunk.length;
+        }
+
+        const geometry = stl_loader1.parse(arrayBuffer.buffer);
+        return geometry;
+    }
+
+    async function optionalLoadSTLLower(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+        }
+        const reader = response.body.getReader();
+        const contentLength = response.headers.get('Content-Length');
+        const total = contentLength ? parseInt(contentLength, 10) : null;
+        let loaded = 0;
+
+        const chunks = [];
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            loaded += value.length;
+            if (total) {
+                const percentComplete = (loaded / total * 100).toFixed(2);
+                $("#optional-lower-arch-progress-bar").css({width: `${percentComplete}%`})
+                $("#optional-lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
+                // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
+            }
+        }
+        const arrayBuffer = new Uint8Array(loaded);
+        let offset = 0;
+        for (let chunk of chunks) {
+            arrayBuffer.set(chunk, offset);
+            offset += chunk.length;
+        }
+
+        const geometry = stl_loader2.parse(arrayBuffer.buffer);
+        return geometry;
+    }
+
+    async function loadPLYUpper(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+        }
+        const reader = response.body.getReader();
+        const contentLength = response.headers.get('Content-Length');
+        const total = contentLength ? parseInt(contentLength, 10) : null;
+        let loaded = 0;
+
+        const chunks = [];
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            loaded += value.length;
+            if (total) {
+                const percentComplete = (loaded / total * 100).toFixed(2);
+                $("#upper-arch-progress-bar").css({width: `${percentComplete}%`})
+                $("#upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
+                // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
+            }
+        }
+        const arrayBuffer = new Uint8Array(loaded);
+        let offset = 0;
+        for (let chunk of chunks) {
+            arrayBuffer.set(chunk, offset);
+            offset += chunk.length;
+        }
+
+        const geometry = ply_loader1.parse(arrayBuffer.buffer);
+        return geometry;
+    }
+
+    async function loadPLYLower(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+        }
+        const reader = response.body.getReader();
+        const contentLength = response.headers.get('Content-Length');
+        const total = contentLength ? parseInt(contentLength, 10) : null;
+        let loaded = 0;
+
+        const chunks = [];
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            loaded += value.length;
+            if (total) {
+                const percentComplete = (loaded / total * 100).toFixed(2);
+                $("#lower-arch-progress-bar").css({width: `${percentComplete}%`})
+                $("#lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
+                // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
+            }
+        }
+        const arrayBuffer = new Uint8Array(loaded);
+        let offset = 0;
+        for (let chunk of chunks) {
+            arrayBuffer.set(chunk, offset);
+            offset += chunk.length;
+        }
+
+        const geometry = ply_loader2.parse(arrayBuffer.buffer);
+        return geometry;
+    }
+
+    async function previewUpperStlFile(file_upper)
+    {
+        try {
+            container1 = document.getElementById( 'stl-upper-arch-preview' );
+            scene1 = new THREE.Scene();
+            scene1.name = 'myscene1';
+            scene1.background = new THREE.Color( 0xaaaaaa );
+            camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            camera1.position.set(0, 0, 5);
+            renderer1 = new THREE.WebGLRenderer({ antialias: true });
+            material1 = new THREE.MeshNormalMaterial();
+            controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
+            controls1.enableDamping = true;
+            THREE.Cache.enabled = true;
+
+            const width = $("#upper-jaw-box").width() + 23;
+            const height = $("#upper-jaw-box").height();
+
+            renderer1.setSize( width, height );
+
+            document.body.appendChild( renderer1.domElement );
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene1.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            scene1.add(directionalLight);
+
+            const geometry = await loadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+            const mesh = new THREE.Mesh(geometry, material1)
+            mesh.tag = 'base';
+            scene1.add(mesh);
+            camera1.position.z = 10;
+            camera1.position.x = 0;
+            camera1.position.y = -6;
+            scene1.scale.set(0.02,0.02,0.02);
+
+            controls1.update();
+            animate1();
+        } catch (error) {}
+    }
+    window.previewUpperStlFile = previewUpperStlFile;
+
+    async function previewOptionalUpperStlFile(file_upper)
+    {
+        try {
+            optionalContainer1 = document.getElementById( 'optional-stl-upper-arch-preview' );
+            optionalScene1 = new THREE.Scene();
+            optionalScene1.name = 'optional-myscene1';
+            optionalScene1.background = new THREE.Color( 0xaaaaaa );
+            optionalCamera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            optionalCamera1.position.set(0, 0, 5);
+            optionalRenderer1 = new THREE.WebGLRenderer({ antialias: true });
+            optionalMaterial1 = new THREE.MeshNormalMaterial();
+            optionalControls1 = new OrbitControls(optionalCamera1, optionalRenderer1.domElement, { enableRotate: true });
+            optionalControls1.enableDamping = true;
+            THREE.Cache.enabled = true;
+
+            const width = $("#upper-jaw-box").width() + 23;
+            const height = $("#upper-jaw-box").height();
+
+            optionalRenderer1.setSize( width, height );
+            optionalContainer1.appendChild( optionalRenderer1.domElement );
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            optionalScene1.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            optionalScene1.add(directionalLight);
+
+            const geometry = await optionalLoadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+            const mesh = new THREE.Mesh(geometry, optionalMaterial1)
+            mesh.tag = 'base';
+            optionalScene1.add(mesh);
+            optionalCamera1.position.z = 10;
+            optionalCamera1.position.x = 0;
+            optionalCamera1.position.y = -6;
+            optionalScene1.scale.set(0.02,0.02,0.02);
+
+            optionalControls1.update();
+            animateOptional1();
+        } catch (error) {}
+    }
+    window.previewOptionalUpperStlFile = previewOptionalUpperStlFile;
+
+    async function previewOptionalUpperPlyFile(file_upper)
+    {
+        try {
+            optionalContainer1 = document.getElementById( 'optional-stl-upper-arch-preview' );
+            optionalScene1 = new THREE.Scene();
+            optionalScene1.name = 'optional-myscene1';
+            optionalScene1.background = new THREE.Color( 0xaaaaaa );
+            optionalCamera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            optionalCamera1.position.set(0, 0, 5);
+            optionalRenderer1 = new THREE.WebGLRenderer({ antialias: true });
+
+            optionalMaterial1 = new THREE.MeshStandardMaterial({
+                vertexColors: THREE.VertexColors,
+                flatShading: true
+            });
+            optionalControls1 = new OrbitControls(optionalCamera1, optionalRenderer1.domElement, { enableRotate: true });
+            optionalControls1.enableDamping = true;
+
+            THREE.Cache.enabled = true;
+
+            const width = $("#upper-jaw-box").width() + 23;
+            const height = $("#upper-jaw-box").height();
+
+            optionalRenderer1.setSize( width, height );
+            optionalContainer1.appendChild( optionalRenderer1.domElement );
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            optionalScene1.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            optionalScene1.add(directionalLight);
+            const geometry = await loadPLYUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+            geometry.computeVertexNormals();
+            const mesh = new THREE.Mesh(geometry, optionalMaterial1)
+
+            mesh.tag = 'base';
+            optionalScene1.add(mesh);
+            optionalCamera1.position.z = 10;
+            optionalCamera1.position.x = 0;
+            optionalCamera1.position.y = -6;
+            optionalScene1.scale.set(0.02,0.02,0.02);
+
+            optionalControls1.update();
+            animateOptional1();
+        } catch (error) {}
+    }
+    window.previewOptionalUpperPlyFile = previewOptionalUpperPlyFile;
+
+
+    async function previewOptionalLowerStlFile(file_lower)
+    {
+        try {
+            optionalContainer2 = document.getElementById( 'optional-stl-lower-arch-preview' );
+            optionalScene2 = new THREE.Scene();
+            optionalScene2.name = 'optional-myscene2';
+            optionalScene2.background = new THREE.Color( 0xaaaaaa );
+            optionalCamera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            optionalCamera2.position.set(0, 0, 5);
+            optionalRenderer2 = new THREE.WebGLRenderer({ antialias: true });
+
+            optionalMaterial2 = new THREE.MeshNormalMaterial();
+            optionalControls2 = new OrbitControls(optionalCamera2, optionalRenderer2.domElement, { enableRotate: true });
+            optionalControls2.enableDamping = true;
+            THREE.Cache.enabled = true;
+
+            const width = $("#upper-jaw-box").width() + 23;
+            const height = $("#upper-jaw-box").height();
+
+            optionalRenderer2.setSize( width, height );
+            optionalContainer2.appendChild( optionalRenderer2.domElement );
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            optionalScene2.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            optionalScene2.add(directionalLight);
+
+            const geometry = await optionalLoadSTLLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
+            const mesh = new THREE.Mesh(geometry, optionalMaterial2)
+
+            mesh.tag = 'base';
+            optionalScene2.add(mesh);
+
+            console.log('scene updated');
+
+            optionalCamera2.position.z = 10;
+            optionalCamera2.position.x = 0;
+            optionalCamera2.position.y = -6;
+            optionalScene2.scale.set(0.02,0.02,0.02);
+
+            optionalControls2.update();
+            animateOptional2();
+        } catch (error) {}
+    }
+    window.previewOptionalLowerStlFile = previewOptionalLowerStlFile;
+
+    async function previewOptionalLowerPlyFile(file_lower)
+    {
+        try {
+            optionalContainer2 = document.getElementById( 'optional-stl-lower-arch-preview' );
+            optionalScene2 = new THREE.Scene();
+            optionalScene2.name = 'optional-myscene2';
+            optionalScene2.background = new THREE.Color( 0xaaaaaa );
+            optionalCamera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            optionalCamera2.position.set(0, 0, 5);
+            optionalRenderer2 = new THREE.WebGLRenderer({ antialias: true });
+            optionalMaterial2 = new THREE.MeshStandardMaterial({
+                vertexColors: THREE.VertexColors,
+                flatShading: true
+            });
+            optionalControls2 = new OrbitControls(optionalCamera2, optionalRenderer2.domElement, { enableRotate: true });
+            optionalControls2.enableDamping = true;
+            THREE.Cache.enabled = true;
+
+            const width = $("#upper-jaw-box").width() + 23;
+            const height = $("#upper-jaw-box").height();
+
+            optionalRenderer2.setSize( width, height );
+            optionalContainer2.appendChild( optionalRenderer2.domElement );
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            optionalScene2.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            optionalScene2.add(directionalLight);
+
+            const geometry = await loadPLYLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
+            geometry.computeVertexNormals();
+            const mesh = new THREE.Mesh(geometry, optionalMaterial2)
+
+            mesh.tag = 'base';
+            optionalScene2.add(mesh);
+
+            console.log('scene updated');
+
+            optionalCamera2.position.z = 10;
+            optionalCamera2.position.x = 0;
+            optionalCamera2.position.y = -6;
+            optionalScene2.scale.set(0.02,0.02,0.02);
+
+            optionalControls2.update();
+            animateOptional2();
+        } catch (error) {}
+    }
+    window.previewOptionalLowerPlyFile = previewOptionalLowerPlyFile;
+
+    async function previewLowerStlFile(file_lower)
+    {
+        try {
+            container2 = document.getElementById( 'stl-lower-arch-preview' );
+            scene2 = new THREE.Scene();
+            scene2.name = 'myscene2';
+            scene2.background = new THREE.Color( 0xaaaaaa );
+            camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            camera2.position.set(0, 0, 5);
+            renderer2 = new THREE.WebGLRenderer({ antialias: true });
+
+            material2 = new THREE.MeshNormalMaterial();
+            controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
+            controls2.enableDamping = true;
+            THREE.Cache.enabled = true;
+
+            const width = $("#upper-jaw-box").width() + 23;
+            const height = $("#upper-jaw-box").height();
+
+            //modify renderer
+            renderer2.setSize( width, height );
+
+
+            //append renderer to body
+            document.body.appendChild( renderer2.domElement );
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene2.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            scene2.add(directionalLight);
+
+            const geometry = await loadSTLLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
+            const mesh = new THREE.Mesh(geometry, material2)
+
+            mesh.tag = 'base';
+            scene2.add(mesh);
+
+            console.log('scene updated');
+
+            camera2.position.z = 10;
+            camera2.position.x = 0;
+            camera2.position.y = -6;
+            scene2.scale.set(0.02,0.02,0.02);
+
+            controls2.update();
+            animate2();
+        } catch (error) {}
+    }
+    window.previewLowerStlFile = previewLowerStlFile;
+
+    async function previewUpperPlyFile(file_upper)
+    {
+        try {
+            container1 = document.getElementById( 'stl-upper-arch-preview' );
+            scene1 = new THREE.Scene();
+            scene1.name = 'myscene1';
+            scene1.background = new THREE.Color( 0xaaaaaa );
+            camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            camera1.position.set(0, 0, 5);
+            renderer1 = new THREE.WebGLRenderer({ antialias: true });
+
+            material1 = new THREE.MeshStandardMaterial({
+                vertexColors: THREE.VertexColors,
+                flatShading: true
+            });
+            controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
+            controls1.enableDamping = true;
+
+            THREE.Cache.enabled = true;
+
+            const width = $("#upper-jaw-box").width() + 23;
+            const height = $("#upper-jaw-box").height();
+
+            //modify renderer
+            renderer1.setSize( width, height );
+
+            //append renderer to body
+            document.body.appendChild( renderer1.domElement );
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene1.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            scene1.add(directionalLight);
+            const geometry = await loadPLYUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+            geometry.computeVertexNormals();
+            const mesh = new THREE.Mesh(geometry, material1)
+
+            mesh.tag = 'base';
+
+            scene1.add(mesh);
+            camera1.position.z = 10;
+            camera1.position.x = 0;
+            camera1.position.y = -6;
+            scene1.scale.set(0.02,0.02,0.02);
+
+            controls1.update();
+            animate1();
+        } catch (error) {}
+    }
+    window.previewUpperPlyFile = previewUpperPlyFile;
+
+    async function previewLowerPlyFile(file_lower)
+    {
+        try {
+            container2 = document.getElementById( 'stl-lower-arch-preview' );
+            scene2 = new THREE.Scene();
+            scene2.name = 'myscene2';
+            scene2.background = new THREE.Color( 0xaaaaaa );
+            camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            camera2.position.set(0, 0, 5);
+            renderer2 = new THREE.WebGLRenderer({ antialias: true });
+            material2 = new THREE.MeshStandardMaterial({
+                vertexColors: THREE.VertexColors,
+                flatShading: true
+            });
+            controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
+            controls2.enableDamping = true;
+            THREE.Cache.enabled = true;
+
+
+            const width = $("#upper-jaw-box").width() + 23;
+            const height = $("#upper-jaw-box").height();
+
+            //modify renderer
+            renderer2.setSize( width, height );
+
+            //append renderer to body
+            document.body.appendChild( renderer2.domElement );
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene2.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            scene2.add(directionalLight);
+
+
+            const geometry = await loadPLYLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
+            geometry.computeVertexNormals();
+            const mesh = new THREE.Mesh(geometry, material2)
+
+            mesh.tag = 'base';
+            scene2.add(mesh);
+
+            console.log('scene updated');
+
+            camera2.position.z = 10;
+            camera2.position.x = 0;
+            camera2.position.y = -6;
+            scene2.scale.set(0.02,0.02,0.02);
+
+            controls2.update();
+            animate2();
+        } catch (error) {}
+    }
+    window.previewLowerPlyFile = previewLowerPlyFile;
+
+
+    @if(@$patient->fl_upper_arch!='')
+        @if(explode(".", @$patient->fl_upper_arch)[1] == 'stl')
+            previewUpperStlFile("{{@$patient->fl_upper_arch}}")
+        @else
+            previewUpperPlyFile("{{@$patient->fl_upper_arch}}")
+        @endif
+    @endif
+
+    @if(@$patient->fl_lower_arch!='')
+        @if(explode(".", @$patient->fl_lower_arch)[1] == 'stl')
+            previewLowerStlFile("{{@$patient->fl_lower_arch}}")
+        @else
+            previewLowerPlyFile("{{@$patient->fl_lower_arch}}")
+        @endif
+    @endif
+
+    @if(@$patient->optional_fl_upper_arch!='')
+        @if(explode(".", @$patient->optional_fl_upper_arch)[1] == 'stl')
+            previewOptionalUpperStlFile("{{@$patient->optional_fl_upper_arch}}")
+        @else
+            previewOptionalUpperPlyFile("{{@$patient->optional_fl_upper_arch}}")
+        @endif
+    @endif
+
+    @if(@$patient->optional_fl_lower_arch!='')
+        @if(explode(".", @$patient->optional_fl_lower_arch)[1] == 'stl')
+            previewOptionalLowerStlFile("{{@$patient->optional_fl_lower_arch}}")
+        @else
+            previewOptionalLowerPlyFile("{{@$patient->optional_fl_lower_arch}}")
+        @endif
+    @endif
+
+    function downloadMeditLinkStlFiles($uuid)
+    {
+        $.ajax({
+                type: "POST",
+                url: "{{url('/patient/file/download-medit-link')}}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "patient_id" : "{{ $patient->patient_id }}",
+                    "treatment_plan_id" : "{{ $patient->id }}",
+                    "uuid" : $uuid,
+                },
+                beforeSend: function () {
+                    showLoader();
+                }
+            }).done(function (response) {
+
+                if(response.upper || response.lower) {
+                    if(response.upper) {
+                        $('#key1').attr('file', response.upper);
+                        window.dropzone_active_state('1', response.upper)
+                        previewUpperStlFile(response.upper)
+                    }
+                    if(response.lower) {
+                        $('#key2').attr('file', response.lower);
+                        window.dropzone_active_state('2', response.lower)
+                        previewLowerStlFile(response.lower)
+                    }
+                                                if(response.patient_name){
+                            document.getElementById('first_name').value = response.first_name;
+                            document.getElementById('last_name').value = response.last_name;
+                    }
+                    if(response.patient_code){
+                        document.getElementById('patientCode').value = response.patient_code;
+                    }
+                    $("#3shape-section").addClass('d-none');
+                    $("#medit-link-section").addClass('d-none')
+                    $("#patient-wizard").removeClass('d-none');
+                    hideLoader();
+                }
+                else {
+                    hideLoader();
+                    toastError("Error while downloading files.");
+                }
+            });
+    }
+
+    $(document).on('click', '.download-3shape-stl-files-additional',function () {
+        const hash_upper = $(this).attr('hash-upper'),
+        hash_lower = $(this).attr('hash-lower'),
+        case_id = $(this).attr('case-id');
+        download3ShapeStlFilesAdditional(case_id, hash_upper, hash_lower);
     });
 
-    controls2.dispose();
-
-    container2 = null;
-    scene2 = null;
-    camera2 = null;
-    renderer2 = null;
-    material2 = null;
-    controls2 = null;
-}
-
-window.destroyPreview2 = destroyPreview2;
-
-
-async function loadSTLUpper(url) {
-    const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-            }
-            const reader = response.body.getReader();
-            const contentLength = response.headers.get('Content-Length');
-            const total = contentLength ? parseInt(contentLength, 10) : null;
-            let loaded = 0;
-
-            const chunks = [];
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                chunks.push(value);
-                loaded += value.length;
-                if (total) {
-                    const percentComplete = (loaded / total * 100).toFixed(2);
-                    $("#upper-arch-progress-bar").css({width: `${percentComplete}%`})
-                    $("#upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+    function download3ShapeStlFilesAdditional($case_id, $hash_upper, $hash_lower)
+    {
+        $.ajax({
+                type: "POST",
+                url: "{{url('/patient/file/download-3shape')}}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "patient_id" : "{{ $patient->patient_id }}",
+                    "treatment_plan_id" : "{{ $patient->id }}",
+                    "case_id" : $case_id,
+                    "hash_upper" : $hash_upper,
+                    "hash_lower" : $hash_lower,
+                },
+                beforeSend: function () {
+                    showLoader();
                 }
-            }
-            const arrayBuffer = new Uint8Array(loaded);
-            let offset = 0;
-            for (let chunk of chunks) {
-                arrayBuffer.set(chunk, offset);
-                offset += chunk.length;
-            }
+            }).done(function (response) {
 
-            const geometry = stl_loader1.parse(arrayBuffer.buffer);
-            return geometry;
-}
-
-async function loadSTLLower(url) {
-    const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-            }
-            const reader = response.body.getReader();
-            const contentLength = response.headers.get('Content-Length');
-            const total = contentLength ? parseInt(contentLength, 10) : null;
-            let loaded = 0;
-
-            const chunks = [];
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                chunks.push(value);
-                loaded += value.length;
-                if (total) {
-                    const percentComplete = (loaded / total * 100).toFixed(2);
-                    $("#lower-arch-progress-bar").css({width: `${percentComplete}%`})
-                    $("#lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
-                    // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
-                    // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
+                if(response.upper || response.lower) {
+                    if(response.upper) {
+                        $('#key18').attr('file', response.upper);
+                        window.dropzone_active_state('18', response.upper)
+                        previewOptionalUpperStlFile(response.upper)
+                    }
+                    if(response.lower) {
+                        $('#key19').attr('file', response.lower);
+                        window.dropzone_active_state('19', response.lower)
+                        previewOptionalLowerStlFile(response.lower)
+                    }
+                    $("#optional-3shape-section-Modal").modal('hide');
+                    hideLoader();
                 }
-            }
-            const arrayBuffer = new Uint8Array(loaded);
-            let offset = 0;
-            for (let chunk of chunks) {
-                arrayBuffer.set(chunk, offset);
-                offset += chunk.length;
-            }
-
-            const geometry = stl_loader2.parse(arrayBuffer.buffer);
-            return geometry;
-}
-
-async function optionalLoadSTLUpper(url) {
-    const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-            }
-            const reader = response.body.getReader();
-            const contentLength = response.headers.get('Content-Length');
-            const total = contentLength ? parseInt(contentLength, 10) : null;
-            let loaded = 0;
-
-            const chunks = [];
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                chunks.push(value);
-                loaded += value.length;
-                if (total) {
-                    const percentComplete = (loaded / total * 100).toFixed(2);
-                    $("#optional-upper-arch-progress-bar").css({width: `${percentComplete}%`})
-                    $("#optional-upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                else {
+                    hideLoader();
+                    toastError("Error while downloading files.");
                 }
-            }
-            const arrayBuffer = new Uint8Array(loaded);
-            let offset = 0;
-            for (let chunk of chunks) {
-                arrayBuffer.set(chunk, offset);
-                offset += chunk.length;
-            }
-
-            const geometry = stl_loader1.parse(arrayBuffer.buffer);
-            return geometry;
-}
-
-async function optionalLoadSTLLower(url) {
-    const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-            }
-            const reader = response.body.getReader();
-            const contentLength = response.headers.get('Content-Length');
-            const total = contentLength ? parseInt(contentLength, 10) : null;
-            let loaded = 0;
-
-            const chunks = [];
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                chunks.push(value);
-                loaded += value.length;
-                if (total) {
-                    const percentComplete = (loaded / total * 100).toFixed(2);
-                    $("#optional-lower-arch-progress-bar").css({width: `${percentComplete}%`})
-                    $("#optional-lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
-                    // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
-                    // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
-                }
-            }
-            const arrayBuffer = new Uint8Array(loaded);
-            let offset = 0;
-            for (let chunk of chunks) {
-                arrayBuffer.set(chunk, offset);
-                offset += chunk.length;
-            }
-
-            const geometry = stl_loader2.parse(arrayBuffer.buffer);
-            return geometry;
-}
-
-async function loadPLYUpper(url) {
-    const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-            }
-            const reader = response.body.getReader();
-            const contentLength = response.headers.get('Content-Length');
-            const total = contentLength ? parseInt(contentLength, 10) : null;
-            let loaded = 0;
-
-            const chunks = [];
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                chunks.push(value);
-                loaded += value.length;
-                if (total) {
-                    const percentComplete = (loaded / total * 100).toFixed(2);
-                    $("#upper-arch-progress-bar").css({width: `${percentComplete}%`})
-                    $("#upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
-                    // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
-                    // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
-                }
-            }
-            const arrayBuffer = new Uint8Array(loaded);
-            let offset = 0;
-            for (let chunk of chunks) {
-                arrayBuffer.set(chunk, offset);
-                offset += chunk.length;
-            }
-
-            const geometry = ply_loader1.parse(arrayBuffer.buffer);
-            return geometry;
-}
-
-async function loadPLYLower(url) {
-    const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-            }
-            const reader = response.body.getReader();
-            const contentLength = response.headers.get('Content-Length');
-            const total = contentLength ? parseInt(contentLength, 10) : null;
-            let loaded = 0;
-
-            const chunks = [];
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                chunks.push(value);
-                loaded += value.length;
-                if (total) {
-                    const percentComplete = (loaded / total * 100).toFixed(2);
-                    $("#lower-arch-progress-bar").css({width: `${percentComplete}%`})
-                    $("#lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
-                    // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
-                    // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
-                }
-            }
-            const arrayBuffer = new Uint8Array(loaded);
-            let offset = 0;
-            for (let chunk of chunks) {
-                arrayBuffer.set(chunk, offset);
-                offset += chunk.length;
-            }
-
-            const geometry = ply_loader2.parse(arrayBuffer.buffer);
-            return geometry;
-}
-
-
-            async function previewUpperStlFile(file_upper)
-            {
-                try {
-                    container1 = document.getElementById( 'stl-upper-arch-preview' );
-                    scene1 = new THREE.Scene();
-                    scene1.name = 'myscene1';
-                    scene1.background = new THREE.Color( 0xaaaaaa );
-                    camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-                    camera1.position.set(0, 0, 5);
-                    renderer1 = new THREE.WebGLRenderer({ antialias: true });
-                    material1 = new THREE.MeshNormalMaterial();
-                    controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
-                    controls1.enableDamping = true;
-                    THREE.Cache.enabled = true;
-
-                    const width = $("#upper-jaw-box").width() + 23;
-                    const height = $("#upper-jaw-box").height();
-
-                    renderer1.setSize( width, height );
-
-                    document.body.appendChild( renderer1.domElement );
-
-                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                    scene1.add(ambientLight);
-
-                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-                    directionalLight.position.set(1, 1, 1).normalize();
-                    scene1.add(directionalLight);
-
-                    const geometry = await loadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
-                    const mesh = new THREE.Mesh(geometry, material1)
-                    mesh.tag = 'base';
-                    scene1.add(mesh);
-                    camera1.position.z = 10;
-                    camera1.position.x = 0;
-                    camera1.position.y = -6;
-                    scene1.scale.set(0.02,0.02,0.02);
-
-                    controls1.update();
-                    animate1();
-                } catch (error) {}
-            }
-            window.previewUpperStlFile = previewUpperStlFile;
-
-
-            async function previewOptionalUpperStlFile(file_upper)
-            {
-                try {
-                    container1 = document.getElementById( 'optional-stl-upper-arch-preview' );
-                    scene1 = new THREE.Scene();
-                    scene1.name = 'myscene1';
-                    scene1.background = new THREE.Color( 0xaaaaaa );
-                    camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-                    camera1.position.set(0, 0, 5);
-                    renderer1 = new THREE.WebGLRenderer({ antialias: true });
-                    material1 = new THREE.MeshNormalMaterial();
-                    controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
-                    controls1.enableDamping = true;
-                    THREE.Cache.enabled = true;
-
-                    const width = $("#upper-jaw-box").width() + 23;
-                    const height = $("#upper-jaw-box").height();
-
-                    renderer1.setSize( width, height );
-
-                    document.body.appendChild( renderer1.domElement );
-
-                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                    scene1.add(ambientLight);
-
-                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-                    directionalLight.position.set(1, 1, 1).normalize();
-                    scene1.add(directionalLight);
-
-                    const geometry = await optionalLoadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
-                    const mesh = new THREE.Mesh(geometry, material1)
-                    mesh.tag = 'base';
-                    scene1.add(mesh);
-                    camera1.position.z = 10;
-                    camera1.position.x = 0;
-                    camera1.position.y = -6;
-                    scene1.scale.set(0.02,0.02,0.02);
-
-                    controls1.update();
-                    animate1();
-                } catch (error) {}
-            }
-            window.previewOptionalUpperStlFile = previewOptionalUpperStlFile;
-
-            async function previewOptionalUpperPlyFile(file_upper)
-            {
-                try {
-                    container1 = document.getElementById( 'optional-stl-upper-arch-preview' );
-                    scene1 = new THREE.Scene();
-                    scene1.name = 'myscene1';
-                    scene1.background = new THREE.Color( 0xaaaaaa );
-                    camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-                    camera1.position.set(0, 0, 5);
-                    renderer1 = new THREE.WebGLRenderer({ antialias: true });
-
-                    material1 = new THREE.MeshStandardMaterial({
-                        vertexColors: THREE.VertexColors,
-                        flatShading: true
-                    });
-                    controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
-                    controls1.enableDamping = true;
-
-                    THREE.Cache.enabled = true;
-
-                    const width = $("#upper-jaw-box").width() + 23;
-                    const height = $("#upper-jaw-box").height();
-
-                    //modify renderer
-                    renderer1.setSize( width, height );
-
-                    //append renderer to body
-                    document.body.appendChild( renderer1.domElement );
-
-                    // Lighting
-                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                    scene1.add(ambientLight);
-
-                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-                    directionalLight.position.set(1, 1, 1).normalize();
-                    scene1.add(directionalLight);
-                    const geometry = await loadPLYUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
-                    geometry.computeVertexNormals();
-                    const mesh = new THREE.Mesh(geometry, material1)
-
-                    mesh.tag = 'base';
-
-                    scene1.add(mesh);
-                    camera1.position.z = 10;
-                    camera1.position.x = 0;
-                    camera1.position.y = -6;
-                    scene1.scale.set(0.02,0.02,0.02);
-
-                    controls1.update();
-                    animate1();
-                } catch (error) {}
-            }
-            window.previewOptionalUpperPlyFile = previewOptionalUpperPlyFile;
-
-
-            async function previewOptionalLowerStlFile(file_lower)
-            {
-                try {
-                    container2 = document.getElementById( 'optional-stl-lower-arch-preview' );
-                    scene2 = new THREE.Scene();
-                    scene2.name = 'myscene2';
-                    scene2.background = new THREE.Color( 0xaaaaaa );
-                    camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-                    camera2.position.set(0, 0, 5);
-                    renderer2 = new THREE.WebGLRenderer({ antialias: true });
-
-                    material2 = new THREE.MeshNormalMaterial();
-                    controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
-                    controls2.enableDamping = true;
-                    THREE.Cache.enabled = true;
-
-                    const width = $("#upper-jaw-box").width() + 23;
-                    const height = $("#upper-jaw-box").height();
-
-                    //modify renderer
-                    renderer2.setSize( width, height );
-
-
-                    //append renderer to body
-                    document.body.appendChild( renderer2.domElement );
-
-                    // Lighting
-                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                    scene2.add(ambientLight);
-
-                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-                    directionalLight.position.set(1, 1, 1).normalize();
-                    scene2.add(directionalLight);
-
-                    const geometry = await optionalLoadSTLLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
-                    const mesh = new THREE.Mesh(geometry, material2)
-
-                    mesh.tag = 'base';
-                    scene2.add(mesh);
-
-                    console.log('scene updated');
-
-                    camera2.position.z = 10;
-                    camera2.position.x = 0;
-                    camera2.position.y = -6;
-                    scene2.scale.set(0.02,0.02,0.02);
-
-                    controls2.update();
-                    animate2();
-                } catch (error) {}
-            }
-            window.previewOptionalLowerStlFile = previewOptionalLowerStlFile;
-
-            async function previewOptionalLowerPlyFile(file_lower)
-            {
-                try {
-                    container2 = document.getElementById( 'optional-stl-lower-arch-preview' );
-                    scene2 = new THREE.Scene();
-                    scene2.name = 'myscene2';
-                    scene2.background = new THREE.Color( 0xaaaaaa );
-                    camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-                    camera2.position.set(0, 0, 5);
-                    renderer2 = new THREE.WebGLRenderer({ antialias: true });
-                    material2 = new THREE.MeshStandardMaterial({
-                        vertexColors: THREE.VertexColors,
-                        flatShading: true
-                    });
-                    controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
-                    controls2.enableDamping = true;
-                    THREE.Cache.enabled = true;
-
-
-                    const width = $("#upper-jaw-box").width() + 23;
-                    const height = $("#upper-jaw-box").height();
-
-                    //modify renderer
-                    renderer2.setSize( width, height );
-
-                    //append renderer to body
-                    document.body.appendChild( renderer2.domElement );
-                    // Lighting
-                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                    scene2.add(ambientLight);
-
-                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-                    directionalLight.position.set(1, 1, 1).normalize();
-                    scene2.add(directionalLight);
-
-
-                    const geometry = await loadPLYLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
-                    geometry.computeVertexNormals();
-                    const mesh = new THREE.Mesh(geometry, material2)
-
-                    mesh.tag = 'base';
-                    scene2.add(mesh);
-
-                    console.log('scene updated');
-
-                    camera2.position.z = 10;
-                    camera2.position.x = 0;
-                    camera2.position.y = -6;
-                    scene2.scale.set(0.02,0.02,0.02);
-
-                    controls2.update();
-                    animate2();
-                } catch (error) {}
-            }
-            window.previewOptionalLowerPlyFile = previewOptionalLowerPlyFile;
-
-            async function previewLowerStlFile(file_lower)
-            {
-                try {
-                    container2 = document.getElementById( 'stl-lower-arch-preview' );
-                    scene2 = new THREE.Scene();
-                    scene2.name = 'myscene2';
-                    scene2.background = new THREE.Color( 0xaaaaaa );
-                    camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-                    camera2.position.set(0, 0, 5);
-                    renderer2 = new THREE.WebGLRenderer({ antialias: true });
-
-                    material2 = new THREE.MeshNormalMaterial();
-                    controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
-                    controls2.enableDamping = true;
-                    THREE.Cache.enabled = true;
-
-                    const width = $("#upper-jaw-box").width() + 23;
-                    const height = $("#upper-jaw-box").height();
-
-                    //modify renderer
-                    renderer2.setSize( width, height );
-
-
-                    //append renderer to body
-                    document.body.appendChild( renderer2.domElement );
-
-                    // Lighting
-                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                    scene2.add(ambientLight);
-
-                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-                    directionalLight.position.set(1, 1, 1).normalize();
-                    scene2.add(directionalLight);
-
-                    const geometry = await loadSTLLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
-                    const mesh = new THREE.Mesh(geometry, material2)
-
-                    mesh.tag = 'base';
-                    scene2.add(mesh);
-
-                    console.log('scene updated');
-
-                    camera2.position.z = 10;
-                    camera2.position.x = 0;
-                    camera2.position.y = -6;
-                    scene2.scale.set(0.02,0.02,0.02);
-
-                    controls2.update();
-                    animate2();
-                } catch (error) {}
-            }
-            window.previewLowerStlFile = previewLowerStlFile;
-
-            async function previewUpperPlyFile(file_upper)
-            {
-                try {
-                    container1 = document.getElementById( 'stl-upper-arch-preview' );
-                    scene1 = new THREE.Scene();
-                    scene1.name = 'myscene1';
-                    scene1.background = new THREE.Color( 0xaaaaaa );
-                    camera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-                    camera1.position.set(0, 0, 5);
-                    renderer1 = new THREE.WebGLRenderer({ antialias: true });
-
-                    material1 = new THREE.MeshStandardMaterial({
-                        vertexColors: THREE.VertexColors,
-                        flatShading: true
-                    });
-                    controls1 = new OrbitControls(camera1, renderer1.domElement, { enableRotate: true });
-                    controls1.enableDamping = true;
-
-                    THREE.Cache.enabled = true;
-
-                    const width = $("#upper-jaw-box").width() + 23;
-                    const height = $("#upper-jaw-box").height();
-
-                    //modify renderer
-                    renderer1.setSize( width, height );
-
-                    //append renderer to body
-                    document.body.appendChild( renderer1.domElement );
-
-                    // Lighting
-                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                    scene1.add(ambientLight);
-
-                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-                    directionalLight.position.set(1, 1, 1).normalize();
-                    scene1.add(directionalLight);
-                    const geometry = await loadPLYUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
-                    geometry.computeVertexNormals();
-                    const mesh = new THREE.Mesh(geometry, material1)
-
-                    mesh.tag = 'base';
-
-                    scene1.add(mesh);
-                    camera1.position.z = 10;
-                    camera1.position.x = 0;
-                    camera1.position.y = -6;
-                    scene1.scale.set(0.02,0.02,0.02);
-
-                    controls1.update();
-                    animate1();
-                } catch (error) {}
-            }
-
-
-
-            window.previewUpperPlyFile = previewUpperPlyFile;
-
-            async function previewLowerPlyFile(file_lower)
-            {
-                try {
-                    container2 = document.getElementById( 'stl-lower-arch-preview' );
-                    scene2 = new THREE.Scene();
-                    scene2.name = 'myscene2';
-                    scene2.background = new THREE.Color( 0xaaaaaa );
-                    camera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-                    camera2.position.set(0, 0, 5);
-                    renderer2 = new THREE.WebGLRenderer({ antialias: true });
-                    material2 = new THREE.MeshStandardMaterial({
-                        vertexColors: THREE.VertexColors,
-                        flatShading: true
-                    });
-                    controls2 = new OrbitControls(camera2, renderer2.domElement, { enableRotate: true });
-                    controls2.enableDamping = true;
-                    THREE.Cache.enabled = true;
-
-
-                    const width = $("#upper-jaw-box").width() + 23;
-                    const height = $("#upper-jaw-box").height();
-
-                    //modify renderer
-                    renderer2.setSize( width, height );
-
-                    //append renderer to body
-                    document.body.appendChild( renderer2.domElement );
-                    // Lighting
-                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-                    scene2.add(ambientLight);
-
-                    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-                    directionalLight.position.set(1, 1, 1).normalize();
-                    scene2.add(directionalLight);
-
-
-                    const geometry = await loadPLYLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
-                    geometry.computeVertexNormals();
-                    const mesh = new THREE.Mesh(geometry, material2)
-
-                    mesh.tag = 'base';
-                    scene2.add(mesh);
-
-                    console.log('scene updated');
-
-                    camera2.position.z = 10;
-                    camera2.position.x = 0;
-                    camera2.position.y = -6;
-                    scene2.scale.set(0.02,0.02,0.02);
-
-                    controls2.update();
-                    animate2();
-                } catch (error) {}
-            }
-            window.previewLowerPlyFile = previewLowerPlyFile;
-
-
-            @if(@$patient->fl_upper_arch!='')
-                @if(explode(".", @$patient->fl_upper_arch)[1] == 'stl')
-                    previewUpperStlFile("{{@$patient->fl_upper_arch}}")
-                @else
-                    previewUpperPlyFile("{{@$patient->fl_upper_arch}}")
-                @endif
-            @endif
-
-            @if(@$patient->optional_fl_upper_arch!='')
-                @if(explode(".", @$patient->optional_fl_upper_arch)[1] == 'stl')
-                    previewOptionalUpperStlFile("{{@$patient->optional_fl_upper_arch}}")
-                @else
-                    previewOptionalUpperPlyFile("{{@$patient->optional_fl_upper_arch}}")
-                @endif
-            @endif
-
-            @if(@$patient->fl_lower_arch!='')
-                @if(explode(".", @$patient->fl_lower_arch)[1] == 'stl')
-                    previewLowerStlFile("{{@$patient->fl_lower_arch}}")
-                @else
-                    previewLowerPlyFile("{{@$patient->fl_lower_arch}}")
-                @endif
-            @endif
-
-            @if(@$patient->optional_fl_lower_arch!='')
-                @if(explode(".", @$patient->optional_fl_lower_arch)[1] == 'stl')
-                    previewOptionalLowerStlFile("{{@$patient->optional_fl_lower_arch}}")
-                @else
-                    previewOptionalLowerPlyFile("{{@$patient->optional_fl_lower_arch}}")
-                @endif
-            @endif
-
-            function downloadMeditLinkStlFiles($uuid)
-            {
-                $.ajax({
-                        type: "POST",
-                        url: "{{url('/patient/file/download-medit-link')}}",
-                        data: {
-                            "_token" : "{{ csrf_token() }}",
-                            "patient_id" : "{{ $patient->patient_id }}",
-                            "treatment_plan_id" : "{{ $patient->id }}",
-                            "uuid" : $uuid,
-                        },
-                        beforeSend: function () {
-                            showLoader();
-                        }
-                    }).done(function (response) {
-
-                        if(response.upper || response.lower) {
-                            if(response.upper) {
-                                $('#key1').attr('file', response.upper);
-                                window.dropzone_active_state('1', response.upper)
-                                previewUpperStlFile(response.upper)
-                            }
-                            if(response.lower) {
-                                $('#key2').attr('file', response.lower);
-                                window.dropzone_active_state('2', response.lower)
-                                previewLowerStlFile(response.lower)
-                            }
-                                                        if(response.patient_name){
-                                    document.getElementById('first_name').value = response.first_name;
-                                    document.getElementById('last_name').value = response.last_name;
-                            }
-                            if(response.patient_code){
-                                document.getElementById('patientCode').value = response.patient_code;
-                            }
-                            $("#3shape-section").addClass('d-none');
-                            $("#medit-link-section").addClass('d-none')
-                            $("#patient-wizard").removeClass('d-none');
-                            hideLoader();
-                        }
-                        else {
-                            hideLoader();
-                            toastError("Error while downloading files.");
-                        }
-                    });
-            }
-
-            $(document).on('click', '.download-3shape-stl-files-additional',function () {
-                const hash_upper = $(this).attr('hash-upper'),
-                hash_lower = $(this).attr('hash-lower'),
-                case_id = $(this).attr('case-id');
-                download3ShapeStlFilesAdditional(case_id, hash_upper, hash_lower);
             });
-
-            function download3ShapeStlFilesAdditional($case_id, $hash_upper, $hash_lower)
-            {
-                $.ajax({
-                        type: "POST",
-                        url: "{{url('/patient/file/download-3shape')}}",
-                        data: {
-                            "_token" : "{{ csrf_token() }}",
-                            "patient_id" : "{{ $patient->patient_id }}",
-                            "treatment_plan_id" : "{{ $patient->id }}",
-                            "case_id" : $case_id,
-                            "hash_upper" : $hash_upper,
-                            "hash_lower" : $hash_lower,
-                        },
-                        beforeSend: function () {
-                            showLoader();
-                        }
-                    }).done(function (response) {
-
-                        if(response.upper || response.lower) {
-                            if(response.upper) {
-                                $('#key18').attr('file', response.upper);
-                                window.dropzone_active_state('18', response.upper)
-                                previewOptionalUpperStlFile(response.upper)
-                            }
-                            if(response.lower) {
-                                $('#key19').attr('file', response.lower);
-                                window.dropzone_active_state('19', response.lower)
-                                previewOptionalLowerStlFile(response.lower)
-                            }
-                            $("#optional-3shape-section-Modal").modal('hide');
-                            hideLoader();
-                        }
-                        else {
-                            hideLoader();
-                            toastError("Error while downloading files.");
-                        }
-                    });
-            }
+    }
 
 
-            function download3ShapeStlFiles($case_id, $hash_upper, $hash_lower)
-            {
-                $.ajax({
-                        type: "POST",
-                        url: "{{url('/patient/file/download-3shape')}}",
-                        data: {
-                            "_token" : "{{ csrf_token() }}",
-                            "patient_id" : "{{ $patient->patient_id }}",
-                            "treatment_plan_id" : "{{ $patient->id }}",
-                            "case_id" : $case_id,
-                            "hash_upper" : $hash_upper,
-                            "hash_lower" : $hash_lower,
-                        },
-                        beforeSend: function () {
-                            showLoader();
-                        }
-                    }).done(function (response) {
+    function download3ShapeStlFiles($case_id, $hash_upper, $hash_lower)
+    {
+        $.ajax({
+                type: "POST",
+                url: "{{url('/patient/file/download-3shape')}}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "patient_id" : "{{ $patient->patient_id }}",
+                    "treatment_plan_id" : "{{ $patient->id }}",
+                    "case_id" : $case_id,
+                    "hash_upper" : $hash_upper,
+                    "hash_lower" : $hash_lower,
+                },
+                beforeSend: function () {
+                    showLoader();
+                }
+            }).done(function (response) {
 
-                        if(response.upper || response.lower) {
-                            if(response.upper) {
-                                $('#key1').attr('file', response.upper);
-                                window.dropzone_active_state('1', response.upper)
-                                previewUpperStlFile(response.upper)
-                            }
-                            if(response.lower) {
-                                $('#key2').attr('file', response.lower);
-                                window.dropzone_active_state('2', response.lower)
-                                previewLowerStlFile(response.lower)
-                            }
-                            $("#3shape-section-Modal").modal('hide');
-                            hideLoader();
-                        }
-                        else {
-                            hideLoader();
-                            toastError("Error while downloading files.");
-                        }
-                    });
-            }
+                if(response.upper || response.lower) {
+                    if(response.upper) {
+                        $('#key1').attr('file', response.upper);
+                        window.dropzone_active_state('1', response.upper)
+                        previewUpperStlFile(response.upper)
+                    }
+                    if(response.lower) {
+                        $('#key2').attr('file', response.lower);
+                        window.dropzone_active_state('2', response.lower)
+                        previewLowerStlFile(response.lower)
+                    }
+                    $("#3shape-section-Modal").modal('hide');
+                    hideLoader();
+                }
+                else {
+                    hideLoader();
+                    toastError("Error while downloading files.");
+                }
+            });
+    }
+
+    $(document).ready(function () {
+
+        @if(@$medit_data->case_uuid)
+            downloadMeditLinkStlFiles('{{@$medit_data->case_uuid}}')
+        @endif
+
+        $(document).on('click', '.download-3shape-stl-files',function () {
+            const hash_upper = $(this).attr('hash-upper'),
+            hash_lower = $(this).attr('hash-lower'),
+            case_id = $(this).attr('case-id');
+            download3ShapeStlFiles(case_id, hash_upper, hash_lower);
+        });
+
+        $(document).on('click', '.download-medit-link-stl-files', function () {
+            const uuid = $(this).attr('data-uuid');
+            downloadMeditLinkStlFiles(uuid)
+        })
+
+        $("#medit-link-search").on('submit', function (e) {
+            e.preventDefault()
+            e.stopImmediatePropagation()
+            const case_id = $("#medit-link-search input[name=_case_id]").val(),
+            patient_id = $("#medit-link-search input[name=_patient_id]").val(),
+            medit_link_search_for_case = $("#medit-link-search input[name=_medit_link_search_for_case]").val(),
+            medit_link_start_date = $("#medit-link-search input[name=_medit_link_start_date]").val(),
+            medit_link_end_date = $("#medit-link-search input[name=_medit_link_end_date]").val()
+
+            $.ajax({
+                type: "POST",
+                url: "{{ url('/integrations/medit-link-search-cases') }}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "case_id" : case_id,
+                    "patient_id" : patient_id,
+                    "medit_link_search_for_case" : medit_link_search_for_case,
+                    "medit_link_start_date" : medit_link_start_date,
+                    "medit_link_end_date" : medit_link_end_date
+                },
+                beforeSend: function () {
+                    showLoader();
+                }
+            }).done(function (response) {
+                $("#medit-link-search-result").html(response);
+                hideLoader();
+            })
+        });
 
         $(document).ready(function () {
+            // Show additional divs when an advisor is selected
+            $("#advisor").on("change", function () {
+                if ($(this).val() !== "") {
+                    $("#additionalDivs").removeClass("d-none");
+                    $("#consultant_agreement").attr("required", true); // Make checkbox required
+                } else {
+                    $("#additionalDivs").addClass("d-none");
+                    $("#consultant_agreement").removeAttr("required"); // Remove required if no advisor is selected
+                }
+            });
 
-                    @if(@$medit_data->case_uuid)
-                        downloadMeditLinkStlFiles('{{@$medit_data->case_uuid}}')
-                    @endif
+            // Final submit button logic
+            $(document).on("click", "#final-confirm-and-submit-btn", function () {
+                // Check if terms and conditions are accepted
+                if ($("input[name=terms_and_conditions]").is(":checked")) {
+                    const advisor = $("#advisor").val();
+                    var comment = $("#comment").val();// Get advisor selection
+                    const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
+                    if (comment === undefined || comment === null) {
+                        comment = "";
+                    }
+                    // Validate consultant agreement checkbox if advisor is selected
+                    if (advisor && !consultantAgreementChecked) {
+                        toastError("You must agree to the additional consultation terms.");
+                        return;
+                    }
 
+                    // Submit the form
+                    $("#final-submit-form").append(`<input type="hidden" name="advisor" value="${advisor}" />`);
+                $("#final-submit-form").append(`<input type="hidden" name="comment" value="${comment}" />`);
 
-
-                    $(document).on('click', '.download-3shape-stl-files',function () {
-                        const hash_upper = $(this).attr('hash-upper'),
-                        hash_lower = $(this).attr('hash-lower'),
-                        case_id = $(this).attr('case-id');
-                        download3ShapeStlFiles(case_id, hash_upper, hash_lower);
-                    });
-
-                    $(document).on('click', '.download-medit-link-stl-files', function () {
-                        const uuid = $(this).attr('data-uuid');
-                        downloadMeditLinkStlFiles(uuid)
-                    })
-
-
-
-                    $("#medit-link-search").on('submit', function (e) {
-                        e.preventDefault()
-                        e.stopImmediatePropagation()
-                        const case_id = $("#medit-link-search input[name=_case_id]").val(),
-                        patient_id = $("#medit-link-search input[name=_patient_id]").val(),
-                        medit_link_search_for_case = $("#medit-link-search input[name=_medit_link_search_for_case]").val(),
-                        medit_link_start_date = $("#medit-link-search input[name=_medit_link_start_date]").val(),
-                        medit_link_end_date = $("#medit-link-search input[name=_medit_link_end_date]").val()
-
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ url('/integrations/medit-link-search-cases') }}",
-                            data: {
-                                "_token" : "{{ csrf_token() }}",
-                                "case_id" : case_id,
-                                "patient_id" : patient_id,
-                                "medit_link_search_for_case" : medit_link_search_for_case,
-                                "medit_link_start_date" : medit_link_start_date,
-                                "medit_link_end_date" : medit_link_end_date
-                            },
-                            beforeSend: function () {
-                                showLoader();
-                            }
-                        }).done(function (response) {
-                            $("#medit-link-search-result").html(response);
-                            hideLoader();
-                        })
-                    });
-
-                    // $("#3shape-search").on('submit', function (e) {
-                    //     e.preventDefault();
-                    //     e.stopImmediatePropagation();
-                    //     const case_id = $("#3shape-search input[name=_case_id]").val(),
-                    //     patient_id = $("#3shape-search input[name=_patient_id]").val(),
-                    //     three_shape_case_id = $("#3shape-search input[name=_three_shape_case_id]").val(),
-                    //     three_shape_search_for_case = $("#3shape-search input[name=_three_shape_search_for_case]").val();
-                    //     $.ajax({
-                    //         type: "POST",
-                    //         url: "{{ url('/integrations/3shape-search-cases') }}",
-                    //         data: {
-                    //             "_token" : "{{ csrf_token() }}",
-                    //             "case_id" : case_id,
-                    //             "patient_id" : patient_id,
-                    //             "three_shape_case_id" : three_shape_case_id,
-                    //             "three_shape_search_for_patient" : three_shape_search_for_case,
-                    //         },
-                    //         beforeSend: function () {
-                    //             showLoader();
-                    //         }
-                    //     }).done(function (response) {
-                    //         $("#3shape-search-result").html(response);
-                    //         hideLoader();
-                    //     });
-                    // });
-
-
-
-
-
-
-                $(document).ready(function () {
-                    // Show additional divs when an advisor is selected
-                    $("#advisor").on("change", function () {
-                        if ($(this).val() !== "") {
-                            $("#additionalDivs").removeClass("d-none");
-                            $("#consultant_agreement").attr("required", true); // Make checkbox required
-                        } else {
-                            $("#additionalDivs").addClass("d-none");
-                            $("#consultant_agreement").removeAttr("required"); // Remove required if no advisor is selected
-                        }
-                    });
-
-                    // Final submit button logic
-                    $(document).on("click", "#final-confirm-and-submit-btn", function () {
-                        // Check if terms and conditions are accepted
-                        if ($("input[name=terms_and_conditions]").is(":checked")) {
-                            const advisor = $("#advisor").val();
-                            var comment = $("#comment").val();// Get advisor selection
-                            const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
-                            if (comment === undefined || comment === null) {
-                                comment = "";
-                            }
-                            // Validate consultant agreement checkbox if advisor is selected
-                            if (advisor && !consultantAgreementChecked) {
-                                toastError("You must agree to the additional consultation terms.");
-                                return;
-                            }
-
-                            // Submit the form
-                            $("#final-submit-form").append(`<input type="hidden" name="advisor" value="${advisor}" />`);
-                        $("#final-submit-form").append(`<input type="hidden" name="comment" value="${comment}" />`);
-
-                        // Submit the form
-                        $("#final-submit-form").submit();
-                        } else {
-                            toastError("You must accept the Packages and Terms & Conditions agreement.");
-                        }
-                    });
-                });
-
+                // Submit the form
+                $("#final-submit-form").submit();
+                } else {
+                    toastError("You must accept the Packages and Terms & Conditions agreement.");
+                }
+            });
         });
+
+    });
 </script>
 <script src="{{asset('public/js/cropper.js')}}"></script>
 <script>
@@ -2360,11 +2351,11 @@ async function loadPLYLower(url) {
                     }
 
                     if(key == 18) {
-                        window.destroyPreview1();
+                        window.destroyOptionalPreview1();
                         $("#optional-stl-upper-arch-preview").html("");
                     }
                     if(key == 19) {
-                        window.destroyPreview2();
+                        window.destroyOptionalPreview2();
                         $("#optional-stl-lower-arch-preview").html("");
                     }
                     toastSuccess("File successfully removed")
@@ -3743,21 +3734,21 @@ async function loadPLYLower(url) {
         var file = $("._dropzone_template #key" + key).attr('file');
 
         var imageUrl="{{asset('storage/PatientFiles/Patient')}}{{$patient->patient_id}}/"+file;
-    if (file) {
-  fetch(imageUrl)
-            .then(response => response.blob()) // Convert the image to a blob
-            .then(blob => {
-                const file = new File([blob], "editedImage.jpg", { type: blob.type }); // Create a new File object
-                // Open image editor and pass the file object
-                openImageEditor(file, function(croppedFile) {
-                    dropzone_upload(key, croppedFile); // Upload the edited image
-                });
-            })
-            .catch(err => console.error("Error fetching the image: ", err));
+        if (file) {
+            fetch(imageUrl)
+                .then(response => response.blob()) // Convert the image to a blob
+                .then(blob => {
+                    const file = new File([blob], "editedImage.jpg", { type: blob.type }); // Create a new File object
+                    // Open image editor and pass the file object
+                    openImageEditor(file, function(croppedFile) {
+                        dropzone_upload(key, croppedFile); // Upload the edited image
+                    });
+                })
+                .catch(err => console.error("Error fetching the image: ", err));
 
-    } else {
-        console.error("No file found for editing in the dropzone.");
-    }
+        } else {
+            console.error("No file found for editing in the dropzone.");
+        }
           });
 
 
