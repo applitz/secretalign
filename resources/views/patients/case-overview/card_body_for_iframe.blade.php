@@ -21,7 +21,7 @@
                         @if($patient->primary_movix_link != null)
                             <iframe src="{{ $patient->primary_movix_link }}" width="100%" height="700" style="min-height: 700px;"></iframe>
                         @else
-                            @if ($patient->fl_upper_arch && $patient->fl_lower_arch && $patient->is_treatment_submitted == 0 && !@$patient->iframe_link)
+                            @if ($patient->fl_upper_arch && $patient->fl_lower_arch && $patient->is_treatment_submitted == 0 )
                                 <div class="container-fluid mx-0 my-3" id="hide-on-paste">
                                     <div class="row mb-3">
                                         <div class="col-xl-12 d-none">
@@ -61,9 +61,9 @@
                                                 <h6 class="mb-3 mt-0">Rotate Vertically</h6>
                                                 <input type="range" class="form-range" id="slider">
                                             </div>
-                                            @if (!@$patient->iframe_link)
+                                            {{-- @if (!@$patient->iframe_link)
                                                 <div id="canvas" class="canvas-bg"></div>
-                                            @endif
+                                            @endif --}}
 
                                             <div class="btn-group float-end btns-steps" role="group"
                                                 aria-label="Basic radio toggle button group d-block"
@@ -105,7 +105,7 @@
                             @if($patient->optional_scan_movix_link != null)
                                 <iframe src="{{ $patient->optional_scan_movix_link }}" width="100%" height="700" style="min-height: 700px;"></iframe>
                             @else
-                                @if ($patient->is_treatment_submitted == 0 && !@$patient->iframe_link)
+                                @if ($patient->is_treatment_submitted == 0 )
                                     <div class="container-fluid mx-0 my-3" id="hide-on-paste-optional">
                                         <div class="row mb-3">
                                             <div class="col-xl-12 d-none">
@@ -187,7 +187,7 @@
     </div>
 </div>
 
-@if ($hasOptionalScans && $patient->is_treatment_submitted == 0 && !@$patient->iframe_link)
+@if ($hasOptionalScans && $patient->is_treatment_submitted == 0 )
     <script type="module">
         import {
             STLLoader
