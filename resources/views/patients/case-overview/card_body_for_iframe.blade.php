@@ -61,9 +61,9 @@
                                                 <h6 class="mb-3 mt-0">Rotate Vertically</h6>
                                                 <input type="range" class="form-range" id="slider">
                                             </div>
-                                            {{-- @if (!@$patient->iframe_link)
+                                            @if (!@$patient->iframe_link)
                                                 <div id="canvas" class="canvas-bg"></div>
-                                            @endif --}}
+                                            @endif
 
                                             <div class="btn-group float-end btns-steps" role="group"
                                                 aria-label="Basic radio toggle button group d-block"
