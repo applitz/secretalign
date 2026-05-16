@@ -5,7 +5,7 @@
 
                 <p><strong>Name:</strong> {{ $patient->first_name . ' ' . $patient->last_name }}</p>
                 <p><strong>Date of Birth:</strong> {{ $patient->dob }}</p>
-                <p><strong>Treatment Type:</strong> {{ $patient->treatment_type == 1 ? 'Treatment Plan Service' : 'Aligners Full-Service' }}</p>
+                <p><strong>Treatment Type :</strong> {{ $patient->treatment_type == 1 ? 'Treatment Plan Service' : 'Aligners Full-Service' }}</p>
                 @php
                     $hasOptionalScans = !empty($patient->optional_fl_upper_arch) && !empty($patient->optional_fl_lower_arch);
                     $optional_upper_arch_stl = $hasOptionalScans
