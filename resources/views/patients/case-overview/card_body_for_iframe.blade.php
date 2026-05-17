@@ -6,7 +6,7 @@
                 <p><strong>Name:</strong> {{ $patient->first_name . ' ' . $patient->last_name }}</p>
                 <p><strong>Date of Birth:</strong> {{ $patient->dob }}</p>
                 <p><strong>Treatment Type:</strong> {{ $patient->treatment_type == 1 ? 'Treatment Plan Service' : 'Aligners Full-Service' }}</p>
-                @if ($patient->fl_upper_arch && $patient->fl_lower_arch  )
+                @if ($patient->fl_upper_arch && $patient->fl_lower_arch && $patient->is_treatment_submitted == 0 && !@$patient->iframe_link)
                     <div class="container-fluid mx-0 my-3" id="hide-on-paste">
                         <div class="row mb-3">
                             <div class="col-xl-12 d-none">
@@ -46,9 +46,9 @@
                                     <h6 class="mb-3 mt-0">Rotate Vertically</h6>
                                     <input type="range" class="form-range" id="slider">
                                 </div>
-                                {{-- @if (!@$patient->iframe_link) --}}
+                                @if (!@$patient->iframe_link)
                                     <div id="canvas" class="canvas-bg"></div>
-                                {{-- @endif --}}
+                                @endif
 
                                 <div class="btn-group float-end btns-steps" role="group"
                                     aria-label="Basic radio toggle button group d-block"
@@ -82,7 +82,72 @@
                         </div>
                     </div>
                 @endif
+                <!-- $patient->is_treatment_submitted == 1 -->
+                @if (@$patient->iframe_link)
+                    @if(@$patient->link_type == 'edit')
+                    <?php $simseToken = getSimseToken($patient->first_name,$patient->last_name,$patient->dob,$patient->user_id);?>
+                    <iframe onload="authenticate('{{$simseToken}}', '{{ $patient->iframe_link }}')"     id="nemoPortal" width="100%" height="700" style="min-height: 700px";     src="{{ $patient->iframe_link }}">
+                    </iframe>
+                    @else
+                    <iframe src="{{ $patient->iframe_link }}" width="100%" height="700" style="min-height: 700px;"></iframe>
+                    @endif
+                    <!--<div class="row mt-5">-->
+                    <!--        <div class="col-md-12">-->
+                    <!--            <a href="{{ route('iframe', request()->phase) }}" class="btn btn-primary"-->
+                    <!--                target="_blank">View on full screen</a>-->
+                    <!--        </div>-->
+                    <!--            <div class="accordion-body">-->
+                    <!--                <div class="mb-3 d-flex align-items-center gap-3">-->
+                                        <!--<label for="patientOption" class="me-2 mb-0 fw-semibold">-->
+                                        <!--    Select Nemo Sync Option-->
+                                        <!--</label>-->
 
+                    <!--                    <select id="patientOption" name="patient_option"-->
+                    <!--                        class="form-select stylish-dropdown-half fw-medium border-0 shadow-sm"-->
+                    <!--                        onchange="syncNemoLink(this)">-->
+                    <!--                        <option value="">Please select option</option>-->
+                    <!--                        <option value="view" {{ $patient->link_type == 'view' ? 'selected' : '' }}>Advanced Viewer</option>-->
+                    <!--                        <option value="edit" {{ $patient->link_type == 'edit' ? 'selected' : '' }}>Editor</option>-->
+                    <!--                    </select>-->
+                    <!--                </div>-->
+                    <!--            </div>-->
+                    <!--    </div>-->
+
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            <div class="d-flex align-items-center gap-3">
+                                <!-- Full Screen Button -->
+                                <a href="{{ route('iframe', request()->phase) }}"
+                                   class="btn btn-primary"
+                                   target="_blank">
+                                   View on Full Screen
+                                </a>
+                                @if($role && ($role == 'staff' || $role == 'doctor'))
+                                    @if($patient->status == 'Treatment Plan Completed' || $patient->status == 'Doctor requests a Modification to Setup 1')
+                                    <select id="patientOption" name="patient_option"
+                                        class="form-select stylish-dropdown-half fw-medium border-0 shadow-sm"
+                                        onchange="syncNemoLink(this)">
+                                        <option value="">Please select option</option>
+                                        <option value="view" {{ $patient->link_type == 'view' ? 'selected' : '' }}>Advanced Viewer</option>
+                                        <option value="edit" {{ $patient->link_type == 'edit' ? 'selected' : '' }}>Editor</option>
+                                    </select>
+                                    @endif
+                                @endif
+                                @if($role && ($role == 'lab'))
+                                    @if($patient->status == 'Treatment Plan Completed' || $patient->status == 'Doctor requests a Modification to Setup 1' || $patient->status == 'Treatment Plan Approved' )
+                                    <select id="patientOption" name="patient_option"
+                                            class="form-select stylish-dropdown-half fw-medium shadow-sm"
+                                            onchange="syncNemoLink(this)">
+                                        <option value="">Please select option</option>
+                                        <option value="view" {{ $patient->link_type == 'view' ? 'selected' : '' }}>Advanced Viewer</option>
+                                        <option value="edit" {{ $patient->link_type == 'edit' ? 'selected' : '' }}>Editor</option>
+                                    </select>
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
