@@ -6,7 +6,7 @@
                 <p><strong>Name:</strong> {{ $patient->first_name . ' ' . $patient->last_name }}</p>
                 <p><strong>Date of Birth:</strong> {{ $patient->dob }}</p>
                 <p><strong>Treatment Type:</strong> {{ $patient->treatment_type == 1 ? 'Treatment Plan Service' : 'Aligners Full-Service' }}</p>
-                @if ($patient->fl_upper_arch && $patient->fl_lower_arch && $patient->is_treatment_submitted == 0 )
+                @if ($patient->fl_upper_arch && $patient->fl_lower_arch  )
                     <div class="container-fluid mx-0 my-3" id="hide-on-paste">
                         <div class="row mb-3">
                             <div class="col-xl-12 d-none">
