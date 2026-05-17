@@ -27,7 +27,7 @@ var Home = function() {
                 { 'title': 'Patient', "data": "patient_full_name", orderable: false, searchable: false },
                 { 'title': 'Task', "data": "task_name", orderable: false, searchable: false },
                 { 'title': 'Treatment Type', "data": "treatment_type", orderable: false, searchable: false },
-                { 'title': 'Setup Type', "data": "setup_type", orderable: false, searchable: false },
+                // { 'title': 'Setup Type', "data": "setup_type", orderable: false, searchable: false },
                 { 'title': 'From', "data": "previous_case_holder", orderable: false, searchable: false },
                 { 'title': 'Task Date', "data": "created_at", orderable: false, searchable: false },
                 { 'title': '', "data": "case_overview", orderable: false, searchable: false },

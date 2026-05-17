@@ -27,7 +27,7 @@ var Home = function() {
 
                 { 'title': 'Task Date', "data": "created_at", orderable: false, searchable: false },
                 { 'title': 'Treatment Type', "data": "treatment_type", orderable: false, searchable: false },
-                { 'title': 'Setup Type', "data": "setup_type", orderable: false, searchable: false },
+                // { 'title': 'Setup Type', "data": "setup_type", orderable: false, searchable: false },
                 { 'title': 'Treatment Plan', "data": "phase", orderable: false, searchable: false },
                 { 'title': '', "data": "case_overview", orderable: false, searchable: false },
             ],

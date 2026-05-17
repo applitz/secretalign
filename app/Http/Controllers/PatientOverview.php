@@ -114,7 +114,6 @@ class PatientOverview extends Controller
     }
     public function overview(Request $request, $phase)
     {
-
         $whereClauses = [["tp.id", $this->hashids->decode($phase)], ["tp.is_deleted", 0],];
 
         if (Auth::user()->role == 'lab') {
