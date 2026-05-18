@@ -268,8 +268,37 @@ class UserController extends Controller
         }
         return \redirect()->back();
     }
+     public function change_profile_photo(Request $request, $id)
+    {
+        $this->validate($request, [
+            "file" => "required|file|mimes:jpg,jpeg,png,webp,gif",
+        ]);
+        if($request->hasFile("file")) {
+            $oldFile = Auth::user()->photo;
+            $file = $request->file('file');
+            // $fileName = mt_rand(1, 1000) . time() . '.' . $file->getClientOriginalExtension();
+            // $file->move(storage_path() . '/app/public/Profiles', $fileName);
+            $fileName = uploadWebpImage($file, storage_path() . '/app/public/Profiles');
 
-    public function change_profile_photo(Request $request, $id)
+            if($fileName && $fileName != null ){
+
+                if (!empty($oldFile)) {
+                    $oldFilePath = storage_path('app/public/Profiles/' . $oldFile);
+                    if (File::exists($oldFilePath)) {
+                        File::delete($oldFilePath);
+                    }
+                }
+                DB::table('users')->where('id', $id)->update([
+                    "photo" => $fileName,
+                ]);
+                return redirect()->back()->with('success', 'You have successfully changed your profile picture');
+            }
+            return redirect()->back()->with('error', 'Something goes to wrong.');
+        }
+        return redirect()->back()->with('error', 'enable to upload file');
+    }
+
+    public function change_profile_photoOld(Request $request, $id)
     {
         $this->validate($request, [
             "file" => "required|file|mimes:jpg,jpeg,png,webp,gif",
