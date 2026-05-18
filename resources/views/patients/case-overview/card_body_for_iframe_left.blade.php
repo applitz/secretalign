@@ -2662,6 +2662,7 @@
     </div>
     @if ($patient->is_submitted != 0 && Auth::user()->role == $patient->case_holder && (Auth::user()->role != 'lab' || DB::table('lab_requests')->where('treatment_plan_id', @$patient->id)->where('user_id', Auth::user()->id)->where('is_canceled', 0)->exists()))
         {{-- @dd($patient); --}}
+
         @if ($patient->is_rejected == 1 || $patient->is_cancelled == 1)
             @if ($patient->is_cancelled == 1)
                 <div class="card">
@@ -2810,6 +2811,21 @@
                                 </div>
                             @endif
 
+                            @if (Auth::user()->role == 'staff' && $patient->case_holder == 'staff')
+                                @if ($patient->is_treatment_submitted == 1 && $patient->is_completed == 0 && $patient->is_continue == 0)
+                                        <div class="mb-3">
+                                            <label>Lab</label>
+                                            <select class="form-select" name="lab" id="lab">
+                                                <option value="" disabled selected>Select Lab</option>
+                                                @foreach ($labs as $lab)
+                                                    <option value="{{ $lab->id }}">{{ $lab->first_name }}
+                                                        {{ $lab->last_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @endif
+                            @endif
+
                             @if ($patient->is_sent_to_lab == 1 && $patient->is_treatment_submitted == 1 )
                                 <div class="mb-3">
                                     <label>No. of Steps (Aligner)</label>
@@ -2882,6 +2898,11 @@
                                         type="button" id="staff-send-to-doctor-for-approval">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>
                                         Send to the Doctor for Approval
+                                    </button>
+
+                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action"
+                                        type="button" id="request-treatment">
+                                        <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Lab
                                     </button>
                                 @endif
 
@@ -3228,5 +3249,3 @@
     </div>
 @endif
 </div>
-
-
