@@ -44,11 +44,11 @@
         </style>
 @include('patients.case-overview.case_overview_header')
 
-{{-- @if((Auth::user()->email == 'parthkhunt12@gmail.com'))
+@if((Auth::user()->email == 'parthkhunt12@gmail.com'))
     @include('patients.case-overview.card_body_for_iframe_new')
-@else --}}
+@else
     @include('patients.case-overview.card_body_for_iframe')
-{{-- @endif --}}
+@endif
 
 
 <div class="row gx-2">
