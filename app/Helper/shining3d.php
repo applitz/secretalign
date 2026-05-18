@@ -24,7 +24,6 @@ use Nette\Utils\Json;
         'Content-Type' => 'application/json',
         ])->withBody($body, 'application/json')->send('GET', $url)->json();
 
-
         if (($response['status'] ?? null) !== 'success') {
             throw new \RuntimeException('Failed to get auth token');
         }
@@ -45,7 +44,7 @@ use Nette\Utils\Json;
             'code'         => $code,
             'redirectUri'  => 'https://secretalign-user.com/patient/create',
         ]);
-
+        // dd($response);
         if (!$response->successful()) {
             throw new \RuntimeException(
                 'Token exchange failed: ' . $response->body()

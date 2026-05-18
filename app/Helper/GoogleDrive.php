@@ -58,11 +58,13 @@ function listPublicDriveFiles($url)
         $client->setApplicationName('SECRETALIGN');
         $client->setDeveloperKey('AIzaSyBmRLqMpqVZUtrPnbyJZ6iakwLeFGliEK8');
         $service = new Google\Service\Drive($client);
-
+        $pageToken = null;
         $response = $service->files->listFiles([
             'q' => "'$folderId' in parents and trashed = false",
             'orderBy' => 'name',
+            'pageSize' => 1000,
             'fields' => 'files(id, name, mimeType, webContentLink)',
+            'pageToken' => $pageToken,
         ]);
 
         $files = $response->getFiles();
