@@ -44,7 +44,12 @@
         </style>
 @include('patients.case-overview.case_overview_header')
 
-@include('patients.case-overview.card_body_for_iframe')
+@if((Auth::user()->email == 'parthkhunt12@gmail.com'))
+    @include('patients.case-overview.card_body_for_iframe_new')
+@else
+    @include('patients.case-overview.card_body_for_iframe')
+@endif
+
 
 <div class="row gx-2">
     @include('patients.case-overview.card_body_for_iframe_right')
