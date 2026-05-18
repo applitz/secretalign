@@ -2811,7 +2811,7 @@
                                 </div>
                             @endif
 
-                            @if (Auth::user()->role == 'staff' && $patient->case_holder == 'staff')
+                            {{-- @if (Auth::user()->role == 'staff' && $patient->case_holder == 'staff')
                                 @if ($patient->is_treatment_submitted == 1 && $patient->is_completed == 0 && $patient->is_continue == 0)
                                         <div class="mb-3">
                                             <label>Lab</label>
@@ -2824,7 +2824,7 @@
                                             </select>
                                         </div>
                                     @endif
-                            @endif
+                            @endif --}}
 
                             @if ($patient->is_sent_to_lab == 1 && $patient->is_treatment_submitted == 1 )
                                 <div class="mb-3">
@@ -2900,10 +2900,10 @@
                                         Send to the Doctor for Approval
                                     </button>
 
-                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action"
+                                    {{-- <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action"
                                         type="button" id="request-treatment">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Lab
-                                    </button>
+                                    </button> --}}
                                 @endif
 
                                 @if ($patient->recommended_advisor != null && $patient->is_completed == 0 && $patient->is_continue == 0)

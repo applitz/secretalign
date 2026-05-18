@@ -264,7 +264,7 @@
         @endif
     @endif
     @if((Auth::user()->email == 'parthkhunt12@gmail.com'))
-    @include('patients.create-patients.additional-scan')
+        @include('patients.create-patients.additional-scan')
     @endif
     <div class="mb-3 text-end">
         <button class="btn btn-primary btn-sm waves-effect waves-light px-3 previous-tab" data-target="#pill-tab-li-treatment-type">Previous</button>
