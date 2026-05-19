@@ -162,6 +162,7 @@ class PatientsService extends CommonFunction
 
             $expiredHtml = '';
             $changeStatusHtml = '';
+            $changeCaseHolderHtml = '';
             if($patient->status != 'Cancelled' && $patient->status != 'Shipped' ) {
                 $changeStatusHtml = '<a class="btn p-0 ms-2 change-status"
                                     data-bs-toggle="modal"
@@ -210,7 +211,7 @@ class PatientsService extends CommonFunction
                 'case_holder' => $case_holder,
                 'action' => '<a class="btn p-0 ms-2 delete" data-id="' . $patient->id . '" data-name="' . htmlspecialchars($patient->last_name . ' ' . $patient->first_name) . '"
                             href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Delete" aria-label="Delete"><i class="fas fa-trash-alt"></i></a>' . $expiredHtml . $changeStatusHtml,
+                            title="Delete" aria-label="Delete"><i class="fas fa-trash-alt"></i></a>' . $expiredHtml . $changeStatusHtml.$changeCaseHolderHtml,
 
             ];
         }

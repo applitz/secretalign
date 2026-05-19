@@ -3014,6 +3014,13 @@
                                     </button>
                                 @endif
 
+                                @if (($patient->is_completed == 1) && $patient->tracking_id == null && $patient->is_treatment_submitted == 1)
+                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn"
+                                        type="button" id="send-to-lab-for-modification">
+                                        <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Lab for modification 2
+                                    </button>
+                                @endif
+
                                 @if (($patient->is_completed == 1 || $patient->is_continue == 1) && $patient->tracking_id == null)
                                     <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="staff-submit-tracking-id">
