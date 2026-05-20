@@ -559,11 +559,11 @@
                         <p>Are you sure you want to change this patient's status to <strong>"Shipped"</strong>? This action cannot be undone.</p>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
                             <label class="form-label">Patient Name</label>
                             <h5 id="modal_change_status_patient_name"></h5>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-6">
                             <label class="form-label">Current Status</label>
                             <h5>
                                 <span id="modal_change_status_current_status" class="badge"></span>
@@ -579,7 +579,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password" id="modal_change_status_password" required>
+                        <input type="password" class="form-control" name="password" id="modal_change_status_password" placeholder="Please enter your password" required>
                         <span class="text-danger error-text password_error"></span>
                     </div>
 
@@ -589,6 +589,145 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button class="btn btn-primary" id="saveStatus">Change Status</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="changeCaseHolderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Change Case Holder
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="changeCaseHolder" method="POST" action="{{ route('patients.change-case-holder') }}">
+                    @csrf
+                    <input type="hidden" name="patient_id" id="modal_change_case_holder_patient_id">
+                    <div class="mb-3">
+                        <p>Are you sure you want to change this patient's case holder?</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Patient Name</label>
+                            <h5 id="modal_change_case_holder_patient_name"></h5>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Current Case Holder</label>
+                            <h5>
+                                <span id="modal_change_current_case_holder" class="badge"></span>
+                            </h5>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <label class="form-label">Select New Case Holder</label>
+                        <select class="form-select" name="new_case_holder" id="modal_change_case_holder_new_case_holder" required>
+
+                        </select>
+                        <span class="text-danger error-text new_case_holder_error"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="modal_change_case_holder_password" placeholder="Please enter your password"  required>
+                        <span class="text-danger error-text change_case_holder_password_error"></span>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="saveCaseHolder">Change Case Holder</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="changeTreatmentPlanModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Change Treatment Type
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="changeTreatmentPlan" method="POST" action="{{ route('patients.change-treatment-plan') }}">
+                    @csrf
+                    <input type="hidden" name="patient_id" id="modal_change_treatment_plan_patient_id">
+                    <div class="mb-3">
+                        <p>Are you sure you want to change this patient's treatment plan?</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Patient Name</label>
+                            <h5 id="modal_change_treatment_plan_patient_name"></h5>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+
+                        <div class="row g-4">
+                            <div class="col-12 col-md-6" style="height:580px">
+                                <div class="plan-box d-flex flex-column justify-content-end modal_change_treatment_plan_div" id="modal_change_treatment_plan_treatment" style="background-image: url('{{ asset('public') }}/assets/Treatment-Plan-Service-light.webp'); background-size: cover; background-position: center; " >
+
+                                    <div style="border-radius: 10px; background-color: #80C6C7; padding: 15px; text-align: justify;height: 160px;">
+                                        <div class="plan-title text-center text-white mb-2"  >Treatment Planning Service</div>
+                                        <h4 class="page-title mb-0 font-size-18 text-justify" style="color:#209194;text-align:center">
+                                            Precise Staging: From Patient's Scans to Print-Ready STL Files
+                                        </h4>
+
+                                        <!-- Centered Button -->
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#serviceModal">
+                                                Pricing Info
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <input type="radio" name="modal_change_treatment_plan" class="d-none" value="1" >
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6" style="height:580px">
+                                <div class="plan-box d-flex flex-column justify-content-end modal_change_treatment_plan_div"  id="modal_change_treatment_plan_aligners" style="background-image: url('{{ asset('public') }}/assets/Aligners-light.webp'); background-size: cover; background-position: center; " >
+
+                                    <div style="border-radius: 10px; background-color: #80C6C7; padding: 15px; text-align: justify; height: 160px;">
+                                        <div class="plan-title text-center text-white mb-2" >Aligners Full-Service</div>
+                                        <h4 class="page-title mb-0 font-size-18 text-justify" style="color:#209194;text-align:center">
+                                            Digital Planning and Precision Production
+                                        </h4>
+                                    </div>
+
+                                    <input type="radio" name="modal_change_treatment_plan" class="d-none" value="2" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="modal_change_treatment_plan_password" placeholder="Please enter your password"  required>
+                        <span class="text-danger error-text change_treatment_plan_password_error"></span>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="saveCaseHolder">Change Case Holder</button>
             </div>
 
         </div>

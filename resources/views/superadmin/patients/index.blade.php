@@ -180,6 +180,23 @@
         }
     });
 
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.change-case-holder')) {
+            const btn = e.target.closest('.change-case-holder');
+
+            document.getElementById('modal_patient_id').value = btn.dataset.patientId;
+            document.getElementById('modal_change_case_holder_patient_name').innerText = btn.dataset.patientName;
+            document.getElementById('modal_change_current_case_holder').innerText = btn.dataset.currentCaseHolder;
+            // ✅ Password input clear
+            const passwordInput = document.getElementById('modal_change_case_holder_password');
+            passwordInput.value = '';
+            passwordInput.classList.remove('is-invalid');
+
+            // ✅ Password error text clear
+            document.querySelector('.change_case_holder_password_error').innerText = '';
+        }
+    });
+
     function getPatientTreatmentPlanStatus(status) {
         const statusMap = {
             'In Progress': 'badge-soft-primary',
