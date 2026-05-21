@@ -667,6 +667,9 @@
                 <form id="changeTreatmentPlan" method="POST" action="{{ route('patients.change-treatment-plan') }}">
                     @csrf
                     <input type="hidden" name="patient_id" id="modal_change_treatment_plan_patient_id">
+                    <div id="modal_change_treatment_plan_show_error">
+
+                    </div>
                     <div class="mb-3">
                         <p>Are you sure you want to change this patient's treatment plan?</p>
                     </div>
@@ -681,7 +684,7 @@
 
                         <div class="row g-4">
                             <div class="col-12 col-md-6" style="height:580px">
-                                <div class="plan-box d-flex flex-column justify-content-end modal_change_treatment_plan_div" id="modal_change_treatment_plan_treatment" style="background-image: url('{{ asset('public') }}/assets/Treatment-Plan-Service-light.webp'); background-size: cover; background-position: center; " >
+                                <div class="plan-box d-flex flex-column justify-content-end modal_change_treatment_plan_div" data-selected="1" id="modal_change_treatment_plan_treatment" style="background-image: url('{{ asset('public') }}/assets/Treatment-Plan-Service-light.webp'); background-size: cover; background-position: center; " >
 
                                     <div style="border-radius: 10px; background-color: #80C6C7; padding: 15px; text-align: justify;height: 160px;">
                                         <div class="plan-title text-center text-white mb-2"  >Treatment Planning Service</div>
@@ -702,7 +705,7 @@
                             </div>
 
                             <div class="col-12 col-md-6" style="height:580px">
-                                <div class="plan-box d-flex flex-column justify-content-end modal_change_treatment_plan_div"  id="modal_change_treatment_plan_aligners" style="background-image: url('{{ asset('public') }}/assets/Aligners-light.webp'); background-size: cover; background-position: center; " >
+                                <div class="plan-box d-flex flex-column justify-content-end modal_change_treatment_plan_div" data-selected="2" id="modal_change_treatment_plan_aligners" style="background-image: url('{{ asset('public') }}/assets/Aligners-light.webp'); background-size: cover; background-position: center; " >
 
                                     <div style="border-radius: 10px; background-color: #80C6C7; padding: 15px; text-align: justify; height: 160px;">
                                         <div class="plan-title text-center text-white mb-2" >Aligners Full-Service</div>
@@ -727,7 +730,7 @@
 
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button class="btn btn-primary" id="saveCaseHolder">Change Case Holder</button>
+                <button class="btn btn-primary" id="saveChangeTreatmentType">Change Treatment Type</button>
             </div>
 
         </div>

@@ -181,4 +181,16 @@ class PatientsController extends Controller
         }
         return $this->patientsService->changeCaseHolder($request);
     }
+
+    public function changeTreatmentPlan(Request $request)
+    {
+        // ✅ Check password with logged-in user
+        if (!Hash::check($request->password, Auth::user()->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Incorrect password'
+            ], 422);
+        }
+        return $this->patientsService->changeTreatmentPlan($request);
+    }
 }

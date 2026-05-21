@@ -444,8 +444,164 @@ var Patients = function() {
 
         $(document).on('click', '.modal_change_treatment_plan_div', function (e) {
             e.preventDefault();
-            btn = $(this);
-            alert("Hello");
+            let btn = $(this);
+            let selectedValue = btn.data('selected');
+            $("#modal_change_treatment_plan_show_error").html('');
+            // Reset radio buttons
+            $('input[name="modal_change_treatment_plan"]').prop('checked', false);
+
+            // Check selected radio
+            btn.find('input[type="radio"]').prop('checked', true);
+
+            if (selectedValue == 1) {
+                $("#modal_change_treatment_plan_treatment").css(
+                    'background-image',
+                    'url("' + baseUrl + '/public/assets/Treatment-Plan-Service.webp")'
+                );
+                $("#modal_change_treatment_plan_aligners").css(
+                    'background-image',
+                    'url("' + baseUrl + '/public/assets/Aligners-light.webp")'
+                );
+            } else if (selectedValue == 2) {
+                $("#modal_change_treatment_plan_treatment").css(
+                    'background-image',
+                    'url("' + baseUrl + '/public/assets/Treatment-Plan-Service-light.webp")'
+                );
+                $("#modal_change_treatment_plan_aligners").css(
+                    'background-image',
+                    'url("' + baseUrl + '/public/assets/Aligners.webp")'
+                );
+            } else {
+                $("#modal_change_treatment_plan_show_error").html(`
+                    <div class="alert alert-danger" role="alert">
+                        Something went wrong!
+                    </div>
+                `);
+            }
+
+        });
+
+        $(document).on('click', '#saveChangeTreatmentType', function (e) {
+
+            e.preventDefault();
+            // Clear old errors
+            $("#modal_change_treatment_plan_show_error").html('');
+            $('.change_treatment_plan_password_error').text('');
+
+            $('#modal_change_treatment_plan_new_treatment_plan, #modal_change_treatment_plan_password')
+                .removeClass('is-invalid');
+
+            let isValid = true;
+            let newTreatmentPlan = $('input[name="modal_change_treatment_plan"]:checked').val();
+            let password = $('#modal_change_treatment_plan_password').val();
+            let patientId = $('#modal_change_treatment_plan_patient_id').val();
+
+            console.log({ newTreatmentPlan, password, patientId });
+            // Validate password
+            if (!password) {
+
+                isValid = false;
+
+                $('#modal_change_case_holder_password')
+                    .addClass('is-invalid');
+
+                $('.change_case_holder_password_error')
+                    .text('Password is required');
+
+            } else if (password.length < 6) {
+
+                isValid = false;
+
+                $('#modal_change_case_holder_password')
+                    .addClass('is-invalid');
+
+                $('.change_case_holder_password_error')
+                    .text('Password must be at least 6 characters');
+            }
+
+            // Stop if validation fails
+            if (!isValid) {
+                return false;
+            }
+
+            // FormData
+            let formData = new FormData();
+
+            formData.append('_token', $('input[name="_token"]').val());
+            formData.append('patient_id', patientId);
+            formData.append('new_treatment_plan', newTreatmentPlan);
+            formData.append('password', password);
+
+            $.ajax({
+
+                type: "POST",
+
+                url: baseUrl + '/superadmin/patients/change-treatment-plan',
+
+                data: formData,
+
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 120000,
+
+                success: function (response) {
+
+                    if (response.success === true) {
+
+                        toastSuccess(response.message);
+
+                        $('#changeTreatmentPlanModal').modal('hide');
+                        $('#patients-list').DataTable().ajax.reload(null, false);
+
+                    } else {
+
+                        toastError(response.message ?? 'Unable to change treatment plan!');
+                    }
+                },
+
+                error: function (xhr) {
+
+                    // Laravel validation errors
+                    if (xhr.status === 422 && xhr.responseJSON?.errors) {
+
+                        let errors = xhr.responseJSON.errors;
+
+                        if (errors.new_treatment_plan) {
+
+                            $('#modal_change_treatment_plan_new_treatment_plan')
+                                .addClass('is-invalid');
+
+                            $('.new_treatment_plan_error')
+                                .text(errors.new_treatment_plan[0]);
+                        }
+
+                        if (errors.password) {
+
+                            $('#modal_change_treatment_plan_password')
+                                .addClass('is-invalid');
+
+                            $('.change_treatment_plan_password_error')
+                                .text(errors.password[0]);
+                        }
+
+                    }
+                    // Incorrect password
+                    else if (xhr.status === 422 && xhr.responseJSON?.message) {
+
+                        $('#modal_change_treatment_plan_password')
+                            .addClass('is-invalid');
+
+                        $('.change_treatment_plan_password_error')
+                            .text(xhr.responseJSON.message);
+
+                    } else {
+
+                        toastError('Unable to change treatment plan!');
+                    }
+                }
+            });
+
         });
         // $(document).on('click', '#saveExpiryDate', function (e) {
         //     e.preventDefault();

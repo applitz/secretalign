@@ -288,4 +288,15 @@ class PatientsService extends CommonFunction
         }
         return response()->json(['success' => false, 'message' => 'Patient not found']);
     }
+
+    public function changeTreatmentPlan($request)
+    {
+        $patient = PatientTreatmentPlan::find($request->patient_id);
+        if ($patient) {
+            $patient->treatment_type = $request->new_treatment_plan;
+            $patient->save();
+            return response()->json(['success' => true, 'message' => ' Treatment Type updated successfully']);
+        }
+        return response()->json(['success' => false, 'message' => 'Patient not found']);
+    }
 }
