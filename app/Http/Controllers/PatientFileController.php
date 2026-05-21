@@ -335,8 +335,8 @@ class PatientFileController extends Controller
     public function file_upload(Request $request, $patient_id, $treatment_plan_id)
     {
         if (DB::table('p_treatment_plans')->where('patient_id', $patient_id)->where('id', $treatment_plan_id)->exists()) {
-
-            $file = $request->file('file' . $request->get('key'));
+            $key  = (int) $request->get('key');
+            $file = $request->file('file' . $key);
 
             $attachment = $file->getClientOriginalName();
             $filename   = str_replace(' ', '-', $attachment);
@@ -344,29 +344,47 @@ class PatientFileController extends Controller
             $directory = $this->mkDr($patient_id);
 
             $file_parts = pathinfo($filename);
-            $extension  = strtolower($file_parts['extension'] ?? '');
+            $extension = strtolower($file_parts['extension'] ?? '');
 
             // Check image or not
             $isImage = str_starts_with($file->getMimeType(), 'image/');
 
-            if ($isImage) {
-                $filename = $file_parts['filename'] . '.webp';
-            }
+            // Final extension
+            $finalExtension = ($isImage && $key != 4 && $key != 12)
+                ? 'webp'
+                : $extension;
+
+            // Generate filename
+            $filename = $file_parts['filename'] . '.' . $finalExtension;
+
+            // if ($isImage && $key != 4 && $key != 12) {
+            //     $filename = $file_parts['filename'] . '.webp';
+            // }
 
             // Check if file with same name already exists
+            // Check duplicate file
             if (File::exists($directory . '/' . $filename)) {
 
                 $count = 2;
 
-                while (File::exists($directory . '/' . $file_parts['filename'] . '(' . $count . ').' . ($isImage ? 'webp' : $extension))) {
+                while (
+                    File::exists(
+                        $directory . '/' .
+                        $file_parts['filename'] .
+                        '(' . $count . ').' .
+                        $finalExtension
+                    )
+                ) {
                     $count++;
                 }
 
-                $filename = $file_parts['filename'] . '(' . $count . ').' . ($isImage ? 'webp' : $extension);
+                $filename = $file_parts['filename'] .
+                    '(' . $count . ').' .
+                    $finalExtension;
             }
 
             // Upload file
-            if ($isImage) {
+            if ($isImage && $key != 4 && $key != 12) {
                 uploadWebpImage($file, $directory, $filename);
             } else {
                 $file->move($directory, $filename);
