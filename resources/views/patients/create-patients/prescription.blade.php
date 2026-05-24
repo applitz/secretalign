@@ -144,7 +144,7 @@
             </div>
             <div class="collapse bg-light" id="collapseFaqAccordion3"
                 aria-labelledby="faqAccordionHeading3" data-parent="#accordionFaq">
-                <div class="card-body" style="text-align: center;">
+                <div class="card-body" >
                     <div class="mb-3">
                         <div class="form-check form-switch">
                             <input class="form-check-input" id="class1" type="checkbox" name="class"
@@ -159,7 +159,7 @@
                         </div>
                     </div>
 
-                    <h5 style="text-align: left">Additional Attachments</h5>
+                    <span class="fw-medium font-sans-serif text-900" >Additional Attachments</span>
                     <div class="mb-3">
 
                         @php
@@ -1275,7 +1275,7 @@
             <div class="collapse bg-light" id="collapseFaqAccordion4"
                 aria-labelledby="faqAccordionHeading4" data-parent="#accordionFaq">
                 <div class="card-body">
-                    <h5>Resolve Tooth Size Issues</h5>
+                    <span class="fw-medium font-sans-serif text-900" >Resolve Tooth Size Issues</span>
                     <div class="mb-3">
                         <label>Please select one of the following options.</label>
                         <div class="form-check">
@@ -1302,7 +1302,7 @@
                     </div>
                     <hr>
                     <div id="presc-location-section" class="{{ $preferredSizeIssues == 'IPR' ? '' : 'd-none'}}">
-                    <h5>Location</h5>
+                    <span class="fw-medium font-sans-serif text-900" >Location</span>
                     <div class="mb-3">
                         <label>Upper</label>
                         <select id="location_upper" name="location_upper" class="form-select">
@@ -1330,7 +1330,7 @@
                     <hr>
                     </div>
                     <div id="pres-limits-section"  class="{{ $preferredSizeIssues == 'IPR' ? '' : 'd-none'}}">
-                        <h5>Limits</h5>
+                        <span class="fw-medium font-sans-serif text-900" >Limits</span>
                         <div class="mb-3">
                             <label>Maximum Ant. IPR/Contact 0.1-0.6mm</label>
                             <input class="form-control" type="number" name="limits"
@@ -1341,7 +1341,7 @@
                     </div>
 
                     @if ($patient->is_new == '0')
-                    <h5 class="text-center mb-3">Open space for future Prosthesis</h5>
+                    <span class="fw-medium font-sans-serif text-900" >Open space for future Prosthesis</span>
                     <div class="row justify-content-center">
                         <div class="col-8">
                             <div class="row">
@@ -2292,7 +2292,7 @@
                     <div class="mb-3" style="text-align: left">
                         <label>Notes</label>
                         <textarea name="resolution_notes" id="resolution_notes"
-                            class="form-control">{{ $preferredResolutionNotes }}</textarea>
+                            class="form-control"></textarea>
                     </div>
                 </div>
             </div>
@@ -2737,7 +2737,7 @@
                         </div>
                         <hr>
                     @endif
-                    <h5>Aesthetic start</h5>
+                    <span class="fw-medium font-sans-serif text-900" >Aesthetic start</span>
                     <div class="mb-3">
                         <div class="form-check form-switch">
                             <input class="form-check-input" id="aesthetic_start1" type="radio"
@@ -2751,7 +2751,7 @@
                         </div>
                     </div>
 
-                    <h5>Primary Esthetic Objective for Anterior Leveling</h5>
+                    <span class="fw-medium font-sans-serif text-900" >Primary Esthetic Objective for Anterior Leveling</span>
                     <div class="mb-3">
                         <div class="form-check form-switch">
                             <input class="form-check-input" id="anterior_leveling1" type="radio"
@@ -2796,7 +2796,7 @@
 
 
 
-                    <h5>Aligner Trim Type</h5>
+                    <span class="fw-medium font-sans-serif text-900" >Aligner Trim Type</span>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label>Upper</label>
@@ -2845,7 +2845,7 @@
                         </div>
                     </div>
                     <hr>
-                    <h5 class="text-center my-3">Please Mark the last tooth you want the aligners to cover</h5>
+                    <span class="fw-medium font-sans-serif text-900" >Please Mark the last tooth you want the aligners to cover</span>
                         @php
                             $tla_ur = [];
                             if ($patient->tla_ur != '' && $patient->tla_ur != null) {
