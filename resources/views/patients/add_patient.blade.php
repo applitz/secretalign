@@ -1820,12 +1820,15 @@ async function previewUpperStlFile(file_upper)
                     $(document).on("click", "#final-confirm-and-submit-btn", function () {
                         // Check if terms and conditions are accepted
                         if ($("input[name=terms_and_conditions]").is(":checked")) {
-                            const advisor = $("#advisor").val();
+                            var advisor = $("#advisor").val();
                             var comment = $("#comment").val();// Get advisor selection
                             const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
                             const setup_type = $('input[name="setup_type"]:checked').val();
                             if (comment === undefined || comment === null) {
                                 comment = "";
+                            }
+                            if (advisor === undefined || advisor === null) {
+                                advisor = "";
                             }
                             // Validate consultant agreement checkbox if advisor is selected
                             if (advisor && !consultantAgreementChecked) {
