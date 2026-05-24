@@ -1371,7 +1371,7 @@
             CKEDITOR.instances[instance].updateElement();
     </script>
 
-    @if ($patient->fl_upper_arch && $patient->fl_lower_arch && $patient->is_treatment_submitted == 0)
+    @if ($patient->fl_upper_arch && $patient->fl_lower_arch )
         <script type="module">
             import {
                 STLLoader

@@ -1,3 +1,8 @@
+<style>
+    .brand-logo {
+        display: none !important;
+    }
+</style>
 <div class="row gx-2">
     <div class="col-md-12">
         <div class="card mb-3">
@@ -21,9 +26,42 @@
                     <div class="{{ $hasOptionalScans ? 'col-md-6' : 'col-md-12' }}">
                         <h6 class="mb-2">Primary Scan</h6>
                         @if($patient->primary_movix_link != null)
-                            <iframe src="{{ $patient->primary_movix_link }}" width="100%" height="700" style="min-height: 700px;"></iframe>
+
+                                @php
+                                    $primaryLink = $patient->primary_movix_link;
+                                    $primaryLinkExpiresAt = $patient->primary_movix_link_expires_at;
+                                    $primaryLinkValid = false;
+
+                                    if ($primaryLinkValid) {
+                                        if (empty($primaryLinkExpiresAt)) {
+                                            $primaryLinkValid = true;
+                                        } else {
+                                            try {
+                                                $primaryLinkValid = \Carbon\Carbon::parse($primaryLinkExpiresAt)->isFuture();
+                                            } catch (\Exception $e) {
+                                                $primaryLinkValid = false;
+                                            }
+                                        }
+                                    }
+
+                                    $iframeUrl = $primaryLink;
+
+                                    if (!$primaryLinkValid) {
+                                        $createMovixLinkUrl = createMovixLinkUrl(
+                                            $patient->id,
+                                            $patient->primary_case_id,
+                                            'primary'
+                                        );
+
+                                        $iframeUrl = $createMovixLinkUrl['url'] ?? null;
+                                    }
+                                @endphp
+
+                                @if ($iframeUrl)
+                                    <iframe class="movix_link_iframe" src="{{ $iframeUrl }}" width="100%" height="700" style="min-height: 700px;"></iframe>
+                                @endif
                         @else
-                            @if ($patient->fl_upper_arch && $patient->fl_lower_arch && $patient->is_treatment_submitted == 0 && !@$patient->iframe_link)
+                            @if ($patient->fl_upper_arch && $patient->fl_lower_arch )
                                 <div class="container-fluid mx-0 my-3" id="hide-on-paste">
                                     <div class="row mb-3">
                                         <div class="col-xl-12 d-none">
@@ -102,10 +140,43 @@
                     @if ($hasOptionalScans)
                         <div class="col-md-6">
                             <h6 class="mb-2">Optional Scan</h6>
-                            @if($patient->optional_scan_movix_link != null)
-                                <iframe src="{{ $patient->optional_scan_movix_link }}" width="100%" height="700" style="min-height: 700px;"></iframe>
+                            @if ($patient->optional_scan_movix_link != null)
+                                @php
+                                    $optionalLink = $patient->optional_scan_movix_link;
+                                    $optionalLinkExpiresAt = $patient->optional_scan_movix_link_expires_at;
+                                    $optionalLinkValid = false;
+
+                                    if ($optionalLink) {
+                                        if (empty($optionalLinkExpiresAt)) {
+                                            $optionalLinkValid = true;
+                                        } else {
+                                            try {
+                                                $optionalLinkValid = \Carbon\Carbon::parse($optionalLinkExpiresAt)->isFuture();
+                                            } catch (\Exception $e) {
+                                                $optionalLinkValid = false;
+                                            }
+                                        }
+                                    }
+
+                                    $iframeUrl = $optionalLink;
+
+                                    if (!$optionalLinkValid) {
+                                        $createMovixLinkUrl = createMovixLinkUrl(
+                                            $patient->id,
+                                            $patient->optional_scan_case_id,
+                                            'optional'
+                                        );
+
+                                        $iframeUrl = $createMovixLinkUrl['url'] ?? null;
+                                    }
+                                @endphp
+
+                                @if ($iframeUrl)
+                                    <iframe  class="movix_link_iframe" src="{{ $iframeUrl }}" width="100%" height="700" style="min-height: 700px;"></iframe>
+                                @endif
+
                             @else
-                                @if ($patient->is_treatment_submitted == 0 && !@$patient->iframe_link)
+
                                     <div class="container-fluid mx-0 my-3" id="hide-on-paste-optional">
                                         <div class="row mb-3">
                                             <div class="col-xl-12 d-none">
@@ -177,7 +248,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endif
+
                             @endif
                         </div>
                     @endif
@@ -188,7 +259,7 @@
     </div>
 </div>
 
-@if ($hasOptionalScans && $patient->is_treatment_submitted == 0 && !@$patient->iframe_link)
+@if ($hasOptionalScans)
     <script type="module">
         import {
             STLLoader
@@ -419,4 +490,5 @@
             });
         })();
     </script>
+
 @endif
