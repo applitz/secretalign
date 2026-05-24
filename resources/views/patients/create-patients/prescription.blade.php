@@ -2739,15 +2739,17 @@
                     @endif
                     <span class="fw-medium font-sans-serif text-900" >Aesthetic start</span>
                     <div class="mb-3">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" id="aesthetic_start1" type="radio"
-                                name="aesthetic_start" value="1" @if ($patient->aesthetic_start == '1') checked="checked" @endif />
-                            <label class="form-check-label" for="aesthetic_start1">Yes</label>
-                        </div>
+
                         <div class="form-check form-switch">
                             <input class="form-check-input" id="aesthetic_start2" type="radio"
                                 name="aesthetic_start" value="0" @if ($patient->aesthetic_start == '0') checked="checked" @endif />
                             <label class="form-check-label" for="aesthetic_start2">No</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" id="aesthetic_start1" type="radio"
+                                name="aesthetic_start" value="1" @if ($patient->aesthetic_start == '1') checked="checked" @endif />
+                            <label class="form-check-label" for="aesthetic_start1">Yes</label>
                         </div>
                     </div>
 

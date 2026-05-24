@@ -262,7 +262,7 @@
     <!-- Toggle Button -->
     <div class="mb-3">
         <button type="button" class="btn btn-outline-primary" id="toggleAdditionalScans">
-            Add Mandibular Repositioning STL Files
+            Add Mandibular Repositioning STL Files (Optional)
         </button>
     </div>
 
@@ -343,10 +343,7 @@
                     Quick Upload Notes:
                 </span>
                 <span class="">
-                    &bull; Please upload a Bite Registration STL file.
-                </span>
-                <span class="">
-                    &bull; Bite registration is required when scanning. However, if the bite registration STL file data is included in the Upper/Lower STL files, then no separate bite registration file needs to be uploaded.
+                    &bull; STL file with bite registration for mandibular reposition is required.
                 </span>
             </div>
         </div>
