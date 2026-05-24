@@ -21,167 +21,66 @@
                         ? asset('/storage/PatientFiles/Patient' . $patient->patient_id . '/' . $patient->optional_fl_lower_arch)
                         : '';
                 @endphp
-
-                <div class="row">
-                    <div class="{{ $hasOptionalScans ? 'col-md-6' : 'col-md-12' }}">
-                        <h6 class="mb-2">Primary Scan</h6>
-                        @if($patient->primary_movix_link != null)
-
-                                @php
-                                    $primaryLink = $patient->primary_movix_link;
-                                    $primaryLinkExpiresAt = $patient->primary_movix_link_expires_at;
-                                    $primaryLinkValid = false;
-
-                                    if ($primaryLinkValid) {
-                                        if (empty($primaryLinkExpiresAt)) {
-                                            $primaryLinkValid = true;
-                                        } else {
-                                            try {
-                                                $primaryLinkValid = \Carbon\Carbon::parse($primaryLinkExpiresAt)->isFuture();
-                                            } catch (\Exception $e) {
-                                                $primaryLinkValid = false;
-                                            }
-                                        }
-                                    }
-
-                                    $iframeUrl = $primaryLink;
-
-                                    if (!$primaryLinkValid) {
-                                        $createMovixLinkUrl = createMovixLinkUrl(
-                                            $patient->id,
-                                            $patient->primary_case_id,
-                                            'primary'
-                                        );
-
-                                        $iframeUrl = $createMovixLinkUrl['url'] ?? null;
-                                    }
-                                @endphp
-
-                                @if ($iframeUrl)
-                                    <iframe class="movix_link_iframe" src="{{ $iframeUrl }}" width="100%" height="700" style="min-height: 700px;"></iframe>
-                                @endif
-                        @else
-                            @if ($patient->fl_upper_arch && $patient->fl_lower_arch )
-                                <div class="container-fluid mx-0 my-3" id="hide-on-paste">
-                                    <div class="row mb-3">
-                                        <div class="col-xl-12 d-none">
-                                            <div class="progress mb-3" id="progress-wrapper" style="height: 30px;">
-                                                <div id="loading-bar" class="progress-bar bg-success progress-bar-striped"
-                                                    role="progressbar" style="width: 2%" aria-valuenow="2" aria-valuemin="0"
-                                                    aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-12">
-                                            <div class="btn-group float-end view-btns" role="group"
-                                                aria-label="Basic radio toggle button group">
-                                                <input data-cameraz="10" data-camerax="0" data-visible="1" type="radio"
-                                                    class="btn-check model-control" name="btnradio" id="labial"
-                                                    autocomplete="off">
-                                                <label class="btn btn-outline-primary btn-square" for="labial">Front</label>
-                                                <input data-camerax="-10" data-visible="1" type="radio"
-                                                    class="btn-check model-control" name="btnradio" id="right_buccal"
-                                                    autocomplete="off">
-                                                <label class="btn btn-outline-primary btn-square" for="right_buccal">Right
-                                                    Buccal</label>
-                                                <input data-camerax="10" data-visible="1" type="radio"
-                                                    class="btn-check model-control" name="btnradio" id="left_buccal"
-                                                    autocomplete="off">
-                                                <label class="btn btn-outline-primary btn-square" for="left_buccal">Left
-                                                    Buccal</label>
-                                                <input data-camerax="-10" type="radio" class="btn-check model-control"
-                                                    name="btnradio" id="maxillary" autocomplete="off">
-                                                <label class="btn btn-outline-primary btn-square btn-square" for="maxillary">Upper
-                                                    Occlusal</label>
-                                                <input data-camerax="10" type="radio" class="btn-check model-control"
-                                                    name="btnradio" id="mandibular" autocomplete="off">
-                                                <label class="btn btn-outline-primary btn-square" for="mandibular">Lower
-                                                    Occlusal</label>
-                                            </div>
-                                            <div class="p-3">
-                                                <h6 class="mb-3 mt-0">Rotate Vertically</h6>
-                                                <input type="range" class="form-range" id="slider">
-                                            </div>
-
-                                            @if (!@$patient->iframe_link)
-                                                <div id="canvas" class="canvas-bg"></div>
-                                            @endif
-
-                                            <div class="btn-group float-end btns-steps" role="group"
-                                                aria-label="Basic radio toggle button group d-block"
-                                                style="display:none !important;">
-                                                <?php
-                                                $step = 1;
-                                                ?>
-                                                <input data-maxillary="<?php echo $upper_arch_stl; ?>" data-mandibular="<?php echo $lower_arch_stl; ?>"
-                                                    data-cameraz="10" data-camerax="0" data-visible="1" type="radio"
-                                                    class="btn-check step-control" name="step-trigger"
-                                                    id="step-{{ $step }}" autocomplete="off">
-                                                <label class="btn btn-outline-primary btn-square step-trigger"
-                                                    for="step-<?php echo $step; ?>">
-                                                    <?php echo $step; ?>
-                                                </label>
-                                            </div>
-                                            <div class="mb-3 mt-3 d-none">
-                                                <input value="0" type="range" class="form-range" min="0"
-                                                    max="<?php echo 1 - 1; ?>" id="customRange2" step="1">
-                                            </div>
-                                            <div class="btn-group d-none" aria-label="Basic example" role="group">
-                                                <button id="play-button" type="button" class="btn btn-outline-primary btn-square">
-                                                    <i class="fas fa-play"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                        @endif
+                <!-- $patient->is_treatment_submitted == 1 -->
+                @if (@$patient->iframe_link)
+                    @if(@$patient->link_type == 'edit')
+                    <?php $simseToken = getSimseToken($patient->first_name,$patient->last_name,$patient->dob,$patient->user_id);?>
+                        <iframe onload="authenticate('{{$simseToken}}', '{{ $patient->iframe_link }}')" id="nemoPortal" width="100%" height="700" style="min-height: 700px";     src="{{ $patient->iframe_link }}"></iframe>
+                    @else
+                        <iframe src="{{ $patient->iframe_link }}" width="100%" height="700" style="min-height: 700px;"></iframe>
+                    @endif
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            <a href="{{ route('iframe', request()->phase) }}" class="btn btn-primary"
+                                target="_blank">View on full screen</a>
+                        </div>
                     </div>
+                @else
+                    <div class="row">
+                        <div class="{{ $hasOptionalScans ? 'col-md-6' : 'col-md-12' }}">
+                            <p><strong>Original bite registration STL file</strong></p>
+                            @if($patient->primary_movix_link != null)
 
-                    @if ($hasOptionalScans)
-                        <div class="col-md-6">
-                            <h6 class="mb-2">Optional Scan</h6>
-                            @if ($patient->optional_scan_movix_link != null)
-                                @php
-                                    $optionalLink = $patient->optional_scan_movix_link;
-                                    $optionalLinkExpiresAt = $patient->optional_scan_movix_link_expires_at;
-                                    $optionalLinkValid = false;
+                                    @php
+                                        $primaryLink = $patient->primary_movix_link;
+                                        $primaryLinkExpiresAt = $patient->primary_movix_link_expires_at;
+                                        $primaryLinkValid = false;
 
-                                    if ($optionalLink) {
-                                        if (empty($optionalLinkExpiresAt)) {
-                                            $optionalLinkValid = true;
-                                        } else {
-                                            try {
-                                                $optionalLinkValid = \Carbon\Carbon::parse($optionalLinkExpiresAt)->isFuture();
-                                            } catch (\Exception $e) {
-                                                $optionalLinkValid = false;
+                                        if ($primaryLinkValid) {
+                                            if (empty($primaryLinkExpiresAt)) {
+                                                $primaryLinkValid = true;
+                                            } else {
+                                                try {
+                                                    $primaryLinkValid = \Carbon\Carbon::parse($primaryLinkExpiresAt)->isFuture();
+                                                } catch (\Exception $e) {
+                                                    $primaryLinkValid = false;
+                                                }
                                             }
                                         }
-                                    }
 
-                                    $iframeUrl = $optionalLink;
+                                        $iframeUrl = $primaryLink;
 
-                                    if (!$optionalLinkValid) {
-                                        $createMovixLinkUrl = createMovixLinkUrl(
-                                            $patient->id,
-                                            $patient->optional_scan_case_id,
-                                            'optional'
-                                        );
+                                        if (!$primaryLinkValid) {
+                                            $createMovixLinkUrl = createMovixLinkUrl(
+                                                $patient->id,
+                                                $patient->primary_case_id,
+                                                'primary'
+                                            );
 
-                                        $iframeUrl = $createMovixLinkUrl['url'] ?? null;
-                                    }
-                                @endphp
+                                            $iframeUrl = $createMovixLinkUrl['url'] ?? null;
+                                        }
+                                    @endphp
 
-                                @if ($iframeUrl)
-                                    <iframe  class="movix_link_iframe" src="{{ $iframeUrl }}" width="100%" height="700" style="min-height: 700px;"></iframe>
-                                @endif
-
+                                    @if ($iframeUrl)
+                                        <iframe class="movix_link_iframe" src="{{ $iframeUrl }}" width="100%" height="700" style="min-height: 700px;"></iframe>
+                                    @endif
                             @else
-
-                                    <div class="container-fluid mx-0 my-3" id="hide-on-paste-optional">
+                                @if ($patient->fl_upper_arch && $patient->fl_lower_arch )
+                                    <div class="container-fluid mx-0 my-3" id="hide-on-paste">
                                         <div class="row mb-3">
                                             <div class="col-xl-12 d-none">
-                                                <div class="progress mb-3" id="progress-wrapper-optional" style="height: 30px;">
-                                                    <div id="loading-bar-optional" class="progress-bar bg-success progress-bar-striped"
+                                                <div class="progress mb-3" id="progress-wrapper" style="height: 30px;">
+                                                    <div id="loading-bar" class="progress-bar bg-success progress-bar-striped"
                                                         role="progressbar" style="width: 2%" aria-valuenow="2" aria-valuemin="0"
                                                         aria-valuemax="100"></div>
                                                 </div>
@@ -190,70 +89,185 @@
                                                 <div class="btn-group float-end view-btns" role="group"
                                                     aria-label="Basic radio toggle button group">
                                                     <input data-cameraz="10" data-camerax="0" data-visible="1" type="radio"
-                                                        class="btn-check model-control" name="btnradio_optional" id="labial_optional"
+                                                        class="btn-check model-control" name="btnradio" id="labial"
                                                         autocomplete="off">
-                                                    <label class="btn btn-outline-primary btn-square" for="labial_optional">Front</label>
+                                                    <label class="btn btn-outline-primary btn-square" for="labial">Front</label>
                                                     <input data-camerax="-10" data-visible="1" type="radio"
-                                                        class="btn-check model-control" name="btnradio_optional" id="right_buccal_optional"
+                                                        class="btn-check model-control" name="btnradio" id="right_buccal"
                                                         autocomplete="off">
-                                                    <label class="btn btn-outline-primary btn-square" for="right_buccal_optional">Right
+                                                    <label class="btn btn-outline-primary btn-square" for="right_buccal">Right
                                                         Buccal</label>
                                                     <input data-camerax="10" data-visible="1" type="radio"
-                                                        class="btn-check model-control" name="btnradio_optional" id="left_buccal_optional"
+                                                        class="btn-check model-control" name="btnradio" id="left_buccal"
                                                         autocomplete="off">
-                                                    <label class="btn btn-outline-primary btn-square" for="left_buccal_optional">Left
+                                                    <label class="btn btn-outline-primary btn-square" for="left_buccal">Left
                                                         Buccal</label>
                                                     <input data-camerax="-10" type="radio" class="btn-check model-control"
-                                                        name="btnradio_optional" id="maxillary_optional" autocomplete="off">
-                                                    <label class="btn btn-outline-primary btn-square btn-square" for="maxillary_optional">Upper
+                                                        name="btnradio" id="maxillary" autocomplete="off">
+                                                    <label class="btn btn-outline-primary btn-square btn-square" for="maxillary">Upper
                                                         Occlusal</label>
                                                     <input data-camerax="10" type="radio" class="btn-check model-control"
-                                                        name="btnradio_optional" id="mandibular_optional" autocomplete="off">
-                                                    <label class="btn btn-outline-primary btn-square" for="mandibular_optional">Lower
+                                                        name="btnradio" id="mandibular" autocomplete="off">
+                                                    <label class="btn btn-outline-primary btn-square" for="mandibular">Lower
                                                         Occlusal</label>
                                                 </div>
                                                 <div class="p-3">
                                                     <h6 class="mb-3 mt-0">Rotate Vertically</h6>
-                                                    <input type="range" class="form-range" id="slider_optional">
+                                                    <input type="range" class="form-range" id="slider">
                                                 </div>
 
-
-                                                <div id="canvas_optional" class="canvas-bg"></div>
-
+                                                @if (!@$patient->iframe_link)
+                                                    <div id="canvas" class="canvas-bg"></div>
+                                                @endif
 
                                                 <div class="btn-group float-end btns-steps" role="group"
                                                     aria-label="Basic radio toggle button group d-block"
                                                     style="display:none !important;">
                                                     <?php
-                                                    $optional_step = 1;
+                                                    $step = 1;
                                                     ?>
-                                                    <input data-maxillary="<?php echo $optional_upper_arch_stl; ?>" data-mandibular="<?php echo $optional_lower_arch_stl; ?>"
+                                                    <input data-maxillary="<?php echo $upper_arch_stl; ?>" data-mandibular="<?php echo $lower_arch_stl; ?>"
                                                         data-cameraz="10" data-camerax="0" data-visible="1" type="radio"
-                                                        class="btn-check step-control" name="step-trigger-optional"
-                                                        id="step-optional-{{ $optional_step }}" autocomplete="off">
+                                                        class="btn-check step-control" name="step-trigger"
+                                                        id="step-{{ $step }}" autocomplete="off">
                                                     <label class="btn btn-outline-primary btn-square step-trigger"
-                                                        for="step-optional-<?php echo $optional_step; ?>">
-                                                        <?php echo $optional_step; ?>
+                                                        for="step-<?php echo $step; ?>">
+                                                        <?php echo $step; ?>
                                                     </label>
                                                 </div>
                                                 <div class="mb-3 mt-3 d-none">
                                                     <input value="0" type="range" class="form-range" min="0"
-                                                        max="<?php echo 1 - 1; ?>" id="customRange2_optional" step="1">
+                                                        max="<?php echo 1 - 1; ?>" id="customRange2" step="1">
                                                 </div>
                                                 <div class="btn-group d-none" aria-label="Basic example" role="group">
-                                                    <button id="play-button-optional" type="button" class="btn btn-outline-primary btn-square">
+                                                    <button id="play-button" type="button" class="btn btn-outline-primary btn-square">
                                                         <i class="fas fa-play"></i>
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
+                                @endif
                             @endif
                         </div>
-                    @endif
-                </div>
 
+                        @if ($hasOptionalScans)
+                            <div class="col-md-6">
+                                <p><strong>Mandibular Repositioning STL Files</strong></p>
+                                @if ($patient->optional_scan_movix_link != null)
+                                    @php
+                                        $optionalLink = $patient->optional_scan_movix_link;
+                                        $optionalLinkExpiresAt = $patient->optional_scan_movix_link_expires_at;
+                                        $optionalLinkValid = false;
+
+                                        if ($optionalLink) {
+                                            if (empty($optionalLinkExpiresAt)) {
+                                                $optionalLinkValid = true;
+                                            } else {
+                                                try {
+                                                    $optionalLinkValid = \Carbon\Carbon::parse($optionalLinkExpiresAt)->isFuture();
+                                                } catch (\Exception $e) {
+                                                    $optionalLinkValid = false;
+                                                }
+                                            }
+                                        }
+
+                                        $iframeUrl = $optionalLink;
+
+                                        if (!$optionalLinkValid) {
+                                            $createMovixLinkUrl = createMovixLinkUrl(
+                                                $patient->id,
+                                                $patient->optional_scan_case_id,
+                                                'optional'
+                                            );
+
+                                            $iframeUrl = $createMovixLinkUrl['url'] ?? null;
+                                        }
+                                    @endphp
+
+                                    @if ($iframeUrl)
+                                        <iframe  class="movix_link_iframe" src="{{ $iframeUrl }}" width="100%" height="700" style="min-height: 700px;"></iframe>
+                                    @endif
+
+                                @else
+
+                                        <div class="container-fluid mx-0 my-3" id="hide-on-paste-optional">
+                                            <div class="row mb-3">
+                                                <div class="col-xl-12 d-none">
+                                                    <div class="progress mb-3" id="progress-wrapper-optional" style="height: 30px;">
+                                                        <div id="loading-bar-optional" class="progress-bar bg-success progress-bar-striped"
+                                                            role="progressbar" style="width: 2%" aria-valuenow="2" aria-valuemin="0"
+                                                            aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-12">
+                                                    <div class="btn-group float-end view-btns" role="group"
+                                                        aria-label="Basic radio toggle button group">
+                                                        <input data-cameraz="10" data-camerax="0" data-visible="1" type="radio"
+                                                            class="btn-check model-control" name="btnradio_optional" id="labial_optional"
+                                                            autocomplete="off">
+                                                        <label class="btn btn-outline-primary btn-square" for="labial_optional">Front</label>
+                                                        <input data-camerax="-10" data-visible="1" type="radio"
+                                                            class="btn-check model-control" name="btnradio_optional" id="right_buccal_optional"
+                                                            autocomplete="off">
+                                                        <label class="btn btn-outline-primary btn-square" for="right_buccal_optional">Right
+                                                            Buccal</label>
+                                                        <input data-camerax="10" data-visible="1" type="radio"
+                                                            class="btn-check model-control" name="btnradio_optional" id="left_buccal_optional"
+                                                            autocomplete="off">
+                                                        <label class="btn btn-outline-primary btn-square" for="left_buccal_optional">Left
+                                                            Buccal</label>
+                                                        <input data-camerax="-10" type="radio" class="btn-check model-control"
+                                                            name="btnradio_optional" id="maxillary_optional" autocomplete="off">
+                                                        <label class="btn btn-outline-primary btn-square btn-square" for="maxillary_optional">Upper
+                                                            Occlusal</label>
+                                                        <input data-camerax="10" type="radio" class="btn-check model-control"
+                                                            name="btnradio_optional" id="mandibular_optional" autocomplete="off">
+                                                        <label class="btn btn-outline-primary btn-square" for="mandibular_optional">Lower
+                                                            Occlusal</label>
+                                                    </div>
+                                                    <div class="p-3">
+                                                        <h6 class="mb-3 mt-0">Rotate Vertically</h6>
+                                                        <input type="range" class="form-range" id="slider_optional">
+                                                    </div>
+
+
+                                                    <div id="canvas_optional" class="canvas-bg"></div>
+
+
+                                                    <div class="btn-group float-end btns-steps" role="group"
+                                                        aria-label="Basic radio toggle button group d-block"
+                                                        style="display:none !important;">
+                                                        <?php
+                                                        $optional_step = 1;
+                                                        ?>
+                                                        <input data-maxillary="<?php echo $optional_upper_arch_stl; ?>" data-mandibular="<?php echo $optional_lower_arch_stl; ?>"
+                                                            data-cameraz="10" data-camerax="0" data-visible="1" type="radio"
+                                                            class="btn-check step-control" name="step-trigger-optional"
+                                                            id="step-optional-{{ $optional_step }}" autocomplete="off">
+                                                        <label class="btn btn-outline-primary btn-square step-trigger"
+                                                            for="step-optional-<?php echo $optional_step; ?>">
+                                                            <?php echo $optional_step; ?>
+                                                        </label>
+                                                    </div>
+                                                    <div class="mb-3 mt-3 d-none">
+                                                        <input value="0" type="range" class="form-range" min="0"
+                                                            max="<?php echo 1 - 1; ?>" id="customRange2_optional" step="1">
+                                                    </div>
+                                                    <div class="btn-group d-none" aria-label="Basic example" role="group">
+                                                        <button id="play-button-optional" type="button" class="btn btn-outline-primary btn-square">
+                                                            <i class="fas fa-play"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                @endif
+                            </div>
+                        @endif
+                    </div>
+                @endif
             </div>
         </div>
     </div>
