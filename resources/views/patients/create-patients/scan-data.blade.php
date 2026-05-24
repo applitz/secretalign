@@ -76,8 +76,11 @@
         <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <div class="row mb-3">
-
+        <div class="row mb-3">
+            <span class="fw-medium font-sans-serif text-900" >Original bite registration STL File:</span>
+        </div>
         <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-6 col-12 _dropzone_template" template-key="1">
+
             <input class="d-none" name="file1" id="key1" file="{{ @$patient->fl_upper_arch }}" data-field="1" type="file">
             <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="upper-jaw-box" key="1" style="background-image: url('{{asset('public/assets/vector/upper-jaw.webp')}}')">
                 <div class="_dropzone_added _dropzone_added_hidden d-flex flex-column align-items-center justify-content-center">
@@ -140,6 +143,18 @@
                 <div class="mb-3 " id="stl-lower-arch-preview">
 
                 </div>
+        </div>
+
+        <div class="row mb-3">
+            <span class="fw-medium font-sans-serif text-900">
+                Quick Upload Notes:
+            </span>
+            <span class="">
+                &bull; Please upload a Bite Registration STL file.
+            </span>
+            <span class="">
+                &bull; Bite registration is required when scanning. However, if the bite registration STL file data is included in the Upper/Lower STL files, then no separate bite registration file needs to be uploaded.
+            </span>
         </div>
     </div>
 
@@ -247,7 +262,7 @@
     <!-- Toggle Button -->
     <div class="mb-3">
         <button type="button" class="btn btn-outline-primary" id="toggleAdditionalScans">
-            <i class="fas fa-plus"></i> Add Additional Scans
+            Add Mandibular Repositioning STL Files
         </button>
     </div>
 
@@ -255,7 +270,7 @@
 
     <div id="additional-scans-optional" class="d-none">
         <div class="mb-3">
-            Add additional Scans (Optional)
+            Mandibular Repositioning STL Files (Optional)
         </div>
 
         <div class="row mb-3">
@@ -321,6 +336,18 @@
                 <div class="mb-3 " id="optional-stl-lower-arch-preview">
 
                 </div>
+            </div>
+
+            <div class="row mb-3">
+                <span class="fw-medium font-sans-serif text-900">
+                    Quick Upload Notes:
+                </span>
+                <span class="">
+                    &bull; Please upload a Bite Registration STL file.
+                </span>
+                <span class="">
+                    &bull; Bite registration is required when scanning. However, if the bite registration STL file data is included in the Upper/Lower STL files, then no separate bite registration file needs to be uploaded.
+                </span>
             </div>
         </div>
 

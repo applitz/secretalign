@@ -4604,9 +4604,9 @@ async function previewUpperStlFile(file_upper)
             $("#additional-scans-optional").toggleClass("d-none");
             // Button text change
             if ($("#additional-scans-optional").hasClass("d-none")) {
-                $(this).text("+ Add Additional Scans");
+                $(this).text("Add Mandibular Repositioning STL Files");
             } else {
-                $(this).text("- Hide Additional Scans");
+                $(this).text("Hide Mandibular Repositioning STL Files");
             }
         });
 
