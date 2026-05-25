@@ -304,6 +304,9 @@ var Patients = function() {
             "processing": true,
             "serverSide": true,
             "searching": false,
+             "scrollX": true,
+            "responsive": false,
+            "autoWidth": false,
             "ajax": {
                 url: baseUrl + "/superadmin/patients",
                 type: 'GET',
@@ -335,8 +338,6 @@ var Patients = function() {
                 { 'title': 'Action', "data": "action", orderable: false, searchable: false },
             ],
             "order": [[1, 'DESC']],
-            "responsive": true,
-            "autoWidth": false,
             "lengthMenu": [10, 20, 50, 100],
         });
 

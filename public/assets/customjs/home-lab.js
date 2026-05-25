@@ -8,6 +8,9 @@ var Home = function() {
             "processing": true,
             "searching": false,
             "serverSide": true,
+            "scrollX": true,
+            "responsive": false,
+            "autoWidth": false,
             "ajax": {
                 url: baseUrl + "/home",
                 type: 'GET',
@@ -32,8 +35,6 @@ var Home = function() {
                 { 'title': '', "data": "case_overview", orderable: false, searchable: false },
             ],
             "order": [[1, 'DESC']],
-            "responsive": true,
-            "autoWidth": false,
             "lengthMenu": [10, 20, 50, 100],
         });
 

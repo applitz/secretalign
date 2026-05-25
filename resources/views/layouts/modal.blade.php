@@ -422,7 +422,7 @@
             </div>
 
             <div class="modal-body">
-                <img src="{{ asset('public/assets/secret-blocks.png') }}" alt="Precision Cuts Placement" class="img-fluid shadow-sm">
+                <img src="{{ asset('public/assets/secret-blocks.webp') }}" alt="Precision Cuts Placement" class="img-fluid shadow-sm">
             </div>
 
             <div class="modal-footer">

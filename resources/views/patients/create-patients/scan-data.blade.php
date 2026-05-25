@@ -150,10 +150,10 @@
                 Quick Upload Notes:
             </span>
             <span class="">
-                &bull; Please upload a Bite Registration STL file.
+                &bull;  Only STL files are accepted.
             </span>
             <span class="">
-                &bull; Bite registration is required when scanning. However, if the bite registration STL file data is included in the Upper/Lower STL files, then no separate bite registration file needs to be uploaded.
+                &bull; No separate bite registration file needed! Just ensure it was completed during the scan; the data is already embedded in your Upper and Lower STL files.
             </span>
         </div>
     </div>
@@ -343,7 +343,7 @@
                     Quick Upload Notes:
                 </span>
                 <span class="">
-                    &bull; STL file with bite registration for mandibular reposition is required.
+                    &bull; STL file with bite registration for mandibular repositioning is required.
                 </span>
             </div>
         </div>

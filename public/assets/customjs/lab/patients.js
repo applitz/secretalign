@@ -8,6 +8,9 @@ var Patients = function() {
             "processing": true,
             "serverSide": true,
             "searching": false,
+             "scrollX": true,
+            "responsive": false,
+            "autoWidth": false,
             "ajax": {
                 url: baseUrl + "/lab/patients",
                 type: 'GET',
@@ -36,8 +39,6 @@ var Patients = function() {
                 { 'title': '', "data": "case_overview", orderable: false, searchable: false },
             ],
             "order": [[1, 'DESC']],
-            "responsive": true,
-            "autoWidth": false,
             "lengthMenu": [10, 20, 50, 100],
         });
 

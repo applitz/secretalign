@@ -4,6 +4,9 @@ var Patients = function() {
            "mode": "range"
        });
         $("#patients-list").dataTable({
+            "scrollX": true,
+            "responsive": false,
+            "autoWidth": false,
             "pageLength": 20,
             "processing": true,
             "serverSide": true,
@@ -28,18 +31,15 @@ var Patients = function() {
                 { 'title': 'Package', "data": "package", orderable: false, searchable: false },
                 { 'title': 'Status', "data": "status", orderable: false, searchable: false },
                 { 'title': 'Case Holder', "data": "case_holder", orderable: false, searchable: false },
-                { 'title': 'Due Date', "data": "due_date", orderable: false, searchable: false },
                 { 'title': 'Treatment Type', "data": "treatment_type", orderable: false, searchable: false },
                 { 'title': 'Setup Type', "data": "setup_type", orderable: false, searchable: false },
-                { 'title': 'Setup Approval Date', "data": "setup_approval_date", orderable: false, searchable: false },
                 { 'title': '', "data": "case_overview", orderable: false, searchable: false },
                 { 'title': 'Continue Treatment', "data": "continue_treatment", orderable: false, searchable: false },
                 { 'title': 'Request New Plan', "data": "request_new_plan", orderable: false, searchable: false },
-
+                { 'title': 'Due Date', "data": "due_date", orderable: false, searchable: false },
+                { 'title': 'Setup Approval Date', "data": "setup_approval_date", orderable: false, searchable: false },
             ],
             "order": [[1, 'DESC']],
-            "responsive": true,
-            "autoWidth": false,
             "lengthMenu": [10, 20, 50, 100],
         });
 

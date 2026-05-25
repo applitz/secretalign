@@ -3,6 +3,9 @@ var Subaccount = function() {
         $("#subaccount-list").dataTable({
             "processing": true,
             "serverSide": true,
+             "scrollX": true,
+            "responsive": false,
+            "autoWidth": false,
             "ajax": {
                 url: baseUrl + "/subaccounts",
                 type: 'GET',
@@ -17,8 +20,6 @@ var Subaccount = function() {
                 { 'title': 'Action', "data": "actions", orderable: false, searchable: false},
             ],
             "order": [[1, 'asc']],
-            "responsive": true,
-            "autoWidth": false,
             "lengthMenu": [10, 25, 50, 100],
         });
     }

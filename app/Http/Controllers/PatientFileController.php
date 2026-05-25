@@ -353,12 +353,12 @@ class PatientFileController extends Controller
             $finalExtension = ($isImage && $key != 4 && $key != 12)
                 ? 'webp'
                 : $extension;
-
+            $fName = rand(1000, 9999) . time();
             // Generate filename
-            $filename = $file_parts['filename'] . '.' . $finalExtension;
+            $filename = $fName . '.' . $finalExtension;
 
             // if ($isImage && $key != 4 && $key != 12) {
-            //     $filename = $file_parts['filename'] . '.webp';
+            //     $filename = $fName . '.webp';
             // }
 
             // Check if file with same name already exists
@@ -370,7 +370,7 @@ class PatientFileController extends Controller
                 while (
                     File::exists(
                         $directory . '/' .
-                        $file_parts['filename'] .
+                        $fName .
                         '(' . $count . ').' .
                         $finalExtension
                     )
@@ -378,7 +378,7 @@ class PatientFileController extends Controller
                     $count++;
                 }
 
-                $filename = $file_parts['filename'] .
+                $filename = $fName .
                     '(' . $count . ').' .
                     $finalExtension;
             }

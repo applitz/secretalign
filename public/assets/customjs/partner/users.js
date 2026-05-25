@@ -6,6 +6,9 @@ var Users = function() {
             "processing": true,
             "serverSide": true,
             "searching": false,
+             "scrollX": true,
+            "responsive": false,
+            "autoWidth": false,
             "ajax": {
                 url: baseUrl + "/partner/users",
                 type: 'GET',
@@ -21,8 +24,6 @@ var Users = function() {
                 { 'title': 'Tier', "data": "tier", orderable: false, searchable: true },
             ],
             "order": [[1, 'DESC']],
-            "responsive": true,
-            "autoWidth": false,
             "lengthMenu": [10, 20, 50, 100],
         });
 

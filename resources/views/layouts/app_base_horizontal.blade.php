@@ -71,9 +71,13 @@
                 overflow-x: hidden;
             }
 
-            div.dataTables_wrapper div.dataTables_scrollBody {
-                overflow-x: hidden !important;
+            .table-responsive {
+                overflow-x: auto !important;
             }
+
+            /* div.dataTables_wrapper div.dataTables_scrollBody {
+                overflow-x: hidden !important;
+            } */
             body[data-layout=detached] #layout-wrapper::before {
                 height: 165px;
                 top: 70px;

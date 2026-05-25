@@ -105,7 +105,7 @@
 
                     <div class="table-rep-plugin">
                         <div class="table-responsive mb-0" data-pattern="priority-columns">
-                            <table id="patients-list" class="table table-striped">
+                            <table id="patients-list" class="table table-striped w-100">
 
                             </table>
                         </div>
