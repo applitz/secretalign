@@ -4764,11 +4764,11 @@
 
 
 </script>
-<script src="{{  asset('public/assets/customjs/clinicalPreferences.js') }}"></script>
-<script src="{{ asset('public/assets/customjs/dm-integration.js') }}"></script>
-<script src="{{ asset('public/assets/customjs/add-patient.js') }}"></script>
+<script src="{{  asset('public/assets/customjs/clinicalPreferences.js') }}?v={{ time() }}"></script>
+<script src="{{ asset('public/assets/customjs/dm-integration.js') }}?v={{ time() }}"></script>
+<script src="{{ asset('public/assets/customjs/add-patient.js') }}?v={{ time() }}"></script>
 <script src="{{ asset('public/assets/customjs/shining3d.js') }}?v={{ time() }}"></script>
-<script src="{{  asset('public/assets/customjs/clinicalPreferencesSection2.js') }}"></script>
+<script src="{{  asset('public/assets/customjs/clinicalPreferencesSection2.js') }}?v={{ time() }}"></script>
 <script src="{{  asset('public/assets/customjs/alignersToCover.js') }}?v={{ time() }}"></script>
 
 <script>
