@@ -294,20 +294,36 @@ function repositionOverlays(toothNumber, side) {
         var activeOrder = (side === 'upper') ? orderUpper : orderLower;
         return activeOrder[a.type] - activeOrder[b.type];
     });
-
-    if (side === 'upper') {
+    if(toothNumber >= 1 && toothNumber <= 16){
+        if (side === 'upper') {
         var y = -25;
-        overlays.forEach(function(ov) {
-            ov.el.css({'top': y + 'px', 'bottom': ''});
-            y -= ov.height + 5;
-        });
+            overlays.forEach(function(ov) {
+                ov.el.css({'top': y + 'px', 'bottom': ''});
+                y -= ov.height + 5;
+            });
+        } else {
+            var y = -25;
+            overlays.forEach(function(ov) {
+                ov.el.css({'bottom': y + 'px', 'top': ''});
+                y -= ov.height + 5;
+            });
+        }
     } else {
-        var y = -25;
-        overlays.forEach(function(ov) {
-            ov.el.css({'bottom': y + 'px', 'top': ''});
-            y -= ov.height + 5;
-        });
+        if (side === 'upper') {
+            var y = -25;
+            overlays.forEach(function(ov) {
+                ov.el.css({'bottom': y + 'px', 'top': ''});
+                y -= ov.height + 5;
+            });
+        } else {
+            var y = -25;
+            overlays.forEach(function(ov) {
+                ov.el.css({'top': y + 'px', 'bottom': ''});
+                y -= ov.height + 5;
+            });
+        }
     }
+
 
     updateArcPadding();
 }
@@ -394,11 +410,20 @@ function getPrecisionCutImageSrc(toothNumber, side) {
     if (!toothSide) {
         return baseUrl + '/public/assets/tooth/png/precisioncut.webp';
     }
-    if(side === 'upper'){
-        return baseUrl + '/public/assets/tooth/png/precisioncut-U' + toothSide + '.webp';
+    if(toothNumber >= 1 && toothNumber <= 16){
+        if(side === 'upper'){
+            return baseUrl + '/public/assets/tooth/png/precisioncut-U' + toothSide + '.webp';
+        } else {
+            return baseUrl + '/public/assets/tooth/png/precisioncut-L' + toothSide + '.webp';
+        }
     } else {
-        return baseUrl + '/public/assets/tooth/png/precisioncut-L' + toothSide + '.webp';
+        if(side === 'upper'){
+            return baseUrl + '/public/assets/tooth/png/precisioncut-L' + toothSide + '.webp';
+        } else {
+            return baseUrl + '/public/assets/tooth/png/precisioncut-U' + toothSide + '.webp';
+        }
     }
+
 }
 
 function precisionCut(toothNumber, side){
@@ -427,11 +452,18 @@ function getIHookImageSrc(toothNumber, side) {
     if (!toothSide) {
         return baseUrl + '/public/assets/tooth/png/I-hook.webp';
     }
-
-    if(side === 'upper'){
-        return baseUrl + '/public/assets/tooth/png/I-hook-U' + toothSide + '.webp';
+    if(toothNumber >= 1 && toothNumber <= 16){
+        if(side === 'upper'){
+            return baseUrl + '/public/assets/tooth/png/I-hook-U' + toothSide + '.webp';
+        } else {
+            return baseUrl + '/public/assets/tooth/png/I-hook-L' + toothSide + '.webp';
+        }
     } else {
-        return baseUrl + '/public/assets/tooth/png/I-hook-L' + toothSide + '.webp';
+        if(side === 'upper'){
+            return baseUrl + '/public/assets/tooth/png/I-hook-L' + toothSide + '.webp';
+        } else {
+            return baseUrl + '/public/assets/tooth/png/I-hook-U' + toothSide + '.webp';
+        }
     }
 }
 
@@ -479,7 +511,11 @@ function powerArmAttachment(toothNumber, side){
     if (existing.length > 0) {
         existing.remove();
     } else {
-        var imgSrc = side === 'upper' ? baseUrl + '/public/assets/tooth/png/Power-Arm-Attachment.webp' : baseUrl + '/public/assets/tooth/png/Power-Arm-Attachment-lower.webp';
+        if(toothNumber >= 1 && toothNumber <= 16){
+            var imgSrc = side === 'upper' ? baseUrl + '/public/assets/tooth/png/Power-Arm-Attachment.webp' : baseUrl + '/public/assets/tooth/png/Power-Arm-Attachment-lower.webp';
+        } else {
+            var imgSrc = side === 'upper' ? baseUrl + '/public/assets/tooth/png/Power-Arm-Attachment-lower.webp' : baseUrl + '/public/assets/tooth/png/Power-Arm-Attachment.webp';
+        }
         var img = $('<img src="' + imgSrc + '" class="power-arm-attachment-overlay" data-side="' + side + '" style="position: absolute; width: 15px; height: 25px; left: 50%; transform: translateX(-50%); z-index: 11;">');
         wrapper.append(img);
     }
