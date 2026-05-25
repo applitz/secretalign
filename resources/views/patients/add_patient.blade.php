@@ -4124,12 +4124,81 @@
                 var fl_upper_arch = $("#fl_upper_arch").val();
                 var fl_lower_arch = $("#fl_lower_arch").val();
 
-                // Better file validation
+                // Check if files are selected
                 if (!$("#key1").prop('files').length || !$("#key2").prop('files').length) {
                     toastError("Upload scan data files.");
                     $("#submit-prescription").attr('fn', 0);
                     return false;
                 }
+
+                // Check if files are completely uploaded
+                var upperArchWidth = $("#upper-arch-progress-bar").css('width');
+                var lowerArchWidth = $("#lower-arch-progress-bar").css('width');
+
+                // Check if upload is in progress (loading state visible)
+                var upperLoading = !$("#upper-jaw-box").find('._dropzone_loading').hasClass('_dropzone_loading_hidden');
+                var lowerLoading = !$("#lower-jaw-box").find('._dropzone_loading').hasClass('_dropzone_loading_hidden');
+
+                // Extract percentage from progress bar
+                var upperPercent = 0;
+                var lowerPercent = 0;
+
+                if (upperArchWidth) {
+                    upperPercent = parseInt(upperArchWidth);
+                }
+                if (lowerArchWidth) {
+                    lowerPercent = parseInt(lowerArchWidth);
+                }
+
+                // Validate uploads are complete for required files
+                if (upperLoading || lowerLoading) {
+                    toastError("Required scan files are still uploading. Please wait for the upload to complete.");
+                    return false;
+                }
+
+                if (upperPercent < 100 || lowerPercent < 100) {
+                    toastError("Please ensure both required scan files are completely uploaded (100%).");
+                    return false;
+                }
+
+                // Check optional Mandibular Repositioning STL Files
+                var additionalScansVisible = !$("#additional-scans-optional").hasClass('d-none');
+
+                if (additionalScansVisible) {
+                    var hasOptionalKey18 = $("#key18").prop('files').length > 0;
+                    var hasOptionalKey19 = $("#key19").prop('files').length > 0;
+
+                    // If either optional file is selected, validate both are completely uploaded
+                    if (hasOptionalKey18 || hasOptionalKey19) {
+                        var optionalUpperArchWidth = $("#optional-upper-arch-progress-bar").css('width');
+                        var optionalLowerArchWidth = $("#optional-lower-arch-progress-bar").css('width');
+
+                        var optionalUpperLoading = !$("#posterior-bite-turbos-box").find('._dropzone_loading').hasClass('_dropzone_loading_hidden');
+                        var optionalLowerLoading = !$("#anterior-bite-turbos-box").find('._dropzone_loading').hasClass('_dropzone_loading_hidden');
+
+                        var optionalUpperPercent = 0;
+                        var optionalLowerPercent = 0;
+
+                        if (optionalUpperArchWidth) {
+                            optionalUpperPercent = parseInt(optionalUpperArchWidth);
+                        }
+                        if (optionalLowerArchWidth) {
+                            optionalLowerPercent = parseInt(optionalLowerArchWidth);
+                        }
+
+                        // Validate optional uploads are complete
+                        if (optionalUpperLoading || optionalLowerLoading) {
+                            toastError("Optional Mandibular Repositioning files are still uploading. Please wait for the upload to complete.");
+                            return false;
+                        }
+
+                        if (optionalUpperPercent < 100 || optionalLowerPercent < 100) {
+                            toastError("Please ensure both optional Mandibular Repositioning files are completely uploaded (100%).");
+                            return false;
+                        }
+                    }
+                }
+
                 // 👉 Show loader before request
                 $(".my-loader").show();
 
