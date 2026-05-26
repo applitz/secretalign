@@ -185,44 +185,47 @@ $lowerSize = [
             <div style="display:flex; flex-direction:row; justify-content:center; gap:5px; width:100%;margin-top: 4px;">
                 @foreach($lowerTeeth as $id => $tooth)
                     @php
-                        $buttonOuter = in_array($id, arr($patient->button_outer));
-                        $ihookOuter = in_array($id, arr($patient->ihook_outer));
-                        $precision_cut_outer = in_array($id, arr($patient->precision_cut_outer));
-                        $power_ridge_outer = in_array($id, arr($patient->power_ridge_outer));
-                        $power_arm_attachment_outer = in_array($id, arr($patient->power_arm_attachment_outer));
+                        $buttonInner = in_array($id, arr($patient->button_inner));
+                        $ihookInner = in_array($id, arr($patient->ihook_inner));
+                        $precisionCutInner = in_array($id, arr($patient->precision_cut_inner));
+                        $power_ridge_inner = in_array($id, arr($patient->power_ridge_inner));
+                        $power_arm_attachment_inner = in_array($id, arr($patient->power_arm_attachment_inner));
                     @endphp
-                    <div style="width:{{$lowerSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-end; gap:6px;">
-                        @if($buttonOuter)
-                            <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Outer">
+                    {{-- <div style="width:{{$lowerSize[$id]}}; height:18px; display:flex; align-items:center; justify-content:center;"> --}}
+                    <div style="width:{{$lowerSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-start; gap:6px;">
+
+                         @if($power_ridge_inner)
+                            <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" style="width: 16px; height: 10px;" alt="Power Ridge Inner">
                         @endif
 
-                        @if($ihookOuter)
+                        @if($power_arm_attachment_inner)
+                            <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.webp') }}" style="width: 12px; height: 20px;" alt="Power Arm Attachment Inner">
+                        @endif
+
+
+                        @if($buttonInner)
+                            <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Inner">
+                        @endif
+
+                        @if($ihookInner)
                             @if($id >=17 && $id <= 24)
-                                <img src="{{ asset('public/assets/tooth/png/I-hook-UR.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
+                                <img src="{{ asset('public/assets/tooth/png/I-hook-UR.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Inner">
                             @else
-                                <img src="{{ asset('public/assets/tooth/png/I-hook-UL.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
+                                <img src="{{ asset('public/assets/tooth/png/I-hook-UL.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Inner">
                             @endif
                         @endif
 
-                        @if($precision_cut_outer)
+                        @if($precisionCutInner)
                             @if($id >=16 && $id <= 24)
                                 <img src="{{ asset('public/assets/tooth/png/precisioncut-UR.webp') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
                             @else
                                 <img src="{{ asset('public/assets/tooth/png/precisioncut-UL.webp') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
                             @endif
                         @endif
-
-                        @if($power_arm_attachment_outer)
-                            <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.webp') }}" style="width: 12px; height: 20px;" alt="Power Arm Attachment Outer">
-                        @endif
-
-                        @if($power_ridge_outer)
-                            <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" style="width: 16px; height: 10px;" alt="Power Ridge Outer">
-                        @endif
-
                     </div>
                 @endforeach
             </div>
+
             <div style="display:flex; flex-direction:row; justify-content:center; gap:5px; width:100%;margin-top: 8px;">
                 @foreach($lowerTeeth as $id => $tooth)
                     @php
@@ -251,49 +254,50 @@ $lowerSize = [
                     </div>
                 @endforeach
             </div>
+
             <div style="display:flex; flex-direction:row; justify-content:center; gap:5px; width:100%;margin-top: 4px;">
                 @foreach($lowerTeeth as $id => $tooth)
                     @php
-                        $buttonInner = in_array($id, arr($patient->button_inner));
-                        $ihookInner = in_array($id, arr($patient->ihook_inner));
-                        $precisionCutInner = in_array($id, arr($patient->precision_cut_inner));
-                        $power_ridge_inner = in_array($id, arr($patient->power_ridge_inner));
-                        $power_arm_attachment_inner = in_array($id, arr($patient->power_arm_attachment_inner));
+                        $buttonOuter = in_array($id, arr($patient->button_outer));
+                        $ihookOuter = in_array($id, arr($patient->ihook_outer));
+                        $precision_cut_outer = in_array($id, arr($patient->precision_cut_outer));
+                        $power_ridge_outer = in_array($id, arr($patient->power_ridge_outer));
+                        $power_arm_attachment_outer = in_array($id, arr($patient->power_arm_attachment_outer));
                     @endphp
-                    {{-- <div style="width:{{$lowerSize[$id]}}; height:18px; display:flex; align-items:center; justify-content:center;"> --}}
-                    <div style="width:{{$lowerSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-start; gap:6px;">
-
-                         @if($power_ridge_inner)
-                            <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" style="width: 16px; height: 10px;" alt="Power Ridge Inner">
+                    <div style="width:{{$lowerSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-end; gap:6px;">
+                        @if($buttonOuter)
+                            <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Outer">
                         @endif
 
-                        @if($power_arm_attachment_inner)
-                            <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment-lower.webp') }}" style="width: 12px; height: 20px;" alt="Power Arm Attachment Inner">
-                        @endif
-
-
-                        @if($buttonInner)
-                            <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Inner">
-                        @endif
-
-                        @if($ihookInner)
+                        @if($ihookOuter)
                             @if($id >=17 && $id <= 24)
-                                <img src="{{ asset('public/assets/tooth/png/I-hook-LR.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Inner">
+                                <img src="{{ asset('public/assets/tooth/png/I-hook-LR.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
                             @else
-                                <img src="{{ asset('public/assets/tooth/png/I-hook-LL.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Inner">
+                                <img src="{{ asset('public/assets/tooth/png/I-hook-LL.webp') }}" style="width: 16px; height: 16px;" alt="I-Hook Outer">
                             @endif
                         @endif
 
-                        @if($precisionCutInner)
+                        @if($precision_cut_outer)
                             @if($id >=16 && $id <= 24)
                                 <img src="{{ asset('public/assets/tooth/png/precisioncut-LR.webp') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
                             @else
                                 <img src="{{ asset('public/assets/tooth/png/precisioncut-LL.webp') }}" style="width: 16px; height: 16px;" alt="precisioncut Inner">
                             @endif
                         @endif
+
+                        @if($power_arm_attachment_outer)
+                            <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment-lower.webp') }}" style="width: 12px; height: 20px;" alt="Power Arm Attachment Outer">
+                        @endif
+
+                        @if($power_ridge_outer)
+                            <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" style="width: 16px; height: 10px;" alt="Power Ridge Outer">
+                        @endif
+
                     </div>
                 @endforeach
             </div>
+
+
         </div>
     </div>
 
