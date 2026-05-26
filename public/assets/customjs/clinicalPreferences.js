@@ -371,13 +371,13 @@ function updateArcPadding() {
     var extUpperBottom = getMaxExtent('#classIIUpperArcNew', 'lower');
     upperEl.style.setProperty('padding-bottom', (extUpperBottom > 0 ? extUpperBottom + buffer : 0) + 'px', 'important');
 
-    // 'upper' side overlays on lower arc → expand padding-top (space toward center)
+    // 'upper' side overlays on lower arc → uses bottom positioning for teeth 17-32, so expand padding-bottom
     var extLowerTop = getMaxExtent('#classIILowerArc', 'upper');
-    lowerEl.style.setProperty('padding-top', (extLowerTop > 0 ? extLowerTop + buffer : 0) + 'px', 'important');
+    lowerEl.style.setProperty('padding-bottom', (extLowerTop > 0 ? extLowerTop + buffer : 35) + 'px', 'important');
 
-    // 'lower' side overlays on lower arc → expand padding-bottom so they stay inside
+    // 'lower' side overlays on lower arc → uses top positioning for teeth 17-32, so expand padding-top
     var extLowerBottom = getMaxExtent('#classIILowerArc', 'lower');
-    lowerEl.style.setProperty('padding-bottom', (extLowerBottom > 0 ? extLowerBottom + buffer : 35) + 'px', 'important');
+    lowerEl.style.setProperty('padding-top', (extLowerBottom > 0 ? extLowerBottom + buffer : 0) + 'px', 'important');
 }
 
 function buttonCutout(toothNumber, side){
