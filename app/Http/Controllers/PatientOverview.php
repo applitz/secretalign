@@ -386,6 +386,7 @@ class PatientOverview extends Controller
                         DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                             "is_sent_to_lab" => 1,
                             "is_treatment_submitted" => 0,
+                            "dr_request_modification" => false,
                             "case_holder" => "lab",
                             "previous_case_holder" => "staff",
                             "status" => "Waiting Lab Review",
@@ -1533,6 +1534,7 @@ class PatientOverview extends Controller
                 DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
                     'is_completed' => "0",
                     'send_for_approval' => $send_for_approval,
+                    'dr_request_modification' => false,
                     "case_holder" => "doctor",
                     "previous_case_holder" => "staff",
                     "status" => $status,
@@ -1735,6 +1737,7 @@ class PatientOverview extends Controller
                     DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                         "case_holder" => "staff",
                         "send_for_approval" => false,
+                        "dr_request_modification" => true,
                         "previous_case_holder" => "doctor",
                         "status" => "Doctor requests a Modification to Setup ". $treatment_plan->phase,
                         "is_editable" => 0,
@@ -1826,6 +1829,7 @@ class PatientOverview extends Controller
                 DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                     "is_rejected" => 1,
                     "case_holder" => "doctor",
+                    "dr_request_modification" => false,
                     "previous_case_holder" => "staff",
                     "status" => "Cancelled",
                 ]);
