@@ -432,7 +432,6 @@
                                             @php
                                                 $buttonOuter = in_array($id, arr($patient->button_outer));
                                                 $buttonInner = in_array($id, arr($patient->button_inner));
-
                                                 $ihookOuter = in_array($id, arr($patient->ihook_outer));
                                                 $ihookInner = in_array($id, arr($patient->ihook_inner));
 
@@ -558,10 +557,25 @@
                                         <span style="flex:1; height:1px; background: rgba(177, 175, 175, 0.70);"></span>
                                         <span style="font-weight:bold;">L</span>
                                     </div>
+
                                     <div class="media img-responsive input-group" style="display:flex; flex-wrap: wrap; justify-content:center; gap:10px; position:relative; padding:0.5rem 0 25px;" id="classIILowerArc">
                                         @foreach($lowerTeeth as $id => $tooth)
 
                                             @php
+                                                $buttonOuter = in_array($id, arr($patient->button_outer));
+                                                $buttonInner = in_array($id, arr($patient->button_inner));
+                                                $ihookOuter = in_array($id, arr($patient->ihook_outer));
+                                                $ihookInner = in_array($id, arr($patient->ihook_inner));
+
+                                                $precision_cut_outer = in_array($id, arr($patient->precision_cut_outer));
+                                                $precisionCutInner = in_array($id, arr($patient->precision_cut_inner));
+
+                                                $power_arm_attachment_outer = in_array($id, arr($patient->power_arm_attachment_outer));
+                                                $power_arm_attachment_inner = in_array($id, arr($patient->power_arm_attachment_inner));
+
+                                                $power_ridge_outer = in_array($id, arr($patient->power_ridge_outer));
+                                                $power_ridge_inner = in_array($id, arr($patient->power_ridge_inner));
+
                                                 $bite_turbos_lower = in_array($id, arr($patient->bite_turbos));
                                                 $bite_ramp_lower = in_array($id, arr($patient->bite_ramp));
                                                 $selected = isSelected($id, $allSelections);
@@ -569,57 +583,18 @@
                                                     ? "public/assets/tooth/png/selected/$tooth.webp"
                                                     : "public/assets/tooth/png/$tooth.webp";
                                             @endphp
+
                                             @if($selected)
                                                 <div class="tooth-wrapper" style="position: relative; display: inline-block;">
                                             @endif
+
                                             <img id="{{ $id }}" class="choose-tooth" data-id="{{ $id }}"  data-image="{{ $tooth }}.webp" src="{{ asset($img) }}" style="vertical-align: baseline;height: {{ $lowerSize[$id] }};width: {{ $lowerSize[$id] }}; margin-top: 10px; margin-bottom: 5px;">
+
                                             @if($selected)
                                                 @php
                                                     $lowerNumberOfelementsOuter = 1;
                                                     $lowerNumberOfelementsInner = 1;
                                                 @endphp
-
-                                                {{-- 3. Power Ridge (upper) --}}
-                                                @if($power_ridge_outer)
-                                                    <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" class="power-ridge-overlay" data-side="upper" style="position: absolute; width: 30px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 12; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
-                                                    @php $lowerNumberOfelementsOuter++; @endphp
-                                                @endif
-
-                                                {{-- 2. Power Arm Attachment (upper) --}}
-                                                @if($power_arm_attachment_outer)
-                                                    <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.webp') }}" class="power-arm-attachment-overlay" data-side="upper" style="position: absolute; width: 15px; height: 25px; left: 50%; transform: translateX(-50%); z-index: 11; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
-                                                    @php $lowerNumberOfelementsOuter++; @endphp
-                                                @endif
-
-                                                {{-- 1. Show only one of Button Cutout, Precision Cut, I-Hook (upper) --}}
-                                                @if($buttonOuter)
-                                                    <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" class="button-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
-                                                    @php $lowerNumberOfelementsOuter++; @endphp
-                                                @elseif($precision_cut_outer)
-                                                    @if($id >=17 && $id <= 24)
-                                                        <img src="{{ asset('public/assets/tooth/png/precisioncut-UR.webp') }}" class="precision-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};" alt="precisioncut Outer">
-                                                        @php $lowerNumberOfelementsOuter++; @endphp
-                                                    @else
-                                                        <img src="{{ asset('public/assets/tooth/png/precisioncut-UL.webp') }}" class="precision-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};" alt="precisioncut Outer">
-                                                        @php $lowerNumberOfelementsOuter++; @endphp
-                                                    @endif
-                                                @elseif($ihookOuter)
-                                                    @if($id >=17 && $id <= 24)
-                                                        <img src="{{ asset('public/assets/tooth/png/I-hook-UR.webp') }}" class="i-hook-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
-                                                        @php $lowerNumberOfelementsOuter++; @endphp
-                                                    @else
-                                                        <img src="{{ asset('public/assets/tooth/png/I-hook-UL.webp') }}" class="i-hook-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
-                                                        @php $lowerNumberOfelementsOuter++; @endphp
-                                                    @endif
-                                                @endif
-
-                                                @if($bite_ramp_lower && in_array($id, $biteRampLowerIds))
-                                                    <img src="{{ asset('public/assets/tooth/png/Bite-Ramp-lower.webp') }}" class="bite-ramp-overlay" style="position: absolute; width: 20px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">
-                                                @endif
-
-                                                @if($bite_turbos_lower && in_array($id, $biteTurbosLowerIds))
-                                                    <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.webp' ) }}" class="bite-turbos-overlay" style="position: absolute; width: 25px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">
-                                                @endif
 
                                                 {{-- Inner Start --}}
                                                 @if($power_ridge_inner)
@@ -656,6 +631,53 @@
                                                         @php $lowerNumberOfelementsInner++; @endphp
                                                     @endif
                                                 @endif
+
+
+                                                {{-- upper side overlays --}}
+                                                    {{-- 3. Power Ridge (upper) --}}
+                                                    @if($power_ridge_outer)
+                                                        <img src="{{ asset('public/assets/tooth/png/Power-Ridge.webp') }}" class="power-ridge-overlay" data-side="upper" style="position: absolute; width: 30px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 12; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                        @php $lowerNumberOfelementsOuter++; @endphp
+                                                    @endif
+
+                                                    {{-- 2. Power Arm Attachment (upper) --}}
+                                                    @if($power_arm_attachment_outer)
+                                                        <img src="{{ asset('public/assets/tooth/png/Power-Arm-Attachment.webp') }}" class="power-arm-attachment-overlay" data-side="upper" style="position: absolute; width: 15px; height: 25px; left: 50%; transform: translateX(-50%); z-index: 11; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                        @php $lowerNumberOfelementsOuter++; @endphp
+                                                    @endif
+
+                                                    {{-- 1. Show only one of Button Cutout, Precision Cut, I-Hook (upper) --}}
+                                                    @if($buttonOuter)
+                                                        <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" class="button-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                        @php $lowerNumberOfelementsOuter++; @endphp
+                                                    @elseif($precision_cut_outer)
+                                                        @if($id >=17 && $id <= 24)
+                                                            <img src="{{ asset('public/assets/tooth/png/precisioncut-UR.webp') }}" class="precision-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};" alt="precisioncut Outer">
+                                                            @php $lowerNumberOfelementsOuter++; @endphp
+                                                        @else
+                                                            <img src="{{ asset('public/assets/tooth/png/precisioncut-UL.webp') }}" class="precision-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};" alt="precisioncut Outer">
+                                                            @php $lowerNumberOfelementsOuter++; @endphp
+                                                        @endif
+                                                    @elseif($ihookOuter)
+                                                        @if($id >=17 && $id <= 24)
+                                                            <img src="{{ asset('public/assets/tooth/png/I-hook-UR.webp') }}" class="i-hook-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                            @php $lowerNumberOfelementsOuter++; @endphp
+                                                        @else
+                                                            <img src="{{ asset('public/assets/tooth/png/I-hook-UL.webp') }}" class="i-hook-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                            @php $lowerNumberOfelementsOuter++; @endphp
+                                                        @endif
+                                                    @endif
+
+                                                    @if($bite_ramp_lower && in_array($id, $biteRampLowerIds))
+                                                        <img src="{{ asset('public/assets/tooth/png/Bite-Ramp-lower.webp') }}" class="bite-ramp-overlay" style="position: absolute; width: 20px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">
+                                                    @endif
+
+                                                    @if($bite_turbos_lower && in_array($id, $biteTurbosLowerIds))
+                                                        <img src="{{ asset('public/assets/tooth/png/Bite-Turbos.webp' ) }}" class="bite-turbos-overlay" style="position: absolute; width: 25px; height: 20px; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 13; pointer-events: none;">
+                                                    @endif
+                                                {{-- upper Side --}}
+
+
 
                                             </div>
                                             @endif

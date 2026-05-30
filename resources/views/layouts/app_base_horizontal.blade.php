@@ -109,7 +109,7 @@
                 @else
                 top: 0;
                 @endif
-                background: url('{{asset('public/assets/header-bg.svg')}}') no-repeat center;
+                background: url('{{asset('public/assets/Banner.webp')}}') no-repeat center;
                 background-size: cover;
                 opacity: 1;
                 z-index: -1;
