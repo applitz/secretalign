@@ -2969,7 +2969,7 @@
                                 @if (($patient->is_treatment_submitted == 0 || ($patient->is_continue == 1 || $patient->patient_link == null)) && $patient->is_lab_cancel == 0)
                                     <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn" data-staff-send-to-doctor-for-approval="0"
                                         type="button" id="staff-send-to-doctor">
-                                        <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to the Doctor for Modification 11
+                                        <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to the Doctor for Modification
                                     </button>
                                 @endif
 
