@@ -3064,7 +3064,7 @@
                                     <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                         type="button" id="lab-cancel-request-after-submit">
                                         <span class="fas fa-tint-slash"
-                                            data-fa-transform="shrink-3"></span> Cancel Request 2
+                                            data-fa-transform="shrink-3"></span> Cancel Request
                                     </button>
                                 @endif
 
