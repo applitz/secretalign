@@ -729,6 +729,36 @@
                 });
             });
 
+            $("#lab-cancel-request-after-submit").on('click', function () {
+                $("#lab-cancel-request-after-submit-modal").modal('show');
+            });
+
+             $("#confirm-lab-cancel-request-after-submit").on('click', function() {
+                var $this = $(".btn-action");
+                var comment = window.commentEditor.getData();
+
+                $this.prop("disabled", true);
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('cancel-treatment-after-submit') }}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "comment": comment,
+                        "treatment_plan_id": "{{ $patient->id }}",
+                    }
+                }).done(function(response) {
+                    $("#comment").val('');
+                    $("#panel").remove();
+                    toastSuccess("You have canceled request for treatment plan!");
+                    $("#lab-cancel-request-after-submit-modal").modal('hide');
+                }).fail(function(response) {
+                    $this.prop("disabled", false);
+                    console.log(response);
+                    toastError("Unable to cancel request!");
+                });
+            });
+
+
             $("#lab-cancel-request").on('click', function () {
                 $("#lab-cancel-request-modal").modal('show');
             });

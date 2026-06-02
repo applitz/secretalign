@@ -214,6 +214,7 @@ Route::post('/patient/case-overview/submit/tracking-id', [PatientOverview::class
 Route::post('/patient/case-overview/submit/send-to-doctor-for-modification', [PatientOverview::class, 'send_to_doctor_for_modification']);
 
 Route::post('/patient/case-overview/send-from-lab-to-staff/cancel-request', [PatientOverview::class, 'cancel_treatment_request'])->name("cancel-treatment");
+Route::post('/patient/case-overview/send-from-lab-to-staff/cancel-request-after-submit', [PatientOverview::class, 'cancel_treatment_after_submit'])->name("cancel-treatment-after-submit");
 Route::post('/patient/case-overview/send-from-staff-to-doctor', [PatientOverview::class, 'send_form_staff_to_doctor']);
 Route::post('/patient/case-overview/send-from-doctor-to-staff', [PatientOverview::class, 'send_from_doctor_to_staff']);
 Route::post('/patient/case-overview/doctor-send-to-staff-request-modification', [PatientOverview::class, 'doctor_send_to_staff_request_modification']);

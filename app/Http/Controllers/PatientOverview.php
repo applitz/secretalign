@@ -312,6 +312,7 @@ class PatientOverview extends Controller
                         //sent to lab
                         DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                             "is_sent_to_lab" => 1,
+                            "is_lab_cancel" => 0,
                             "case_holder" => "lab",
                             "previous_case_holder" => "staff",
                             "status" => "Waiting Lab Review",
@@ -385,6 +386,7 @@ class PatientOverview extends Controller
                     if ($task_id) {
                         DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                             "is_sent_to_lab" => 1,
+                            "is_lab_cancel" => 0,
                             "is_treatment_submitted" => 0,
                             "dr_request_modification" => false,
                             "case_holder" => "lab",
@@ -448,6 +450,7 @@ class PatientOverview extends Controller
                         //sent to lab
                         DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                             "is_sent_to_lab" => 1,
+                            "is_lab_cancel" => 0,
                             "case_holder" => "lab",
                             "previous_case_holder" => "staff",
                             "status" => "Treatment Plan Approved",
@@ -468,6 +471,7 @@ class PatientOverview extends Controller
                         //sent to lab
                         DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                             "is_sent_to_lab" => 1,
+                            "is_lab_cancel" => 0,
                             "case_holder" => "lab",
                             "previous_case_holder" => "staff",
                             "status" => "Treatment Plan Approved",
@@ -624,6 +628,7 @@ class PatientOverview extends Controller
                     "iframe_link" => $iframe_link,
                     "patient_link" => $patient_link,
                     "is_treatment_submitted" => 1,
+                    "is_lab_cancel" => 0,
                     "status" => "Treatment Plan Completed",
                 ]);
 
@@ -1472,6 +1477,7 @@ class PatientOverview extends Controller
                         }
                         DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                             "aligner_steps" => $aligner_steps,
+                            "is_lab_cancel" => 0,
                             "cancellation_date" => $cancellationDate,
                         ]);
                     }
@@ -1533,6 +1539,7 @@ class PatientOverview extends Controller
                 }
                 DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
                     'is_completed' => "0",
+                    'is_lab_cancel' => 0,
                     'send_for_approval' => $send_for_approval,
                     'dr_request_modification' => false,
                     "case_holder" => "doctor",
@@ -1787,6 +1794,58 @@ class PatientOverview extends Controller
                 //update treatment plan
                 DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                     "is_treatment_submitted" => 0,
+                    "is_lab_cancel" => 0,
+                    "is_sent_to_lab" => 0,
+                    "case_holder" => "staff",
+                    "previous_case_holder" => "lab",
+                    "status" => "Waiting Staff Review",
+                    "lab" => null,
+                ]);
+            }
+        }
+    }
+
+    public function cancel_treatment_after_submit(Request $request)
+    {
+        if (Auth::user()->role == 'lab') {
+            $treatment_plan_id = $request->post('treatment_plan_id');
+            $comment = $request->post('comment');
+            $treatment_plan = DB::table('p_treatment_plans as tp')
+                ->where('tp.id', $treatment_plan_id)
+                ->Join("patients as p", function ($join) {
+                    $join->on("tp.patient_id", "=", "p.id")
+                        ->where("p.is_deleted", 0);
+                })
+                ->select("tp.*", "p.user_id", "p.first_name", "p.last_name")
+                ->first();
+            if (@$treatment_plan->case_holder == 'lab') {
+                $details = [
+                        'subject' => 'Action Required: Required cancellation request submitted for Patient: ' . $treatment_plan->first_name . ' ' . $treatment_plan->last_name,
+                        'title' => 'Action Required: Required cancellation request submitted for Patient: ' . $treatment_plan->first_name . ' ' . $treatment_plan->last_name,
+                        'patient_name' => $treatment_plan->first_name." ".$treatment_plan->last_name,
+                        'comment' => $comment,
+                        'lab_name' =>  Auth::user()->first_name. ' ' . Auth::user()->last_name,
+                    ];
+                $staff = DB::table('users')
+                                ->where('role', 'staff')
+                                ->get(['first_name', 'last_name', 'email'])
+                                ->toArray();
+
+                CancelTreatmentByLabJob::dispatch($staff, $details);
+
+                $task = (new TaskService($treatment_plan_id));
+                $task->complete_task("lab");
+                //add staff task + comment
+                $task_id = $task->create_task("staff", "Lab Cancelled", null, $comment, "lab", "staff"); //comment from lab to staff
+                $task->liveAlert("Treatment request cancelled by Al Secret lab.", null, "staff", $task_id); //cancellation alert
+                //cancel lab request
+                DB::table('lab_requests')->where('treatment_plan_id', $treatment_plan->id)->where('user_id', Auth::user()->id)->update([
+                    "is_canceled" => 1,
+                ]);
+                //update treatment plan
+                DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
+                    "is_treatment_submitted" => 0,
+                    "is_lab_cancel" => 1,
                     "is_sent_to_lab" => 0,
                     "case_holder" => "staff",
                     "previous_case_holder" => "lab",
@@ -1972,6 +2031,7 @@ class PatientOverview extends Controller
                     // "iframe_link" => null,
                     // "patient_link" => null,
                     "is_treatment_submitted" => 0,
+                    "is_lab_cancel" => 0,
                     "is_sent_to_lab" => 0,
                     "is_rejected" => 0,
                     "completed_at" => null,

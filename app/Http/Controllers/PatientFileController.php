@@ -353,6 +353,140 @@ class PatientFileController extends Controller
             $finalExtension = ($isImage && $key != 4 && $key != 12)
                 ? 'webp'
                 : $extension;
+            $fName = rand(1000, 9999) . time();
+            // Generate filename
+            $filename = $fName . '.' . $finalExtension;
+
+            // if ($isImage && $key != 4 && $key != 12) {
+            //     $filename = $fName . '.webp';
+            // }
+
+            // Check if file with same name already exists
+            // Check duplicate file
+            if (File::exists($directory . '/' . $filename)) {
+
+                $count = 2;
+
+                while (
+                    File::exists(
+                        $directory . '/' .
+                        $fName .
+                        '(' . $count . ').' .
+                        $finalExtension
+                    )
+                ) {
+                    $count++;
+                }
+
+                $filename = $fName .
+                    '(' . $count . ').' .
+                    $finalExtension;
+            }
+
+            // Upload file
+            if ($isImage && $key != 4 && $key != 12) {
+                uploadWebpImage($file, $directory, $filename);
+            } else {
+                $file->move($directory, $filename);
+            }
+
+            $column = '';
+
+            if ($request->get('key') == 1) {
+                $column = "fl_upper_arch";
+            }
+            if ($request->get('key') == 2) {
+                $column = "fl_lower_arch";
+            }
+            if ($request->get('key') == 3) {
+                $column = "fl_front";
+            }
+            if ($request->get('key') == 4) {
+                $column = "fl_smile";
+            }
+            if ($request->get('key') == 5) {
+                $column = "fl_profile";
+            }
+            if ($request->get('key') == 6) {
+                $column = "fl_frontal";
+            }
+            if ($request->get('key') == 7) {
+                $column = "fl_right_buccal";
+            }
+            if ($request->get('key') == 8) {
+                $column = "fl_left_buccal";
+            }
+            if ($request->get('key') == 9) {
+                $column = "fl_upper_occlusal";
+            }
+            if ($request->get('key') == 10) {
+                $column = "fl_lower_occlusal";
+            }
+            if ($request->get('key') == 11) {
+                $column = "fl_panorex";
+            }
+            if ($request->get('key') == 12) {
+                $column = "fl_lateral_ceph";
+            }
+            if ($request->get('key') == 13) {
+                $column = "fl_general_upload";
+            }
+            if ($request->get('key') == 14) {
+                $column = "fl_posterior_bite_turbos";
+            }
+            if ($request->get('key') == 15) {
+                $column = "fl_anterior_bite_turbos";
+            }
+            if ($request->get('key') == 16) {
+                $column = "fl_bite_keeper";
+            }
+            if ($request->get('key') == 17) {
+                $column = "fl_notes";
+            }
+            if ($request->get('key') == 18) {
+                $column = "optional_fl_upper_arch";
+            }
+            if ($request->get('key') == 19) {
+                $column = "optional_fl_lower_arch";
+            }
+
+            if ($column != '') {
+                DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
+                    $column => $filename,
+                ]);
+            }
+
+            return response()->json([
+                "status"   => "success",
+                "fileName" => $filename,
+            ]);
+        }
+        return response()->json([
+            "status" => "error",
+        ]);
+    }
+
+    public function file_upload_1(Request $request, $patient_id, $treatment_plan_id)
+    {
+        if (DB::table('p_treatment_plans')->where('patient_id', $patient_id)->where('id', $treatment_plan_id)->exists()) {
+            $key  = (int) $request->get('key');
+            $file = $request->file('file' . $key);
+
+            $attachment = $file->getClientOriginalName();
+            $filename   = str_replace(' ', '-', $attachment);
+
+            $directory = $this->mkDr($patient_id);
+
+            $file_parts = pathinfo($filename);
+            $extension = strtolower($file_parts['extension'] ?? '');
+
+            // Check image or not
+            $isImage = str_starts_with($file->getMimeType(), 'image/');
+
+            // Final extension
+            $finalExtension = ($isImage && $key != 4 && $key != 12)
+                ? 'webp'
+                : $extension;
 
             // Generate filename
             $filename = $file_parts['filename'] . '.' . $finalExtension;

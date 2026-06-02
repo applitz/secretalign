@@ -678,6 +678,7 @@ class RegisterPatient extends Controller
             if (!empty($request->advisor) && $request->advisor !== 'null') {
                 DB::table('p_treatment_plans')->where('id', $patient->id)->update([
                     "case_holder" => "staff",
+                    "is_lab_cancel" => 0,
                     "previous_case_holder" => "doctor",
                     "status" => "Waiting Staff Review for Advisor",
                     "recommended_advisor" => $advisor_id
@@ -689,6 +690,7 @@ class RegisterPatient extends Controller
                 {
                     DB::table('p_treatment_plans')->where('id', $patient->id)->update([
                         "case_holder" => "staff",
+                        "is_lab_cancel" => 0,
                         "previous_case_holder" => "doctor",
                         "status" => "Waiting Staff Review",
                     "recommended_advisor" => $advisor_id
@@ -717,6 +719,7 @@ class RegisterPatient extends Controller
             {
                 DB::table('p_treatment_plans')->where('id', $patient->id)->update([
                     "case_holder" => "staff",
+                    "is_lab_cancel" => 0,
                     "previous_case_holder" => "doctor",
                     "status" => "Waiting Staff Review",
                     "is_editable" => 0,
