@@ -1982,7 +1982,64 @@ window.destroyPreview1 = destroyPreview1;
         @endif
     @endif
 
-    function downloadMeditLinkStlFiles($uuid)
+    function downloadMeditLinkStlFiles(uuid)
+    {
+        $.ajax({
+            type: "POST",
+            url: "{{url('/patient/file/download-medit-link')}}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "patient_id": "{{ $patient->patient_id }}",
+                "treatment_plan_id": "{{ $patient->id }}",
+                "uuid": uuid,
+            },
+            beforeSend: function () {
+                $(".my-loader").show();
+            }
+        })
+        .done(function (response) {
+
+            if (response.upper || response.lower) {
+
+                if (response.upper) {
+                    $('#key1').attr('file', response.upper);
+                    window.dropzone_active_state('1', response.upper);
+                    previewUpperStlFile(response.upper);
+                }
+
+                if (response.lower) {
+                    $('#key2').attr('file', response.lower);
+                    window.dropzone_active_state('2', response.lower);
+                    previewLowerStlFile(response.lower);
+                }
+
+                if (response.patient_name) {
+                    document.getElementById('first_name').value = response.first_name;
+                    document.getElementById('last_name').value = response.last_name;
+                }
+
+                if (response.patient_code) {
+                    document.getElementById('patientCode').value = response.patient_code;
+                }
+
+                $("#3shape-section").addClass('d-none');
+                $("#medit-link-section").addClass('d-none');
+                $("#patient-wizard").removeClass('d-none');
+            } else {
+                toastError("Error while downloading files.");
+            }
+        })
+        .fail(function (xhr) {
+            console.log(xhr);
+            toastError("Something went wrong.");
+        })
+        .always(function () {
+            $(".my-loader").hide();
+            $('#medit-link-Modal').modal('hide');
+        });
+    }
+
+    function downloadMeditLinkStlFilesOld($uuid)
     {
         $.ajax({
                 type: "POST",
@@ -1995,6 +2052,7 @@ window.destroyPreview1 = destroyPreview1;
                 },
                 beforeSend: function () {
                     showLoader();
+                    $(".my-loader").show();
                 }
             }).done(function (response) {
 
@@ -2020,9 +2078,11 @@ window.destroyPreview1 = destroyPreview1;
                     $("#medit-link-section").addClass('d-none')
                     $("#patient-wizard").removeClass('d-none');
                     hideLoader();
+                    $(".my-loader").hide();
                 }
                 else {
                     hideLoader();
+                    $(".my-loader").hide();
                     toastError("Error while downloading files.");
                 }
             });
@@ -2050,6 +2110,7 @@ window.destroyPreview1 = destroyPreview1;
                 },
                 beforeSend: function () {
                     showLoader();
+                    $(".my-loader").show();
                 }
             }).done(function (response) {
 
@@ -2066,9 +2127,11 @@ window.destroyPreview1 = destroyPreview1;
                     }
                     $("#optional-3shape-section-Modal").modal('hide');
                     hideLoader();
+                    $(".my-loader").hide();
                 }
                 else {
                     hideLoader();
+                    $(".my-loader").hide();
                     toastError("Error while downloading files.");
                 }
             });
@@ -2090,6 +2153,7 @@ window.destroyPreview1 = destroyPreview1;
                 },
                 beforeSend: function () {
                     showLoader();
+                    $(".my-loader").show();
                 }
             }).done(function (response) {
 
@@ -2106,9 +2170,11 @@ window.destroyPreview1 = destroyPreview1;
                     }
                     $("#3shape-section-Modal").modal('hide');
                     hideLoader();
+                    $(".my-loader").hide();
                 }
                 else {
                     hideLoader();
+                    $(".my-loader").hide();
                     toastError("Error while downloading files.");
                 }
             });
@@ -2154,10 +2220,12 @@ window.destroyPreview1 = destroyPreview1;
                 },
                 beforeSend: function () {
                     showLoader();
+                    $(".my-loader").show();
                 }
             }).done(function (response) {
                 $("#medit-link-search-result").html(response);
                 hideLoader();
+                $(".my-loader").hide();
             })
         });
 
@@ -3873,17 +3941,19 @@ window.destroyPreview1 = destroyPreview1;
             // }
             function fetchOverview() {
                 // ensure loader is visible when fetching overview
-                try { showLoader(); } catch(e) { /* noop if showLoader undefined */ }
+                try { showLoader(); $(".my-loader").show(); } catch(e) { /* noop if showLoader undefined */ }
                 $.ajax({
                     url: `{{ url('/patient/fetch-case-overview/' . $hashids->encode($patient->id) . '?i=true') }}`,
                     type: "GET",
                     success: function(response) {
                         $("#overview-container").html(response);
                         hideLoader();
+                        $(".my-loader").hide();
                     },
                     error: function(xhr) {
                         console.error("Error fetching HTML:", xhr);
                         hideLoader();
+                        $(".my-loader").hide();
                     }
                 });
             }
@@ -4021,6 +4091,7 @@ window.destroyPreview1 = destroyPreview1;
                         },
                         beforeSend() {
                             showLoader();
+                            $(".my-loader").show();
                         }
                     }).done(function(response) {
                         //console.log(response)
@@ -4068,9 +4139,11 @@ window.destroyPreview1 = destroyPreview1;
                         $('ul.nav-pills a[href="' + targetTab + '"]').tab('show');
 
                                 hideLoader();
+                                $(".my-loader").hide();
                         }).fail(function(response) {
                             toastError("Not able to proceed. check your internet connection.");
                             hideLoader();
+                            $(".my-loader").hide();
                         });
                 } else {
                     // Activate the clicked tab
@@ -4093,7 +4166,7 @@ window.destroyPreview1 = destroyPreview1;
             });
 
             @if(@$_GET['tab'])
-                try { showLoader(); } catch(e) { }
+                try { showLoader(); $(".my-loader").show(); } catch(e) { }
                 fetchOverview()
                 let tabSelector = 'ul.nav-pills a[href="#{{ $_GET["tab"] }}"]';
                 let tabEl = document.querySelector(tabSelector);
