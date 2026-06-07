@@ -29,9 +29,9 @@ class TaskController extends Controller
             }
             $tasks = DB::table('tasks as t')
                 ->where($whereClauses)
-                ->Join("p_treatment_plans as tp", function ($join) {
-                    ->where('tp.is_deleted', 0);
-                    $join->on("t.treatment_plan_id", "=", "tp.id")
+                 ->join("p_treatment_plans as tp", function ($join) {
+                    $join->on("t.treatment_plan_id", "=", "tp.id"); // ✅ fixed
+                    $join->where('tp.is_deleted', 0);
                 })
                 ->Join("patients as p", function ($join) {
                     $join->on("p.id", "=", "tp.patient_id")

@@ -21,7 +21,8 @@
         <!-- App Css-->
         <link href="{{ asset('public/qovex') }}/assets/css/app.min.css"  id="app-style"  rel="stylesheet" type="text/css" />
         <link href="{{ asset('public/css/custom.css') }}" rel="stylesheet" type="text/css" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" /> --}}
+        <link href="{{ asset('public/assets/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
         <style>
             :root {
@@ -427,6 +428,25 @@
         z-index: 10000;
     }
 
+    .select2-container--default .select2-selection--single {
+        border: 1px solid #f6f6f6 !important;
+        border-radius: 0px !important;
+        color: #8687a7 !important;
+        height: 38px;
+    }
+
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        line-height: 36px !important;
+        padding-left: 12px !important;
+    }
+    .select2-dropdown {
+        border: 1px solid #f6f6f6 !important;
+        border-radius: 0px !important;
+    }
+
+    .select2-container--default .select2-results__option--selected {
+        color: #a6a7be !important;
+    }
     /* canvas[data-engine="three.js r146"] {
         display: none !important;
     } */
@@ -1210,7 +1230,8 @@
             toast.show()
         }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="{{  asset('public/assets/select2/js/select2.min.js') }}"></script>
+    <script src="{{  asset('public/assets/customjs/form-advanced.init.js') }}"></script>
     @yield('javascript')
     <script>
         function checkNotifications() {

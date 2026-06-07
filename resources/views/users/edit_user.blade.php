@@ -106,31 +106,37 @@
                         <input type="hidden" name="role" value="superadmin">
                         @endif
 
-                        @if ($user->role == 'doctor')
-                        <div class="mb-3">
+
+                        <div class="mb-3" id="doctorTier">
                             <label for="tier">Tier</label>
-                            <select class="form-select @error('tier')
-                            is-invalid
-                        @enderror" name="tier" id="tier">
+                            <select class="form-select @error('tier')  is-invalid @enderror" name="tier" id="tier">
                                 @foreach ($tiers as $tier)
-                                <option value="{{ $tier->id }}" @if ($user->tier == $tier->id) selected @endif>{{
-                                    $tier->tier_name }}
-                                </option>
+                                    <option value="{{ $tier->id }}" @if ($user->tier == $tier->id) selected @endif>{{ $tier->tier_name }} </option>
                                 @endforeach
                             </select>
                         </div>
-                        
-                        @endif
+
+                        <div class="mb-3" id="staffDiv">
+                            <label for="staff">Staff</label>
+                            <select class="form-select @error('staff') is-invalid @enderror" name="staff" id="staff">
+                                <option value="">Select staff...</option>
+                                @foreach ($staff as $staff)
+                                    <option value="{{ $staff->id }}" @if ($user->staff_id == $staff->id) selected @endif>
+                                        {{ $staff->first_name }} {{ $staff->last_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('staff')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                          @if ($user->role == 'advisor')
-                          <div class="mb-3" id="advisorPrice">
-                        <label for="tier">Advsior Quote</label>
-                          <input type="advisor_price" class="form-control @error('advisor_price') is-invalid @enderror"
-                            id="advisor_price" placeholder="Enter Advisor Quote" name="advisor_price"
-                            aria-describedby="advisor_price" />
-                    </div>
-                    @endif
-
-
+                            <div class="mb-3" id="advisorPrice">
+                                <label for="tier">Advsior Quote</label>
+                                <input type="advisor_price" class="form-control @error('advisor_price') is-invalid @enderror"  id="advisor_price" placeholder="Enter Advisor Quote" name="advisor_price" aria-describedby="advisor_price" />
+                            </div>
+                        @endif
 
                         @if(Auth::user()->role == 'superadmin')
                         <div class="mb-3">
@@ -210,5 +216,28 @@
 
 
 @section('javascript')
+<script>
+        $(document).ready(function() {
+            $("#doctorTier").hide();
+            $("#staffDiv").hide();
+            $("#role").on("change", function() {
+                var selectedRole = $(this).val();
+                if (selectedRole === "doctor") {
+                    $("#doctorTier").show();
+                    $("#staffDiv").show();
+                } else {
+                    $("#doctorTier").hide();
+                    $("#staffDiv").hide();
+                }
 
+                if (selectedRole === "advisor") {
+                    $("#advisorPrice").show();
+                } else {
+                    $("#advisorPrice").hide();
+                }
+
+            });
+            $("#role").trigger("change");
+        });
+    </script>
 @stop

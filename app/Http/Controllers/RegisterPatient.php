@@ -525,6 +525,7 @@ class RegisterPatient extends Controller
             "first_name" => $first_name,
             "last_name" => $last_name,
             "dob" => $dob,
+            "staff_id" => Auth::user()->staff_id,
         ]);
         session(['patient_id' => $id]);
     }
@@ -672,7 +673,7 @@ class RegisterPatient extends Controller
                     ->where('p.user_id', Auth::user()->id)
                     ->where('p.is_deleted', 0);
             })
-            ->select("tp.*", "p.first_name", "p.last_name", "p.dob", "p.user_id", "p.pricing_package", "p.nemotech_patient_id")
+            ->select("tp.*", "p.first_name", "p.last_name", "p.staff_id",  "p.dob", "p.user_id", "p.pricing_package", "p.nemotech_patient_id")
             ->first();
 
         $details = [
@@ -682,12 +683,18 @@ class RegisterPatient extends Controller
             'email' => Auth::user()->email,
         ];
         SubmitCaseMailJob::dispatch($details);
-        $staff = DB::table('users')
+
+        if($patient->staff_id && $patient->staff_id != null){
+            $staff = DB::table('users')
                     ->where('role', 'staff')
+                    ->where('id', $patient->staff_id)
                     ->get(['first_name', 'last_name', 'email'])
                     ->toArray();
 
-        SubmitCaseMailStaffJob::dispatch($staff, $details);
+            SubmitCaseMailStaffJob::dispatch($staff, $details);
+        }
+
+
         if($patient->recommended_advisor != null)
         {
             $advisor_id = $patient->recommended_advisor;

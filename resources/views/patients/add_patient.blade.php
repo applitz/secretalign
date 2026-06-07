@@ -68,6 +68,9 @@
         width: 250px !important;
     }
 
+    .plan-box {
+        height: clamp(250px, 40vh, 450px);
+    }
 
 </style>
 @stop
@@ -256,7 +259,7 @@
     </div>
 </div>
 
-<div class="row gx-0" id="patient-wizard">
+<div class="row gx-0" id="patient-wizard" >
     <div class="col-12 ">
         <div class="card">
 
@@ -4773,6 +4776,8 @@
 
 <script>
     $(document).ready(function() {
+
+
         const params = new URLSearchParams(window.location.search);
 
         const code = params.get('code');

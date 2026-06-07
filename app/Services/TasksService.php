@@ -97,7 +97,9 @@ class TasksService extends CommonFunction
                 });
             }
         }
-
+        if ($user->role == 'staff') {
+            $query->where('p.staff_id', $user->id);
+        }
 
         $total = $query->count();
 

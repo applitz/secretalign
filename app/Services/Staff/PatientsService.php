@@ -34,14 +34,14 @@ class PatientsService extends CommonFunction
             ->join("users as u", function ($join) {
                 $join->on("u.id", "=", "p.user_id");
             })
-            ->leftJoin("users as l", function ($join) {
-                $join->on("tp.lab", "=", "l.id")
-                    ->where("l.role", "lab");
-            })
+            // ->leftJoin("users as l", function ($join) {
+            //     $join->on("tp.lab", "=", "l.id")
+            //         ->where("l.role", "lab");
+            // })
             ->leftJoin('treatment_checks as tc', function ($join) {
                 $join->on('tc.patient_id', '=', 'tp.id');
             });
-
+        $query->where('p.staff_id', Auth::id());
         // Case Holder
         $case_holder = $request->get('case_holder');
         if (!empty($case_holder)) {
@@ -49,6 +49,7 @@ class PatientsService extends CommonFunction
                 $query->where('tp.case_holder', 'lab');
             } elseif (strpos($case_holder, "staff") !== false) {
                 $query->where('tp.case_holder', 'staff');
+
             } else {
                 $query->where('tp.case_holder', 'doctor');
             }
@@ -104,28 +105,30 @@ class PatientsService extends CommonFunction
         // Fetch paginated results
         $patientsLists = $query
             ->select(
-                'p.*',
+                // 'p.*',
+                'p.id',
+                'p.first_name',
+                'p.last_name',
+                'p.dob',
+                'p.pricing_package',
+                'p.setup_type',
                 'tp.id as treatment_plan',
                 'tp.status',
                 'tp.phase',
                 'tp.treatment_type',
                 'tp.is_submitted',
                 'tp.case_holder',
-                'tp.is_completed',
-                'tp.completed_at',
-                'tp.treatment_plan_duration',
-                'tp.cancellation_date',
+                // 'tp.is_completed',
+                // 'tp.completed_at',
+                // 'tp.treatment_plan_duration',
+                // 'tp.cancellation_date',
                 'tp.setup_approval_date',
                 'tp.recommended_advisor',
                 'tc.id as treatment_checklist',
                 // 'u.first_name as d_first_name',
                 // 'u.last_name as d_last_name',
                 DB::raw("CONCAT(u.first_name, ' ', u.last_name) as user_full_name"),
-                'u.postal_code',
-                'u.city',
                 'u.country',
-                'l.first_name as lab_first_name',
-                'l.last_name as lab_last_name'
             )
             ->orderBy('tp.id', 'desc')
             ->offset($offset)
