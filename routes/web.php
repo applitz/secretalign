@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CasePhaseController;
 use App\Http\Controllers\CronJobController;
@@ -108,6 +109,11 @@ Route::get('/impressum', function () {
 
 Auth::routes(['register' => false]);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/forgot-password', [App\Http\Controllers\AuthController::class, 'forgotPassword'])->name('forgot-password');
+Route::post('password/email', [App\Http\Controllers\AuthController::class, 'passwordEmail'])->name('password.email');
+Route::post('/reset-password', [AuthController::class, 'updatePassword']) ->name('password.update');
+
 Route::get('check-mail', [App\Http\Controllers\HomeController::class, 'checkMail'])->name('check-mail');
 Route::get('check-mail-job', [App\Http\Controllers\HomeController::class, 'checkMailJob'])->name('check-mail-job');
 
