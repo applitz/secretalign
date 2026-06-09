@@ -85,13 +85,32 @@ class PatientFileController extends Controller
             if(count($response->files) > 0) {
                 foreach ($response->files as $file) {
                     Log::info($file->name);
-                    if($file->name == "Gallistl_Barbara-LowerJawScan.stl.general.meditMesh") {
+
+                    // Lower Arch
+                    if (stripos($file->name, 'mandibular') !== false) {
                         $lower_arch_uuid = $file->uuid;
                     }
-                    if($file->name == "Gallistl_Barbara-UpperJawScan.stl.general.meditMesh") {
+
+                    // Upper Arch
+                    if (stripos($file->name, 'maxillary') !== false) {
                         $upper_arch_uuid = $file->uuid;
                     }
+
+                    // Bite/Occlusion file (optional)
+                    if (stripos($file->name, 'occlusion') !== false) {
+                        $bite_uuid = $file->uuid;
+                    }
                 }
+                // foreach ($response->files as $file) {
+                //     Log::info($file->name);
+
+                //     if($file->name == "Gallistl_Barbara-LowerJawScan.stl.general.meditMesh") {
+                //         $lower_arch_uuid = $file->uuid;
+                //     }
+                //     if($file->name == "Gallistl_Barbara-UpperJawScan.stl.general.meditMesh") {
+                //         $upper_arch_uuid = $file->uuid;
+                //     }
+                // }
             }
         }
         return (object) compact("upper_arch_uuid", "lower_arch_uuid","patient_name","patient_code");
@@ -142,7 +161,6 @@ class PatientFileController extends Controller
         $directory = $this->mkDr($patient_id);
 
         $downloadFilePath = $directory . '/' . $downloadFileName;
-
 
         $filename = time() . rand(1, 100) . '.stl';
         // Check if file with same name already exists
@@ -226,7 +244,7 @@ class PatientFileController extends Controller
             $filename = $this->MeditLinkDownloadAndExtract7Zip($patient_id, $_file);
             if($filename != null) {
                 DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
-                    $column => $filename . ".stl",
+                    $column => $filename,
                 ]);
             }
             return $filename;
@@ -240,7 +258,6 @@ class PatientFileController extends Controller
         $caseUuid = $request->post('uuid');
         $data = [];
         $case = $this->MeditLinkGetCase($caseUuid);
-
         if($case->upper_arch_uuid) {
             $data['upper'] = $this->MeditLinkSaveSTL($patient_id, $treatment_plan_id, 'fl_upper_arch', $case->upper_arch_uuid,$case->patient_name,$case->patient_code);
         }
