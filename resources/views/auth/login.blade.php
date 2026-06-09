@@ -3,19 +3,19 @@
 @section('content')
 <style>
     .account-pages .logo-admin {
-   
+
     width: 200px;
     height: 200px;
     }
     .form-control {
- 
+
     font-size: 16px;
     }
     .btn{
             font-size: 20px;
     }
     .form-label {
-   
+
     font-size: 17px;
 }
 </style>
@@ -63,12 +63,21 @@
                     <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
 
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input"name="remember" id="remember" {{ old('remember')
-                    ? 'checked' : '' }}>
-                    <label class="form-check-label" for="remember">Remember
-                        me</label>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input"name="remember" id="remember" {{ old('remember')
+                        ? 'checked' : '' }}>
+                        <label class="form-check-label" for="remember">
+                            Remember me
+                        </label>
+                    </div>
+
+                    @if (Route::has('forgot-password'))
+                        <a href="{{ route('forgot-password') }}" class="text-primary">
+                            Forgot Password?
+                        </a>
+                    @endif
                 </div>
 
                 <div class="mt-3">
