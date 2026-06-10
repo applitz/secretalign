@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Hashids\Hashids;
+use App\Models\DoctorClinicalPreference;
 use Exception;
 use DateTime;
 use DateInterval;
@@ -153,7 +154,10 @@ class PatientOverview extends Controller
             $plans = DB::table('p_treatment_plans')->where('is_deleted', 0)->where('patient_id', $patient->patient_id)->orderByDesc('phase')->select("phase", "id")->get();
             $treatmentCheck = TreatmentCheck::where('patient_id', $patient->id)->first();
 
-            $data = compact("patient", "labs", "comments", "plans", "advisors","treatmentCheck");
+            // Fetch doctor's clinical preferences
+            $clinicalPreference = DoctorClinicalPreference::where('doctor_id', $patient->user_id)->first();
+
+            $data = compact("patient", "labs", "comments", "plans", "advisors","treatmentCheck", "clinicalPreference");
             $data['stl_files'] = [];
             $notificationId = @$request->get('notify');
             Log::info(json_encode($data));
