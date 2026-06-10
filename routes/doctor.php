@@ -6,9 +6,12 @@ use Illuminate\Support\Facades\Artisan;
 
 use App\Http\Controllers\Doctor\PatientsController;
 use App\Http\Controllers\Doctor\Shining3dController;
+use App\Http\Controllers\Doctor\MovixtechController;
+use App\Http\Controllers\Doctor\ClinicalPreferencesController;
 
 Route::middleware(['auth', 'auth.doctor'])->group(function () {
     Route::resource('patients', PatientsController::class);
+    Route::resource('clinical-preferences', ClinicalPreferencesController::class);
     Route::get('update-shiping-date', [PatientsController::class, 'updateShipingDate'])->name('update-shiping-date');
 
     Route::post('order-from-dental-monitoring', [PatientsController::class, 'orderFromDentalMonitoring'])->name('order-from-dental-monitoring');
@@ -22,6 +25,13 @@ Route::middleware(['auth', 'auth.doctor'])->group(function () {
 
     Route::get('shining3d-region-details', [Shining3dController::class, 'regionDetails'])->name('shining3d-region-details');
 
+    Route::get('movix-login', [MovixtechController::class, 'login'])->name('movix-login');
+
+    Route::post('/patient/movixtech/create_case', [MovixtechController::class, 'processMovix'])->name('movixtech_create_case');
+
+    Route::get('movix-get-access-token', [MovixtechController::class, 'getAccessToken'])->name('movix-get-access-token');
+    Route::get('movix-create-webhook', [MovixtechController::class, 'createWebhook'])->name('movix-create-webhook');
+    Route::get('movix-get-webhook', [MovixtechController::class, 'getWebhooks'])->name('movix-get-webhook');
 });
 
 ?>
