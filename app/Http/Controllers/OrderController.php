@@ -146,6 +146,7 @@ class OrderController extends Controller
                 "tp.aligner_steps",
                 "tp.phase",
                 "t.tier_name",
+                "p.pricing_package",
                 "tp.is_completed",
             )
             ->first();
