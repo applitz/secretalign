@@ -119,8 +119,7 @@
                     @if (Auth::user()->role == 'superadmin')
                         <div class="mb-3">
                             <label for="role">Role/Privileges</label>
-                            <select class="form-select  @error('role') is-invalid @enderror" id="role"
-                                name="role">
+                            <select class="form-select select2 @error('role') is-invalid @enderror" id="role" name="role">
                                 <option value="">Select role...</option>
                                 <option value="superadmin" @if (old('role') == 'superadmin') selected @endif>Superadmin
                                 </option>
@@ -151,6 +150,21 @@
                         </select>
                     </div>
 
+                    <div class="mb-3" id="staffDiv">
+                        <label for="staff">Staff</label>
+                        <select class="form-select @error('staff') is-invalid @enderror" name="staff" id="staff">
+                            <option value="">Select staff...</option>
+                            @foreach ($staff as $staff)
+                                <option value="{{ $staff->id }}">
+                                    {{ $staff->first_name }} {{ $staff->last_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('staff')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <div class="mb-3" id="advisorPrice">
                         <label for="tier">Advsior Quote</label>
                         <input type="advisor_price" class="form-control @error('advisor_price') is-invalid @enderror"
@@ -168,27 +182,36 @@
             </div>
         </div>
     </div>
-
-
 @stop
 
 
 @section('javascript')
+    <script src="{{  asset('public/assets/customjs/superadmin/add-user.js') }}?v={{ time() }}"></script>
     <script>
         $(document).ready(function() {
+
+            AddUser.init();
+            $('.mySelect2').select2({
+                closeOnSelect: false
+            });
             $("#doctorTier").hide();
+            $("#staffDiv").hide();
             $("#role").on("change", function() {
                 var selectedRole = $(this).val();
                 if (selectedRole === "doctor") {
                     $("#doctorTier").show();
+                    $("#staffDiv").show();
                 } else {
                     $("#doctorTier").hide();
+                    $("#staffDiv").hide();
                 }
+
                 if (selectedRole === "advisor") {
                     $("#advisorPrice").show();
                 } else {
                     $("#advisorPrice").hide();
                 }
+
             });
             $("#role").trigger("change");
         });

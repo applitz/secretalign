@@ -66,7 +66,11 @@ class UserController extends Controller
     public function add()
     {
         $tiers = DB::table('tiers')->orderBy('id', 'asc')->get();
-        return view("users.add_user", compact("tiers"));
+        $staff = DB::table('users')->where('role', 'staff')->orderBy('id', 'asc')
+        ->orderBy('first_name', 'asc')
+        ->orderBy('last_name', 'asc')
+        ->get();
+        return view("users.add_user", compact("tiers", "staff"));
     }
 
     public function save(Request $request)
@@ -86,8 +90,10 @@ class UserController extends Controller
 
             ],
             'confirm_password' => 'required | same:password',
+            'staff' => 'required_if:role,doctor',
         ], [
             'password.regex' => 'Invalid password format. Must contain at least one lowercase letter and must contain at least one digit.',
+            'staff.required_if' => 'Please select a staff member.',
         ]);
         if ($validated) {
             $first_name = $request->input('first_name');
@@ -97,6 +103,7 @@ class UserController extends Controller
             $phone_number = $request->input('phone_number');
             $billing_address = $request->input('billing_address');
             $shipping_address = $request->input('shipping_address');
+            $staff_id = $request->input('staff');
             $role = $request->input('role');
             if (Auth::user()->role == 'rep') {
                 $role = 'doctor';
@@ -116,7 +123,8 @@ class UserController extends Controller
                 "shipping_address" => $shipping_address,
                 "registered_by" => Auth::user()->id,
                 "tier" => $tier,
-                 "advisor_price" => $request->input('advisor_price'),
+                "staff_id" => $staff_id,
+                "advisor_price" => $request->input('advisor_price'),
             ]);
             return redirect('/users/view')->with('success', 'New User Registered.');
         }
@@ -137,7 +145,11 @@ class UserController extends Controller
         $user = DB::table('users')->where('id', $id)->where('role', '!=', 'admin')->first();
         if (@$user) {
             $tiers = DB::table('tiers')->orderBy('id', 'asc')->get();
-            return view("users.edit_user", compact("user", "tiers"));
+            $staff = DB::table('users')->where('role', 'staff')->orderBy('id', 'asc')
+                ->orderBy('first_name', 'asc')
+                ->orderBy('last_name', 'asc')
+                ->get();
+            return view("users.edit_user", compact("user", "tiers", "staff"));
         }
         return redirect()->back()->with('error', 'page not found.');
     }
@@ -210,6 +222,7 @@ class UserController extends Controller
                 'email',
                 Rule::unique('users', 'email')->ignore($id)
             ],
+            'staff' => 'required_if:role,doctor',
         ]);
         if ($validated) {
             $first_name = $request->input('first_name');
@@ -219,6 +232,7 @@ class UserController extends Controller
                 'last_name' => $request->input('last_name'),
                 'email' => $email,
                 'role' => $request->input('role'),
+                'staff_id' => $request->input('staff'),
                 'phone_number' => $request->input('phone_number'),
                 "billing_address" => $request->input('billing_address'),
                 "shipping_address" => $request->input('shipping_address'),
@@ -268,7 +282,8 @@ class UserController extends Controller
         }
         return \redirect()->back();
     }
-     public function change_profile_photo(Request $request, $id)
+
+    public function change_profile_photo(Request $request, $id)
     {
         $this->validate($request, [
             "file" => "required|file|mimes:jpg,jpeg,png,webp,gif",
@@ -294,23 +309,6 @@ class UserController extends Controller
                 return redirect()->back()->with('success', 'You have successfully changed your profile picture');
             }
             return redirect()->back()->with('error', 'Something goes to wrong.');
-        }
-        return redirect()->back()->with('error', 'enable to upload file');
-    }
-
-    public function change_profile_photoOld(Request $request, $id)
-    {
-        $this->validate($request, [
-            "file" => "required|file|mimes:jpg,jpeg,png,webp,gif",
-        ]);
-        if($request->hasFile("file")) {
-            $file = $request->file('file');
-            $fileName = mt_rand(1, 1000) . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(storage_path() . '/app/public/Profiles', $fileName);
-            DB::table('users')->where('id', $id)->update([
-                "photo" => $fileName,
-            ]);
-            return redirect()->back()->with('success', 'You have successfully changed your profile picture');
         }
         return redirect()->back()->with('error', 'enable to upload file');
     }
