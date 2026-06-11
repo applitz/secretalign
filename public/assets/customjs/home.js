@@ -8,6 +8,9 @@ var Home = function() {
             "processing": true,
             "searching": false,
             "serverSide": true,
+            "scrollX": true,
+            "responsive": false,
+            "autoWidth": false,
             "ajax": {
                 url: baseUrl + "/home",
                 type: 'GET',
@@ -23,14 +26,12 @@ var Home = function() {
                 { 'title': 'Patient', "data": "patient_full_name", orderable: false, searchable: false },
                 { 'title': 'Task', "data": "task_name", orderable: false, searchable: false },
                 { 'title': 'Treatment Type', "data": "treatment_type", orderable: false, searchable: false },
-                // { 'title': 'Setup Type', "data": "setup_type", orderable: false, searchable: false },
+                { 'title': 'Setup Type', "data": "setup_type", orderable: false, searchable: false },
                 { 'title': 'Task Date', "data": "created_at", orderable: false, searchable: false },
                 { 'title': 'Due Date', "data": "due_date", orderable: false, searchable: false },
                 { 'title': '', "data": "case_overview", orderable: false, searchable: false },
             ],
             "order": [[1, 'DESC']],
-            "responsive": true,
-            "autoWidth": false,
             "lengthMenu": [10, 20, 50, 100],
         });
 

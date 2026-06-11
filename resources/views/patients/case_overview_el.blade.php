@@ -36,38 +36,20 @@
     }
 @endphp
 <style>
-
-        canvas{
-			max-width: 720px;
-			max-height: 480px;
-		}
-        </style>
+    canvas{
+        max-width: 720px;
+        max-height: 480px;
+    }
+</style>
 @include('patients.case-overview.case_overview_header')
 
-@if((Auth::user()->email == 'parthkhunt12@gmail.com'))
-    @include('patients.case-overview.card_body_for_iframe_new')
-@else
-    @include('patients.case-overview.card_body_for_iframe')
-@endif
-
+@include('patients.case-overview.card_body_for_iframe')
 
 <div class="row gx-2">
     @include('patients.case-overview.card_body_for_iframe_right')
 
     @include('patients.case-overview.card_body_for_iframe_left')
 </div>
-
-{{-- </div>
-</div>
-</div>
-</div>
-</div>
-
-
-
-</div>
-</div>
-</div> --}}
 
 <div class="modal fade" id="docSendModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

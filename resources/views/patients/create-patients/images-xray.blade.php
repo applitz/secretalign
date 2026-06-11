@@ -63,7 +63,7 @@
     {{-- Profile Start --}}
     <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-6 col-12 _dropzone_template" template-key="5">
         <input class="d-none" name="file5" id="key5" file="{{ @$patient->fl_profile }}" data-field="5" type="file">
-        <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" key="5" style="background-image: url('{{asset('public/assets/vector/head-side.jpg')}}') ">
+        <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" key="5" style="background-image: url('{{asset('public/assets/vector/head-side.webp')}}') ">
             <div class="_dropzone_added _dropzone_added_hidden d-flex flex-column align-items-center justify-content-center">
                 <span class="text-white fw-semibold" data-text></span>
                 <img src="{{asset('public/assets')}}/check-mark.webp" style="width: 50px;height: 50px;">

@@ -8,6 +8,9 @@ var Patients = function() {
             "processing": true,
             "serverSide": true,
             "searching": false,
+             "scrollX": true,
+            "responsive": false,
+            "autoWidth": false,
             "ajax": {
                 url: baseUrl + "/lab/patients",
                 type: 'GET',
@@ -27,7 +30,7 @@ var Patients = function() {
                 { 'title': 'First Name', "data": "first_name", orderable: false, searchable: true },
                 { 'title': 'Birth Date', "data": "dob", orderable: false, searchable: true },
                 { 'title': 'Treatment Type', "data": "treatment_type", orderable: false, searchable: false },
-                // { 'title': 'Setup Type', "data": "setup_type", orderable: false, searchable: false },
+                { 'title': 'Setup Type', "data": "setup_type", orderable: false, searchable: false },
                 { 'title': 'Package', "data": "package", orderable: false, searchable: false },
                 { 'title': 'Status', "data": "status", orderable: false, searchable: false },
                 { 'title': 'Case Holder', "data": "case_holder", orderable: false, searchable: false },
@@ -36,8 +39,6 @@ var Patients = function() {
                 { 'title': '', "data": "case_overview", orderable: false, searchable: false },
             ],
             "order": [[1, 'DESC']],
-            "responsive": true,
-            "autoWidth": false,
             "lengthMenu": [10, 20, 50, 100],
         });
 

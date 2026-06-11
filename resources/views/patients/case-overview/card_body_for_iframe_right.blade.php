@@ -8,18 +8,35 @@
                                 data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">Scan
                                 Data</button>
                         </h2>
-                        <div class="accordion-collapse collapse " id="collapse2" aria-labelledby="heading2"
-                            data-bs-parent="#accordionExample">
+                        <div class="accordion-collapse collapse " id="collapse2" aria-labelledby="heading2" data-bs-parent="#accordionExample">
+
                             <div class="accordion-body">
+                                <span class="fw-medium font-sans-serif text-900" >Original bite registration STL file:</span><br>
                                 @if ($patient->fl_upper_arch)
                                     <a href="{{ asset('/storage/PatientFiles/Patient' . $patient->patient_id . '/' . $patient->fl_upper_arch) }}"
-                                        target="_blank" class="btn btn-link btn-sm ps-0 mt-2">Upper Arch <i
+                                        target="_blank" class="btn btn-link btn-sm ps-0 ">Upper Arch <i
                                             class="fas fa-angle-right"></i></a>
                                 @endif
-                                @if ($patient->fl_upper_arch)
+                                @if ($patient->fl_lower_arch)
                                     <a href="{{ asset('/storage/PatientFiles/Patient' . $patient->patient_id . '/' . $patient->fl_lower_arch) }}"
-                                        target="_blank" class="btn btn-link btn-sm ps-0 mt-2">Lower Arch <i
+                                        target="_blank" class="btn btn-link btn-sm ps-0 ">Lower Arch <i
                                             class="fas fa-angle-right"></i></a>
+                                @endif
+
+                                @if($patient->optional_fl_upper_arch != null || $patient->optional_fl_lower_arch != null)
+                                    <br><br>
+                                    <span class="fw-medium font-sans-serif text-900" >Mandibular Repositioning STL Files:</span><br>
+                                    @if ($patient->optional_fl_upper_arch)
+                                        <a href="{{ asset('/storage/PatientFiles/Patient' . $patient->patient_id . '/' . $patient->optional_fl_upper_arch) }}"
+                                            target="_blank" class="btn btn-link btn-sm ps-0 ">Upper Arch <i
+                                                class="fas fa-angle-right"></i></a>
+                                    @endif
+
+                                    @if ($patient->optional_fl_lower_arch)
+                                        <a href="{{ asset('/storage/PatientFiles/Patient' . $patient->patient_id . '/' . $patient->optional_fl_lower_arch) }}"
+                                            target="_blank" class="btn btn-link btn-sm ps-0 ">Lower Arch <i
+                                                class="fas fa-angle-right"></i></a>
+                                    @endif
                                 @endif
                             </div>
                         </div>

@@ -547,6 +547,109 @@ class RegisterPatient extends Controller
     }
     public function save_prescription(Request $request)
     {
+        $data = [];
+        $data['treat_upper_arch'] = $request->post('upper_arch');
+        $data['treat_lower_arch'] = $request->post('lower_arch');
+        $data['midline'] = $request->post('midline');
+        $data['align_to_facial_midline'] = $request->post('align_to_facial_midline');
+        $data['midline_notes'] = $request->post('midline_notes');
+        $data['archform'] = $request->post('archform');
+        $data['archform_notes'] = $request->post("archform_notes");
+        $data['class'] = $request->post("class");
+        $data['pcp_ur'] = serialize(json_decode($request->post('pcp_ur')));
+        $data['pcp_lr'] = serialize(json_decode($request->post('pcp_lr')));
+        $data['pcp_ul'] = serialize(json_decode($request->post('pcp_ul')));
+        $data['pcp_ll'] = serialize(json_decode($request->post('pcp_ll')));
+        $data['ctp_ur'] = serialize(json_decode($request->post('ctp_ur')));
+        $data['ctp_lr'] = serialize(json_decode($request->post('ctp_lr')));
+        $data['ctp_ul'] = serialize(json_decode($request->post('ctp_ul')));
+        $data['ctp_ll'] = serialize(json_decode($request->post('ctp_ll')));
+
+        $data['button_inner'] = implode(',', json_decode($request->post('button_inner'), true) ?? []);
+        $data['button_outer'] = implode(',', json_decode($request->post('button_outer'), true) ?? []);
+        $data['ihook_outer'] = implode(',', json_decode($request->post('ihook_outer'), true) ?? []);
+        $data['ihook_inner'] = implode(',', json_decode($request->post('ihook_inner'), true) ?? []);
+        $data['precision_cut_outer'] = implode(',', json_decode($request->post('precision_cut_outer'), true) ?? []);
+        $data['precision_cut_inner'] = implode(',', json_decode($request->post('precision_cut_inner'), true) ?? []);
+        $data['power_arm_attachment_outer'] = implode(',', json_decode($request->post('power_arm_attachment_outer'), true) ?? []);
+        $data['power_arm_attachment_inner'] = implode(',', json_decode($request->post('power_arm_attachment_inner'), true) ?? []);
+        $data['power_ridge_outer'] = implode(',', json_decode($request->post('power_ridge_outer'), true) ?? []);
+        $data['power_ridge_inner'] = implode(',', json_decode($request->post('power_ridge_inner'), true) ?? []);
+        $data['bite_turbos'] = implode(',', json_decode($request->post('bite_turbos'), true) ?? []);
+        $data['bite_ramp'] = implode(',', json_decode($request->post('bite_ramp'), true) ?? []);
+
+        $data['unerupted_teeth'] = implode(',', json_decode($request->post('unerupted_teeth'), true) ?? []);
+        $data['extracted_teeth'] = implode(',', json_decode($request->post('extracted_teeth'), true) ?? []);
+        $data['tooth_movement_restrictions'] = implode(',', json_decode($request->post('tooth_movement_restrictions'), true) ?? []);
+        $data['coil'] = implode(',', json_decode($request->post('coil'), true) ?? []);
+        $data['pontic'] = implode(',', json_decode($request->post('pontic'), true) ?? []);
+        $data['bridge'] = implode(',', json_decode($request->post('bridge'), true) ?? []);
+
+        $data['ihook_ur'] = serialize(json_decode($request->post('ihook_ur')));
+        $data['ihook_lr'] = serialize(json_decode($request->post('ihook_lr')));
+        $data['ihook_ul'] = serialize(json_decode($request->post('ihook_ul')));
+        $data['ihook_ll'] = serialize(json_decode($request->post('ihook_ll')));
+        $data['class_notes'] = $request->post("class_notes");
+        $data['tooth_size_issues'] = $request->post("size_issues");
+        $data['location_upper'] = $request->post('location_upper');
+        $data['location_lower'] = $request->post('location_lower');
+        $data['limits'] = $request->post('limits');
+        $data['ofp_ur'] = serialize(json_decode($request->post('ofp_ur')));
+        $data['ofp_lr'] = serialize(json_decode($request->post('ofp_lr')));
+        $data['ofp_ul'] = serialize(json_decode($request->post('ofp_ul')));
+        $data['ofp_ll'] = serialize(json_decode($request->post('ofp_ll')));
+        $data['tmr_ur'] = serialize(json_decode($request->post('tmr_ur')));
+        $data['tmr_lr'] = serialize(json_decode($request->post('tmr_lr')));
+        $data['tmr_ul'] = serialize(json_decode($request->post('tmr_ul')));
+        $data['tmr_ll'] = serialize(json_decode($request->post('tmr_ll')));
+        $data['mut_ur'] = serialize(json_decode($request->post('mut_ur')));
+        $data['mut_lr'] = serialize(json_decode($request->post('mut_lr')));
+        $data['mut_ul'] = serialize(json_decode($request->post('mut_ul')));
+        $data['mut_ll'] = serialize(json_decode($request->post('mut_ll')));
+        $data['tbe_ur'] = serialize(json_decode($request->post('tbe_ur')));
+        $data['tbe_lr'] = serialize(json_decode($request->post('tbe_lr')));
+        $data['tbe_ul'] = serialize(json_decode($request->post('tbe_ul')));
+        $data['tbe_ll'] = serialize(json_decode($request->post('tbe_ll')));
+        $data['tla_ur'] = serialize(json_decode($request->post('tla_ur')));
+        $data['tla_lr'] = serialize(json_decode($request->post('tla_lr')));
+        $data['tla_ul'] = serialize(json_decode($request->post('tla_ul')));
+        $data['tla_ll'] = serialize(json_decode($request->post('tla_ll')));
+
+        $data['add_pontic_ur'] = serialize(json_decode($request->post('add_pontic_ur')));
+        $data['add_pontic_ul'] = serialize(json_decode($request->post('add_pontic_ul')));
+        $data['add_pontic_lr'] = serialize(json_decode($request->post('add_pontic_lr')));
+        $data['add_pontic_ll'] = serialize(json_decode($request->post('add_pontic_ll')));
+
+        $data['add_bite_turbos_ur'] = serialize(json_decode($request->post('add_bite_turbos_ur')));
+        $data['add_bite_turbos_ul'] = serialize(json_decode($request->post('add_bite_turbos_ul')));
+        $data['add_bite_turbos_lr'] = serialize(json_decode($request->post('add_bite_turbos_lr')));
+        $data['add_bite_turbos_ll'] = serialize(json_decode($request->post('add_bite_turbos_ll')));
+
+        $data['resolutions_notes'] = $request->post('resolution_notes');
+        $data['occlusal_plane'] = $request->post('occlusal_plane');
+        $data['occlusal_plane_notes'] = $request->post('occlusal_plane_notes');
+
+        $data['aesthetic_start'] = $request->post('aesthetic_start');
+        $data['anterior_leveling'] = $request->post('anterior_leveling');
+
+        $data['additional_attachments'] = serialize(json_decode($request->post('additional_attachments')));
+        $data['additional_attachments_notes'] = $request->post('additional_attachments_notes');
+        $data['keep_already_placed_attachments'] = $request->post('keep_already_place_attachments');
+
+        $data['trim_type_upper'] = $request->post('aligner_trim_type_upper');
+        $data['trim_type_upper_straight_upper'] = $request->post('trim_type_upper_upper');
+        $data['trim_type_lower'] = $request->post('aligner_trim_type_lower');
+        $data['trim_type_lower_straight_lower'] = $request->post('trim_type_lower_upper');
+
+        $data['is_prescription_submitted'] = 1;
+        $id = $request->post('patient_id');
+        $treatment_plan_id = $request->post('treatment_plan_id');
+       // dd($data);
+        DB::table('p_treatment_plans')->where('patient_id', $id)->where('id', $treatment_plan_id)->update($data);
+    }
+
+    public function save_prescription_old(Request $request)
+    {
         //dd($request->all());
         $data = [];
         $data['treat_upper_arch'] = $request->post('upper_arch');
@@ -622,6 +725,203 @@ class RegisterPatient extends Controller
     }
 
     public function submit(Request $request)
+    {
+        // dd($request->all());
+        $id = $request->post('patient_id');
+        $phase = $request->post('treatment_plan_id');
+        $preferred_package = @$request->post('client_preferred_package');
+        $setup_type = @$request->post('client_setup_type');
+        $comment = $request->comment;
+        $advisor_id = $request->advisor;
+        // dd($advisor_id === null , $advisor_id === '');
+        $patient = DB::table('p_treatment_plans as tp')
+            ->where('tp.is_deleted', 0)
+            //->where('tp.is_submitted', 0)
+            ->where('tp.id', $phase)
+            ->Join("patients as p", function ($join) {
+                $join->on("tp.patient_id", '=', "p.id")
+                    ->where('p.user_id', Auth::user()->id)
+                    ->where('p.is_deleted', 0);
+            })
+            ->select("tp.*", "p.first_name", "p.last_name", "p.staff_id",  "p.dob", "p.user_id", "p.pricing_package", "p.nemotech_patient_id")
+            ->first();
+
+        $details = [
+            'subject' => 'Order Received - Review in Progress',
+            'doctor_name' => Auth::user()->first_name." ".Auth::user()->last_name,
+            'patient_name' => $patient->first_name." ".$patient->last_name,
+            'email' => Auth::user()->email,
+        ];
+        SubmitCaseMailJob::dispatch($details);
+
+        if($patient->staff_id && $patient->staff_id != null){
+            $staff = DB::table('users')
+                    ->where('role', 'staff')
+                    ->where('id', $patient->staff_id)
+                    ->get(['first_name', 'last_name', 'email'])
+                    ->toArray();
+
+            SubmitCaseMailStaffJob::dispatch($staff, $details);
+        }
+
+
+        if($patient->recommended_advisor != null)
+        {
+            $advisor_id = $patient->recommended_advisor;
+        }
+
+        if (@$patient) {
+
+            if($patient->phase == 1 && $patient->is_editable == 0 && $patient->is_submitted == 0) {
+
+                if(!in_array($preferred_package, ['select', 'confidence'])) {
+                    'Enable to submit. Make sure you have completely filled all required sections.';
+                }
+                $package = 'AL-SECRET-SELECT';
+                if($preferred_package == 'confidence') {
+                    $package = 'AL-SECRET-CONFIDENCE';
+                }
+                DB::table('patients')->where('id', $patient->patient_id)->update([
+                    "pricing_package" => $package,
+                    "setup_type" => $setup_type,
+                ]);
+            }
+
+            if (!empty($request->advisor) && $request->advisor !== 'null') {
+                DB::table('p_treatment_plans')->where('id', $patient->id)->update([
+                    "case_holder" => "staff",
+                    "previous_case_holder" => "doctor",
+                    "status" => "Waiting Staff Review for Advisor",
+                    "recommended_advisor" => $advisor_id
+                ]);
+                $task = (new TaskService($patient->id));
+                $task_id = $task->create_task_withoutMailStaff("staff", "Case Review for Advisor", $patient->user_id, $comment, "doctor", "staff", null);
+            } else {
+                if($patient->is_editable == 0)
+                {
+                    DB::table('p_treatment_plans')->where('id', $patient->id)->update([
+                        "case_holder" => "staff",
+                        "previous_case_holder" => "doctor",
+                        "status" => "Waiting Staff Review",
+                        "recommended_advisor" => $advisor_id
+                    ]);
+
+
+                    $tasks = DB::table('tasks')
+                            ->where('treatment_plan_id', $patient->id)
+                            // ->where('type','doctor')
+                            ->where('status', '!=', 'completed')
+                            ->orderByDesc('id')
+                            ->get();
+
+                    foreach ($tasks as $task) {
+                        DB::table('tasks')->where('id', $task->id)->update([
+                            "status" => 'completed',
+                            "user_id" => Auth::id(),
+                        ]);
+                    }
+                    $task = (new TaskService($patient->id));
+                    $task_id = $task->create_task_withoutMailStaff("staff", "Case Review", $patient->user_id, null, "doctor", "staff", null);
+                }
+            }
+
+            if($patient->is_editable == 1)
+            {
+                DB::table('p_treatment_plans')->where('id', $patient->id)->update([
+                    "case_holder" => "staff",
+                    "previous_case_holder" => "doctor",
+                    "status" => "Waiting Staff Review",
+                    "is_editable" => 0,
+
+                ]);
+
+
+                $tasks = DB::table('tasks')
+                        ->where('treatment_plan_id', $patient->id)
+                        // ->where('type','doctor')
+                        ->where('status', '!=', 'completed')
+                        ->orderByDesc('id')
+                        ->get();
+
+                foreach ($tasks as $task) {
+                    DB::table('tasks')->where('id', $task->id)->update([
+                        "status" => 'completed',
+                        "user_id" => Auth::id(),
+                    ]);
+                }
+                $task = (new TaskService($patient->id));
+                if (!empty($request->advisor) && $request->advisor !== 'null') {
+                    $task_id = $task->create_task_withoutMailStaff("staff", "Case Review for Advisor", $patient->user_id, null, "doctor", "staff", null);
+                } else {
+                    $task_id = $task->create_task_withoutMailStaff("staff", "Case Review", $patient->user_id, null, "doctor", "staff", null);
+                }
+            }
+            if ($patient->first_name && $patient->last_name && $patient->dob) {
+
+                $nemotech = new NemoTechService($patient->first_name, $patient->last_name, $patient->dob, $patient->nemotech_patient_id);
+                $patient_id = $nemotech->syncPatient();
+                if($patient_id != null) {
+                    DB::table('patients')->where('id', $patient->patient_id)->update([
+                        "nemotech_patient_id" => $patient_id,
+                    ]);
+                }
+                if (($patient->fl_upper_arch && $patient->fl_lower_arch && $patient->fl_front && $patient->fl_smile && $patient->fl_profile && $patient->fl_frontal && $patient->fl_right_buccal && $patient->fl_left_buccal && $patient->fl_upper_occlusal && $patient->fl_lower_occlusal && $patient->fl_panorex && $patient->fl_lateral_ceph ) || $patient->phase!=1) {
+                    if (($patient->treat_upper_arch == 1 || $patient->treat_lower_arch == 1) && $patient->is_prescription_submitted == 1) {
+                        if ($patient->is_editable == 1) {
+
+                            //sync documents
+                            DB::table('sync_queues')->insert([
+                                "type" => "Nemotech",
+                                "treatment_plan_id" => $phase,
+                                "created_at" => date("Y-m-d"),
+                            ]);
+                            $nemotech->syncDocuments(DB::table('p_treatment_plans as tp')
+                            ->where('tp.is_deleted', 0)
+                            ->where('tp.id', $phase)
+                            ->Join("patients as p", function ($join) {
+                                $join->on("tp.patient_id", '=', "p.id")
+                                    ->where('p.user_id', Auth::user()->id)
+                                    ->where('p.is_deleted', 0);
+                            })
+                            ->select("tp.*", "p.first_name", "p.last_name", "p.dob", "p.user_id", "p.pricing_package", "p.nemotech_patient_id")
+                            ->first());
+                            return redirect('/patient/case-overview/' . $this->hashids->encode($patient->id))->with("success", "Patient Case Edited!");
+                        }
+                        if (!empty($request->advisor) && $request->advisor !== 'null') {
+                            $taskName = 'Case Review for Advisor';
+                        } else {
+                            $taskName = 'Case Review';
+                        }
+                        $this->saveOrderNew($id, $phase, $taskName, $patient->user_id);
+
+                        //sync documents
+                        DB::table('sync_queues')->insert([
+                            "type" => "Nemotech",
+                            "treatment_plan_id" => $phase,
+                            "created_at" => date("Y-m-d"),
+                        ]);
+
+                        $nemotech->syncDocuments(DB::table('p_treatment_plans as tp')
+                        ->where('tp.is_deleted', 0)
+                        ->where('tp.id', $phase)
+                        ->Join("patients as p", function ($join) {
+                            $join->on("tp.patient_id", '=', "p.id")
+                                ->where('p.user_id', Auth::user()->id)
+                                ->where('p.is_deleted', 0);
+                        })
+                        ->select("tp.*", "p.first_name", "p.last_name", "p.dob", "p.user_id", "p.pricing_package", "p.nemotech_patient_id")
+                        ->first());
+                        return redirect('/patient/case-overview/' . $this->hashids->encode($patient->id))->with("success", "Patient Case has been added!");
+                        //return redirect('/orders/checkout/proceed/' . $id . '/' . $phase . '/initial-deposit');
+                    }
+                }
+            }
+        }
+
+        return redirect()->back()->with('error', 'Enable to submit. Make sure you have completely filled all required sections.');
+    }
+
+    public function submitOld(Request $request)
     {
         $id = $request->post('patient_id');
         $phase = $request->post('treatment_plan_id');
@@ -857,6 +1157,51 @@ class RegisterPatient extends Controller
             []             // $isMail
         );
     }
+
+    private function saveOrderNew($id, $phase, $taskName = null, $user_id = null)
+    {
+        $order_id = @DB::table('orders')->where('treatment_plan_id', $phase)->where('is_deleted', 0)->first()->id;
+        // $orderId= DB::table('orders')->where('id', $order_id)->where('is_deleted', 0)->first();
+        //$plan= DB::table('p_treatment_plans')->where('id',$orderId->treatment_plan_id)->first();
+        if (!@$order_id) {
+            $order_id = DB::table('orders')->insertGetId([
+                "user_id" => Auth::user()->id,
+                "patient_id" => $id,
+                "treatment_plan_id" => $phase,
+                "datetime" => date("Y-m-d H:i:s"),
+                "status" => "pending"
+            ]);
+        }
+        DB::table('p_treatment_plans')->where('id', $phase)->update([
+            "is_submitted" => 1,
+            "status" => "In Progress",
+            "is_editable" => 0,
+            "previous_case_holder" => "Doctor",
+        ]);
+
+
+        //add statff tasks
+        $tasks = DB::table('tasks')
+            ->where('treatment_plan_id', $phase)
+            // ->where('type','doctor')
+            ->where('status', '!=', 'completed')
+            ->orderByDesc('id')
+            ->get();
+
+        foreach ($tasks as $task) {
+            DB::table('tasks')->where('id', $task->id)->update([
+                "status" => 'completed',
+                "user_id" => Auth::id(),
+            ]);
+        }
+        $task_id = (new TaskService($phase))->create_task_withoutMailStaff("staff", $taskName != null ? $taskName : "Case Review",    $user_id,            // $user_id
+            null,            // $comment
+            null,            // $from_role
+            null,            // $to_role
+            []             // $isMail
+        );
+    }
+
     public function validatePatientData(Request $request)
     {
         $id = $request->post('patient_id');

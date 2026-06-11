@@ -6,7 +6,7 @@
         <title>Dashboard | Secret Clear Aligner</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+
         <!-- App favicon -->
         <link rel="shortcut icon" href="{{ asset('public') }}/assets/favicon.png">
 
@@ -20,9 +20,14 @@
         <link href="{{ asset('public/qovex') }}/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
         <!-- App Css-->
         <link href="{{ asset('public/qovex') }}/assets/css/app.min.css"  id="app-style"  rel="stylesheet" type="text/css" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <link href="{{ asset('public/css/custom.css') }}" rel="stylesheet" type="text/css" />
+        {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" /> --}}
+        <link href="{{ asset('public/assets/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
         <style>
-
+            :root {
+                --bs-font-sans-serif: "Roboto", sans-serif !important;
+            }
 
             body[data-layout=detached] .container-fluid {
                 max-width: 100%;
@@ -67,9 +72,13 @@
                 overflow-x: hidden;
             }
 
-            div.dataTables_wrapper div.dataTables_scrollBody {
-                overflow-x: hidden !important;
+            .table-responsive {
+                overflow-x: auto !important;
             }
+
+            /* div.dataTables_wrapper div.dataTables_scrollBody {
+                overflow-x: hidden !important;
+            } */
             body[data-layout=detached] #layout-wrapper::before {
                 height: 165px;
                 top: 70px;
@@ -419,6 +428,25 @@
         z-index: 10000;
     }
 
+    .select2-container--default .select2-selection--single {
+        border: 1px solid #f6f6f6 !important;
+        border-radius: 0px !important;
+        color: #8687a7 !important;
+        height: 38px;
+    }
+
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        line-height: 36px !important;
+        padding-left: 12px !important;
+    }
+    .select2-dropdown {
+        border: 1px solid #f6f6f6 !important;
+        border-radius: 0px !important;
+    }
+
+    .select2-container--default .select2-results__option--selected {
+        color: #a6a7be !important;
+    }
     /* canvas[data-engine="three.js r146"] {
         display: none !important;
     } */
@@ -498,22 +526,18 @@
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end">
                                         <!-- item-->
-                                        <a class="dropdown-item" href="{{ url('/profile-settings') }}">
-                                            <i class="bx bx-user font-size-16 align-middle me-1"></i>Profile
-                                        </a>
+                                        <a class="dropdown-item" href="{{ url('/profile-settings') }}"><i class="bx bx-user font-size-16 align-middle me-1"></i>
+                                            Profile</a>
 
                                         @if(Auth::user()->role == 'doctor')
-                                            <a class="dropdown-item" href="{{ url('/clinical-preferences') }}">
-                                                 <i class="bx bx-customize font-size-16 align-middle me-1"></i>
-                                                Clinical Preferences
-                                            </a>
+                                            <a class="dropdown-item" href="{{ url('/clinical-preferences') }}"><i class="bx bx-user font-size-16 align-middle me-1"></i>
+                                            Clinical Preferences</a>
                                         @endif
 
-                                        <a class="dropdown-item text-danger" href="javascript:void(0);"  onclick="document.getElementById('logout-form').submit()">
-                                            <i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> Logout
-                                        </a>
-                                        <form method="POST" id="logout-form" action="{{ route('logout') }}">@csrf</form>
-                                    </div>
+                                        <a class="dropdown-item text-danger" href="javascript:void(0);"  onclick="document.getElementById('logout-form').submit()"><i
+                                                class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> Logout</a>
+                                                <form method="POST" id="logout-form" action="{{ route('logout') }}">@csrf</form>
+                                            </div>
                                 </div>
 
 
@@ -1136,6 +1160,7 @@
         <script src="{{  asset('public/assets/plugins/ckeditor.js') }}"></script>
 
 
+
         <script src="{{ asset('public/qovex') }}/assets/js/app.js"></script>
 
 
@@ -1205,7 +1230,8 @@
             toast.show()
         }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="{{  asset('public/assets/select2/js/select2.min.js') }}"></script>
+    <script src="{{  asset('public/assets/customjs/form-advanced.init.js') }}"></script>
     @yield('javascript')
     <script>
         function checkNotifications() {
@@ -1259,9 +1285,9 @@
 
                 // switch to light version
                 if (p.dataset.planType === 'treatment') {
-                    p.style.backgroundImage = `url('${baseAssetPath}/Treatment-Plan-Service-light.svg')`;
+                    p.style.backgroundImage = `url('${baseAssetPath}/Treatment-Plan-Service-light.webp')`;
                 } else if (p.dataset.planType === 'aligners') {
-                    p.style.backgroundImage = `url('${baseAssetPath}/Aligners-light.svg')`;
+                    p.style.backgroundImage = `url('${baseAssetPath}/Aligners-light.webp')`;
                 }
             });
 

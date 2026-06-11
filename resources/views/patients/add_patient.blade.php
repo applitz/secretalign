@@ -68,7 +68,6 @@
         width: 250px !important;
     }
 
-
 </style>
 @stop
 @php
@@ -121,7 +120,7 @@
     @endphp
 
 
-{{-- <div class="row gx-0 d-none" id="3shape-section">
+<div class="row gx-0 d-none" id="3shape-section">
     <div class="col-12 ">
         <div class="card">
             <div class="card-body">
@@ -181,219 +180,8 @@
             </div>
         </div>
     </div>
-</div> --}}
-
-<div class="modal fade" id="3shape-section-Modal" tabindex="-1">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">3Shape communicate Scan data</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <p class="card-title-desc">Search with case id or by patient. Click on case to download stl files.</p>
-
-            @csrf
-            <input type="hidden" name="additional_patient_id" value="{{ $patient->patient_id }}">
-            <input type="hidden" name="additional_case_id" value="{{ $patient->id }}">
-            <div class="row">
-                <div class="col-md-3 mb-3">
-                    <div class="row align-items-center g-3">
-                        <div class="col-12">
-                        <h6 class="text-700 mb-0">Case ID: </h6>
-                        </div>
-                        <div class="col-12 position-relative">
-                        <input type="text" class="form-control" id="_three_shape_case_id"  name="_three_shape_case_id">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="row align-items-center g-3">
-                        <div class="col-12">
-                        <h6 class="text-700 mb-0">Search for case: </h6>
-                        </div>
-                        <div class="col-12 position-relative">
-                        <input type="text" class="form-control" id="_three_shape_search_for_case" name="_three_shape_search_for_case">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                <div class="btn-group">
-                    <button class="btn btn-primary waves-effect waves-light" type="button" id="3shape-search">Search</button>
-                    <button type="button" class="btn btn-warning waves-effect waves-light" id="cancel-3shape-select">
-                        Cancel
-                    </button>
-                    {{-- <a class="btn btn-warning waves-effect waves-light" href="javascript:void(0);" id="optional-cancel-3shape-select">Cancel</a> --}}
-                </div>
-                    @if(Auth::user()->three_shape_access_token != null)
-                        <a class="btn btn-danger float-end" href="{{url('/integrations/3shape-disable')}}">
-                            <div class="d-flex align-items-center justify-content-center ">
-                            <span>Logout From</span>
-                            <img class="ms- 1" src="{{asset('public/assets/communicate-logo-white.png')}}" width="75px">
-                            </div>
-                        </a>
-                    @endif
-                </div>
-            </div>
-
-
-        <div class="table-rep-plugin">
-            <div class="table-responsive mb-0">
-                <table id="3shape-search-result" class="table table-striped">
-
-                </table>
-            </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-  </div>
 </div>
 
-{{-- <div class="row gx-0 d-none" id="optional-3shape-section">
-    <div class="col-12 ">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">3Shape communicate Scan data 111</h4>
-                <p class="card-title-desc">Search with case id or by patient. Click on case to download stl files.</p>
-                <form class="mt-2" method="GET" id="3shape-search">
-                    <input type="hidden" name="_patient_id" value="{{ $patient->patient_id }}">
-                    <input type="hidden" name="_case_id" value="{{ $patient->id }}">
-                    <div class="row">
-                      <div class="col-md-3 mb-3">
-                        <div class="row align-items-center g-3">
-                          <div class="col-12">
-                            <h6 class="text-700 mb-0">Case ID: </h6>
-                          </div>
-                          <div class="col-12 position-relative">
-                            <input type="text" class="form-control" name="_three_shape_case_id">
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-3 mb-3">
-                        <div class="row align-items-center g-3">
-                          <div class="col-12">
-                            <h6 class="text-700 mb-0">Search for case: </h6>
-                          </div>
-                          <div class="col-12 position-relative">
-                            <input type="text" class="form-control" name="_three_shape_search_for_case">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12 mb-3">
-                        <div class="btn-group">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit">Search</button>
-                            <a class="btn btn-warning waves-effect waves-light" href="javascript:void(0);" id="optional-cancel-3shape-select">Cancel</a>
-                        </div>
-                        @if(Auth::user()->three_shape_access_token != null)
-                            <a class="btn btn-danger float-end" href="{{url('/integrations/3shape-disable')}}">
-                               <div class="d-flex align-items-center justify-content-center ">
-                                <span>Logout From</span>
-                                <img class="ms- 1" src="{{asset('public/assets/communicate-logo-white.png')}}" width="75px">
-                               </div>
-                            </a>
-                         @endif
-                      </div>
-                    </div>
-                  </form>
-
-                  <div class="table-rep-plugin">
-                    <div class="table-responsive mb-0">
-                        <table id="3shape-search-result" class="table table-striped">
-
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div> --}}
-
-<div class="modal fade" id="medit-link-Modal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Medit Link Scan data</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p class="card-title-desc">
-                    Search with case registration/modification dates and case name. Click on case to download stl files.
-                </p>
-                <form class="mt-2" method="GET" id="medit-link-search">
-                    <input type="hidden" name="_patient_id" value="{{ $patient->patient_id }}">
-                    <input type="hidden" name="_case_id" value="{{ $patient->id }}">
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                        <div class="row align-items-center g-3">
-                            <div class="col-12">
-                            <h6 class="text-700 mb-0">Start Date: </h6>
-                            </div>
-                            <div class="col-12 position-relative">
-                            <input type="text" class="form-control pickr" name="_medit_link_start_date" value="{{date("Y-m-d", strtotime("-1 month"))}}">
-                            </div>
-                        </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                        <div class="row align-items-center g-3">
-                            <div class="col-12">
-                            <h6 class="text-700 mb-0">End Date: </h6>
-                            </div>
-                            <div class="col-12 position-relative">
-                            <input type="text" class="form-control pickr" name="_medit_link_end_date" value="{{date("Y-m-d")}}">
-                            </div>
-                        </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                        <div class="row align-items-center g-3">
-                            <div class="col-12">
-                            <h6 class="text-700 mb-0">Search for case: </h6>
-                            </div>
-                            <div class="col-12 position-relative">
-                            <input type="text" class="form-control" name="_medit_link_search_for_case">
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                        <div class="btn-group">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit">Search</button>
-                            <a class="btn btn-warning waves-effect waves-light" href="javascript:void(0);" id="cancel-medit-link-select">Cancel</a>
-                        </div>
-                        @if(Auth::user()->medit_link_access_token != null)
-                            <a class="btn btn-danger float-end" href="{{url('/integrations/medit-link-disable')}}">
-                                <div class="d-flex align-items-center justify-content-center ">
-                                <span>Logout From</span>
-                                <img class="ms-2"  src="{{asset('public/assets/medit-link-logo.svg')}}" width="52px">
-                                </div>
-                            </a>
-                            @endif
-                        </div>
-                    </div>
-                </form>
-
-                <div class="table-rep-plugin">
-                    <div class="table-responsive mb-0">
-                        <table id="medit-link-search-result" class="table table-striped">
-
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="row gx-0 d-none" id="medit-link-section">
     <div class="col-12 ">
@@ -467,79 +255,7 @@
     </div>
 </div>
 
-<div class="row gx-0 d-none" id="optional-medit-link-section">
-    <div class="col-12 ">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Medit Link Scan data</h4>
-                <p class="card-title-desc">Search with case registration/modification dates and case name. Click on case to download stl files.</p>
-                <form class="mt-2" method="GET" id="medit-link-search">
-                    <input type="hidden" name="_patient_id" value="{{ $patient->patient_id }}">
-                    <input type="hidden" name="_case_id" value="{{ $patient->id }}">
-                    <div class="row">
-                      <div class="col-md-3 mb-3">
-                        <div class="row align-items-center g-3">
-                          <div class="col-12">
-                            <h6 class="text-700 mb-0">Start Date: </h6>
-                          </div>
-                          <div class="col-12 position-relative">
-                            <input type="text" class="form-control pickr" name="_medit_link_start_date" value="{{date("Y-m-d", strtotime("-1 month"))}}">
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-3 mb-3">
-                        <div class="row align-items-center g-3">
-                          <div class="col-12">
-                            <h6 class="text-700 mb-0">End Date: </h6>
-                          </div>
-                          <div class="col-12 position-relative">
-                            <input type="text" class="form-control pickr" name="_medit_link_end_date" value="{{date("Y-m-d")}}">
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-3 mb-3">
-                        <div class="row align-items-center g-3">
-                          <div class="col-12">
-                            <h6 class="text-700 mb-0">Search for case: </h6>
-                          </div>
-                          <div class="col-12 position-relative">
-                            <input type="text" class="form-control" name="_medit_link_search_for_case">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12 mb-3">
-                        <div class="btn-group">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit">Search</button>
-                            <a class="btn btn-warning waves-effect waves-light" href="javascript:void(0);" id="cancel-medit-link-select">Cancel</a>
-                        </div>
-                        @if(Auth::user()->medit_link_access_token != null)
-                            <a class="btn btn-danger float-end" href="{{url('/integrations/medit-link-disable')}}">
-                               <div class="d-flex align-items-center justify-content-center ">
-                                <span>Logout From</span>
-                                <img class="ms-2"  src="{{asset('public/assets/medit-link-logo.svg')}}" width="52px">
-                               </div>
-                            </a>
-                         @endif
-                      </div>
-                    </div>
-                  </form>
-
-                  <div class="table-rep-plugin">
-                    <div class="table-responsive mb-0">
-                        <table id="medit-link-search-result" class="table table-striped">
-
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row gx-0" id="patient-wizard">
+<div class="row gx-0" id="patient-wizard" >
     <div class="col-12 ">
         <div class="card">
 
@@ -621,11 +337,10 @@
 
 
 
-
-
 <form method="POST" action="{{ url('/patient/submit') }}" id="final-submit-form">
     @csrf
     <input type="hidden" name="client_preferred_package" value="select">
+    <input type="hidden" name="client_setup_type" value="1">
     <input type="hidden" name="treatment_plan_id" value="{{ $patient->id }}">
     <input type="hidden" name="patient_id" value="{{ $patient->patient_id }}">
 </form>
@@ -908,7 +623,7 @@
 
 @endif
 
-    @if( request()->get('code') && request()->get('matchNode') && request()->get('codeChallenge') && request()->get('domain') && request()->get('type') == 'primary' )
+    @if( request()->get('code') && request()->get('matchNode') && request()->get('codeChallenge') && request()->get('domain'))
     <!--  Order From shining3d Modal Start -->
         <div class="modal fade" id="order-from-shining3d-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -1083,65 +798,67 @@
         </div>
     <!-- Order From shining3d Modal End -->
     @endif
-
-    @if( request()->get('code') && request()->get('matchNode') && request()->get('codeChallenge') && request()->get('domain') && request()->get('type') == 'additional' )
-         <!--  Order From shining3d Modal Start -->
-        <div class="modal fade" id="order-from-shining3d-additional-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
+    {{-- <!--  Order From shining3d Modal Start -->
+        <div class="modal fade" id="order-from-shining3d-modal" tabindex="-1" aria-labelledby="orderFromShining3dLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content">
 
                     <div class="modal-header">
                         <h5 class="modal-title" id="orderFromShining3dLabel">
-                            Import From Shining3d
+                            Order From Shining3d
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="modal-body">
-                        <div id="shining3d-error-additional" class="alert alert-danger py-1" style="display:none; font-size: 14px;"></div>
+                        <div id="shining3d-error" class="alert alert-danger py-1" style="display:none; font-size: 14px;"></div>
                             @csrf
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label for="scanType" class="form-label">Select Region
-                                            <a href="{{ route('shining3d-region-details') }}" class="text-info" target="_blank" rel="noopener noreferrer">
-                                                <i class="fas fa-info-circle"></i>
-                                            </a>
-                                        </label>
-                                        <select id="scanRegion-additional" class="form-select">
-                                            <option value="https://ffapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ffapi.shining3d.com' ? 'selected="selected"' : '' }}> Europe </option>
-                                            <option value="https://hzapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://hzapi.shining3d.com' ? 'selected="selected"' : '' }}> China</option>
-                                            <option value="https://ruapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://ruapi.shining3d.com' ? 'selected="selected"' : '' }}> Russia </option>
-                                            <option value="https://sapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://sapi.shining3d.com' ? 'selected="selected"' : '' }}> USA</option>
-                                            <option value="https://tkapi.shining3d.com" {{ $dataShining3d['baseUrl'] == 'https://tkapi.shining3d.com' ? 'selected="selected"' : '' }}> Asia-Pacific</option>
+                                        <label for="scanType" class="form-label">Select Region</label>
+                                        <select id="scanRegion" class="form-select">
+                                            <option value="">-- Select Region Based on Your Location --</option>
+
+                                            <option value="frankfurt">
+                                                Europe (Frankfurt) – Recommended for EU countries
+                                            </option>
+
+                                            <option value="hz">
+                                                China (Hangzhou) – Mainland China users
+                                            </option>
+
+                                            <option value="ru">
+                                                Russia – Users located in Russia
+                                            </option>
+
+                                            <option value="silicon">
+                                                USA (Silicon Valley) – North America users
+                                            </option>
+
+                                            <option value="tokyo">
+                                                Japan (Tokyo) – Japan & East Asia users
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label for="startDate-additional" class="form-label">Start Date</label>
-                                        <input type="text" id="startDate-additional" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['startDate'] ? date('d-m-Y', strtotime($dataShining3d['startDate'])) : '' }}" placeholder="Select start date">
+                                        <label for="startDate" class="form-label">Start Date</label>
+                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" placeholder="Select start date">
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label for="endDate-additional" class="form-label">End Date</label>
-                                        <input type="text" id="endDate-additional" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['endDate'] ? date('d-m-Y', strtotime($dataShining3d['endDate'])) : '' }}" placeholder="Select end date">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-doctor-id-additional" value="{{ $dataShining3d['doctorId'] }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-auth-token-additional" value="{{ $dataShining3d['authToken'] }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-org-type-additional" value="{{ $dataShining3d['orgType'] }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-org-code-additional" value="{{ $dataShining3d['orgCode'] }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-csrf-token-additional" value="{{ $dataShining3d['csrfToken'] }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-base-url-additional" value="{{ $dataShining3d['baseUrl'] }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-patient-id-additional" value="{{  $patient->patient_id }}">
-                                        <input type="hidden" id="order-from-shining3d-label-model-shining3d-treatment-plan-id-additional" value="{{ $patient->id }}">
+                                        <label for="endDate" class="form-label">End Date</label>
+                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" placeholder="Select end date">
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row mt-3" id="caseSearchRow" >
+                            <div class="row mt-3" id="caseSearchRow" style="display:none;">
                                 <div class="col-12">
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-striped align-middle">
@@ -1156,89 +873,7 @@
                                                     <th>Scan Files</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="shining3dOrderTable-additional">
-                                                @if(!empty($dataShining3d['orderList']['result']) && count($dataShining3d['orderList']['result']) > 0)
-                                                    @foreach($dataShining3d['orderList']['result'] as $order)
-
-                                                        @php
-                                                            // -------------------------
-                                                            // Patient details
-                                                            // -------------------------
-                                                            $patientName = $order['patient']['name'] ?? '-';
-
-                                                            if (!empty($order['patient']['phone'])) {
-                                                                $phone = '+' . ($order['patient']['phoneArea'] ?? '') . ' ' . $order['patient']['phone'];
-                                                            } else {
-                                                                $phone = '-';
-                                                            }
-
-                                                            $sex     = $order['patient']['sex'] ?? '-';
-                                                            $labName = $order['lab']['name'] ?? '-';
-
-                                                            // -------------------------
-                                                            // Created date
-                                                            // -------------------------
-                                                            $createdAt = !empty($order['createOn'])
-                                                                ? \Carbon\Carbon::parse($order['createOn'])->format('d-m-Y')
-                                                                : '-';
-
-                                                            // -------------------------
-                                                            // Status mapping
-                                                            // -------------------------
-                                                            $statusText  = $order['status'] ?? 'unknown';
-                                                            $statusClass = 'secondary';
-
-                                                            switch ($statusText) {
-                                                                case 'waitDelivery':
-                                                                    $statusText  = 'Waiting for Delivery';
-                                                                    $statusClass = 'warning';
-                                                                    break;
-
-                                                                case 'delivered':
-                                                                    $statusText  = 'Delivered';
-                                                                    $statusClass = 'info';
-                                                                    break;
-
-                                                                case 'completed':
-                                                                    $statusText  = 'Completed';
-                                                                    $statusClass = 'success';
-                                                                    break;
-
-                                                                case 'cancelled':
-                                                                    $statusText  = 'Cancelled';
-                                                                    $statusClass = 'danger';
-                                                                    break;
-                                                            }
-                                                        @endphp
-
-                                                        <tr>
-                                                            <td>{{ $patientName }}</td>
-                                                            <td>{{ $phone }}</td>
-                                                            <td>{{ $sex }}</td>
-                                                            <td>{{ $labName }}</td>
-                                                            <td>
-                                                                <span class="badge bg-{{ $statusClass }}">
-                                                                    {{ $statusText }}
-                                                                </span>
-                                                            </td>
-                                                            <td>{{ $createdAt }}</td>
-                                                            <td>
-                                                                <button class="btn btn-sm btn-primary view-scan-additional get-scan-btn"
-                                                                        data-id="{{ $order['id'] }}">
-                                                                    Get Scan
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-
-                                                    @endforeach
-                                                @else
-                                                    <tr>
-                                                        <td colspan="7" class="text-center text-muted">
-                                                            No orders found for selected date range.
-                                                        </td>
-                                                    </tr>
-                                                @endif
-
+                                            <tbody id="shining3dOrderTable">
                                             </tbody>
                                         </table>
                                     </div>
@@ -1249,16 +884,14 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
-                        {{-- <button type="button" class="btn btn-danger" data-base-url="{{ $dataShining3d['baseUrl']}}" data-csrf-token="{{ $dataShining3d['csrfToken']}}"  data-org-type="{{ $dataShining3d['orgType']}}" data-org-code="{{ $dataShining3d['orgCode']}}" data-doctor-id="{{ $dataShining3d['doctorId']}}" data-auth-token="{{ $dataShining3d['authToken']}}" id="order-from-shining3d">Get Sacn</button> --}}
-                        <button type="button" class="btn btn-danger" id="order-from-shining3d-additional">Get Sacn</button>
+                        <button type="button" class="btn btn-danger" id="order-from-shining3d">Get Sacn</button>
                     </div>
 
                 </div>
             </div>
 
         </div>
-    <!-- Order From shining3d Modal End -->
-    @endif
+    <!-- Order From shining3d Modal End --> --}}
 @stop
 
 @section('javascript')
@@ -1270,39 +903,55 @@
     import { PLYLoader } from "{{asset('public/assets/three/examples/jsm/loaders/PLYLoader.js')}}";
     import { OrbitControls } from '{{asset("public/assets/three/examples/jsm/controls/OrbitControls.js")}}';
 
+
+
+
     var container1, scene1, camera1, renderer1, material1, controls1,
     container2, scene2, camera2, renderer2, material2, controls2,
-    optionalContainer1, optionalScene1, optionalCamera1, optionalRenderer1, optionalMaterial1, optionalControls1,
-    optionalContainer2, optionalScene2, optionalCamera2, optionalRenderer2, optionalMaterial2, optionalControls2;
+    containerOptional1, sceneOptional1, cameraOptional1, rendererOptional1, materialOptional1, controlsOptional1,
+    containerOptional2, sceneOptional2, cameraOptional2, rendererOptional2, materialOptional2, controlsOptional2;
     const stl_loader1 = new STLLoader()
     const stl_loader2 = new STLLoader()
     const ply_loader1 = new PLYLoader()
     const ply_loader2 = new PLYLoader()
+    const stl_loaderOptional1 = new STLLoader()
+    const stl_loaderOptional2 = new STLLoader()
+    const ply_loaderOptional1 = new PLYLoader()
+    const ply_loaderOptional2 = new PLYLoader()
 
     function animate1() {
         requestAnimationFrame( animate1 );
+        container1.appendChild( renderer1.domElement );
         controls1.update();
         renderer1.render( scene1, camera1 );
 
     };
+
     function animate2() {
         requestAnimationFrame( animate2 );
+        container2.appendChild( renderer2.domElement );
         controls2.update();
         renderer2.render( scene2, camera2 );
 
     };
+
+    // Optional Previews Animation Functions
     function animateOptional1() {
         requestAnimationFrame( animateOptional1 );
-        optionalControls1.update();
-        optionalRenderer1.render( optionalScene1, optionalCamera1 );
+        containerOptional1.appendChild( rendererOptional1.domElement );
+        controlsOptional1.update();
+        rendererOptional1.render( sceneOptional1, cameraOptional1 );
 
     };
     function animateOptional2() {
         requestAnimationFrame( animateOptional2 );
-        optionalControls2.update();
-        optionalRenderer2.render( optionalScene2, optionalCamera2 );
+        containerOptional2.appendChild( rendererOptional2.domElement );
+        controlsOptional2.update();
+        rendererOptional2.render( sceneOptional2, cameraOptional2 );
 
     };
+    // Optional Previews Animation Functions End
+
     function destroyPreview1() {
         container1.removeChild(renderer1.domElement);
         scene1.traverse((object) => {
@@ -1320,7 +969,7 @@
         material1 = null;
         controls1 = null;
     }
-window.destroyPreview1 = destroyPreview1;
+    window.destroyPreview1 = destroyPreview1;
 
     function destroyPreview2() {
         container2.removeChild(renderer2.domElement);
@@ -1343,6 +992,47 @@ window.destroyPreview1 = destroyPreview1;
     }
     window.destroyPreview2 = destroyPreview2;
 
+    // Optional Previews Destroy Functions
+    function destroyPreviewOptional1() {
+        containerOptional1.removeChild(rendererOptional1.domElement);
+        sceneOptional1.traverse((object) => {
+            if (object.isMesh) {
+                object.geometry.dispose();
+                object.material.dispose();
+            }
+        });
+
+        controlsOptional1.dispose();
+        containerOptional1 = null;
+        sceneOptional1 = null;
+        cameraOptional1 = null;
+        rendererOptional1 = null;
+        materialOptional1 = null;
+        controlsOptional1 = null;
+    }
+    window.destroyPreviewOptional1 = destroyPreviewOptional1;
+
+    function destroyPreviewOptional2() {
+        containerOptional2.removeChild(rendererOptional2.domElement);
+
+        sceneOptional2.traverse((object) => {
+            if (object.isMesh) {
+                object.geometry.dispose();
+                object.material.dispose();
+            }
+        });
+
+        controlsOptional2.dispose();
+
+        containerOptional2 = null;
+        sceneOptional2 = null;
+        cameraOptional2 = null;
+        rendererOptional2 = null;
+        materialOptional2 = null;
+        controlsOptional2 = null;
+    }
+    window.destroyPreviewOptional2 = destroyPreviewOptional2;
+    // Optional Previews Destroy Functions End
 
     async function loadSTLUpper(url) {
         const response = await fetch(url);
@@ -1412,142 +1102,74 @@ window.destroyPreview1 = destroyPreview1;
                 return geometry;
     }
 
-    async function optionalLoadSTLUpper(url) {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-        }
-        const reader = response.body.getReader();
-        const contentLength = response.headers.get('Content-Length');
-        const total = contentLength ? parseInt(contentLength, 10) : null;
-        let loaded = 0;
-
-        const chunks = [];
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-            loaded += value.length;
-            if (total) {
-                const percentComplete = (loaded / total * 100).toFixed(2);
-                $("#optional-upper-arch-progress-bar").css({width: `${percentComplete}%`})
-                $("#optional-upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
-            }
-        }
-        const arrayBuffer = new Uint8Array(loaded);
-        let offset = 0;
-        for (let chunk of chunks) {
-            arrayBuffer.set(chunk, offset);
-            offset += chunk.length;
-        }
-
-        const geometry = stl_loader1.parse(arrayBuffer.buffer);
-        return geometry;
-    }
-
-    async function optionalLoadSTLLower(url) {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-        }
-        const reader = response.body.getReader();
-        const contentLength = response.headers.get('Content-Length');
-        const total = contentLength ? parseInt(contentLength, 10) : null;
-        let loaded = 0;
-
-        const chunks = [];
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-            loaded += value.length;
-            if (total) {
-                const percentComplete = (loaded / total * 100).toFixed(2);
-                $("#optional-lower-arch-progress-bar").css({width: `${percentComplete}%`})
-                $("#optional-lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
-                // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
-                // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
-            }
-        }
-        const arrayBuffer = new Uint8Array(loaded);
-        let offset = 0;
-        for (let chunk of chunks) {
-            arrayBuffer.set(chunk, offset);
-            offset += chunk.length;
-        }
-
-        const geometry = stl_loader2.parse(arrayBuffer.buffer);
-        return geometry;
-    }
-
     async function loadPLYUpper(url) {
         const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-        }
-        const reader = response.body.getReader();
-        const contentLength = response.headers.get('Content-Length');
-        const total = contentLength ? parseInt(contentLength, 10) : null;
-        let loaded = 0;
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+                }
+                const reader = response.body.getReader();
+                const contentLength = response.headers.get('Content-Length');
+                const total = contentLength ? parseInt(contentLength, 10) : null;
+                let loaded = 0;
 
-        const chunks = [];
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-            loaded += value.length;
-            if (total) {
-                const percentComplete = (loaded / total * 100).toFixed(2);
-                $("#upper-arch-progress-bar").css({width: `${percentComplete}%`})
-                $("#upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
-                // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
-                // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
-            }
-        }
-        const arrayBuffer = new Uint8Array(loaded);
-        let offset = 0;
-        for (let chunk of chunks) {
-            arrayBuffer.set(chunk, offset);
-            offset += chunk.length;
-        }
+                const chunks = [];
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    loaded += value.length;
+                    if (total) {
+                        const percentComplete = (loaded / total * 100).toFixed(2);
+                        $("#upper-arch-progress-bar").css({width: `${percentComplete}%`})
+                        $("#upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                        // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
+                        // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
+                    }
+                }
+                const arrayBuffer = new Uint8Array(loaded);
+                let offset = 0;
+                for (let chunk of chunks) {
+                    arrayBuffer.set(chunk, offset);
+                    offset += chunk.length;
+                }
 
-        const geometry = ply_loader1.parse(arrayBuffer.buffer);
-        return geometry;
+                const geometry = ply_loader1.parse(arrayBuffer.buffer);
+                return geometry;
     }
 
     async function loadPLYLower(url) {
         const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-        }
-        const reader = response.body.getReader();
-        const contentLength = response.headers.get('Content-Length');
-        const total = contentLength ? parseInt(contentLength, 10) : null;
-        let loaded = 0;
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+                }
+                const reader = response.body.getReader();
+                const contentLength = response.headers.get('Content-Length');
+                const total = contentLength ? parseInt(contentLength, 10) : null;
+                let loaded = 0;
 
-        const chunks = [];
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-            loaded += value.length;
-            if (total) {
-                const percentComplete = (loaded / total * 100).toFixed(2);
-                $("#lower-arch-progress-bar").css({width: `${percentComplete}%`})
-                $("#lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
-                // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
-                // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
-            }
-        }
-        const arrayBuffer = new Uint8Array(loaded);
-        let offset = 0;
-        for (let chunk of chunks) {
-            arrayBuffer.set(chunk, offset);
-            offset += chunk.length;
-        }
+                const chunks = [];
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    loaded += value.length;
+                    if (total) {
+                        const percentComplete = (loaded / total * 100).toFixed(2);
+                        $("#lower-arch-progress-bar").css({width: `${percentComplete}%`})
+                        $("#lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                        // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
+                        // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
+                    }
+                }
+                const arrayBuffer = new Uint8Array(loaded);
+                let offset = 0;
+                for (let chunk of chunks) {
+                    arrayBuffer.set(chunk, offset);
+                    offset += chunk.length;
+                }
 
-        const geometry = ply_loader2.parse(arrayBuffer.buffer);
-        return geometry;
+                const geometry = ply_loader2.parse(arrayBuffer.buffer);
+                return geometry;
     }
 
     async function previewUpperStlFile(file_upper)
@@ -1569,8 +1191,8 @@ window.destroyPreview1 = destroyPreview1;
             const height = $("#upper-jaw-box").height();
 
             renderer1.setSize( width, height );
-            container1.innerHTML = '';
-            container1.appendChild( renderer1.domElement );
+
+            document.body.appendChild( renderer1.domElement );
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene1.add(ambientLight);
@@ -1594,205 +1216,6 @@ window.destroyPreview1 = destroyPreview1;
     }
     window.previewUpperStlFile = previewUpperStlFile;
 
-    async function previewOptionalUpperStlFile(file_upper)
-    {
-        try {
-            optionalContainer1 = document.getElementById( 'optional-stl-upper-arch-preview' );
-            optionalContainer1.innerHTML = '';
-            optionalScene1 = new THREE.Scene();
-            optionalScene1.name = 'optional-myscene1';
-            optionalScene1.background = new THREE.Color( 0xaaaaaa );
-            optionalCamera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-            optionalCamera1.position.set(0, 0, 5);
-            optionalRenderer1 = new THREE.WebGLRenderer({ antialias: true });
-            optionalMaterial1 = new THREE.MeshNormalMaterial();
-            optionalControls1 = new OrbitControls(optionalCamera1, optionalRenderer1.domElement, { enableRotate: true });
-            optionalControls1.enableDamping = true;
-            THREE.Cache.enabled = true;
-
-            const width = $("#upper-jaw-box").width() + 23;
-            const height = $("#upper-jaw-box").height();
-
-            optionalRenderer1.setSize( width, height );
-            optionalContainer1.appendChild( optionalRenderer1.domElement );
-
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            optionalScene1.add(ambientLight);
-
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(1, 1, 1).normalize();
-            optionalScene1.add(directionalLight);
-
-            const geometry = await optionalLoadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
-            const mesh = new THREE.Mesh(geometry, optionalMaterial1)
-            mesh.tag = 'base';
-            optionalScene1.add(mesh);
-            optionalCamera1.position.z = 10;
-            optionalCamera1.position.x = 0;
-            optionalCamera1.position.y = -6;
-            optionalScene1.scale.set(0.02,0.02,0.02);
-
-            optionalControls1.update();
-            animateOptional1();
-        } catch (error) {}
-    }
-    window.previewOptionalUpperStlFile = previewOptionalUpperStlFile;
-
-    async function previewOptionalUpperPlyFile(file_upper)
-    {
-        try {
-            optionalContainer1 = document.getElementById( 'optional-stl-upper-arch-preview' );
-            optionalContainer1.innerHTML = '';
-            optionalScene1 = new THREE.Scene();
-            optionalScene1.name = 'optional-myscene1';
-            optionalScene1.background = new THREE.Color( 0xaaaaaa );
-            optionalCamera1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-            optionalCamera1.position.set(0, 0, 5);
-            optionalRenderer1 = new THREE.WebGLRenderer({ antialias: true });
-
-            optionalMaterial1 = new THREE.MeshStandardMaterial({
-                vertexColors: THREE.VertexColors,
-                flatShading: true
-            });
-            optionalControls1 = new OrbitControls(optionalCamera1, optionalRenderer1.domElement, { enableRotate: true });
-            optionalControls1.enableDamping = true;
-
-            THREE.Cache.enabled = true;
-
-            const width = $("#upper-jaw-box").width() + 23;
-            const height = $("#upper-jaw-box").height();
-
-            optionalRenderer1.setSize( width, height );
-            optionalContainer1.appendChild( optionalRenderer1.domElement );
-
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            optionalScene1.add(ambientLight);
-
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(1, 1, 1).normalize();
-            optionalScene1.add(directionalLight);
-            const geometry = await loadPLYUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
-            geometry.computeVertexNormals();
-            const mesh = new THREE.Mesh(geometry, optionalMaterial1)
-
-            mesh.tag = 'base';
-
-            optionalScene1.add(mesh);
-            optionalCamera1.position.z = 10;
-            optionalCamera1.position.x = 0;
-            optionalCamera1.position.y = -6;
-            optionalScene1.scale.set(0.02,0.02,0.02);
-
-            optionalControls1.update();
-            animateOptional1();
-        } catch (error) {}
-    }
-    window.previewOptionalUpperPlyFile = previewOptionalUpperPlyFile;
-
-
-    async function previewOptionalLowerStlFile(file_lower)
-    {
-        try {
-            optionalContainer2 = document.getElementById( 'optional-stl-lower-arch-preview' );
-            optionalContainer2.innerHTML = '';
-            optionalScene2 = new THREE.Scene();
-            optionalScene2.name = 'optional-myscene2';
-            optionalScene2.background = new THREE.Color( 0xaaaaaa );
-            optionalCamera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-            optionalCamera2.position.set(0, 0, 5);
-            optionalRenderer2 = new THREE.WebGLRenderer({ antialias: true });
-
-            optionalMaterial2 = new THREE.MeshNormalMaterial();
-            optionalControls2 = new OrbitControls(optionalCamera2, optionalRenderer2.domElement, { enableRotate: true });
-            optionalControls2.enableDamping = true;
-            THREE.Cache.enabled = true;
-
-            const width = $("#upper-jaw-box").width() + 23;
-            const height = $("#upper-jaw-box").height();
-
-            optionalRenderer2.setSize( width, height );
-            optionalContainer2.appendChild( optionalRenderer2.domElement );
-
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            optionalScene2.add(ambientLight);
-
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(1, 1, 1).normalize();
-            optionalScene2.add(directionalLight);
-
-            const geometry = await optionalLoadSTLLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
-            const mesh = new THREE.Mesh(geometry, optionalMaterial2)
-
-            mesh.tag = 'base';
-            optionalScene2.add(mesh);
-
-            console.log('scene updated');
-
-            optionalCamera2.position.z = 10;
-            optionalCamera2.position.x = 0;
-            optionalCamera2.position.y = -6;
-            optionalScene2.scale.set(0.02,0.02,0.02);
-
-            optionalControls2.update();
-            animateOptional2();
-        } catch (error) {}
-    }
-    window.previewOptionalLowerStlFile = previewOptionalLowerStlFile;
-
-    async function previewOptionalLowerPlyFile(file_lower)
-    {
-        try {
-            optionalContainer2 = document.getElementById( 'optional-stl-lower-arch-preview' );
-            optionalContainer2.innerHTML = '';
-            optionalScene2 = new THREE.Scene();
-            optionalScene2.name = 'optional-myscene2';
-            optionalScene2.background = new THREE.Color( 0xaaaaaa );
-            optionalCamera2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
-            optionalCamera2.position.set(0, 0, 5);
-            optionalRenderer2 = new THREE.WebGLRenderer({ antialias: true });
-            optionalMaterial2 = new THREE.MeshStandardMaterial({
-                vertexColors: THREE.VertexColors,
-                flatShading: true
-            });
-            optionalControls2 = new OrbitControls(optionalCamera2, optionalRenderer2.domElement, { enableRotate: true });
-            optionalControls2.enableDamping = true;
-            THREE.Cache.enabled = true;
-
-
-            const width = $("#upper-jaw-box").width() + 23;
-            const height = $("#upper-jaw-box").height();
-
-            optionalRenderer2.setSize( width, height );
-            optionalContainer2.appendChild( optionalRenderer2.domElement );
-
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            optionalScene2.add(ambientLight);
-
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(1, 1, 1).normalize();
-            optionalScene2.add(directionalLight);
-
-
-            const geometry = await loadPLYLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
-            geometry.computeVertexNormals();
-            const mesh = new THREE.Mesh(geometry, optionalMaterial2)
-
-            mesh.tag = 'base';
-            optionalScene2.add(mesh);
-
-            console.log('scene updated');
-
-            optionalCamera2.position.z = 10;
-            optionalCamera2.position.x = 0;
-            optionalCamera2.position.y = -6;
-            optionalScene2.scale.set(0.02,0.02,0.02);
-
-            optionalControls2.update();
-            animateOptional2();
-        } catch (error) {}
-    }
-    window.previewOptionalLowerPlyFile = previewOptionalLowerPlyFile;
-
     async function previewLowerStlFile(file_lower)
     {
         try {
@@ -1812,9 +1235,12 @@ window.destroyPreview1 = destroyPreview1;
             const width = $("#upper-jaw-box").width() + 23;
             const height = $("#upper-jaw-box").height();
 
+            //modify renderer
             renderer2.setSize( width, height );
-            container2.innerHTML = '';
-            container2.appendChild( renderer2.domElement );
+
+
+            //append renderer to body
+            document.body.appendChild( renderer2.domElement );
 
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -1866,9 +1292,11 @@ window.destroyPreview1 = destroyPreview1;
             const width = $("#upper-jaw-box").width() + 23;
             const height = $("#upper-jaw-box").height();
 
+            //modify renderer
             renderer1.setSize( width, height );
-            container1.innerHTML = '';
-            container1.appendChild( renderer1.domElement );
+
+            //append renderer to body
+            document.body.appendChild( renderer1.domElement );
 
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -1917,9 +1345,11 @@ window.destroyPreview1 = destroyPreview1;
             const width = $("#upper-jaw-box").width() + 23;
             const height = $("#upper-jaw-box").height();
 
+            //modify renderer
             renderer2.setSize( width, height );
-            container2.innerHTML = '';
-            container2.appendChild( renderer2.domElement );
+
+            //append renderer to body
+            document.body.appendChild( renderer2.domElement );
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene2.add(ambientLight);
@@ -1949,6 +1379,350 @@ window.destroyPreview1 = destroyPreview1;
     }
     window.previewLowerPlyFile = previewLowerPlyFile;
 
+    // Optional Previews Functions
+    async function optionalLoadSTLUpper(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+        }
+        const reader = response.body.getReader();
+        const contentLength = response.headers.get('Content-Length');
+        const total = contentLength ? parseInt(contentLength, 10) : null;
+        let loaded = 0;
+
+        const chunks = [];
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            loaded += value.length;
+            if (total) {
+                const percentComplete = (loaded / total * 100).toFixed(2);
+                $("#optional-upper-arch-progress-bar").css({width: `${percentComplete}%`})
+                $("#optional-upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+            }
+        }
+        const arrayBuffer = new Uint8Array(loaded);
+        let offset = 0;
+        for (let chunk of chunks) {
+            arrayBuffer.set(chunk, offset);
+            offset += chunk.length;
+        }
+
+        const geometry = stl_loaderOptional1.parse(arrayBuffer.buffer);
+        return geometry;
+    }
+
+    async function optionalLoadSTLLower(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+        }
+        const reader = response.body.getReader();
+        const contentLength = response.headers.get('Content-Length');
+        const total = contentLength ? parseInt(contentLength, 10) : null;
+        let loaded = 0;
+
+        const chunks = [];
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            loaded += value.length;
+            if (total) {
+                const percentComplete = (loaded / total * 100).toFixed(2);
+                $("#optional-lower-arch-progress-bar").css({width: `${percentComplete}%`})
+                $("#optional-lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+            }
+        }
+        const arrayBuffer = new Uint8Array(loaded);
+        let offset = 0;
+        for (let chunk of chunks) {
+            arrayBuffer.set(chunk, offset);
+            offset += chunk.length;
+        }
+
+        const geometry = stl_loaderOptional2.parse(arrayBuffer.buffer);
+        return geometry;
+    }
+
+    async function optionalLoadPLYUpper(url) {
+        const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+                }
+                const reader = response.body.getReader();
+                const contentLength = response.headers.get('Content-Length');
+                const total = contentLength ? parseInt(contentLength, 10) : null;
+                let loaded = 0;
+
+                const chunks = [];
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    loaded += value.length;
+                    if (total) {
+                        const percentComplete = (loaded / total * 100).toFixed(2);
+                        $("#upper-arch-progress-bar").css({width: `${percentComplete}%`})
+                        $("#upper-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                        // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
+                        // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
+                    }
+                }
+                const arrayBuffer = new Uint8Array(loaded);
+                let offset = 0;
+                for (let chunk of chunks) {
+                    arrayBuffer.set(chunk, offset);
+                    offset += chunk.length;
+                }
+
+                const geometry = ply_loaderOptional1.parse(arrayBuffer.buffer);
+                return geometry;
+    }
+
+    async function optionalLoadPLYLower(url) {
+        const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+                }
+                const reader = response.body.getReader();
+                const contentLength = response.headers.get('Content-Length');
+                const total = contentLength ? parseInt(contentLength, 10) : null;
+                let loaded = 0;
+
+                const chunks = [];
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                    loaded += value.length;
+                    if (total) {
+                        const percentComplete = (loaded / total * 100).toFixed(2);
+                        $("#lower-arch-progress-bar").css({width: `${percentComplete}%`})
+                        $("#lower-arch-progress-bar").html(`%${parseInt(percentComplete)} Loaded`)
+                        // document.getElementById('progress-bar').style.width = `${percentComplete}%`;
+                        // document.getElementById('progress-bar').textContent = `${percentComplete}%`;
+                    }
+                }
+                const arrayBuffer = new Uint8Array(loaded);
+                let offset = 0;
+                for (let chunk of chunks) {
+                    arrayBuffer.set(chunk, offset);
+                    offset += chunk.length;
+                }
+
+                const geometry = ply_loaderOptional2.parse(arrayBuffer.buffer);
+                return geometry;
+    }
+    // Optional Previews Functions End
+
+    async function previewOptionalUpperStlFile(file_upper)
+    {
+        try {
+            containerOptional1 = document.getElementById( 'optional-stl-upper-arch-preview' );
+            sceneOptional1 = new THREE.Scene();
+            sceneOptional1.name = 'myscene1';
+            sceneOptional1.background = new THREE.Color( 0xaaaaaa );
+            cameraOptional1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            cameraOptional1.position.set(0, 0, 5);
+            rendererOptional1 = new THREE.WebGLRenderer({ antialias: true });
+            materialOptional1 = new THREE.MeshNormalMaterial();
+            controlsOptional1 = new OrbitControls(cameraOptional1, rendererOptional1.domElement, { enableRotate: true });
+            controlsOptional1.enableDamping = true;
+            THREE.Cache.enabled = true;
+
+            const width = $("#upper-jaw-box").width() + 23;
+            const height = $("#upper-jaw-box").height();
+
+            rendererOptional1.setSize( width, height );
+
+            document.body.appendChild( rendererOptional1.domElement );
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            sceneOptional1.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            sceneOptional1.add(directionalLight);
+
+            const geometry = await optionalLoadSTLUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+            const mesh = new THREE.Mesh(geometry, materialOptional1)
+            mesh.tag = 'base';
+            sceneOptional1.add(mesh);
+            cameraOptional1.position.z = 10;
+            cameraOptional1.position.x = 0;
+            cameraOptional1.position.y = -6;
+            sceneOptional1.scale.set(0.02,0.02,0.02);
+
+            controlsOptional1.update();
+            animateOptional1();
+        } catch (error) {}
+    }
+    window.previewOptionalUpperStlFile = previewOptionalUpperStlFile;
+
+    async function previewOptionalUpperPlyFile(file_upper)
+    {
+        try {
+            containerOptional1 = document.getElementById( 'optional-stl-upper-arch-preview' );
+            sceneOptional1 = new THREE.Scene();
+            sceneOptional1.name = 'myscene1';
+            sceneOptional1.background = new THREE.Color( 0xaaaaaa );
+            cameraOptional1 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            cameraOptional1.position.set(0, 0, 5);
+            rendererOptional1 = new THREE.WebGLRenderer({ antialias: true });
+
+            materialOptional1 = new THREE.MeshStandardMaterial({
+                vertexColors: THREE.VertexColors,
+                flatShading: true
+            });
+            controlsOptional1 = new OrbitControls(cameraOptional1, rendererOptional1.domElement, { enableRotate: true });
+            controlsOptional1.enableDamping = true;
+
+            THREE.Cache.enabled = true;
+
+            const width = $("#upper-jaw-box").width() + 23;
+            const height = $("#upper-jaw-box").height();
+
+            //modify renderer
+            rendererOptional1.setSize( width, height );
+
+            //append renderer to body
+            document.body.appendChild( rendererOptional1.domElement );
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            sceneOptional1.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            sceneOptional1.add(directionalLight);
+            const geometry = await loadPLYUpper('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_upper)
+            geometry.computeVertexNormals();
+            const mesh = new THREE.Mesh(geometry, materialOptional1)
+
+            mesh.tag = 'base';
+
+            sceneOptional1.add(mesh);
+            cameraOptional1.position.z = 10;
+            cameraOptional1.position.x = 0;
+            cameraOptional1.position.y = -6;
+            sceneOptional1.scale.set(0.02,0.02,0.02);
+
+            controlsOptional1.update();
+            animateOptional1();
+        } catch (error) {}
+    }
+    window.previewOptionalUpperPlyFile = previewOptionalUpperPlyFile;
+
+    async function previewOptionalLowerStlFile(file_lower)
+    {
+        try {
+            containerOptional2 = document.getElementById( 'optional-stl-lower-arch-preview' );
+            sceneOptional2 = new THREE.Scene();
+            sceneOptional2.name = 'myscene2';
+            sceneOptional2.background = new THREE.Color( 0xaaaaaa );
+            cameraOptional2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            cameraOptional2.position.set(0, 0, 5);
+            rendererOptional2 = new THREE.WebGLRenderer({ antialias: true });
+
+            materialOptional2 = new THREE.MeshNormalMaterial();
+            controlsOptional2 = new OrbitControls(cameraOptional2, rendererOptional2.domElement, { enableRotate: true });
+            controlsOptional2.enableDamping = true;
+            THREE.Cache.enabled = true;
+
+            const width = $("#upper-jaw-box").width() + 23;
+            const height = $("#upper-jaw-box").height();
+
+            //modify renderer
+            rendererOptional2.setSize( width, height );
+
+
+            //append renderer to body
+            document.body.appendChild( rendererOptional2.domElement );
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            sceneOptional2.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            sceneOptional2.add(directionalLight);
+
+            const geometry = await optionalLoadSTLLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
+            const mesh = new THREE.Mesh(geometry, materialOptional2)
+
+            mesh.tag = 'base';
+            sceneOptional2.add(mesh);
+
+            console.log('scene updated');
+
+            cameraOptional2.position.z = 10;
+            cameraOptional2.position.x = 0;
+            cameraOptional2.position.y = -6;
+            sceneOptional2.scale.set(0.02,0.02,0.02);
+
+            controlsOptional2.update();
+            animateOptional2();
+        } catch (error) {}
+    }
+    window.previewOptionalLowerStlFile = previewOptionalLowerStlFile;
+
+    async function previewOptionalLowerPlyFile(file_lower)
+    {
+        try {
+            containerOptional2 = document.getElementById( 'optional-stl-lower-arch-preview' );
+            sceneOptional2 = new THREE.Scene();
+            sceneOptional2.name = 'myscene2';
+            sceneOptional2.background = new THREE.Color( 0xaaaaaa );
+            cameraOptional2 = new THREE.PerspectiveCamera(10, 1420/764 , 0.1, 1000);
+            cameraOptional2.position.set(0, 0, 5);
+            rendererOptional2 = new THREE.WebGLRenderer({ antialias: true });
+            materialOptional2 = new THREE.MeshStandardMaterial({
+                vertexColors: THREE.VertexColors,
+                flatShading: true
+            });
+            controlsOptional2 = new OrbitControls(cameraOptional2, rendererOptional2.domElement, { enableRotate: true });
+            controlsOptional2.enableDamping = true;
+            THREE.Cache.enabled = true;
+
+
+            const width = $("#upper-jaw-box").width() + 23;
+            const height = $("#upper-jaw-box").height();
+
+            //modify renderer
+            rendererOptional2.setSize( width, height );
+
+            //append renderer to body
+            document.body.appendChild( rendererOptional2.domElement );
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            sceneOptional2.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1).normalize();
+            sceneOptional2.add(directionalLight);
+
+
+            const geometry = await loadPLYLower('{{url('/patient/mesh/fetch/'.$patient->patient_id)}}/'+file_lower)
+            geometry.computeVertexNormals();
+            const mesh = new THREE.Mesh(geometry, materialOptional2)
+
+            mesh.tag = 'base';
+            sceneOptional2.add(mesh);
+
+            console.log('scene updated');
+
+            cameraOptional2.position.z = 10;
+            cameraOptional2.position.x = 0;
+            cameraOptional2.position.y = -6;
+            sceneOptional2.scale.set(0.02,0.02,0.02);
+
+            controlsOptional2.update();
+            animateOptional2();
+        } catch (error) {}
+    }
+    window.previewOptionalLowerPlyFile = previewOptionalLowerPlyFile;
 
     @if(@$patient->fl_upper_arch!='')
         @if(explode(".", @$patient->fl_upper_arch)[1] == 'stl')
@@ -1966,80 +1740,7 @@ window.destroyPreview1 = destroyPreview1;
         @endif
     @endif
 
-    @if(@$patient->optional_fl_upper_arch!='')
-        @if(explode(".", @$patient->optional_fl_upper_arch)[1] == 'stl')
-            previewOptionalUpperStlFile("{{@$patient->optional_fl_upper_arch}}")
-        @else
-            previewOptionalUpperPlyFile("{{@$patient->optional_fl_upper_arch}}")
-        @endif
-    @endif
-
-    @if(@$patient->optional_fl_lower_arch!='')
-        @if(explode(".", @$patient->optional_fl_lower_arch)[1] == 'stl')
-            previewOptionalLowerStlFile("{{@$patient->optional_fl_lower_arch}}")
-        @else
-            previewOptionalLowerPlyFile("{{@$patient->optional_fl_lower_arch}}")
-        @endif
-    @endif
-
-    function downloadMeditLinkStlFiles(uuid)
-    {
-        $.ajax({
-            type: "POST",
-            url: "{{url('/patient/file/download-medit-link')}}",
-            data: {
-                "_token": "{{ csrf_token() }}",
-                "patient_id": "{{ $patient->patient_id }}",
-                "treatment_plan_id": "{{ $patient->id }}",
-                "uuid": uuid,
-            },
-            beforeSend: function () {
-                $(".my-loader").show();
-            }
-        })
-        .done(function (response) {
-
-            if (response.upper || response.lower) {
-
-                if (response.upper) {
-                    $('#key1').attr('file', response.upper);
-                    window.dropzone_active_state('1', response.upper);
-                    previewUpperStlFile(response.upper);
-                }
-
-                if (response.lower) {
-                    $('#key2').attr('file', response.lower);
-                    window.dropzone_active_state('2', response.lower);
-                    previewLowerStlFile(response.lower);
-                }
-
-                if (response.patient_name) {
-                    document.getElementById('first_name').value = response.first_name;
-                    document.getElementById('last_name').value = response.last_name;
-                }
-
-                if (response.patient_code) {
-                    document.getElementById('patientCode').value = response.patient_code;
-                }
-
-                $("#3shape-section").addClass('d-none');
-                $("#medit-link-section").addClass('d-none');
-                $("#patient-wizard").removeClass('d-none');
-            } else {
-                toastError("Error while downloading files.");
-            }
-        })
-        .fail(function (xhr) {
-            console.log(xhr);
-            toastError("Something went wrong.");
-        })
-        .always(function () {
-            $(".my-loader").hide();
-            $('#medit-link-Modal').modal('hide');
-        });
-    }
-
-    function downloadMeditLinkStlFilesOld($uuid)
+    function downloadMeditLinkStlFiles($uuid)
     {
         $.ajax({
                 type: "POST",
@@ -2052,7 +1753,6 @@ window.destroyPreview1 = destroyPreview1;
                 },
                 beforeSend: function () {
                     showLoader();
-                    $(".my-loader").show();
                 }
             }).done(function (response) {
 
@@ -2078,65 +1778,13 @@ window.destroyPreview1 = destroyPreview1;
                     $("#medit-link-section").addClass('d-none')
                     $("#patient-wizard").removeClass('d-none');
                     hideLoader();
-                    $(".my-loader").hide();
                 }
                 else {
                     hideLoader();
-                    $(".my-loader").hide();
                     toastError("Error while downloading files.");
                 }
             });
     }
-
-    $(document).on('click', '.download-3shape-stl-files-additional',function () {
-        const hash_upper = $(this).attr('hash-upper'),
-        hash_lower = $(this).attr('hash-lower'),
-        case_id = $(this).attr('case-id');
-        download3ShapeStlFilesAdditional(case_id, hash_upper, hash_lower);
-    });
-
-    function download3ShapeStlFilesAdditional($case_id, $hash_upper, $hash_lower)
-    {
-        $.ajax({
-                type: "POST",
-                url: "{{url('/patient/file/download-3shape')}}",
-                data: {
-                    "_token" : "{{ csrf_token() }}",
-                    "patient_id" : "{{ $patient->patient_id }}",
-                    "treatment_plan_id" : "{{ $patient->id }}",
-                    "case_id" : $case_id,
-                    "hash_upper" : $hash_upper,
-                    "hash_lower" : $hash_lower,
-                },
-                beforeSend: function () {
-                    showLoader();
-                    $(".my-loader").show();
-                }
-            }).done(function (response) {
-
-                if(response.upper || response.lower) {
-                    if(response.upper) {
-                        $('#key18').attr('file', response.upper);
-                        window.dropzone_active_state('18', response.upper)
-                        previewOptionalUpperStlFile(response.upper)
-                    }
-                    if(response.lower) {
-                        $('#key19').attr('file', response.lower);
-                        window.dropzone_active_state('19', response.lower)
-                        previewOptionalLowerStlFile(response.lower)
-                    }
-                    $("#optional-3shape-section-Modal").modal('hide');
-                    hideLoader();
-                    $(".my-loader").hide();
-                }
-                else {
-                    hideLoader();
-                    $(".my-loader").hide();
-                    toastError("Error while downloading files.");
-                }
-            });
-    }
-
 
     function download3ShapeStlFiles($case_id, $hash_upper, $hash_lower)
     {
@@ -2153,7 +1801,6 @@ window.destroyPreview1 = destroyPreview1;
                 },
                 beforeSend: function () {
                     showLoader();
-                    $(".my-loader").show();
                 }
             }).done(function (response) {
 
@@ -2168,13 +1815,13 @@ window.destroyPreview1 = destroyPreview1;
                         window.dropzone_active_state('2', response.lower)
                         previewLowerStlFile(response.lower)
                     }
-                    $("#3shape-section-Modal").modal('hide');
+                    $("#3shape-section").addClass('d-none');
+                    $("#medit-link-section").addClass('d-none')
+                    $("#patient-wizard").removeClass('d-none');
                     hideLoader();
-                    $(".my-loader").hide();
                 }
                 else {
                     hideLoader();
-                    $(".my-loader").hide();
                     toastError("Error while downloading files.");
                 }
             });
@@ -2183,8 +1830,34 @@ window.destroyPreview1 = destroyPreview1;
     $(document).ready(function () {
 
         @if(@$medit_data->case_uuid)
-            downloadMeditLinkStlFiles('{{@$medit_data->case_uuid}}')
-        @endif
+                downloadMeditLinkStlFiles('{{@$medit_data->case_uuid}}')
+                @endif
+
+
+        $("#select-from-3shape").on('click', function () {
+            $("#3shape-section").removeClass('d-none');
+            $("#medit-link-section").addClass('d-none');
+            $("#patient-wizard").addClass('d-none');
+        });
+
+        $("#cancel-3shape-select").on('click', function () {
+            $("#3shape-section").addClass('d-none');
+            $("#medit-link-section").addClass('d-none')
+            $("#patient-wizard").removeClass('d-none');
+        });
+
+
+        $("#select-from-medit-link").on('click', function () {
+            $("#medit-link-section").removeClass('d-none')
+            $("#3shape-section").addClass('d-none')
+            $("#patient-wizard").addClass('d-none')
+        })
+
+        $("#cancel-medit-link-select").on('click', function () {
+            $("#3shape-section").addClass('d-none');
+            $("#medit-link-section").addClass('d-none')
+            $("#patient-wizard").removeClass('d-none');
+        })
 
         $(document).on('click', '.download-3shape-stl-files',function () {
             const hash_upper = $(this).attr('hash-upper'),
@@ -2197,6 +1870,7 @@ window.destroyPreview1 = destroyPreview1;
             const uuid = $(this).attr('data-uuid');
             downloadMeditLinkStlFiles(uuid)
         })
+
 
         $("#medit-link-search").on('submit', function (e) {
             e.preventDefault()
@@ -2220,13 +1894,37 @@ window.destroyPreview1 = destroyPreview1;
                 },
                 beforeSend: function () {
                     showLoader();
-                    $(".my-loader").show();
                 }
             }).done(function (response) {
                 $("#medit-link-search-result").html(response);
                 hideLoader();
-                $(".my-loader").hide();
             })
+        })
+
+        $("#3shape-search").on('submit', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            const case_id = $("#3shape-search input[name=_case_id]").val(),
+            patient_id = $("#3shape-search input[name=_patient_id]").val(),
+            three_shape_case_id = $("#3shape-search input[name=_three_shape_case_id]").val(),
+            three_shape_search_for_case = $("#3shape-search input[name=_three_shape_search_for_case]").val();
+            $.ajax({
+                type: "POST",
+                url: "{{ url('/integrations/3shape-search-cases') }}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "case_id" : case_id,
+                    "patient_id" : patient_id,
+                    "three_shape_case_id" : three_shape_case_id,
+                    "three_shape_search_for_patient" : three_shape_search_for_case,
+                },
+                beforeSend: function () {
+                    showLoader();
+                }
+            }).done(function (response) {
+                $("#3shape-search-result").html(response);
+                hideLoader();
+            });
         });
 
         $(document).ready(function () {
@@ -2245,11 +1943,15 @@ window.destroyPreview1 = destroyPreview1;
             $(document).on("click", "#final-confirm-and-submit-btn", function () {
                 // Check if terms and conditions are accepted
                 if ($("input[name=terms_and_conditions]").is(":checked")) {
-                    const advisor = $("#advisor").val();
+                    var advisor = $("#advisor").val();
                     var comment = $("#comment").val();// Get advisor selection
                     const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
+                    const setup_type = $('input[name="setup_type"]:checked').val();
                     if (comment === undefined || comment === null) {
                         comment = "";
+                    }
+                    if (advisor === undefined || advisor === null) {
+                        advisor = "";
                     }
                     // Validate consultant agreement checkbox if advisor is selected
                     if (advisor && !consultantAgreementChecked) {
@@ -2257,18 +1959,22 @@ window.destroyPreview1 = destroyPreview1;
                         return;
                     }
 
+                    if (!setup_type) {
+                        toastError("You must select your preferred package.");
+                        return;
+                    }
+
                     // Submit the form
                     $("#final-submit-form").append(`<input type="hidden" name="advisor" value="${advisor}" />`);
-                $("#final-submit-form").append(`<input type="hidden" name="comment" value="${comment}" />`);
+                    $("#final-submit-form").append(`<input type="hidden" name="comment" value="${comment}" />`);
 
-                // Submit the form
-                $("#final-submit-form").submit();
+                    // Submit the form
+                    $("#final-submit-form").submit();
                 } else {
                     toastError("You must accept the Packages and Terms & Conditions agreement.");
                 }
             });
         });
-
     });
 </script>
 <script src="{{asset('public/js/cropper.js')}}"></script>
@@ -2372,19 +2078,23 @@ window.destroyPreview1 = destroyPreview1;
                     if(key == 1) {
                         window.destroyPreview1();
                         $("#stl-upper-arch-preview").html("");
+                        $("#upper-arch-progress-bar").css('width', '0%').text('0%');
                     }
                     if(key == 2) {
                         window.destroyPreview2();
                         $("#stl-lower-arch-preview").html("");
+                        $("#lower-arch-progress-bar").css('width', '0%').text('0%');
                     }
 
                     if(key == 18) {
-                        window.destroyPreview1();
+                        window.destroyPreviewOptional1();
                         $("#optional-stl-upper-arch-preview").html("");
+                        $("#optional-upper-arch-progress-bar").css('width', '0%').text('0%');
                     }
                     if(key == 19) {
-                        window.destroyPreview2();
+                        window.destroyPreviewOptional2();
                         $("#optional-stl-lower-arch-preview").html("");
+                        $("#optional-lower-arch-progress-bar").css('width', '0%').text('0%');
                     }
                     toastSuccess("File successfully removed")
                 } else {
@@ -3699,8 +3409,8 @@ window.destroyPreview1 = destroyPreview1;
                     var fileExtension = fileName.split('.').pop().toLowerCase(); // get file extension
 
                     if(key == 1 || key == 2) {
-                        if (fileExtension !== 'stl' && fileExtension !== 'ply') {
-                            dropzone_reset_state(key, "Please drop a stl or ply file.")
+                        if (fileExtension !== 'stl') {
+                            dropzone_reset_state(key, "Please drop a stl file.")
                             return false;
                         }
                         const scan = $('._dropzone_template #key'+ (key == 1 ? 2 : 1)).attr('file')
@@ -3751,33 +3461,31 @@ window.destroyPreview1 = destroyPreview1;
             }
         })
 
-          $(document).on('click', '._dropzone_remove', function (e) {
-                       const key = $(this).parent().attr('key')
-                 dropzone_destroy_state(key)
-          });
-               $(document).on('click', '._dropzone_edit', function (e) {
-                       const key = $(this).parent().attr('key')
+        $(document).on('click', '._dropzone_remove', function (e) {
+            const key = $(this).parent().attr('key')
+            dropzone_destroy_state(key)
+        });
 
+        $(document).on('click', '._dropzone_edit', function (e) {
+            const key = $(this).parent().attr('key')
+            var file = $("._dropzone_template #key" + key).attr('file');
+            var imageUrl="{{asset('storage/PatientFiles/Patient')}}{{$patient->patient_id}}/"+file;
+            if (file) {
+                fetch(imageUrl)
+                    .then(response => response.blob()) // Convert the image to a blob
+                    .then(blob => {
+                        const file = new File([blob], "editedImage.jpg", { type: blob.type }); // Create a new File object
+                        // Open image editor and pass the file object
+                        openImageEditor(file, function(croppedFile) {
+                            dropzone_upload(key, croppedFile); // Upload the edited image
+                        });
+                    })
+                    .catch(err => console.error("Error fetching the image: ", err));
 
-        var file = $("._dropzone_template #key" + key).attr('file');
-
-        var imageUrl="{{asset('storage/PatientFiles/Patient')}}{{$patient->patient_id}}/"+file;
-    if (file) {
-  fetch(imageUrl)
-            .then(response => response.blob()) // Convert the image to a blob
-            .then(blob => {
-                const file = new File([blob], "editedImage.jpg", { type: blob.type }); // Create a new File object
-                // Open image editor and pass the file object
-                openImageEditor(file, function(croppedFile) {
-                    dropzone_upload(key, croppedFile); // Upload the edited image
-                });
-            })
-            .catch(err => console.error("Error fetching the image: ", err));
-
-    } else {
-        console.error("No file found for editing in the dropzone.");
-    }
-          });
+            } else {
+                console.error("No file found for editing in the dropzone.");
+            }
+        });
 
 
         $(document).on('change', '._dropzone_template input[data-field]', async function () {
@@ -3792,8 +3500,8 @@ window.destroyPreview1 = destroyPreview1;
                 var fileExtension = fileName.split('.').pop().toLowerCase(); // get file extension
 
                 if(key == 1 || key == 2 || key == 18 || key == 19) {
-                        if (fileExtension !== 'stl' && fileExtension !== 'ply') {
-                            dropzone_reset_state(key, "Please drop a stl or ply file.")
+                        if (fileExtension !== 'stl') {
+                            dropzone_reset_state(key, "Please drop a stl file.")
                             return false;
                         }
                         const scan = $('._dropzone_template #key'+ (key == 1 ? 2 : 1)).attr('file')
@@ -3941,19 +3649,17 @@ window.destroyPreview1 = destroyPreview1;
             // }
             function fetchOverview() {
                 // ensure loader is visible when fetching overview
-                try { showLoader(); $(".my-loader").show(); } catch(e) { /* noop if showLoader undefined */ }
+                try { showLoader(); } catch(e) { /* noop if showLoader undefined */ }
                 $.ajax({
                     url: `{{ url('/patient/fetch-case-overview/' . $hashids->encode($patient->id) . '?i=true') }}`,
                     type: "GET",
                     success: function(response) {
                         $("#overview-container").html(response);
                         hideLoader();
-                        $(".my-loader").hide();
                     },
                     error: function(xhr) {
                         console.error("Error fetching HTML:", xhr);
                         hideLoader();
-                        $(".my-loader").hide();
                     }
                 });
             }
@@ -4091,7 +3797,6 @@ window.destroyPreview1 = destroyPreview1;
                         },
                         beforeSend() {
                             showLoader();
-                            $(".my-loader").show();
                         }
                     }).done(function(response) {
                         //console.log(response)
@@ -4139,11 +3844,9 @@ window.destroyPreview1 = destroyPreview1;
                         $('ul.nav-pills a[href="' + targetTab + '"]').tab('show');
 
                                 hideLoader();
-                                $(".my-loader").hide();
                         }).fail(function(response) {
                             toastError("Not able to proceed. check your internet connection.");
                             hideLoader();
-                            $(".my-loader").hide();
                         });
                 } else {
                     // Activate the clicked tab
@@ -4166,7 +3869,7 @@ window.destroyPreview1 = destroyPreview1;
             });
 
             @if(@$_GET['tab'])
-                try { showLoader(); $(".my-loader").show(); } catch(e) { }
+                try { showLoader(); } catch(e) { }
                 fetchOverview()
                 let tabSelector = 'ul.nav-pills a[href="#{{ $_GET["tab"] }}"]';
                 let tabEl = document.querySelector(tabSelector);
@@ -4294,35 +3997,14 @@ window.destroyPreview1 = destroyPreview1;
                 $('#startDate').val(formatDMY(start));
             });
 
-             $(document).on('change', '#startDate-additional', function () {
-                const startValue = this.value;
-                if (!startValue) return;
-
-                const start = parseDMY(startValue);
-
-                const end = new Date(start);
-                end.setDate(end.getDate() + 3);
-
-                $('#endDate-additional').val(formatDMY(end));
-            });
-
-
-            // document.getElementById("endDate").addEventListener("change", function () {
-            $(document).on('change', '#endDate-additional', function () {
-                const endValue = this.value;
-                if (!endValue) return;
-
-                const end = parseDMY(endValue);
-
-                const start = new Date(end);
-                start.setDate(start.getDate() - 3);
-
-                $('#startDate-additional').val(formatDMY(start));
-            });
-
             $(document).on('change', 'input[name=pricing_package]', function () {
                 if($(this).is(":checked")) {
                     $("input[name=client_preferred_package]").val($(this).val());
+                }
+            });
+            $(document).on('change', 'input[name=setup_type]', function () {
+                if($(this).is(":checked")) {
+                    $("input[name=client_setup_type]").val($(this).val());
                 }
             });
 
@@ -4343,6 +4025,7 @@ window.destroyPreview1 = destroyPreview1;
                     toastError("Enter required data.");
                     return false;
                 }
+
                 $.ajax({
                     type: "POST",
                     url: "{{ url('/patient/patient-info/save') }}",
@@ -4354,17 +4037,56 @@ window.destroyPreview1 = destroyPreview1;
                         "treatment_plan_id": "{{ $patient->id }}",
                         "patient_id": "{{ $patient->patient_id }}"
                     },
-                }).done(function(response) {
-                    $("#submit-prescription").attr('fn', 1);
-                    $("#pill-tab-li-treatment-type").click();
-                    // let tabEl = document.querySelector('#pill-tab-li-treatment-type');
-                    // let tab = new bootstrap.Tab(tabEl);
-                    // tab.show();
-                    toastSuccess("Patient Info Saved");
-                }).fail(function(response) {
-                    $("#submit-prescription").attr('fn', 0);
-                    toastError("Enable to save patient info");
+
+                    beforeSend: function () {
+                        $(".my-loader").show();
+                    },
+
+                    success: function(response) {
+                        $("#submit-prescription").attr('fn', 1);
+                        $("#pill-tab-li-treatment-type").click();
+
+                        toastSuccess("Patient Info Saved");
+                    },
+
+                    error: function(response) {
+                        $("#submit-prescription").attr('fn', 0);
+
+                        toastError("Unable to save patient info");
+                    },
+
+                    complete: function() {
+                        // Hide loader always
+                        $(".my-loader").hide();
+                    }
                 });
+
+                // $.ajax({
+                //     type: "POST",
+                //     url: "{{ url('/patient/patient-info/save') }}",
+                //     data: {
+                //         "_token": "{{ csrf_token() }}",
+                //         "first_name": first_name,
+                //         "last_name": last_name,
+                //         "dob": dob,
+                //         "treatment_plan_id": "{{ $patient->id }}",
+                //         "patient_id": "{{ $patient->patient_id }}"
+                //     },
+                // }).done(function(response) {
+                //     $("#submit-prescription").attr('fn', 1);
+                //     $("#pill-tab-li-treatment-type").click();
+                //     // let tabEl = document.querySelector('#pill-tab-li-treatment-type');
+                //     // let tab = new bootstrap.Tab(tabEl);
+                //     // tab.show();
+                //     toastSuccess("Patient Info Saved");
+                // }).fail(function(response) {
+                //     $("#submit-prescription").attr('fn', 0);
+                //     toastError("Enable to save patient info");
+                // })
+                // complete: function() {
+                //         // 👉 Hide loader always (success or error)
+                //         $(".my-loader").hide();
+                //     };
             });
 
             $("#submit-treatment-plan").on('click', function() {
@@ -4396,40 +4118,126 @@ window.destroyPreview1 = destroyPreview1;
                 });
             });
 
-            $("#submit-scan-data").on('click', function() {
+            $("#submit-scan-data").on('click', function(e) {
+                e.preventDefault();
                 var fl_upper_arch = $("#fl_upper_arch").val();
                 var fl_lower_arch = $("#fl_lower_arch").val();
-                if ($("#key1").attr('file') == '' || $("#key2").attr('file') == '') {
+
+                // Check if files are selected
+                if (!$("#key1").prop('files').length || !$("#key2").prop('files').length) {
                     toastError("Upload scan data files.");
                     $("#submit-prescription").attr('fn', 0);
                     return false;
                 }
-                $("#submit-prescription").attr('fn', 1);
-                // let tabEl = document.querySelector('#pill-tab-li3');
-                // let tab = new bootstrap.Tab(tabEl);
-                // tab.show();
-                 $("#pill-tab-li3").click();
-                $("#pill-tab-div2").removeClass('show active');
-                toastSuccess("Scan data Saved");
-                // $.ajax({
-                //     type: "POST",
-                //     url: "{{ url('/patient/scan-data/save') }}",
-                //     data: {
-                //         "_token": "{{ csrf_token() }}",
-                //         "fl_upper_arch": fl_upper_arch,
-                //         "fl_lower_arch": fl_lower_arch,
-                //         "treatment_plan_id": "{{ $patient->id }}",
-                //         "patient_id": "{{ $patient->patient_id }}"
-                //     },
-                // }).done(function (response) {
-                //     $("#submit-prescription").attr('fn', 1);
-                //     $("#pill-tab-li3").click();
-                //     toastSuccess("Patient Info Saved");
-                // }).fail(function (response) {
-                //     $("#submit-prescription").attr('fn', 0);
-                //     toastError("Enable to save patient info");
-                // });
+
+                // Check if files are completely uploaded
+                var upperArchWidth = $("#upper-arch-progress-bar").css('width');
+                var lowerArchWidth = $("#lower-arch-progress-bar").css('width');
+
+                // Check if upload is in progress (loading state visible)
+                var upperLoading = !$("#upper-jaw-box").find('._dropzone_loading').hasClass('_dropzone_loading_hidden');
+                var lowerLoading = !$("#lower-jaw-box").find('._dropzone_loading').hasClass('_dropzone_loading_hidden');
+
+                // Extract percentage from progress bar
+                var upperPercent = 0;
+                var lowerPercent = 0;
+
+                if (upperArchWidth) {
+                    upperPercent = parseInt(upperArchWidth);
+                }
+                if (lowerArchWidth) {
+                    lowerPercent = parseInt(lowerArchWidth);
+                }
+
+                // Validate uploads are complete for required files
+                if (upperLoading || lowerLoading) {
+                    toastError("Required scan files are still uploading. Please wait for the upload to complete.");
+                    return false;
+                }
+
+                if (upperPercent < 100 || lowerPercent < 100) {
+                    toastError("Please ensure both required scan files are completely uploaded (100%).");
+                    return false;
+                }
+
+                // Check optional Mandibular Repositioning STL Files
+                var additionalScansVisible = !$("#additional-scans-optional").hasClass('d-none');
+
+                if (additionalScansVisible) {
+                    var hasOptionalKey18 = $("#key18").prop('files').length > 0;
+                    var hasOptionalKey19 = $("#key19").prop('files').length > 0;
+
+                    // If either optional file is selected, validate both are completely uploaded
+                    if (hasOptionalKey18 || hasOptionalKey19) {
+                        var optionalUpperArchWidth = $("#optional-upper-arch-progress-bar").css('width');
+                        var optionalLowerArchWidth = $("#optional-lower-arch-progress-bar").css('width');
+
+                        var optionalUpperLoading = !$("#posterior-bite-turbos-box").find('._dropzone_loading').hasClass('_dropzone_loading_hidden');
+                        var optionalLowerLoading = !$("#anterior-bite-turbos-box").find('._dropzone_loading').hasClass('_dropzone_loading_hidden');
+
+                        var optionalUpperPercent = 0;
+                        var optionalLowerPercent = 0;
+
+                        if (optionalUpperArchWidth) {
+                            optionalUpperPercent = parseInt(optionalUpperArchWidth);
+                        }
+                        if (optionalLowerArchWidth) {
+                            optionalLowerPercent = parseInt(optionalLowerArchWidth);
+                        }
+
+                        // Validate optional uploads are complete
+                        if (optionalUpperLoading || optionalLowerLoading) {
+                            toastError("Optional Mandibular Repositioning files are still uploading. Please wait for the upload to complete.");
+                            return false;
+                        }
+
+                        if (optionalUpperPercent < 100 || optionalLowerPercent < 100) {
+                            toastError("Please ensure both optional Mandibular Repositioning files are completely uploaded (100%).");
+                            return false;
+                        }
+                    }
+                }
+
+                // 👉 Show loader before request
+                $(".my-loader").show();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('/patient/movixtech/create_case') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        treatment_plan_id: "{{ $patient->id }}",
+                        patient_id: "{{ $patient->patient_id }}"
+                    },
+                    success: function (response) {
+                        // ✅ Check backend status
+                        if (response.status) {
+                            $("#submit-prescription").attr('fn', 1);
+                            $("#pill-tab-li3").click();
+                            $("#pill-tab-div2").removeClass('show active');
+                            toastSuccess(response.message || "Case created successfully");
+                        } else {
+                            $("#submit-prescription").attr('fn', 0);
+                            toastError(response.message || "Failed to process case");
+                        }
+                    },
+                    error: function (xhr) {
+                        let msg = "Something went wrong!";
+
+                        // ✅ Try to read backend error message
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            msg = xhr.responseJSON.message;
+                        }
+
+                        toastError(msg);
+                    },
+                    complete: function() {
+                        // 👉 Hide loader always (success or error)
+                        $(".my-loader").hide();
+                    }
+                });
             });
+
             //
             $("#submit-images").on('click', function() {
                 if (PHASE == '1' && ($("#key3").attr('file') == '' || $("#key4").attr('file') == '' || $("#key5").attr('file') == '' || $("#key6").attr('file') == '' || $("#key7").attr('file') == '' || $("#key8").attr('file') == '' || $("#key9").attr('file') == '' || $("#key10").attr('file') == '' || $("#key11").attr('file') == '' || $("#key12").attr('file') == '')) {
@@ -4513,6 +4321,46 @@ window.destroyPreview1 = destroyPreview1;
                 var clas = $("input[name=class]:checked").val() || '';
                 fd.append("class", clas);
                 var clas_notes = $("textarea[name=class_notes]").val();
+
+                var button_outer = $("input[name=feature_button_outer_ids]").val();
+                var button_inner = $("input[name=feature_button_inner_ids]").val();
+                var ihook_outer = $("input[name=feature_ihook_outer_ids]").val();
+                var ihook_inner = $("input[name=feature_ihook_inner_ids]").val();
+                var precision_cut_outer = $("input[name=feature_precision_cut_outer_ids]").val();
+                var precision_cut_inner = $("input[name=feature_precision_cut_inner_ids]").val();
+                var power_arm_attachment_outer = $("input[name=feature_power_arm_attachment_outer_ids]").val();
+                var power_arm_attachment_inner = $("input[name=feature_power_arm_attachment_inner_ids]").val();
+                var power_ridge_outer = $("input[name=feature_power_ridge_outer_ids]").val();
+                var power_ridge_inner = $("input[name=feature_power_ridge_inner_ids]").val();
+                var bite_turbos = $("input[name=feature_bite_turbos_ids]").val();
+                var bite_ramp = $("input[name=feature_bite_ramp_ids]").val();
+
+                var unerupted_teeth = $("input[name=feature_unerupted_teeth_ids]").val();
+                var extracted_teeth = $("input[name=feature_extracted_teethids]").val();
+                var tooth_movement_restrictions = $("input[name=feature_tooth_movement_restrictions_ids]").val();
+                var coil = $("input[name=feature_coil_ids]").val();
+                var pontic = $("input[name=feature_pontic_ids]").val();
+                var bridge = $("input[name=feature_bridge_ids]").val();
+
+                fd.append("button_outer", button_outer);
+                fd.append("button_inner", button_inner);
+                fd.append("ihook_outer", ihook_outer);
+                fd.append("ihook_inner", ihook_inner);
+                fd.append("precision_cut_outer", precision_cut_outer);
+                fd.append("precision_cut_inner", precision_cut_inner);
+                fd.append("power_arm_attachment_outer", power_arm_attachment_outer);
+                fd.append("power_arm_attachment_inner", power_arm_attachment_inner);
+                fd.append("power_ridge_outer", power_ridge_outer);
+                fd.append("power_ridge_inner", power_ridge_inner);
+                fd.append("bite_turbos", bite_turbos);
+                fd.append("bite_ramp", bite_ramp);
+
+                fd.append("unerupted_teeth", unerupted_teeth);
+                fd.append("extracted_teeth", extracted_teeth);
+                fd.append("tooth_movement_restrictions", tooth_movement_restrictions);
+                fd.append("coil", coil);
+                fd.append("pontic", pontic);
+                fd.append("bridge", bridge);
 
                 //pcp
                 var pcp_ur = $('input[name="pcp_ur"]:checked').map(function() {
@@ -4728,13 +4576,29 @@ window.destroyPreview1 = destroyPreview1;
                 var additional_attachments_notes = $("textarea[name=additional_attachments_notes]").val();
                 fd.append("additional_attachments_notes", additional_attachments_notes);
 
+                // var aesthetic_start = $("input[name=aesthetic_start]:checked").val();
+                var aesthetic_start = $("input[name='aesthetic_start']:checked").val();
+                fd.append("aesthetic_start", aesthetic_start);
+
+                var anterior_leveling = $("input[name='anterior_leveling']:checked").val();
+                fd.append("anterior_leveling", anterior_leveling);
+
                 var keep_already_place_attachments = $(
                     "input[name=keep_already_placed_attachments]:checked").val() || '0';
                 fd.append("keep_already_place_attachments", keep_already_place_attachments);
-                var aligner_trim_type_upper = $("select[name=trim_type_upper]").val();
+
+                var aligner_trim_type_upper = $("input[name='trim_type_upper']:checked").val(); //$("select[name=trim_type_upper]").val();
                 fd.append("aligner_trim_type_upper", aligner_trim_type_upper);
-                var aligner_trim_type_lower = $("select[name=trim_type_lower]").val();
+
+                var trim_type_upper_upper = $("select[name='trim_type_upper_upper']").val();
+                fd.append("trim_type_upper_upper", trim_type_upper_upper);
+
+                var aligner_trim_type_lower = $("input[name='trim_type_lower']:checked").val(); //$("select[name=trim_type_lower]").val();
                 fd.append("aligner_trim_type_lower", aligner_trim_type_lower);
+
+                var trim_type_lower_upper = $("select[name='trim_type_lower_upper']").val();
+                fd.append("trim_type_lower_upper", trim_type_lower_upper);
+
                 if (aligner_trim_type_lower == '' || aligner_trim_type_lower == undefined ||
                     aligner_trim_type_lower == null || aligner_trim_type_upper == '' ||
                     aligner_trim_type_upper == undefined || aligner_trim_type_upper == null) {
@@ -4747,22 +4611,45 @@ window.destroyPreview1 = destroyPreview1;
                 $("select[name=trim_type_lower]").removeClass('is-invalid')
 
                 //last aligners to cover
-                var tla_ur = $("input[name=tla_ur]:checked").map(function() {
-                    return $(this).data('number');
-                }).get();
+                function parseAlignersToCoverState(selector) {
+                    var raw = $(selector).val();
+
+                    if (!raw) {
+                        return [];
+                    }
+
+                    try {
+                        var parsed = JSON.parse(raw);
+                        return Array.isArray(parsed) ? parsed : [];
+                    } catch (e) {
+                        return [];
+                    }
+                }
+
+                var tla_ur = parseAlignersToCoverState("#tla_ur_state");
                 fd.append("tla_ur", JSON.stringify(tla_ur));
-                var tla_lr = $("input[name=tla_lr]:checked").map(function() {
-                    return $(this).data('number');
-                }).get();
+
+                var tla_lr = parseAlignersToCoverState("#tla_lr_state");
                 fd.append("tla_lr", JSON.stringify(tla_lr));
-                var tla_ul = $("input[name=tla_ul]:checked").map(function() {
-                    return $(this).data('number');
-                }).get();
+
+                var tla_ul = parseAlignersToCoverState("#tla_ul_state");
                 fd.append("tla_ul", JSON.stringify(tla_ul));
-                var tla_ll = $("input[name=tla_ll]:checked").map(function() {
-                    return $(this).data('number');
-                }).get();
+
+                var tla_ll = parseAlignersToCoverState("#tla_ll_state");
                 fd.append("tla_ll", JSON.stringify(tla_ll));
+
+                var upper_teeth_to_cover = tla_ur.length + tla_ul.length;
+                var lower_teeth_to_cover = tla_lr.length + tla_ll.length;
+
+                if (upper_teeth_to_cover > 0 && upper_teeth_to_cover < 4) {
+                    toastError("Please select at least 4 upper teeth to cover.");
+                    return false;
+                }
+
+                if (lower_teeth_to_cover > 0 && lower_teeth_to_cover < 4) {
+                    toastError("Please select at least 4 lower teeth to cover.");
+                    return false;
+                }
 
                 if (tla_ur.length == 0 && tla_lr.length == 0 && tla_ul.length == 0 && tla_ll.length == 0) {
                     toastError("Please mark the last tooth you want the aligners to cover (Special Instructions).");
@@ -4859,32 +4746,7 @@ window.destroyPreview1 = destroyPreview1;
                 // } else {
                 //     redirectUri = "{{ url('/patient/edit') }}/" + hashCode;
                 // }
-                redirectUri = "{{ url('/patient/edit') }}/" + hashCode + "?type=primary";;
-                const shining3dAuthUrl =
-                    'https://dental3dcloud.com/p/index?' +
-                    'codeChallenge={{ config("shining3d.shining3d_code_challenge") }}' +
-                    '&codeChallengeMethod={{ config("shining3d.shining3d_code_challenge_method") }}' +
-                    '&redirectUri=' + encodeURIComponent(redirectUri) +
-                    '&responseType=code' +
-                    '&appId={{ config("shining3d.shining3d_app_id") }}' +
-                    '&thirdUserID={{ Auth::user()->id }}' +
-                    '&thirdUserName={{ Auth::user()->shining3d_org_name }}';
-
-                window.location.href = shining3dAuthUrl;
-            });
-
-            $(document).on('click', '#select-from-shining3d-link-additional', function () {
-                const mode = $(this).attr('data-mode'); // 'add' or 'edit'
-                const hashCode = $(this).attr('data-hash-code');
-
-                let redirectUri;
-
-                // if (mode === 'add') {
-                //     redirectUri = "{{ config('shining3d.shining3d_redirect_uri') }}";
-                // } else {
-                //     redirectUri = "{{ url('/patient/edit') }}/" + hashCode;
-                // }
-                redirectUri = "{{ url('/patient/edit') }}/" + hashCode + "?type=additional";
+                redirectUri = "{{ url('/patient/edit') }}/" + hashCode;
                 const shining3dAuthUrl =
                     'https://dental3dcloud.com/p/index?' +
                     'codeChallenge={{ config("shining3d.shining3d_code_challenge") }}' +
@@ -4901,37 +4763,50 @@ window.destroyPreview1 = destroyPreview1;
 
 
 </script>
-
-<script src="{{ asset('public/assets/customjs/scan.js') }}?v={{ time() }}"></script>
-
-<script src="{{ asset('public/assets/customjs/additional-scan.js') }}?v={{ time() }}"></script>
-
+<script src="{{  asset('public/assets/customjs/clinicalPreferences.js') }}?v={{ time() }}"></script>
 <script src="{{ asset('public/assets/customjs/dm-integration.js') }}?v={{ time() }}"></script>
-
 <script src="{{ asset('public/assets/customjs/add-patient.js') }}?v={{ time() }}"></script>
-
 <script src="{{ asset('public/assets/customjs/shining3d.js') }}?v={{ time() }}"></script>
+<script src="{{  asset('public/assets/customjs/clinicalPreferencesSection2.js') }}?v={{ time() }}"></script>
+<script src="{{  asset('public/assets/customjs/alignersToCover.js') }}?v={{ time() }}"></script>
 
 <script>
     $(document).ready(function() {
+
+
         const params = new URLSearchParams(window.location.search);
 
         const code = params.get('code');
         const matchNode = params.get('matchNode');
         const codeChallenge = params.get('codeChallenge');
         const domain = params.get('domain');
-        const type = params.get('type');
 
-        if (code && matchNode && codeChallenge && domain && type === 'primary') {
+        if (code && matchNode && codeChallenge && domain) {
             $('#order-from-shining3d-modal').modal('show');
         }
 
-        if (code && matchNode && codeChallenge && domain && type === 'additional') {
-            $('#order-from-shining3d-additional-modal').modal('show');
-        }
+        $(document).ready(function () {
+            $('#text-info-modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // clicked element
+                var infoText = button.data('info');  // get data-info
+                var infoTitle = button.data('info-title');  // get data-info
 
-        AdditionalScan.init();
-        Scan.init();
+                $(this).find('#text-info').text(infoText); // set text
+                $(this).find('#text-info-title').text(infoTitle); // set text
+            });
+        });
+
+         $("#toggleAdditionalScans").click(function () {
+
+            $("#additional-scans-optional").toggleClass("d-none");
+            // Button text change
+            if ($("#additional-scans-optional").hasClass("d-none")) {
+                $(this).text("Add Mandibular Repositioning STL Files (Optional)");
+            } else {
+                $(this).text("Hide Mandibular Repositioning STL Files (Optional)");
+            }
+        });
+
         DmIntegration.init();
         AddPatient.init();
         Shining3d.init();

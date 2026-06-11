@@ -217,6 +217,9 @@ class PatientOverview extends Controller
             $labs = DB::table('users')->where('role', 'lab')->get();
             $plans = DB::table('p_treatment_plans')->where('is_deleted', 0)->where('patient_id', $patient->patient_id)->orderByDesc('phase')->select("phase", "id")->get();
 
+            // Fetch doctor's clinical preferences
+            $clinicalPreference = DoctorClinicalPreference::where('doctor_id', $patient->user_id)->first();
+
             $data = compact("patient", "labs", "comments", "plans");
             $notificationId = @$request->get('notify');
             if (!empty($notificationId)) {
