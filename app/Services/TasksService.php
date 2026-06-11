@@ -97,7 +97,9 @@ class TasksService extends CommonFunction
                 });
             }
         }
-
+        if ($user->role == 'staff') {
+            $query->where('p.staff_id', $user->id);
+        }
 
         $total = $query->count();
 
@@ -177,6 +179,7 @@ class TasksService extends CommonFunction
             }
 
             $records['data'][] = [
+                // 'user_full_name' => $patient->user_full_name . " - " . $patient->city . " " . $patient->country. " " . $patient->postal_code ,
                 'user_full_name' => $patient->user_full_name,
                 'country' => $patient->country,
                 'patient_full_name' => $patient->patient_full_name,
