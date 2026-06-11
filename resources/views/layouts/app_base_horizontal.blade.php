@@ -530,8 +530,10 @@
                                             Profile</a>
 
                                         @if(Auth::user()->role == 'doctor')
-                                            <a class="dropdown-item" href="{{ url('/clinical-preferences') }}"><i class="bx bx-user font-size-16 align-middle me-1"></i>
-                                            Clinical Preferences</a>
+                                            <a class="dropdown-item" href="{{ url('/clinical-preferences') }}">
+                                                <i class="bx bx-customize font-size-16 align-middle me-1"></i>
+                                                Clinical Preferences
+                                            </a>
                                         @endif
 
                                         <a class="dropdown-item text-danger" href="javascript:void(0);"  onclick="document.getElementById('logout-form').submit()"><i
