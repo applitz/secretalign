@@ -38,7 +38,6 @@ class ClinicalPreferencesController extends Controller
             'ipr_max_limit' => 'required_if:ipr_preference,IPR|nullable|numeric|between:0.1,0.6',
             'ipr_location_upper' => 'required_if:ipr_preference,IPR|nullable|string|in:3-3,4-4,6-6',
             'ipr_location_lower' => 'required_if:ipr_preference,IPR|nullable|string|in:3-3,4-4,6-6',
-            'resolutions_notes' => 'nullable|string',
             'additional_comments' => 'nullable|string',
         ]);
 
@@ -62,7 +61,6 @@ class ClinicalPreferencesController extends Controller
             'ipr_max_limit',
             'ipr_location_upper',
             'ipr_location_lower',
-            'resolutions_notes',
             'additional_comments',
         ]);
 

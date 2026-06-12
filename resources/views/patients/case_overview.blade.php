@@ -54,10 +54,38 @@
             /*border: 10px solid #c3e8f8;*/
             /*background: #f2f2f2;*/
         }
-
-        .canvas-bg {
-            background: #aaaaaa;
+        .canvas-primary-width{
+            width: 100% !important;
         }
+
+        #canvas {
+            width: 100%;
+            overflow: hidden;
+            /* position: relative; */
+        }
+
+        #canvas canvas {
+            max-width: 100%;
+            width: 100% !important;
+            /* height: auto !important; */
+            /* display: block; */
+        }
+
+        #canvas_optional {
+            width: 100%;
+            overflow: hidden;
+            /* position: relative; */
+        }
+
+        #canvas_optional canvas {
+            max-width: 100%;
+            width: 100% !important;
+            /* height: auto !important; */
+            /* display: block; */
+        }
+        /* .canvas-bg {
+            background: #aaaaaa;
+        } */
 
         .case-overview-btn {
             width: 200px !important;

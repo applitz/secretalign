@@ -10,6 +10,7 @@ use App\Http\Services\TaskService;
 use App\Http\Services\NemoTechService;
 use App\Jobs\SubmitCaseMailJob;
 use App\Jobs\SubmitCaseMailStaffJob;
+use App\Models\DoctorClinicalPreference;
 use Illuminate\Support\Facades\View;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Session;
@@ -107,7 +108,139 @@ class RegisterPatient extends Controller
         }
 
     }
+
     public function edit(Request $request, $treatment_plan_id)
+    {
+        $doctorClinicalPreference = DoctorClinicalPreference::where('doctor_id', Auth::id())->first();
+        $baseUrl = null;
+        $code = null;
+        $changePlan = 'true';
+        $dataShining3d = [];
+        $scanError = null;
+        $baseUrl = null;
+        $code = null;
+        $orderList = [];
+        if($request->has('code') && $request->has('codeChallenge') && $request->has('matchNode') && $request->has('domain')) {
+
+            $shining3d_user_id = Auth::user()->shining3d_user_id;
+            $shining3d_org_code = Auth::user()->shining3d_org_code;
+            $baseUrl = $request->get('domain');
+            $code = $request->get('code');
+
+            $csrfToken = getDynamicEncryptionToken($baseUrl);
+            if($csrfToken['status'] == 'success') {
+                $dataShining3d['csrfToken'] = $csrfToken['result'];
+                $connectionAuthorization = json_decode(connect($baseUrl, $csrfToken['result']), true);
+                if($connectionAuthorization['status'] == 'success') {
+                    $dataShining3d['connectionAuthorization'] = $connectionAuthorization;
+                    $userDetails = exchangeCodeForToken($code, $baseUrl);
+                    if($userDetails['status'] == 'success') {
+                        if($userDetails['result'] && $userDetails['result']['factories'] && count($userDetails['result']['factories']) > 0) {
+                            // Find clinic by name
+                            $userId = $userDetails['result']['userId'];
+                            $dataShining3d['userId'] = $userId;
+                            $clinic = collect($userDetails['result']['factories'])->firstWhere('name', Auth::user()->shining3d_org_name);
+                            if($clinic) {
+                                $orgCode = $clinic['orgCode'];
+                                $dataShining3d['orgCode'] = $orgCode;
+                                $objUser = User::find(Auth::user()->id);
+                                $objUser->shining3d_user_id = $userId;
+                                $objUser->shining3d_org_code = $orgCode;
+                                $objUser->save();
+                                $dataDistribution = $clinic['dataDistribution'];
+                                $dataShining3d['dataDistribution'] = $dataDistribution;
+                                if(count($dataDistribution) > 0){
+                                    $dataShining3d['endDate']   = date('Y-m-d');
+                                    $dataShining3d['startDate'] = date('Y-m-d',strtotime($dataShining3d['endDate'] . ' -3 days'));
+
+                                    $dataShining3d['orderList'] = getOrderList($baseUrl, $connectionAuthorization['result'], $orgCode, $userId, $clinic['orgType'], $dataShining3d['startDate'], $dataShining3d['endDate']);
+                                    $dataShining3d['baseUrl'] = $baseUrl;
+                                    $dataShining3d['authToken'] = $connectionAuthorization['result'];
+                                    $dataShining3d['orgCode'] = $orgCode;
+                                    $dataShining3d['doctorId'] = $userId;
+                                    $dataShining3d['orgType'] = $clinic['orgType'];
+
+                                    // Log::info('SHINING 3D connection successful', ['user_id' => Auth::id(), 'clinic' => $clinic, 'shining3d_user_id' => $userId, 'org_code' => $orgCode]);
+                                }
+                            }
+                            $scanError = 'Failed to find clinic in SHINING 3D.';
+                        }
+                        $scanError = 'Failed to retrieve user details from SHINING 3D.';
+                    }
+                    $scanError = 'Failed to exchange authorization code with SHINING 3D.';
+                }
+                $scanError = 'Failed to establish secure connection with SHINING 3D.';
+            }
+            $scanError = 'Failed to generate secure authentication token from SHINING 3D.';
+        }
+
+
+        if(Auth::user()->three_shape_refresh_token != null) {
+            $this->ThreeShapeRefreshToken();
+        }
+        if(Auth::user()->medit_link_refresh_token != null) {
+            $this->MeditLinkRefreshToken();
+        }
+        $advisors = User::where('role','advisor')->get();
+        $patient = DB::table('p_treatment_plans as tp')
+            ->where('tp.is_deleted', 0)
+            ->where('tp.id', $this->hashids->decode($treatment_plan_id))
+
+            ->Join("patients as p", function ($join) {
+                $join->on("tp.patient_id", '=', "p.id")
+                    ->where('p.user_id', Auth::user()->id)
+                    ->where('p.is_deleted', 0);
+            })
+            ->select("tp.*", "p.first_name", "p.last_name", "p.id as patient_id",  "p.dob", "p.user_id", "p.pricing_package")
+            ->orderByDesc("p.id")
+            ->first();
+
+        $priviousPatientDetails = DB::table('p_treatment_plans as tp')
+            ->where('tp.is_deleted', 0)
+            ->where('tp.id', '!=', $this->hashids->decode($treatment_plan_id))
+            ->where('tp.patient_id', $patient->patient_id)
+            ->Join("patients as p", function ($join) {
+                $join->on("tp.patient_id", '=', "p.id")
+                    ->where('p.user_id', Auth::user()->id)
+                    ->where('p.is_deleted', 0);
+            })
+            ->select("tp.*", "p.first_name", "p.last_name", "p.id as patient_id",  "p.dob", "p.user_id", "p.pricing_package")
+            ->orderByDesc("tp.id")
+            ->first();
+
+        $getTreatmentType = DB::table('p_treatment_plans as tp')
+                            ->where('tp.is_deleted', 0)
+                            ->where('tp.patient_id', $patient->patient_id)
+                            ->where('tp.id', '!=', $patient->id)
+                            ->orderBy('tp.id', 'desc')
+                            ->select('treatment_type')
+                            ->get()
+                            ->first();
+                            if($getTreatmentType){
+                                if($getTreatmentType->treatment_type == 2){
+                                    $changePlan = 'true';
+                                } else {
+                                    $changePlan = 'false';
+                                }
+                            }
+        if (@$patient) {
+
+            $hashids = new Hashids();
+            $hashCode = $hashids->encode($patient->id);
+            $mode = "edit";
+            if ($patient->is_submitted == 1) {
+                if ($patient->is_editable == 1) {
+                    return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code', 'hashCode', 'dataShining3d', 'scanError', 'doctorClinicalPreference'));
+                }
+
+            } else {
+                 return view("patients.add_patient", compact("patient", "mode","advisors", "changePlan", "priviousPatientDetails",  'baseUrl', 'code', 'hashCode', 'dataShining3d', 'scanError', 'doctorClinicalPreference'));
+            }
+        }
+        abort(403, "Unauthorized request!");
+    }
+
+    public function editOld(Request $request, $treatment_plan_id)
     {
         $type = $request->has('type') ? $request->get('type') : 'primary';
         $baseUrl = null;
@@ -253,6 +386,7 @@ class RegisterPatient extends Controller
     }
     public function create(Request $request)
     {
+        $doctorClinicalPreference = DoctorClinicalPreference::where('doctor_id', Auth::id())->first();
         $dataShining3d = [];
         $scanError = null;
         $baseUrl = null;
@@ -481,7 +615,7 @@ class RegisterPatient extends Controller
             $hashCode = $hashids->encode($patient->id);
     // dd($dataShining3d);
         $changePlan = 'true';
-        return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code', 'dataShining3d', 'scanError', 'hashCode'));
+        return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code', 'dataShining3d', 'scanError', 'hashCode', 'doctorClinicalPreference' ));
     }
 
     protected function delete_patient_storage_dir($patient_id)

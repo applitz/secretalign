@@ -117,7 +117,7 @@
                                                 </div>
 
                                                 @if (!@$patient->iframe_link)
-                                                    <div id="canvas" class="canvas-bg"></div>
+                                                    <div id="canvas" class="canvas-bg canvas-primary-width"></div>
                                                 @endif
 
                                                 <div class="btn-group float-end btns-steps" role="group"
@@ -232,7 +232,7 @@
                                                     </div>
 
 
-                                                    <div id="canvas_optional" class="canvas-bg"></div>
+                                                    <div id="canvas_optional" class="canvas-bg canvas-primary-width"></div>
 
 
                                                     <div class="btn-group float-end btns-steps" role="group"
@@ -286,7 +286,9 @@
         } from '{{ asset('public/assets/three/examples/jsm/controls/OrbitControls.js') }}';
 
         // Optional scan viewer: completely separate from primary scan
-        (function initOptionalViewer() {
+        (
+
+        function initOptionalViewer() {
             const containerOptional = document.getElementById('canvas_optional');
             if (!containerOptional) return;
 

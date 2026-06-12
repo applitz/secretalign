@@ -110,6 +110,10 @@ class PatientOverview extends Controller
                     ]);
                 }
             }
+
+            // Fetch doctor's clinical preferences
+            $clinicalPreference = DoctorClinicalPreference::where('doctor_id', $patient->user_id)->first();
+            $data['clinicalPreference'] = $clinicalPreference;
             return View::make("patients.case_overview_el", $data);
         }
     }

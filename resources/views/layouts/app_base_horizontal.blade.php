@@ -72,13 +72,9 @@
                 overflow-x: hidden;
             }
 
-            .table-responsive {
-                overflow-x: auto !important;
-            }
-
-            /* div.dataTables_wrapper div.dataTables_scrollBody {
+            div.dataTables_wrapper div.dataTables_scrollBody {
                 overflow-x: hidden !important;
-            } */
+            }
             body[data-layout=detached] #layout-wrapper::before {
                 height: 165px;
                 top: 70px;
@@ -394,6 +390,18 @@
         border-color: #499596;
         -webkit-box-shadow: 0 0 0 0.25rem rgba(28, 132, 132,.25);
         box-shadow: 0 0 0 0.25rem rgba(28, 132, 132,.25);
+    }
+
+    #patients-list td.wrap-two-lines {
+        white-space: normal !important;
+        word-break: break-word;
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
     }
     @media (min-width: 992px) {
         #toggle-menu-btn {

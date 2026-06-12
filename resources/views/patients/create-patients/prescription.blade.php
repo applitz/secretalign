@@ -18,7 +18,6 @@
         $preferredLocationUpper = $patient->location_upper ?: ($doctorClinicalPreference->ipr_location_upper ?? '');
         $preferredLocationLower = $patient->location_lower ?: ($doctorClinicalPreference->ipr_location_lower ?? '');
         $preferredLimits = $patient->limits ?: ($doctorClinicalPreference->ipr_max_limit ?? '');
-        $preferredResolutionNotes = $patient->resolutions_notes ?: ($doctorClinicalPreference->resolutions_notes ?? '');
     @endphp
     <div class="accordion border-x border-top rounded mb-3" id="accordionFaq">
         <div class="card shadow-none border-bottom rounded-bottom-0 mb-0">
@@ -2858,7 +2857,7 @@
 
                             <div id="trim_type_lower_show" class="{{ $patient->trim_type_lower == 'Straight' ? '' : 'd-none'}}">
                                 <div class="mb-3">
-                                    <label>Upper</label>
+                                    <label>Lower</label>
                                     <select id="trim_type_lower_upper trim_type_lower" name="trim_type_lower_upper" class="form-select">
                                         <option value="" selected disabled>Select</option>
                                         <option value="0" @if ($patient->trim_type_lower_straight_lower == '0') selected @endif>Standard (1-1.5mm beyond the gingival margins)</option>

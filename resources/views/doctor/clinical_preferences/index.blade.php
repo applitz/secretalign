@@ -34,7 +34,7 @@
 
                         <div class="row">
                             <div class="col-12 mb-4">
-                                <h5 class="mb-3">Anterior Teeth Leveling</h5>
+                                <span class="fw-bold font-sans-serif text-900">Anterior Teeth Leveling: Upper incisal edges:</span>
                                 @php
                                     $anteriorOptions = [
                                         'Canines and centrals at same level, laterals 0.5mm above' => 'Canines and centrals at same level, laterals 0.5mm above',
@@ -53,7 +53,7 @@
                             </div>
 
                             <div class="col-12 mb-4">
-                                <h5 class="mb-3">Pontics</h5>
+                                <span class="fw-bold font-sans-serif text-900">Pontics (i: By default, pontics will be placed when spaces are larger than 4mm)</span>
                                 @php
                                     $ponticsOptions = [
                                         'Always apply pontics' => 'Always apply pontics',
@@ -72,7 +72,7 @@
                             </div>
 
                             <div class="col-12 mb-4">
-                                <h5 class="mb-3">Arch Expansion</h5>
+                                <span class="fw-bold font-sans-serif text-900">Arch Expansion</span>
                                 <p class="text-muted">After derotations and bucco-palatal uprighting, what is the max amount of acceptable bodily posterior expansion?</p>
                                 @php
                                     $archOptions = ['1 mm', '2 mm', '3 mm', '4 mm'];
@@ -88,7 +88,7 @@
                             </div>
 
                             <div class="col-12 mb-4">
-                                <h5 class="mb-3">Overcorrection</h5>
+                                <span class="fw-bold font-sans-serif text-900">Overcorrection</span>
                                 <div class="row">
                                     @php
                                         $overcorrectionGroups = [
@@ -119,7 +119,7 @@
                             </div>
 
                             <div class="col-12 mb-4">
-                                <h5 class="mb-3">Ensure even tooth movement per stage</h5>
+                                <span class="fw-bold font-sans-serif text-900">Ensure even tooth movement per stage</span>
                                 <div class="row">
                                     <div class="col-lg-4 col-md-6 mb-3">
                                         <label class="form-label">Rotation / Aligner</label>
@@ -161,7 +161,7 @@
                             </div>
 
                             <div class="col-12 mb-4">
-                                <h5 class="mb-3">Perform sequential distalization/mesialisation</h5>
+                                <span class="fw-bold font-sans-serif text-900">Perform sequential distalization/mesialisation</span>
                                 @php $sequentialOptions = ['30%', '50%', '100%']; @endphp
                                 @foreach($sequentialOptions as $value)
                                     <div class="form-check">
@@ -174,7 +174,7 @@
                             </div>
 
                             <div class="col-12 mb-4">
-                                <h5 class="mb-3">Ensure same number of aligners for both arches</h5>
+                                <span class="fw-bold font-sans-serif text-900">Ensure same number of aligners for both arches</span>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="same_number_aligners_for_both_arches" id="same_aligners_yes" value="Yes"
                                         {{ old('same_number_aligners_for_both_arches', $preference->same_number_aligners_for_both_arches ?? '') === 'Yes' ? 'checked' : '' }}>
@@ -203,7 +203,7 @@
                             </div>
 
                             <div class="col-12 mb-4">
-                                <h5 class="mb-3">En masse distalization while using distal slider?</h5>
+                                <span class="fw-bold font-sans-serif text-900">En masse distalization while using distal slider?</span>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="en_masse_distalization" id="distalization_yes" value="Yes"
                                         {{ old('en_masse_distalization', $preference->en_masse_distalization ?? '') === 'Yes' ? 'checked' : '' }}>
@@ -218,50 +218,51 @@
                             </div>
 
                             <div class="col-12 mb-4">
-                                <h5 class="mb-3">IPR</h5>
-                                @php
-                                    $iprOptions = ['IPR' => 'IPR', 'Restorative (No IPR)' => 'Restorative (No IPR)', 'Accept best fit (No IPR/Restorative)' => 'Accept best fit (No IPR/Restorative)'];
-                                @endphp
-                                @foreach($iprOptions as $value => $label)
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="ipr_preference" id="ipr_{{ md5($value) }}" value="{{ $value }}"
-                                            {{ old('ipr_preference', $preference->ipr_preference ?? '') === $value ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="ipr_{{ md5($value) }}">{{ $label }}</label>
-                                    </div>
-                                @endforeach
-                                @error('ipr_preference')<div class="text-danger">{{ $message }}</div>@enderror
+                                <span class="fw-medium font-sans-serif text-900" >Resolve Tooth Size Issues</span>
+                                <div class="mb-3">
+                                    <label>Please select one of the following options.</label>
+                                    @php
+                                        $iprOptions = ['IPR' => 'IPR', 'Restorative (No IPR)' => 'Restorative (No IPR)', 'Accept best fit (No IPR/Restorative)' => 'Accept best fit (No IPR/Restorative)'];
+                                    @endphp
+                                    @foreach($iprOptions as $value => $label)
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="ipr_preference" id="ipr_{{ md5($value) }}" value="{{ $value }}"
+                                                {{ old('ipr_preference', $preference->ipr_preference ?? '') === $value ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="ipr_{{ md5($value) }}">{{ $label }}</label>
+                                        </div>
+                                    @endforeach
+                                    @error('ipr_preference')<div class="text-danger">{{ $message }}</div>@enderror
 
-                                <div id="ipr-limit-section" class="mt-3 {{ old('ipr_preference', $preference->ipr_preference ?? '') !== 'IPR' ? 'd-none' : '' }}">
-                                    <label class="form-label">Maximum Ant. IPR/Contact 0.1-0.6mm</label>
-                                    <input class="form-control" type="number" name="ipr_max_limit" step="0.05" min="0.1" max="0.6" value="{{ old('ipr_max_limit', $preference->ipr_max_limit ?? '') }}">
-                                    @error('ipr_max_limit')<div class="text-danger">{{ $message }}</div>@enderror
+                                    <div id="ipr-limit-section" class="mt-3 {{ old('ipr_preference', $preference->ipr_preference ?? '') !== 'IPR' ? 'd-none' : '' }}">
 
-                                    <div class="mt-3">
-                                        <label class="form-label">Location Upper</label>
-                                        <select class="form-select" name="ipr_location_upper">
-                                            <option value="">Select</option>
-                                            @foreach(['3-3', '4-4', '6-6'] as $location)
-                                                <option value="{{ $location }}" {{ old('ipr_location_upper', $preference->ipr_location_upper ?? '') === $location ? 'selected' : '' }}>{{ $location }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('ipr_location_upper')<div class="text-danger">{{ $message }}</div>@enderror
-                                    </div>
+                                        <span class="fw-medium font-sans-serif text-900">Location</span>
+                                        <div class="mb-3">
+                                            <label class="form-label">Location Upper</label>
+                                            <select class="form-select" name="ipr_location_upper">
+                                                <option value="">Select</option>
+                                                @foreach(['3-3', '4-4', '6-6'] as $location)
+                                                    <option value="{{ $location }}" {{ old('ipr_location_upper', $preference->ipr_location_upper ?? '') === $location ? 'selected' : '' }}>{{ $location }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('ipr_location_upper')<div class="text-danger">{{ $message }}</div>@enderror
+                                        </div>
 
-                                    <div class="mt-3">
-                                        <label class="form-label">Location Lower</label>
-                                        <select class="form-select" name="ipr_location_lower">
-                                            <option value="">Select</option>
-                                            @foreach(['3-3', '4-4', '6-6'] as $location)
-                                                <option value="{{ $location }}" {{ old('ipr_location_lower', $preference->ipr_location_lower ?? '') === $location ? 'selected' : '' }}>{{ $location }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('ipr_location_lower')<div class="text-danger">{{ $message }}</div>@enderror
-                                    </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Location Lower</label>
+                                            <select class="form-select" name="ipr_location_lower">
+                                                <option value="">Select</option>
+                                                @foreach(['3-3', '4-4', '6-6'] as $location)
+                                                    <option value="{{ $location }}" {{ old('ipr_location_lower', $preference->ipr_location_lower ?? '') === $location ? 'selected' : '' }}>{{ $location }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('ipr_location_lower')<div class="text-danger">{{ $message }}</div>@enderror
+                                        </div>
 
-                                    <div class="mt-3">
-                                        <label class="form-label">Resolutions Notes</label>
-                                        <textarea class="form-control" name="resolutions_notes" rows="3">{{ old('resolutions_notes', $preference->resolutions_notes ?? '') }}</textarea>
-                                        @error('resolutions_notes')<div class="text-danger">{{ $message }}</div>@enderror
+                                        <span class="fw-medium font-sans-serif text-900">Limits</span>
+                                        <label class="form-label">Maximum Ant. IPR/Contact 0.1-0.6mm</label>
+                                        <input class="form-control" type="number" name="ipr_max_limit" step="0.05" min="0.1" max="0.6" value="{{ old('ipr_max_limit', $preference->ipr_max_limit ?? '') }}">
+                                        @error('ipr_max_limit')<div class="text-danger">{{ $message }}</div>@enderror
+
                                     </div>
                                 </div>
                             </div>

@@ -2914,36 +2914,6 @@
                                     value="{{ $patient->patient_link }}" name="patient_link"
                                     id="patient_link">
                             </div>
-                        <!--   <div class="mb-3 d-flex align-items-center gap-3">-->
-                        <!--    <label for="patientOption" class="me-2 mb-0">Select Option:</label>-->
-
-                        <!--    <select id="patientOption" name="patient_option" class="form-select w-auto">-->
-                        <!--        <option value="view" {{ $patient->link_type == 'view' ? 'selected' : '' }}>Advanced Viewer</option>-->
-                        <!--        <option value="edit" {{ $patient->link_type == 'edit' ? 'selected' : '' }}>Editor</option>-->
-                        <!--    </select>-->
-
-                        <!--    <a href="{{ route('patient.nemo.link', $hashids->encode($patient->patient_id)) }}"-->
-                        <!--       class="btn btn-primary rounded-pill px-2 py-2 shadow-sm"-->
-                        <!--       id="patientNemoBtn">-->
-                        <!--       Sync Nemo Link-->
-                        <!--    </a>-->
-                        <!--</div>-->
-                       <div class="mb-3 d-flex align-items-center gap-3">
-                            <label for="patientOption" class="me-2 mb-0 fw-semibold">
-                                Select Nemo Sync Option
-                            </label>
-
-                            <select id="patientOption" name="patient_option"
-                                class="form-select stylish-dropdown-half fw-medium border-0 shadow-sm"
-                                onchange="syncNemoLink(this)">
-                                <option value="">Please select option</option>
-                                <option value="view" {{ $patient->link_type == 'view' ? 'selected' : '' }}>Advanced Viewer</option>
-                                <option value="edit" {{ $patient->link_type == 'edit' ? 'selected' : '' }}>Editor</option>
-                            </select>
-                        </div>
-
-
-
                         @endif
 
                         @if (Auth::user()->role == 'staff' && $patient->case_holder == 'staff')
@@ -3318,15 +3288,15 @@
     @endif
 
     @if (
-    Auth::user()->role == 'doctor' &&
-    in_array($patient->case_holder, ['lab', 'staff', 'advisor']) &&
-    $patient->is_editable == 0 &&
-    $patient->is_submitted != 0
-)
+        Auth::user()->role == 'doctor' &&
+        in_array($patient->case_holder, ['lab', 'staff', 'advisor', 'doctor']) &&
+        $patient->is_editable == 0 &&
+        $patient->is_submitted != 0
+    )
     <div class="card">
         <div class="card-body">
             <div class="mb-3">
-                @if (is_null($patient->recommended_advisor) &&  in_array($patient->is_treatment_submitted, [0, 1]))
+                @if (is_null($patient->recommended_advisor) &&  in_array($patient->is_treatment_submitted, [0, 1]) &&  $patient->case_holder == 'doctor' )
                     <label><strong>Send to Advisor</strong></label>
                     <hr>
                     <form id="sendToAdvisor" method="POST" action="{{ url('/patient/case-overview/send-from-doctor-to-staff-for-advisor') }}">
