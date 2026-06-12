@@ -37,12 +37,12 @@ var Patients = function() {
                 { 'title': 'Package', "data": "package", orderable: false, searchable: false },
                 { 'title': 'Status', "data": "status", orderable: false, searchable: false },
                 { 'title': 'Case Holder', "data": "case_holder", orderable: false, searchable: false },
-
+                { 'title': 'Due Date', "data": "due_date", orderable: false, searchable: false },
+                { 'title': 'Setup Approval Date', "data": "setup_approval_date", orderable: false, searchable: false },
                 { 'title': 'Advisor', "data": "advisor", orderable: false, searchable: false },
                 { 'title': '', "data": "case_overview", orderable: false, searchable: false },
                 { 'title': 'Treatment Checklist', "data": "treatment_checklist", orderable: false, searchable: false },
-                { 'title': 'Due Date', "data": "due_date", orderable: false, searchable: false },
-                { 'title': 'Setup Approval Date', "data": "setup_approval_date", orderable: false, searchable: false },
+
             ],
             "order": [[1, 'DESC']],
             "lengthMenu": [10, 20, 50, 100],
