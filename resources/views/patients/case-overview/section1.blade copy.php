@@ -76,7 +76,7 @@ $lowerSize = [
                     <div style="width:{{$upperSize[$id]}}; height:18px; display:flex; align-items:center; justify-content:center;">
 
                         @if($buttonOuter)
-                            <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}" style="width: 16px; height: 16px;margin-bottom: 20px" alt="Button Outer">
+                            <img src="{{ asset('public/assets/tooth/png/Button.webp') }}" style="width: 16px; height: 16px;margin-bottom: 20px" alt="Button Outer">
                         @endif
 
                         @if($power_ridge_outer)
@@ -155,7 +155,7 @@ $lowerSize = [
                     @endphp
                     <div style="width:{{$upperSize[$id]}}; height:18px; display:flex; align-items:center; justify-content:center;">
                         @if($buttonInner)
-                            <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}" style="width: 16px; height: 16px;margin-top: 15px" alt="Button Inner">
+                            <img src="{{ asset('public/assets/tooth/png/Button.webp') }}" style="width: 16px; height: 16px;margin-top: 15px" alt="Button Inner">
                         @endif
 
                         @if($power_ridge_inner)
@@ -208,7 +208,7 @@ $lowerSize = [
 
                     <div style="width:{{$lowerSize[$id]}}; height:18px; display:flex; align-items:center; justify-content:center;">
                         @if($buttonOuter)
-                            <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}" style="width: 16px; height: 16px;margin-bottom: 20px" alt="Button Outer">
+                            <img src="{{ asset('public/assets/tooth/png/Button.webp') }}" style="width: 16px; height: 16px;margin-bottom: 20px" alt="Button Outer">
                         @endif
 
                          @if($power_ridge_outer)
@@ -286,7 +286,7 @@ $lowerSize = [
                     @endphp
                     <div style="width:{{$lowerSize[$id]}}; height:18px; display:flex; align-items:center; justify-content:center;">
                         @if($buttonInner)
-                            <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}" style="width: 16px; height: 16px;margin-top: 15px" alt="Button Inner">
+                            <img src="{{ asset('public/assets/tooth/png/Button.webp') }}" style="width: 16px; height: 16px;margin-top: 15px" alt="Button Inner">
                         @endif
 
                         @if($power_arm_attachment_inner)
