@@ -108,8 +108,10 @@ class TasksService extends CommonFunction
                 'tp.phase',
                 'tp.cancellation_date',
                 'tp.previous_case_holder',
+                'tp.recommended_advisor',
                 'tp.treatment_type',
                 'u.postal_code',
+                'tp.id as treatment_plan',
                 'u.city',
                 'u.country',
                 'p.setup_type',
@@ -178,6 +180,18 @@ class TasksService extends CommonFunction
                 }
             }
 
+            if ($patient->recommended_advisor) {
+                $advisor = '<div class="dropdown font-sans-serif btn-reveal-trigger">
+                    <a class="btn btn-danger text-600 btn-sm btn-reveal-sm transition-none"
+                        href="' . url('/patient/case-overview/' . $hashids->encode($patient->treatment_plan)) . '"
+                        data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                        Requested for Advisor
+                    </a>
+                </div>';
+            } else {
+                $advisor = 'N/A';
+            }
+
             $records['data'][] = [
                 // 'user_full_name' => $patient->user_full_name . " - " . $patient->city . " " . $patient->country. " " . $patient->postal_code ,
                 'user_full_name' => $patient->user_full_name,
@@ -194,6 +208,7 @@ class TasksService extends CommonFunction
                 'previous_case_holder' => ucfirst($patient->previous_case_holder),
                 'due_date' => $due_date,
                 'case_overview' => $caseOverview,
+                'advisor' => $advisor,
                 'created_at' => date_formate($patient->created_at),
             ];
         }

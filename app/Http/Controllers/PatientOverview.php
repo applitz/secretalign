@@ -1866,6 +1866,7 @@ class PatientOverview extends Controller
             }
         }
     }
+
     public function reject_treatment(Request $request)
     {
         if (Auth::user()->role == 'staff') {

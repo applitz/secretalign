@@ -2889,6 +2889,10 @@
                             }
                             // dd($tla_ur, $tla_ul, $tla_lr, $tla_ll, in_array(1, $tla_ur));
                         @endphp
+                        <input type="hidden" id="tla_ur_state" data-id="ur" value='{{ json_encode($tla_ur) }}'>
+                        <input type="hidden" id="tla_ul_state" data-id="ul" value='{{ json_encode($tla_ul) }}'>
+                        <input type="hidden" id="tla_lr_state" data-id="lr" value='{{ json_encode($tla_lr) }}'>
+                        <input type="hidden" id="tla_ll_state" data-id="ll" value='{{ json_encode($tla_ll) }}'>
 
                         {{-- <input type="text" id="tla_ur" data-id="ur" value="[{{implode(',', unserialize($patient->tla_ur))}}]">
                         <input type="text" id="tla_ul" data-id="ul" value="[{{implode(',', unserialize($patient->tla_ul))}}]">

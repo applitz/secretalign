@@ -4124,11 +4124,11 @@
                 var fl_lower_arch = $("#fl_lower_arch").val();
 
                 // Check if files are selected
-                if (!$("#key1").prop('files').length || !$("#key2").prop('files').length) {
-                    toastError("Upload scan data files.");
-                    $("#submit-prescription").attr('fn', 0);
-                    return false;
-                }
+                // if (!$("#key1").prop('files').length || !$("#key2").prop('files').length) {
+                //     toastError("Upload scan data files.");
+                //     $("#submit-prescription").attr('fn', 0);
+                //     return false;
+                // }
 
                 // Check if files are completely uploaded
                 var upperArchWidth = $("#upper-arch-progress-bar").css('width');

@@ -30,6 +30,7 @@ var Home = function() {
                 { 'title': 'Setup Type', "data": "setup_type", className: "wrap-two-lines", orderable: false, searchable: false },
                 { 'title': 'From', "data": "previous_case_holder", orderable: false, searchable: false },
                 { 'title': 'Task Date', "data": "created_at", orderable: false, searchable: false },
+                { 'title': 'Advisor', "data": "advisor", orderable: false, searchable: false },
                 { 'title': '', "data": "case_overview", orderable: false, searchable: false },
             ],
             "order": [[1, 'DESC']],

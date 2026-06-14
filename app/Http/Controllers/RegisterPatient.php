@@ -657,6 +657,7 @@ class RegisterPatient extends Controller
             "first_name" => $first_name,
             "last_name" => $last_name,
             "dob" => $dob,
+            "staff_id" => Auth::user()->staff_id,
         ]);
         session(['patient_id' => $id]);
     }

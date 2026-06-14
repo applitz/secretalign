@@ -2938,7 +2938,9 @@
                                 </div>
                             @endif
 
-                            @if ($patient->is_sent_to_lab == 1 && $patient->is_treatment_submitted == 1 )
+
+
+                            @if (($patient->is_sent_to_lab == 1 && $patient->is_treatment_submitted == 1) || $patient->is_lab_cancel == 1)
                                 <div class="mb-3">
                                     <label>No. of Steps (Aligner)</label>
                                     <input type="number" name="no_of_steps" id="no_of_steps"
@@ -3089,7 +3091,7 @@
                                     </div>
                                 @endif
 
-                                @if ($patient->is_treatment_submitted == 0 || ($patient->is_continue == 1 || $patient->patient_link == null))
+                                @if (($patient->is_treatment_submitted == 0 || ($patient->is_continue == 1 || $patient->patient_link == null)) && $patient->is_lab_cancel == 0)
                                     <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn" data-staff-send-to-doctor-for-approval="0"
                                         type="button" id="staff-send-to-doctor">
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to the Doctor for Modification
@@ -3102,6 +3104,15 @@
                                         <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Lab
                                     </button>
                                 @endif
+
+                                {{-- @if ($patient->is_treatment_submitted == 0 || ($patient->is_continue == 1 || $patient->patient_link == null))
+                                    <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn" data-staff-send-to-doctor-for-approval="0"
+                                        type="button" id="staff-send-to-doctor">
+                                        <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to the Doctor for Modification
+                                    </button>
+                                @endif --}}
+
+
 
                                 @if ($patient->is_treatment_submitted == 1 &&
                                         $patient->is_approved == 0 &&
@@ -3178,7 +3189,7 @@
                                             data-fa-transform="shrink-3"></span>Submit Files
                                     </button>
                                     <button class="btn btn-danger rounded-pill me-1 mb-1 btn-action case-overview-btn"
-                                        type="button" id="lab-cancel-request">
+                                        type="button" id="lab-cancel-request-after-submit">
                                         <span class="fas fa-tint-slash"
                                             data-fa-transform="shrink-3"></span> Cancel Request
                                     </button>
