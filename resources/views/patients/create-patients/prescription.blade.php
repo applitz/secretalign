@@ -337,7 +337,7 @@
 
                                 <label class="inline-item">
                                     <input type="radio" name="class-selector" class="class-selector" value="button-cutout" checked="checked">
-                                    <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}">
+                                    <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}">
                                     <span class="form-check-label" >Button Cutout</span>
                                 </label>
 
@@ -481,7 +481,7 @@
 
                                             {{-- 1. Show only one of Button Cutout, Precision Cut, I-Hook (upper) --}}
                                             @if($buttonOuter)
-                                                <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" class="button-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}" class="button-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $numberOfelementsOuter == 1 ? '-25px' : ($numberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
                                                 @php $numberOfelementsOuter++; @endphp
                                             @elseif($precision_cut_outer)
                                                 @if($id >=1 && $id <= 8)
@@ -522,7 +522,7 @@
                                             @endif
 
                                             @if($buttonInner)
-                                                <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" class="button-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}" class="button-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $numberOfelementsInner == 1 ? '-25px' : ($numberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                 @php $numberOfelementsInner++; @endphp
                                             @endif
 
@@ -607,7 +607,7 @@
                                                 @endif
 
                                                 @if($buttonInner)
-                                                    <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" class="button-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
+                                                    <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}" class="button-overlay" data-side="lower" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; bottom: {{ $lowerNumberOfelementsInner == 1 ? '-25px' : ($lowerNumberOfelementsInner == 2 ? '-60px' : '-90px') }}">
                                                     @php $lowerNumberOfelementsInner++; @endphp
                                                 @endif
 
@@ -647,7 +647,7 @@
 
                                                     {{-- 1. Show only one of Button Cutout, Precision Cut, I-Hook (upper) --}}
                                                     @if($buttonOuter)
-                                                        <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" class="button-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
+                                                        <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}" class="button-overlay" data-side="upper" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10; top: {{ $lowerNumberOfelementsOuter == 1 ? '-25px' : ($lowerNumberOfelementsOuter == 2 ? '-60px' : '-90px') }};">
                                                         @php $lowerNumberOfelementsOuter++; @endphp
                                                     @elseif($precision_cut_outer)
                                                         @if($id >=17 && $id <= 24)

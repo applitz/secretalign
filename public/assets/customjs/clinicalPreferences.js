@@ -397,7 +397,7 @@ function toggleButton(toothNumber, side) {
     if (existingButton.length > 0) {
         existingButton.remove();
     } else {
-        var buttonImg = $('<img src="' + baseUrl + '/public/assets/tooth/png/buttons.webp" class="button-overlay" data-side="' + side + '" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10;">');
+        var buttonImg = $('<img src="' + baseUrl + '/public/assets/tooth/png/Buttons.webp" class="button-overlay" data-side="' + side + '" style="position: absolute; width: 20px; height: 20px; left: 50%; transform: translateX(-50%); z-index: 10;">');
         wrapper.append(buttonImg);
     }
 

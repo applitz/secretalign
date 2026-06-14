@@ -66,7 +66,7 @@ $lowerSize = [
                     @endphp
                     <div style="width:{{$upperSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-end; gap:6px;">
                         @if($buttonOuter)
-                            <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Outer">
+                            <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Outer">
                         @endif
 
                         @if($ihookOuter)
@@ -148,7 +148,7 @@ $lowerSize = [
 
 
                         @if($buttonInner)
-                            <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Inner">
+                            <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Inner">
                         @endif
 
 
@@ -204,7 +204,7 @@ $lowerSize = [
 
 
                         @if($buttonInner)
-                            <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Inner">
+                            <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Inner">
                         @endif
 
                         @if($ihookInner)
@@ -266,7 +266,7 @@ $lowerSize = [
                     @endphp
                     <div style="width:{{$lowerSize[$id]}};  display:flex; flex-direction: column; align-items:center; justify-content:flex-end; gap:6px;">
                         @if($buttonOuter)
-                            <img src="{{ asset('public/assets/tooth/png/buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Outer">
+                            <img src="{{ asset('public/assets/tooth/png/Buttons.webp') }}" style="width: 16px; height: 16px;" alt="Button Outer">
                         @endif
 
                         @if($ihookOuter)
