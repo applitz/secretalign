@@ -2296,7 +2296,7 @@
             downloadMeditLinkStlFiles(uuid)
         })
 
-        $(document).on('click', '.download-medit-link-stl-additional', function () {
+        $(document).on('click', '.download-medit-link-stl-files-additional', function () {
             const uuid = $(this).attr('data-uuid');
             downloadMeditLinkStlFilesAdditional(uuid)
         })
