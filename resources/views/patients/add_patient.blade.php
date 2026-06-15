@@ -1454,6 +1454,7 @@
 
     async function previewUpperStlFile(file_upper)
     {
+        destroyPreview1();
         try {
             container1 = document.getElementById( 'stl-upper-arch-preview' );
             scene1 = new THREE.Scene();
@@ -1498,6 +1499,7 @@
 
     async function previewLowerStlFile(file_lower)
     {
+        destroyPreview2();
         try {
             container2 = document.getElementById( 'stl-lower-arch-preview' );
             scene2 = new THREE.Scene();
@@ -1799,6 +1801,7 @@
 
     async function previewOptionalUpperStlFile(file_upper)
     {
+        destroyPreview18();
         try {
             containerOptional1 = document.getElementById( 'optional-stl-upper-arch-preview' );
             sceneOptional1 = new THREE.Scene();
@@ -1843,6 +1846,7 @@
 
     async function previewOptionalUpperPlyFile(file_upper)
     {
+        destroyPreview18();
         try {
             containerOptional1 = document.getElementById( 'optional-stl-upper-arch-preview' );
             sceneOptional1 = new THREE.Scene();
@@ -1897,6 +1901,7 @@
 
     async function previewOptionalLowerStlFile(file_lower)
     {
+        destroyPreview19();
         try {
             containerOptional2 = document.getElementById( 'optional-stl-lower-arch-preview' );
             sceneOptional2 = new THREE.Scene();
@@ -1950,6 +1955,7 @@
 
     async function previewOptionalLowerPlyFile(file_lower)
     {
+        destroyPreview19();
         try {
             containerOptional2 = document.getElementById( 'optional-stl-lower-arch-preview' );
             sceneOptional2 = new THREE.Scene();
