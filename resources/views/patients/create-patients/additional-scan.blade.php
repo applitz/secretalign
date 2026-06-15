@@ -166,7 +166,7 @@
 
 <div id="additional-scans-optional" class="@if((request('type') == 'additional') || ($patient->optional_fl_upper_arch != null) || ($patient->optional_fl_lower_arch != null)) @else d-none @endif">
     <div class="mb-3">
-        Add additional Scans (Optional)
+        Mandibular Repositioning STL Files (Optional)
     </div>
 
     <div class="row mb-3">

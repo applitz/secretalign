@@ -1,14 +1,5 @@
 var AdditionalScan = function() {
     var add = function() {
-        $("#toggleAdditionalScans").click(function () {
-            $("#additional-scans-optional").toggleClass("d-none");
-            // Button text change
-            if ($("#additional-scans-optional").hasClass("d-none")) {
-                $(this).text("Add Mandibular Repositioning STL Files (Optional)");
-            } else {
-                $(this).text("Hide Mandibular Repositioning STL Files (Optional)");
-            }
-        });
 
         // optional-select-from-3shape
         $("#optional-select-from-3shape").on("click", function (e) {
