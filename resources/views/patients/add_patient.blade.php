@@ -2066,6 +2066,104 @@
             });
     }
 
+     function downloadMeditLinkStlFilesOld($uuid)
+    {
+        $.ajax({
+                type: "POST",
+                url: "{{url('/patient/file/download-medit-link')}}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "patient_id" : "{{ $patient->patient_id }}",
+                    "treatment_plan_id" : "{{ $patient->id }}",
+                    "uuid" : $uuid,
+                },
+                beforeSend: function () {
+                    showLoader();
+                    $(".my-loader").show();
+                }
+            }).done(function (response) {
+
+                if(response.upper || response.lower) {
+                    if(response.upper) {
+                        $('#key1').attr('file', response.upper);
+                        window.dropzone_active_state('1', response.upper)
+                        previewUpperStlFile(response.upper)
+                    }
+                    if(response.lower) {
+                        $('#key2').attr('file', response.lower);
+                        window.dropzone_active_state('2', response.lower)
+                        previewLowerStlFile(response.lower)
+                    }
+                                                if(response.patient_name){
+                            document.getElementById('first_name').value = response.first_name;
+                            document.getElementById('last_name').value = response.last_name;
+                    }
+                    if(response.patient_code){
+                        document.getElementById('patientCode').value = response.patient_code;
+                    }
+                    $("#3shape-section").addClass('d-none');
+                    $("#medit-link-section").addClass('d-none')
+                    $("#patient-wizard").removeClass('d-none');
+                    hideLoader();
+                    $(".my-loader").hide();
+                }
+                else {
+                    hideLoader();
+                    $(".my-loader").hide();
+                    toastError("Error while downloading files.");
+                }
+            });
+    }
+
+    $(document).on('click', '.download-3shape-stl-files-additional',function () {
+        const hash_upper = $(this).attr('hash-upper'),
+        hash_lower = $(this).attr('hash-lower'),
+        case_id = $(this).attr('case-id');
+        download3ShapeStlFilesAdditional(case_id, hash_upper, hash_lower);
+    });
+
+    function download3ShapeStlFilesAdditional($case_id, $hash_upper, $hash_lower)
+    {
+        $.ajax({
+                type: "POST",
+                url: "{{url('/patient/file/download-3shape')}}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "patient_id" : "{{ $patient->patient_id }}",
+                    "treatment_plan_id" : "{{ $patient->id }}",
+                    "case_id" : $case_id,
+                    "hash_upper" : $hash_upper,
+                    "hash_lower" : $hash_lower,
+                },
+                beforeSend: function () {
+                    showLoader();
+                    $(".my-loader").show();
+                }
+            }).done(function (response) {
+
+                if(response.upper || response.lower) {
+                    if(response.upper) {
+                        $('#key18').attr('file', response.upper);
+                        window.dropzone_active_state('18', response.upper)
+                        previewOptionalUpperStlFile(response.upper)
+                    }
+                    if(response.lower) {
+                        $('#key19').attr('file', response.lower);
+                        window.dropzone_active_state('19', response.lower)
+                        previewOptionalLowerStlFile(response.lower)
+                    }
+                    $("#optional-3shape-section-Modal").modal('hide');
+                    hideLoader();
+                    $(".my-loader").hide();
+                }
+                else {
+                    hideLoader();
+                    $(".my-loader").hide();
+                    toastError("Error while downloading files.");
+                }
+            });
+    }
+
     function download3ShapeStlFiles($case_id, $hash_upper, $hash_lower)
     {
         $.ajax({
