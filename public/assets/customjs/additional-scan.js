@@ -78,6 +78,9 @@ var AdditionalScan = function() {
             $.ajax({
                 type: "POST",
                 url: baseUrl + "/integrations/medit-link-search-cases-additional",
+                headers: {
+                    'X-CSRF-TOKEN': $('input[name="_token"]').val(),
+                },
                 data: {
                     _token: $('meta[name="csrf-token"]').attr('content'),
                     case_id: case_id,
