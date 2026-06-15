@@ -2110,34 +2110,34 @@
     $(document).ready(function () {
 
         @if(@$medit_data->case_uuid)
-                downloadMeditLinkStlFiles('{{@$medit_data->case_uuid}}')
-                @endif
+            downloadMeditLinkStlFiles('{{@$medit_data->case_uuid}}')
+        @endif
 
 
-        $("#select-from-3shape").on('click', function () {
-            $("#3shape-section").removeClass('d-none');
-            $("#medit-link-section").addClass('d-none');
-            $("#patient-wizard").addClass('d-none');
-        });
+        // $("#select-from-3shape").on('click', function () {
+        //     $("#3shape-section").removeClass('d-none');
+        //     $("#medit-link-section").addClass('d-none');
+        //     $("#patient-wizard").addClass('d-none');
+        // });
 
-        $("#cancel-3shape-select").on('click', function () {
-            $("#3shape-section").addClass('d-none');
-            $("#medit-link-section").addClass('d-none')
-            $("#patient-wizard").removeClass('d-none');
-        });
+        // $("#cancel-3shape-select").on('click', function () {
+        //     $("#3shape-section").addClass('d-none');
+        //     $("#medit-link-section").addClass('d-none')
+        //     $("#patient-wizard").removeClass('d-none');
+        // });
 
 
-        $("#select-from-medit-link").on('click', function () {
-            $("#medit-link-section").removeClass('d-none')
-            $("#3shape-section").addClass('d-none')
-            $("#patient-wizard").addClass('d-none')
-        })
+        // $("#select-from-medit-link").on('click', function () {
+        //     $("#medit-link-section").removeClass('d-none')
+        //     $("#3shape-section").addClass('d-none')
+        //     $("#patient-wizard").addClass('d-none')
+        // })
 
-        $("#cancel-medit-link-select").on('click', function () {
-            $("#3shape-section").addClass('d-none');
-            $("#medit-link-section").addClass('d-none')
-            $("#patient-wizard").removeClass('d-none');
-        })
+        // $("#cancel-medit-link-select").on('click', function () {
+        //     $("#3shape-section").addClass('d-none');
+        //     $("#medit-link-section").addClass('d-none')
+        //     $("#patient-wizard").removeClass('d-none');
+        // })
 
         $(document).on('click', '.download-3shape-stl-files',function () {
             const hash_upper = $(this).attr('hash-upper'),
