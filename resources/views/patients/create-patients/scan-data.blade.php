@@ -355,7 +355,7 @@
         <div class="mb-3 ">
             <a class="btn btn-primary order-from-button"
                 @if(Auth::user()->three_shape_access_token != null)
-                    href="javascript:void(0);" id="select-from-3shape"
+                    href="javascript:void(0);" id="optional-select-from-3shape"
                 @else
                     href="{{url('/integration-3shape/obtain-authorization-code')}}"
                 @endif
@@ -369,7 +369,7 @@
 
             <a class="btn btn-primary order-from-button"
                     @if(Auth::user()->medit_link_access_token != null)
-                            href="javascript:void(0);" id="select-from-medit-link"
+                            href="javascript:void(0);" id="select-from-medit-link-additional"
                     @else
                         href="{{url('/integration-medit-link/obtain-authorization-code')}}"
                     @endif
