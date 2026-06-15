@@ -5088,6 +5088,8 @@
             }
         });
 
+        AdditionalScan.init();
+        Scan.init();
         DmIntegration.init();
         AddPatient.init();
         Shining3d.init();
