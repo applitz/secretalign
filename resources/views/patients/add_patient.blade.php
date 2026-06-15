@@ -2068,7 +2068,6 @@
 
     function downloadMeditLinkStlFilesAdditional($uuid)
     {
-        dd("downloadMeditLinkStlFilesAdditional function called");
         $.ajax({
                 type: "POST",
                 url: "{{url('/patient/file/download-medit-link')}}",
@@ -2082,7 +2081,7 @@
                     showLoader();
                 }
             }).done(function (response) {
-
+                console.log(response);
                 if(response.upper || response.lower) {
                     if(response.upper) {
                         $('#key1').attr('file', response.upper);
