@@ -160,20 +160,24 @@
 
 
     <div class="mb-3 ">
-        <a
-        class="btn btn-primary order-from-button"
         @if(Auth::user()->three_shape_access_token != null)
-        href="javascript:void(0);"
-        id="select-from-3shape"
+            <button type="button" class="btn btn-primary order-from-button" id="select-from-3shape">
         @else
-        href="{{url('/integration-3shape/obtain-authorization-code')}}"
+            <a class="btn btn-primary order-from-button" href="{{ url('/integration-3shape/obtain-authorization-code') }}">
         @endif
-        >
+
             <div class="d-flex align-items-center justify-content-center">
-            <span>Import From</span>
-            <img class="" src="{{asset('public/assets/communicate-logo-white.png')}}" width="92px" style="padding-left: 10px">
+                <span>Import From</span>
+                <img src="{{ asset('public/assets/communicate-logo-white.png') }}"
+                    width="92px"
+                    style="padding-left: 10px">
             </div>
-        </a>
+
+        @if(Auth::user()->three_shape_access_token != null)
+            </button>
+        @else
+            </a>
+        @endif
 
 
         <a class="btn btn-primary order-from-button"

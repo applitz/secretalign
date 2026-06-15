@@ -628,9 +628,6 @@
     <input type="hidden" name="patient_id" value="{{ $patient->patient_id }}">
 </form>
 
-
-
-
 <div class="modal fade bs-example-modal-center confirm"  role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -5052,7 +5049,8 @@
 <script src="{{ asset('public/assets/customjs/shining3d.js') }}?v={{ time() }}"></script>
 <script src="{{  asset('public/assets/customjs/clinicalPreferencesSection2.js') }}?v={{ time() }}"></script>
 <script src="{{  asset('public/assets/customjs/alignersToCover.js') }}?v={{ time() }}"></script>
-
+<script src="{{ asset('public/assets/customjs/scan.js') }}?v={{ time() }}"></script>
+<script src="{{ asset('public/assets/customjs/additional-scan.js') }}?v={{ time() }}"></script>
 <script>
     $(document).ready(function() {
 
