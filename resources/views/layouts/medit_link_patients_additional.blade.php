@@ -11,7 +11,7 @@
 <tbody>
     @if(count($results) > 0)
     @foreach ($results as $result)
-    <tr class="download-medit-link-stl-files" style="cursor: pointer" data-uuid="{{$result->uuid}}" data-name="{{$result->patient->name}}">
+    <tr class="download-medit-link-stl-files-additional" style="cursor: pointer" data-uuid="{{$result->uuid}}" data-name="{{$result->patient->name}}">
         <td>{{$result->dateUpdated}}</td>
         <td>{{$result->dateCreated}}</td>
         <td>{{$result->name}}</td>

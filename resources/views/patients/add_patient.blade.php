@@ -2066,6 +2066,55 @@
             });
     }
 
+    function downloadMeditLinkStlFilesAdditional($uuid)
+    {
+        $.ajax({
+                type: "POST",
+                url: "{{url('/patient/file/download-medit-link')}}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "patient_id" : "{{ $patient->patient_id }}",
+                    "treatment_plan_id" : "{{ $patient->id }}",
+                    "uuid" : $uuid,
+                },
+                beforeSend: function () {
+                    showLoader();
+                }
+            }).done(function (response) {
+                console.log(response);
+                exit;
+                if(response.upper || response.lower) {
+                    if(response.upper) {
+                        $('#key1').attr('file', response.upper);
+                        window.dropzone_active_state('1', response.upper)
+                        previewUpperStlFile(response.upper)
+                    }
+                    if(response.lower) {
+                        $('#key2').attr('file', response.lower);
+                        window.dropzone_active_state('2', response.lower)
+                        previewLowerStlFile(response.lower)
+                    }
+
+                    if(response.patient_name){
+                            document.getElementById('first_name').value = response.first_name;
+                            document.getElementById('last_name').value = response.last_name;
+                    }
+
+                    if(response.patient_code){
+                        document.getElementById('patientCode').value = response.patient_code;
+                    }
+
+                    $("#3shape-section").addClass('d-none');
+                    $("#medit-link-section").addClass('d-none')
+                    $("#patient-wizard").removeClass('d-none');
+                    hideLoader();
+                } else {
+                    hideLoader();
+                    toastError("Error while downloading files.");
+                }
+            });
+    }
+
      function downloadMeditLinkStlFilesOld($uuid)
     {
         $.ajax({
@@ -2245,6 +2294,11 @@
         });
 
         $(document).on('click', '.download-medit-link-stl-files', function () {
+            const uuid = $(this).attr('data-uuid');
+            downloadMeditLinkStlFiles(uuid)
+        })
+
+        $(document).on('click', '.download-medit-link-stl-additional', function () {
             const uuid = $(this).attr('data-uuid');
             downloadMeditLinkStlFiles(uuid)
         })
