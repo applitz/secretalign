@@ -1,6 +1,6 @@
 var AdditionalScan = function() {
     var add = function() {
-
+        alert("additional scan js loaded");
         // optional-select-from-3shape
         $("#optional-select-from-3shape").on("click", function (e) {
             e.preventDefault();
