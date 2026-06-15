@@ -2798,12 +2798,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label>Notes</label>
-                        <textarea class="form-control" name="additional_attachments_notes"
-                            id="additional_attachments_notes"
-                            placeholder="Notes">{{ @$patient->additional_attachments_notes }}</textarea>
-                    </div>
+
                     <div class="mb-3">
                         <div class="form-check form-switch">
                             <input class="form-check-input" id="keep_already_placed_attachments"
@@ -2867,6 +2862,14 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="mb-3">
+                        <label>Notes</label>
+                        <textarea class="form-control" name="additional_attachments_notes"
+                            id="additional_attachments_notes"
+                            placeholder="Notes">{{ @$patient->additional_attachments_notes }}</textarea>
+                    </div>
+
                     <hr>
                     <span class="fw-medium font-sans-serif text-900" >Please Mark the last tooth you want the aligners to cover</span>
                         @php
