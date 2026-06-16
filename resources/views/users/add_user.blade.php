@@ -46,25 +46,78 @@
                     <div class="mb-3">
                         <label class="form-label" for="phone_number">Phone Number</label>
                         <input type="tel"
-                            class="form-control @error('phone_number')
-                is-invalid
-            @enderror"
+                            class="form-control @error('phone_number') is-invalid @enderror"
                             name="phone_number" id="phone_number" value="{{ old('phone_number') }}"
                             placeholder="Phone Number">
                         @error('phone_number')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+
                     <div class="mb-3">
                         <label class="form-label" for="billing_address">Billing Address</label>
-                        <textarea class="form-control @error('billing_address')
-                    is-invalid
-                @enderror"
+                        <textarea class="form-control @error('billing_address') is-invalid @enderror"
                             name="billing_address" id="billing_address" placeholder="Billing Address">{{ old('billing_address') }}</textarea>
                         @error('billing_address')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+
+                    <div class="mb-3">
+                        <label class="form-label" for="shipping_address">Shipping Address</label>
+                        <textarea class="form-control @error('shipping_address') is-invalid @enderror" name="shipping_address" id="shipping_address" placeholder="Shipping Address">{{ old('shipping_address') }}</textarea>
+                        @error('shipping_address')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="postal_code">Postal Code</label>
+                        <input type="text" class="form-control @error('postal_code') is-invalid @enderror" name="postal_code" id="postal_code" placeholder="Postal Code" value="{{ old('postal_code') }}">
+                        @error('postal_code')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="city">City</label>
+                        <input type="text"
+                            class="form-control @error('city') is-invalid @enderror"
+                            name="city"
+                            id="city"
+                            placeholder="City"
+                            value="{{ old('city') }}">
+
+                        @error('city')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="country">Country</label>
+                        <input type="text"
+                            class="form-control @error('country') is-invalid @enderror"
+                            name="country"
+                            id="country"
+                            placeholder="Country"
+                            value="{{ old('country') }}">
+
+                        @error('country')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="vat">VAT</label>
+                        <input class="form-control @error('vat') is-invalid @enderror" id="vat"
+                            value="{{ old('vat') }}" type="text" placeholder="VAT" name="vat">
+                        @error('vat')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     {{-- <div class="mb-3">
                 <label class="form-label" for="shipping_address">Shipping Address</label>
                 <textarea class="form-control @error('shipping_address')

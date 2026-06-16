@@ -114,6 +114,15 @@
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label" for="vat">VAT</label>
+                            <input class="form-control @error('vat') is-invalid @enderror" id="vat"
+                                value="{{ $user->vat }}" type="text" placeholder="VAT" name="vat">
+                            @error('vat')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label" for="email">Email</label>
                             <input class="form-control @error('email') is-invalid @enderror" id="email"
                                 value="{{ $user->email }}" type="email" placeholder="Email" name="email">

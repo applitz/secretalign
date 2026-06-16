@@ -79,6 +79,11 @@ class UserController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'role' => 'required',
+            'shipping_address' => 'required',
+            'postal_code' => 'required',
+            'city' => 'required',
+            'country' => 'required',
+            'vat' => 'required',
             'email' => 'required | email | unique:users',
             'password' =>
             [
@@ -103,6 +108,10 @@ class UserController extends Controller
             $phone_number = $request->input('phone_number');
             $billing_address = $request->input('billing_address');
             $shipping_address = $request->input('shipping_address');
+            $postal_code = $request->input('postal_code');
+            $city = $request->input('city');
+            $country = $request->input('country');
+            $vat = $request->input('vat');
             $staff_id = $request->input('staff');
             $role = $request->input('role');
             if (Auth::user()->role == 'rep') {
@@ -121,6 +130,10 @@ class UserController extends Controller
                 'phone_number' => $phone_number,
                 'billing_address' => $billing_address,
                 "shipping_address" => $shipping_address,
+                "postal_code" => $postal_code,
+                "city" => $city,
+                "country" => $country,
+                "vat" => $vat,
                 "registered_by" => Auth::user()->id,
                 "tier" => $tier,
                 "staff_id" => $staff_id,
@@ -181,6 +194,7 @@ class UserController extends Controller
                 "shipping_address" => $request->input('shipping_address'),
                 "postal_code" => $request->input('postal_code'),
                 "city" => $request->input('city'),
+                "vat" => $request->input('vat'),
                 "country" => $request->input('country')
             ]);
             if(Auth::user()->role == 'doctor') {
@@ -217,6 +231,11 @@ class UserController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'role' => 'required',
+            'shipping_address' => 'required',
+            'postal_code' => 'required',
+            'city' => 'required',
+            'country' => 'required',
+            'vat' => 'required',
             'email' => [
                 'required',
                 'email',
@@ -236,6 +255,10 @@ class UserController extends Controller
                 'phone_number' => $request->input('phone_number'),
                 "billing_address" => $request->input('billing_address'),
                 "shipping_address" => $request->input('shipping_address'),
+                "postal_code" => $request->input('postal_code'),
+                "city" => $request->input('city'),
+                "country" => $request->input('country'),
+                "vat" => $request->input('vat'),
                 "advisor_price" => $request->input('advisor_price')
             ]);
             if (DB::table('users')->where('role', 'doctor')->where('id', $id)->exists()) {

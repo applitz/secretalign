@@ -66,6 +66,61 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
+
+                        <div class="mb-3">
+                            <label class="form-label" for="shipping_address">Shipping Address</label>
+                            <textarea class="form-control @error('shipping_address') is-invalid @enderror" name="shipping_address" id="shipping_address" placeholder="Shipping Address">{{ $user->shipping_address }} </textarea>
+                            @error('shipping_address')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="postal_code">Postal Code</label>
+                            <input type="text" class="form-control @error('postal_code') is-invalid @enderror" name="postal_code" id="postal_code" placeholder="Postal Code" value="{{ old('postal_code', $user->postal_code) }}">
+                            @error('postal_code')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="city">City</label>
+                            <input type="text"
+                                class="form-control @error('city') is-invalid @enderror"
+                                name="city"
+                                id="city"
+                                placeholder="City"
+                                value="{{ old('city', $user->city) }}">
+
+                            @error('city')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="country">Country</label>
+                            <input type="text"
+                                class="form-control @error('country') is-invalid @enderror"
+                                name="country"
+                                id="country"
+                                placeholder="Country"
+                                value="{{ old('country', $user->country) }}">
+
+                            @error('country')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="vat">VAT</label>
+                            <input class="form-control @error('vat') is-invalid @enderror" id="vat"
+                                value="{{ $user->vat }}" type="text" placeholder="VAT" name="vat">
+                            @error('vat')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         {{-- <div class="mb-3">
                             <label class="form-label" for="shipping_address">Shipping Address</label>
                             <textarea class="form-control @error('shipping_address')
@@ -106,12 +161,10 @@
                         <input type="hidden" name="role" value="superadmin">
                         @endif
 
-                        @if ($user->role == 'doctor')
-                        <div class="mb-3">
+
+                        <div class="mb-3" id="doctorTier">
                             <label for="tier">Tier</label>
-                            <select class="form-select @error('tier')
-                            is-invalid
-                        @enderror" name="tier" id="tier">
+                            <select class="form-select @error('tier') is-invalid @enderror" name="tier" id="tier">
                                 @foreach ($tiers as $tier)
                                 <option value="{{ $tier->id }}" @if ($user->tier == $tier->id) selected @endif>{{
                                     $tier->tier_name }}
@@ -119,16 +172,29 @@
                                 @endforeach
                             </select>
                         </div>
-                        
-                        @endif
+
+                        <div class="mb-3" id="staffDiv">
+                            <label for="staff">Staff</label>
+                            <select class="form-select @error('staff') is-invalid @enderror" name="staff" id="staff">
+                                <option value="">Select staff...</option>
+                                @foreach ($staff as $staff)
+                                    <option value="{{ $staff->id }}" @if ($user->staff_id == $staff->id) selected @endif>
+                                        {{ $staff->first_name }} {{ $staff->last_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('staff')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                          @if ($user->role == 'advisor')
-                          <div class="mb-3" id="advisorPrice">
-                        <label for="tier">Advsior Quote</label>
-                          <input type="advisor_price" class="form-control @error('advisor_price') is-invalid @enderror"
-                            id="advisor_price" placeholder="Enter Advisor Quote" name="advisor_price"
-                            aria-describedby="advisor_price" />
-                    </div>
-                    @endif
+                            <div class="mb-3" id="advisorPrice">
+                                <label for="tier">Advsior Quote</label>
+                                <input type="text" class="form-control @error('advisor_price') is-invalid @enderror"
+                                    id="advisor_price" placeholder="Enter Advisor Quote" name="advisor_price" aria-describedby="advisor_price" />
+                            </div>
+                        @endif
 
 
 
@@ -155,6 +221,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-6">
             <div class="card mb-3">
 
@@ -210,5 +277,29 @@
 
 
 @section('javascript')
+<script>
+    $(document).ready(function() {
+        $("#doctorTier").hide();
+        $("#staffDiv").hide();
 
+        $("#role").on("change", function() {
+            var selectedRole = $(this).val();
+            if (selectedRole === "doctor") {
+                $("#doctorTier").show();
+                $("#staffDiv").show();
+            } else {
+                $("#doctorTier").hide();
+                $("#staffDiv").hide();
+            }
+
+            if (selectedRole === "advisor") {
+                $("#advisorPrice").show();
+            } else {
+                $("#advisorPrice").hide();
+            }
+
+        });
+        $("#role").trigger("change");
+    });
+</script>
 @stop
