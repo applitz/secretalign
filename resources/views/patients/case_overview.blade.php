@@ -64,12 +64,7 @@
             /* position: relative; */
         }
 
-        #canvas canvas {
-            max-width: 100%;
-            width: 100% !important;
-            /* height: auto !important; */
-            /* display: block; */
-        }
+
 
         #canvas_optional {
             width: 100%;
@@ -77,15 +72,14 @@
             /* position: relative; */
         }
 
-        #canvas_optional canvas {
-            max-width: 100%;
-            width: 100% !important;
-            /* height: auto !important; */
-            /* display: block; */
-        }
+
         /* .canvas-bg {
             background: #aaaaaa;
         } */
+
+        .canvas-bg {
+            background: #aaaaaa;
+        }
 
         .case-overview-btn {
             width: 200px !important;
