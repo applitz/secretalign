@@ -2,6 +2,8 @@
 use App\Models\Patients;
 use App\Http\Services\NemoTechService;
 use App\Models\PatientTreatmentPlan;
+use App\Http\Controllers\Doctor\MovixtechController;
+use Carbon\Carbon;
 
 function checkForRequestNewPlan($patientId)
 {
@@ -156,6 +158,28 @@ function isSelected($tooth, $arrays) {
         if (in_array($tooth, $arr)) return true;
     }
     return false;
+}
+
+if (!function_exists('createMovixLinkUrl')) {
+    function createMovixLinkUrl($p_treatment_plans_id, $caseId, $caseType = 'primary')
+    {
+        // ✅ Find record
+        $case = PatientTreatmentPlan::where('id', $p_treatment_plans_id)->first();
+        $controller = new MovixtechController();
+        $getViewerLink = $controller->getViewerLink($caseId);
+
+        if($caseType == 'optional'){
+            $updateData['optional_scan_movix_link'] = $getViewerLink['url'];
+            $updateData['optional_scan_movix_link_expires_at'] = Carbon::parse($getViewerLink['expires_at']);
+        }
+
+        if($caseType == 'primary'){
+            $updateData['primary_movix_link'] = $getViewerLink['url'];
+            $updateData['primary_movix_link_expires_at'] = Carbon::parse($getViewerLink['expires_at']);
+        }
+        $case->update($updateData);
+        return $getViewerLink;
+    }
 }
 
 if (!function_exists('uploadWebpImage')) {
