@@ -66,7 +66,7 @@
         <div class="mb-3">
             <div class="container-fluid px-0">
 
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <h5 class="text-600 fs-0 mb-2">Select your preferred package.</h5>
                     <div class="d-flex flex-sm-row  flex-column alert alert-info">
                         <div class="me-sm-3">
@@ -83,7 +83,7 @@
                                 </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                  <div class="mb-3">
                     <h5 class="text-600 fs-0 mb-2">Select your preferred setup type</h5>
