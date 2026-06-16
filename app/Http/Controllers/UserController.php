@@ -79,11 +79,6 @@ class UserController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'role' => 'required',
-            'shipping_address' => 'required',
-            'postal_code' => 'required',
-            'city' => 'required',
-            'country' => 'required',
-            'vat' => 'required',
             'email' => 'required | email | unique:users',
             'password' =>
             [
@@ -231,11 +226,6 @@ class UserController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'role' => 'required',
-            'shipping_address' => 'required',
-            'postal_code' => 'required',
-            'city' => 'required',
-            'country' => 'required',
-            'vat' => 'required',
             'email' => [
                 'required',
                 'email',

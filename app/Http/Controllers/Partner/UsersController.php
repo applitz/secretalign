@@ -37,7 +37,11 @@ class UsersController extends Controller
     public function create()
     {
         $tiers = DB::table('tiers')->orderBy('id', 'asc')->get();
-        return view("partner.user.add", compact("tiers"));
+        $staff = DB::table('users')->where('role', 'staff')->orderBy('id', 'asc')
+        ->orderBy('first_name', 'asc')
+        ->orderBy('last_name', 'asc')
+        ->get();
+        return view("partner.user.add", compact("tiers", "staff"));
     }
 
     /**
