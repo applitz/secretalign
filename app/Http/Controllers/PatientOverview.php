@@ -2161,9 +2161,11 @@ class PatientOverview extends Controller
             }
         }
         $attachments = implode(',', $attachments);
+
         if (@$treatment_plan) {
 
             $order_id = @DB::table('orders')->where('treatment_plan_id', $treatment_plan_id)->where('is_deleted', 0)->first()->id;
+
             if (@$order_id) {
                 $task = new TaskService($treatment_plan_id);
                 $task->complete_task("doctor", $treatment_plan->user_id);

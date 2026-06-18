@@ -80,6 +80,11 @@ class UserController extends Controller
             'last_name' => 'required',
             'role' => 'required',
             'email' => 'required | email | unique:users',
+            'billing_address'=>'required',
+            'shipping_address'=>'required',
+            'postal_code'=>'required',
+            'city'=>'required',
+            'country'=>'required',
             'password' =>
             [
                 'required',
@@ -167,6 +172,11 @@ class UserController extends Controller
         $validated = $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
+            'billing_address'=>'required',
+            'shipping_address'=>'required',
+            'postal_code'=>'required',
+            'city'=>'required',
+            'country'=>'required',
             'email' => [
                 'required',
                 'email',
@@ -226,6 +236,11 @@ class UserController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'role' => 'required',
+            'billing_address'=>'required',
+            'shipping_address'=>'required',
+            'postal_code'=>'required',
+            'city'=>'required',
+            'country'=>'required',
             'email' => [
                 'required',
                 'email',
