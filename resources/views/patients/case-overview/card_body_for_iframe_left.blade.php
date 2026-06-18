@@ -3260,7 +3260,7 @@
             @endif
             <div class="card">
                 <div class="card-body">
-                    @if (Auth::user()->role == 'doctor' && $patient->is_editable == 0 && $patient->is_submitted != 0)
+                    @if (Auth::user()->role != 'doctor' && $patient->is_editable == 0 && $patient->is_submitted != 0)
                         @if (($patient->is_treatment_submitted == 0) ||
                                 ($patient->is_treatment_submitted == 1))
 
@@ -3349,7 +3349,8 @@
         Auth::user()->role == 'doctor' &&
         in_array($patient->case_holder, ['lab', 'staff', 'advisor', 'doctor']) &&
         $patient->is_editable == 0 &&
-        $patient->is_submitted != 0
+        $patient->is_submitted != 0 &&
+        Auth::user()->role != 'doctor'
     )
     <div class="card">
         <div class="card-body">
@@ -3363,7 +3364,7 @@
 
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <label>Choose Advisor</label>
+                                <label>Send to Advisor</label>
                                 <select class="form-control form-select" name="advisor" id="advisor_doc" required>
                                     <option value="">Select Advisor</option>
                                     @foreach ($advisors as $item)
