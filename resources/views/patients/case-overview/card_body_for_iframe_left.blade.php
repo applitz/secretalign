@@ -2724,89 +2724,136 @@
                                     <ul class="list-group list-group-flush">
                                         @if(@$clinicalPreference->anterior_teeth_leveling)
                                             <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Anterior Teeth Leveling:</strong> {{ $clinicalPreference->anterior_teeth_leveling }}</p>
+                                                <span class="text-muted mb-0">
+                                                    <strong>Anterior Teeth Leveling: Upper incisal edges:</strong><br>
+                                                    {{ $clinicalPreference->anterior_teeth_leveling }}
+                                                </span>
                                             </li>
                                         @endif
                                         @if(@$clinicalPreference->pontics_selection)
                                             <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Pontics Selection:</strong> {{ $clinicalPreference->pontics_selection }}</p>
+                                                <span class="text-muted mb-0">
+                                                    <strong>Pontics (i: By default, pontics will be placed when spaces are larger than 4mm)</strong>
+                                                    <br>{{ $clinicalPreference->pontics_selection }}
+                                                </span>
                                             </li>
                                         @endif
+
                                         @if(@$clinicalPreference->arch_expansion)
                                             <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Arch Expansion:</strong> {{ $clinicalPreference->arch_expansion }}</p>
+                                                <span class="text-muted mb-0">
+                                                    <strong>Arch Expansion</strong><br>
+                                                        After derotations and bucco-palatal uprighting, what is the max amount of acceptable bodily posterior expansion?<br>
+                                                        {{ $clinicalPreference->arch_expansion }}
+                                                </span>
                                             </li>
                                         @endif
-                                        @if(@$clinicalPreference->derotation)
-                                            <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Derotation:</strong> {{ $clinicalPreference->derotation }}</p>
-                                            </li>
-                                        @endif
-                                        @if(@$clinicalPreference->long_axis)
-                                            <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Long Axis:</strong> {{ $clinicalPreference->long_axis }}</p>
-                                            </li>
-                                        @endif
-                                        @if(@$clinicalPreference->crossbite)
-                                            <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Crossbite:</strong> {{ $clinicalPreference->crossbite }}</p>
-                                            </li>
-                                        @endif
-                                        @if(@$clinicalPreference->intrusion)
-                                            <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Intrusion:</strong> {{ $clinicalPreference->intrusion }}</p>
-                                            </li>
-                                        @endif
-                                        @if(@$clinicalPreference->extrusion)
-                                            <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Extrusion:</strong> {{ $clinicalPreference->extrusion }}</p>
-                                            </li>
-                                        @endif
-                                        @if(@$clinicalPreference->rotation_aligner)
-                                            <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Rotation per Aligner:</strong> {{ $clinicalPreference->rotation_aligner }}</p>
-                                            </li>
-                                        @endif
-                                        @if(@$clinicalPreference->translation_aligner)
-                                            <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Translation per Aligner:</strong> {{ $clinicalPreference->translation_aligner }}</p>
-                                            </li>
-                                        @endif
-                                        @if(@$clinicalPreference->intrusion_extrusion_aligner)
-                                            <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Intrusion/Extrusion per Aligner:</strong> {{ $clinicalPreference->intrusion_extrusion_aligner }}</p>
-                                            </li>
-                                        @endif
+
+
+                                        <li class="list-group-item">
+                                            <span class="text-muted mb-0"><strong>Overcorrection</strong></span>
+                                            <ul class="list-group list-group-flush">
+                                                @if(@$clinicalPreference->derotation)
+                                                    <li class="list-group-item">
+                                                        <p class="fw-bold font-sans-serif text-900 mb-0"><strong>Derotation:</strong> {{ $clinicalPreference->derotation }}</p>
+                                                    </li>
+                                                    @endif
+
+                                                    @if(@$clinicalPreference->long_axis)
+                                                    <li class="list-group-item">
+                                                        <p class="fw-bold font-sans-serif text-900 mb-0"><strong>Long Axis:</strong> {{ $clinicalPreference->long_axis }}</p>
+                                                    </li>
+                                                @endif
+                                                @if(@$clinicalPreference->crossbite)
+                                                    <li class="list-group-item">
+                                                        <p class="fw-bold font-sans-serif text-900 mb-0"><strong>Crossbite:</strong> {{ $clinicalPreference->crossbite }}</p>
+                                                    </li>
+                                                @endif
+                                                @if(@$clinicalPreference->intrusion)
+                                                    <li class="list-group-item">
+                                                        <p class="fw-bold font-sans-serif text-900 mb-0"><strong>Intrusion:</strong> {{ $clinicalPreference->intrusion }}</p>
+                                                    </li>
+                                                @endif
+                                                @if(@$clinicalPreference->extrusion)
+                                                    <li class="list-group-item">
+                                                        <p class="fw-bold font-sans-serif text-900 mb-0"><strong>Extrusion:</strong> {{ $clinicalPreference->extrusion }}</p>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                            {{-- <p class="text-muted mb-0"><strong>Derotation:</strong> {{ $clinicalPreference->derotation }}</p> --}}
+                                        </li>
+
+                                        <li class="list-group-item">
+                                            <span class="text-muted mb-0"><strong>Ensure even tooth movement per stage</strong></span>
+                                            <ul class="list-group list-group-flush">
+                                                @if(@$clinicalPreference->rotation_aligner)
+                                                    <li class="list-group-item">
+                                                        <p class="fw-bold font-sans-serif text-900  mb-0"><strong>Rotation / Aligner </strong> {{ $clinicalPreference->rotation_aligner }}</p>
+                                                    </li>
+                                                @endif
+
+                                                @if(@$clinicalPreference->translation_aligner)
+                                                    <li class="list-group-item">
+                                                        <p class="fw-bold font-sans-serif text-900  mb-0"><strong>Translation / Aligner </strong> {{ $clinicalPreference->translation_aligner }}</p>
+                                                    </li>
+                                                @endif
+
+                                                @if(@$clinicalPreference->intrusion_extrusion_aligner)
+                                                    <li class="list-group-item">
+                                                        <p class="fw-bold font-sans-serif text-900  mb-0"><strong>Intrusion or extrusion / Aligner </strong> {{ $clinicalPreference->intrusion_extrusion_aligner }}</p>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </li>
+
                                         @if(@$clinicalPreference->sequential_distalization_mesialisation)
                                             <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Sequential Distalization/Mesialisation:</strong> {{ $clinicalPreference->sequential_distalization_mesialisation }}</p>
+                                                <span class="text-muted mb-0"><strong>Perform sequential distalization/mesialisation :</strong> {{ $clinicalPreference->sequential_distalization_mesialisation }}</span>
                                             </li>
                                         @endif
+
                                         @if(@$clinicalPreference->same_number_aligners_for_both_arches)
                                             <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Same Number of Aligners for Both Arches:</strong> {{ $clinicalPreference->same_number_aligners_for_both_arches }}</p>
+                                                <span class="text-muted mb-0"><strong>Ensure same number of aligners for both arches :</strong> {{ $clinicalPreference->same_number_aligners_for_both_arches }}</span>
                                                 @if(@$clinicalPreference->same_number_aligners_type)
-                                                    <p class="text-muted mb-0 ms-3">Type: {{ $clinicalPreference->same_number_aligners_type }}</p>
+                                                    <br><span class="text-muted mb-0"><strong>Type :</strong> {{ $clinicalPreference->same_number_aligners_type }}</span>
                                                 @endif
                                             </li>
                                         @endif
+
                                         @if(@$clinicalPreference->en_masse_distalization)
                                             <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>En Masse Distalization:</strong> {{ $clinicalPreference->en_masse_distalization }}</p>
+                                                <span class="text-muted mb-0"><strong>En masse distalization while using distal slider? </strong> {{ $clinicalPreference->en_masse_distalization }}</span>
                                             </li>
                                         @endif
+
                                         @if(@$clinicalPreference->ipr_preference)
                                             <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>IPR Preference:</strong> {{ $clinicalPreference->ipr_preference }}</p>
-                                                @if(@$clinicalPreference->ipr_max_limit)
-                                                    <p class="text-muted mb-0 ms-3">Max Limit: {{ $clinicalPreference->ipr_max_limit }} mm</p>
+                                                <span class="text-muted mb-0"><strong>Resolve Tooth Size Issues</strong></span>
+                                                <br><span class="text-muted mb-0"><strong>Please select one of the following options.</strong></span><br>
+
+                                                <span class="text-muted mb-3">{{ $clinicalPreference->ipr_preference }}</span><br><br>
+
+                                                @if(@$clinicalPreference->ipr_preference == 'IPR')
+                                                    <ul class="list-group list-group-flush">
+                                                        <span class="text-muted mb-0"><strong>Location</strong></span>
+                                                        <li class="list-group-item">
+                                                            <p class="fw-bold font-sans-serif text-900 mb-0"><strong>Location Upper:</strong> {{ $clinicalPreference->ipr_location_upper }}</p>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <p class="fw-bold font-sans-serif text-900 mb-0"><strong>Location Lower:</strong> {{ $clinicalPreference->ipr_location_lower }}</p>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <p class="fw-bold font-sans-serif text-900 mb-0"><strong>Limits Maximum Ant. IPR/Contact 0.1-0.6mm:</strong> {{ $clinicalPreference->ipr_max_limit }}</p>
+                                                        </li>
+                                                    </ul>
+                                                    {{-- <br><span class="text-muted mb-0"><strong>Max Limit:</strong> {{ $clinicalPreference->ipr_max_limit }} mm</span> --}}
                                                 @endif
                                             </li>
                                         @endif
                                         @if(@$clinicalPreference->additional_comments)
                                             <li class="list-group-item">
-                                                <p class="text-muted mb-0"><strong>Additional Comments:</strong></p>
-                                                <p class="text-muted mb-0">{{ $clinicalPreference->additional_comments }}</p>
+                                                <span class="text-muted mb-0"><strong>Additional Comments</strong> <br>{{ $clinicalPreference->additional_comments }}</span>
                                             </li>
                                         @endif
                                     </ul>
