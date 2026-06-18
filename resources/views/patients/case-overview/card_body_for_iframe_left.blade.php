@@ -2832,9 +2832,10 @@
                                                 <span class="text-muted mb-0"><strong>Resolve Tooth Size Issues</strong></span>
                                                 <br><span class="text-muted mb-0"><strong>Please select one of the following options.</strong></span><br>
 
-                                                <span class="text-muted mb-3">{{ $clinicalPreference->ipr_preference }}</span><br><br>
+                                                <span class="text-muted mb-3">{{ $clinicalPreference->ipr_preference }}</span>
 
                                                 @if(@$clinicalPreference->ipr_preference == 'IPR')
+                                                    <br><br>
                                                     <ul class="list-group list-group-flush">
                                                         <span class="text-muted mb-0"><strong>Location</strong></span>
                                                         <li class="list-group-item">
@@ -2847,7 +2848,6 @@
                                                             <p class="fw-bold font-sans-serif text-900 mb-0"><strong>Limits Maximum Ant. IPR/Contact 0.1-0.6mm:</strong> {{ $clinicalPreference->ipr_max_limit }}</p>
                                                         </li>
                                                     </ul>
-                                                    {{-- <br><span class="text-muted mb-0"><strong>Max Limit:</strong> {{ $clinicalPreference->ipr_max_limit }} mm</span> --}}
                                                 @endif
                                             </li>
                                         @endif
