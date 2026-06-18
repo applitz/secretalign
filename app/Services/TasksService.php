@@ -209,7 +209,7 @@ class TasksService extends CommonFunction
                 'due_date' => $due_date,
                 'case_overview' => $caseOverview,
                 'advisor' => $advisor,
-                'created_at' => date_formate($patient->created_at),
+                'created_at' => date_formate($patient->created_at)."<br>".date("h:i A", strtotime($patient->created_at)),
             ];
         }
 
