@@ -444,7 +444,7 @@
             </div>
 
             <div class="modal-body">
-                <img src="{{ asset('public/assets/secret-blocks.png') }}" alt="Precision Cuts Placement" class="img-fluid shadow-sm">
+                <img src="{{ asset('public/assets/secret-blocks.webp') }}" alt="Precision Cuts Placement" class="img-fluid shadow-sm">
             </div>
 
             <div class="modal-footer">
@@ -760,3 +760,22 @@
 </div>
 
 
+<div class="modal fade" id="text-info-modal" tabindex="-1" aria-labelledby="text-info-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="text-info-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <p id="text-info"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
