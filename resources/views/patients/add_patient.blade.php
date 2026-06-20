@@ -2108,7 +2108,7 @@
 
                     hideLoader();
                     $(".my-loader").hide();
-                    $("#optional-3shape-section-Modal").modal('hide');
+                    $("#medit-link-additional-Modal").modal('hide');
                 }
                 else {
                     hideLoader();
