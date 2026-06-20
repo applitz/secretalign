@@ -2087,7 +2087,6 @@
                     $(".my-loader").show();
                 }
             }).done(function (response) {
-                console.log(response);
                 if(response.upper || response.lower) {
                     if(response.upper) {
                         $('#key18').attr('file', response.upper);
@@ -2099,16 +2098,17 @@
                         window.dropzone_active_state('19', response.lower)
                         previewOptionalLowerStlFile(response.lower)
                     }
-                                                if(response.patient_name){
+                    if(response.patient_name){
                             document.getElementById('first_name').value = response.first_name;
                             document.getElementById('last_name').value = response.last_name;
                     }
                     if(response.patient_code){
                         document.getElementById('patientCode').value = response.patient_code;
                     }
-                    $("#optional-3shape-section-Modal").modal('hide');
+
                     hideLoader();
                     $(".my-loader").hide();
+                    $("#optional-3shape-section-Modal").modal('hide');
                 }
                 else {
                     hideLoader();
