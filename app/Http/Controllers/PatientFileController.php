@@ -251,6 +251,29 @@ class PatientFileController extends Controller
         }
         return null;
     }
+    public function MeditLinkDownloadSTLAdditional(Request $request)
+    {
+        $patient_id = $request->post('patient_id');
+        $treatment_plan_id = $request->post('treatment_plan_id');
+        $caseUuid = $request->post('uuid');
+        $data = [];
+        $case = $this->MeditLinkGetCase($caseUuid);
+        if($case->upper_arch_uuid) {
+            $data['upper'] = $this->MeditLinkSaveSTL($patient_id, $treatment_plan_id, 'optional_fl_upper_arch', $case->upper_arch_uuid,$case->patient_name,$case->patient_code);
+        }
+        if($case->lower_arch_uuid) {
+            $data['lower'] = $this->MeditLinkSaveSTL($patient_id, $treatment_plan_id, 'optional_fl_lower_arch', $case->lower_arch_uuid,$case->patient_name,$case->patient_code);
+        }
+                 $name_parts = explode(" ", $case->patient_name);
+        // $data['first_name']=$name_parts[0];
+        // $data['last_name']=$name_parts[0];
+
+          $data['patient_code']=$case->patient_code;
+          Log::info("data");
+          Log::info($data);
+        return response()->json($data);
+    }
+
     public function MeditLinkDownloadSTL(Request $request)
     {
         $patient_id = $request->post('patient_id');
@@ -886,7 +909,7 @@ class PatientFileController extends Controller
             "status" => "error",
         ]);
     }
- public function fetchMesh($patient_id, $filename)
+    public function fetchMesh($patient_id, $filename)
     {
         $directory = $this->mkDr($patient_id);
         $file_path = $directory . '/' . $filename;
@@ -897,7 +920,7 @@ class PatientFileController extends Controller
             exit;
         } else {
             http_response_code(404);
-    echo 'File not found.';
+            echo 'File not found.';
         }
     }
 }

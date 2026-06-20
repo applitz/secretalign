@@ -2075,7 +2075,7 @@
     {
         $.ajax({
                 type: "POST",
-                url: "{{url('/patient/file/download-medit-link')}}",
+                url: "{{url('/patient/file/download-medit-link-additional')}}",
                 data: {
                     "_token" : "{{ csrf_token() }}",
                     "patient_id" : "{{ $patient->patient_id }}",

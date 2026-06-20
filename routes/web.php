@@ -183,6 +183,7 @@ Route::get('/patient/mesh/fetch/{patient_id}/{filename}', [PatientFileController
 Route::post('/patient/file/download-3shape', [PatientFileController::class, 'ThreeShapeDownloadSTL']);
 Route::post('/patient/file/download-3shape-additional', [PatientFileController::class, 'ThreeShapeDownloadSTLAdditional']);
 Route::post('/patient/file/download-medit-link', [PatientFileController::class, 'MeditLinkDownloadSTL']);
+Route::post('/patient/file/download-medit-link-additional', [PatientFileController::class, 'MeditLinkDownloadSTLAdditional']);
 
 //stripe checkout
 // Route::get('/orders/checkout/proceed/{patient_id}/{treatment_plan_id}/{mode}', [StripeCheckout::class, 'checkout'])->name('checkout');
