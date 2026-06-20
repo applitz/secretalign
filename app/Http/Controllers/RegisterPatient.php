@@ -1000,34 +1000,34 @@ class RegisterPatient extends Controller
                 }
             }
             if ($patient->first_name && $patient->last_name && $patient->dob) {
-
-                $nemotech = new NemoTechService($patient->first_name, $patient->last_name, $patient->dob, $patient->nemotech_patient_id);
-                $patient_id = $nemotech->syncPatient();
-                if($patient_id != null) {
-                    DB::table('patients')->where('id', $patient->patient_id)->update([
-                        "nemotech_patient_id" => $patient_id,
-                    ]);
-                }
+                
+                // $nemotech = new NemoTechService($patient->first_name, $patient->last_name, $patient->dob, $patient->nemotech_patient_id);
+                // $patient_id = $nemotech->syncPatient();
+                // if($patient_id != null) {
+                //     DB::table('patients')->where('id', $patient->patient_id)->update([
+                //         "nemotech_patient_id" => $patient_id,
+                //     ]);
+                // }
                 if (($patient->fl_upper_arch && $patient->fl_lower_arch && $patient->fl_front && $patient->fl_smile && $patient->fl_profile && $patient->fl_frontal && $patient->fl_right_buccal && $patient->fl_left_buccal && $patient->fl_upper_occlusal && $patient->fl_lower_occlusal && $patient->fl_panorex && $patient->fl_lateral_ceph ) || $patient->phase!=1) {
                     if (($patient->treat_upper_arch == 1 || $patient->treat_lower_arch == 1) && $patient->is_prescription_submitted == 1) {
                         if ($patient->is_editable == 1) {
 
                             //sync documents
-                            DB::table('sync_queues')->insert([
-                                "type" => "Nemotech",
-                                "treatment_plan_id" => $phase,
-                                "created_at" => date("Y-m-d"),
-                            ]);
-                            $nemotech->syncDocuments(DB::table('p_treatment_plans as tp')
-                            ->where('tp.is_deleted', 0)
-                            ->where('tp.id', $phase)
-                            ->Join("patients as p", function ($join) {
-                                $join->on("tp.patient_id", '=', "p.id")
-                                    ->where('p.user_id', Auth::user()->id)
-                                    ->where('p.is_deleted', 0);
-                            })
-                            ->select("tp.*", "p.first_name", "p.last_name", "p.dob", "p.user_id", "p.pricing_package", "p.nemotech_patient_id")
-                            ->first());
+                            // DB::table('sync_queues')->insert([
+                            //     "type" => "Nemotech",
+                            //     "treatment_plan_id" => $phase,
+                            //     "created_at" => date("Y-m-d"),
+                            // ]);
+                            // $nemotech->syncDocuments(DB::table('p_treatment_plans as tp')
+                            // ->where('tp.is_deleted', 0)
+                            // ->where('tp.id', $phase)
+                            // ->Join("patients as p", function ($join) {
+                            //     $join->on("tp.patient_id", '=', "p.id")
+                            //         ->where('p.user_id', Auth::user()->id)
+                            //         ->where('p.is_deleted', 0);
+                            // })
+                            // ->select("tp.*", "p.first_name", "p.last_name", "p.dob", "p.user_id", "p.pricing_package", "p.nemotech_patient_id")
+                            // ->first());
                             return redirect('/patient/case-overview/' . $this->hashids->encode($patient->id))->with("success", "Patient Case Edited!");
                         }
                         if (!empty($request->advisor) && $request->advisor !== 'null') {
@@ -1038,22 +1038,23 @@ class RegisterPatient extends Controller
                         $this->saveOrderNew($id, $phase, $taskName, $patient->user_id);
 
                         //sync documents
-                        DB::table('sync_queues')->insert([
-                            "type" => "Nemotech",
-                            "treatment_plan_id" => $phase,
-                            "created_at" => date("Y-m-d"),
-                        ]);
+                        // DB::table('sync_queues')->insert([
+                        //     "type" => "Nemotech",
+                        //     "treatment_plan_id" => $phase,
+                        //     "created_at" => date("Y-m-d"),
+                        // ]);
 
-                        $nemotech->syncDocuments(DB::table('p_treatment_plans as tp')
-                        ->where('tp.is_deleted', 0)
-                        ->where('tp.id', $phase)
-                        ->Join("patients as p", function ($join) {
-                            $join->on("tp.patient_id", '=', "p.id")
-                                ->where('p.user_id', Auth::user()->id)
-                                ->where('p.is_deleted', 0);
-                        })
-                        ->select("tp.*", "p.first_name", "p.last_name", "p.dob", "p.user_id", "p.pricing_package", "p.nemotech_patient_id")
-                        ->first());
+                        // $nemotech->syncDocuments(DB::table('p_treatment_plans as tp')
+                        // ->where('tp.is_deleted', 0)
+                        // ->where('tp.id', $phase)
+                        // ->Join("patients as p", function ($join) {
+                        //     $join->on("tp.patient_id", '=', "p.id")
+                        //         ->where('p.user_id', Auth::user()->id)
+                        //         ->where('p.is_deleted', 0);
+                        // })
+                        // ->select("tp.*", "p.first_name", "p.last_name", "p.dob", "p.user_id", "p.pricing_package", "p.nemotech_patient_id")
+                        // ->first());
+                        session()->forget('patient_id');
                         return redirect('/patient/case-overview/' . $this->hashids->encode($patient->id))->with("success", "Patient Case has been added!");
                         //return redirect('/orders/checkout/proceed/' . $id . '/' . $phase . '/initial-deposit');
                     }
