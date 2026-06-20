@@ -2178,7 +2178,7 @@
     {
         $.ajax({
                 type: "POST",
-                url: "{{url('/patient/file/download-3shape')}}",
+                url: "{{url('/patient/file/download-3shape-additional')}}",
                 data: {
                     "_token" : "{{ csrf_token() }}",
                     "patient_id" : "{{ $patient->patient_id }}",

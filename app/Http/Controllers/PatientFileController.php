@@ -349,6 +349,23 @@ class PatientFileController extends Controller
         return response()->json($data);
     }
 
+    public function ThreeShapeDownloadSTLAdditional(Request $request)
+    {
+        $patient_id = $request->post('patient_id');
+        $treatment_plan_id = $request->post('treatment_plan_id');
+        $caseId = $request->post('case_id');
+        $hash_upper = @$request->post('hash_upper');
+        $hash_lower = @$request->post('hash_lower');
+        $data = [];
+        if(!empty($hash_upper)) {
+            $data["upper"] = $this->ThreeShapeSaveSTL($patient_id, $treatment_plan_id, "optional_fl_upper_arch", $caseId, $hash_upper);
+        }
+        if(!empty($hash_lower)) {
+            $data["lower"] = $this->ThreeShapeSaveSTL($patient_id, $treatment_plan_id, "optional_fl_lower_arch", $caseId, $hash_lower);
+        }
+        return response()->json($data);
+    }
+
     public function file_upload(Request $request, $patient_id, $treatment_plan_id)
     {
         if (DB::table('p_treatment_plans')->where('patient_id', $patient_id)->where('id', $treatment_plan_id)->exists()) {
