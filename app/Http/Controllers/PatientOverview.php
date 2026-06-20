@@ -955,7 +955,7 @@ class PatientOverview extends Controller
                         "to_role" => 'doctor',
                         "comment" => $comment,
                         'attachments' => $attachments,
-                        "created_at" => date("Y-m-d H:i:s"),
+                        "created_at" => now()
                     ]);
                 }
                 DB::table('notifications')->insert([
@@ -1147,7 +1147,7 @@ class PatientOverview extends Controller
                         "to_role" => 'doctor',
                         "comment" => $comment,
                         'attachments' => $attachments,
-                        "created_at" => date("Y-m-d H:i:s"),
+                        "created_at" => now()
                     ]);
                 }
                 DB::table('notifications')->insert([
@@ -1306,7 +1306,7 @@ class PatientOverview extends Controller
                         "to_role" => 'doctor',
                         "comment" => $comment,
                         'attachments' => $attachments,
-                        "created_at" => date("Y-m-d H:i:s"),
+                        "created_at" => now()
                     ]);
                 }
                 DB::table('notifications')->insert([
@@ -1526,6 +1526,7 @@ class PatientOverview extends Controller
                     "type" => 'doctor',
                     "user_id" => $treatment_plan->user_id,
                     "status" => "pending",
+                    "created_at" => now()
                 ]);
                 if ($request->hasFile('attachments') != null || $request->post('comment') != null) {
                     DB::table('comments')->insert([
@@ -1538,7 +1539,7 @@ class PatientOverview extends Controller
                         'attachments' => $attachments,
                         // "created_at" => date("Y-m-d H:i:s"),
 
-                        "created_at" => date("Y-m-d H:i:s"),
+                        "created_at" => now()
                     ]);
                 }
                 if($request->post('action') && $request->post('action') == 'send-for-approval'){
@@ -1612,6 +1613,7 @@ class PatientOverview extends Controller
                     "type" => 'staff',
                     "user_id" => null,
                     "status" => "pending",
+                    "created_at" => now()
                 ]);
                 $task_id = DB::table('tasks')->where('treatment_plan_id', $treatment_plan_id)->orderBy('id', 'desc')->first();
                 if ($request->hasFile('attachments') != null || $request->post('comment') != null) {
@@ -1625,7 +1627,7 @@ class PatientOverview extends Controller
                         'attachments' => $attachments,
                         // "created_at" => date("Y-m-d H:i:s"),
 
-                        "created_at" => date("Y-m-d H:i:s"),
+                        "created_at" => now()
                     ]);
                 }
 
@@ -1723,6 +1725,7 @@ class PatientOverview extends Controller
                     "type" => 'staff',
                     "user_id" => null,
                     "status" => "pending",
+                    "created_at" => now()
                 ]);
                 $task_id = DB::table('tasks')->where('treatment_plan_id', $treatment_plan_id)->orderBy('id', 'desc')->first();
                 if ($request->hasFile('attachments') != null || $request->post('comment') != null) {
@@ -1736,7 +1739,7 @@ class PatientOverview extends Controller
                         'attachments' => $attachments,
                         // "created_at" => date("Y-m-d H:i:s"),
 
-                        "created_at" => date("Y-m-d H:i:s"),
+                        "created_at" => now()
                     ]);
                 }
 
@@ -1895,6 +1898,7 @@ class PatientOverview extends Controller
                         "from_role" => "staff",
                         "to_role" => "doctor",
                         "comment" => $comment,
+                        "created_at" => now()
                     ]);
                 }
                 DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
@@ -1954,6 +1958,7 @@ class PatientOverview extends Controller
                         "type" => 'doctor',
                         "user_id" => $treatment_plan->user_id,
                         "status" => "pending",
+                        "created_at" => now()
                     ]);
                 } else {
                     DB::table('tasks')
@@ -2000,6 +2005,7 @@ class PatientOverview extends Controller
                 "type" => 'staff',
                 "user_id" => null,
                 "status" => "pending",
+                "created_at" => now()
             ]);
             $task_id = DB::table('tasks')->where('treatment_plan_id', $treatment_plan_id)->orderBy('id', 'desc')->first();
             if ($comment) {
@@ -2011,7 +2017,7 @@ class PatientOverview extends Controller
                     "to_role" => 'staff',
                     "comment" => $comment,
 
-                    "created_at" => date("Y-m-d H:i:s"),
+                    "created_at" => now()
                 ]);
             }
 

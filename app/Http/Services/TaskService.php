@@ -70,6 +70,7 @@ class TaskService
                 "type" => $type,
                 "user_id" => $user_id,
                 "status" => "pending",
+                "created_at" => now()
             ]);
 
             if ($attachments != null || $comment != null) {
@@ -81,7 +82,7 @@ class TaskService
                     "to_role" => $to_role,
                     "comment" => $comment,
                     'attachments'=>$attachments,
-                    "created_at" => date(format: "Y-m-d H:i:s"),
+                    "created_at" => now()
                 ]);
                // dd($comment);
             }
@@ -102,6 +103,7 @@ class TaskService
                 "type" => $type,
                 "user_id" => $user_id,
                 "status" => "pending",
+                "created_at" => now()
             ]);
 
             if ($attachments != null || $comment != null) {
@@ -113,7 +115,7 @@ class TaskService
                     "to_role" => $to_role,
                     "comment" => $comment,
                     'attachments'=>$attachments,
-                    "created_at" => date(format: "Y-m-d H:i:s"),
+                    "created_at" => now()
                 ]);
                // dd($comment);
             }
@@ -132,6 +134,7 @@ class TaskService
                 "type" => $type,
                 "user_id" => $user_id,
                 "status" => "pending",
+                "created_at" => now()
             ]);
 
             if ($attachments != null || $comment != null) {
@@ -143,7 +146,7 @@ class TaskService
                     "to_role" => $to_role,
                     "comment" => $comment,
                     'attachments'=>$attachments,
-                    "created_at" => date(format: "Y-m-d H:i:s"),
+                    "created_at" => now()
                 ]);
                // dd($comment);
             }

@@ -83,6 +83,7 @@ class CasePhaseController extends Controller
                 "type" => 'staff',
                 "user_id" => null,
                 "status" => "completed",
+                "created_at" => now()
             ]);
 
             $task = DB::table('tasks')
@@ -98,7 +99,7 @@ class CasePhaseController extends Controller
                     "from_role" => 'doctor',
                     "to_role" => 'staff',
                     "comment" => $comment,
-                    "created_at" => date("Y-m-d H:i:s"),
+                    "created_at" => now(),
                 ]);
             }
 
@@ -204,6 +205,7 @@ class CasePhaseController extends Controller
                 "type" => 'staff',
                 "user_id" => null,
                 "status" => "pending",
+                "created_at" => now()
             ]);
                 //  dd($latest);
             $task_id= DB::table('tasks')->where('treatment_plan_id',$treatment_plan->id)->orderBy('id','desc')->first();
@@ -217,8 +219,7 @@ class CasePhaseController extends Controller
                     "from_role" => 'doctor',
                     "to_role" => 'staff',
                     "comment" => $comment,
-
-                    "created_at" => date("Y-m-d H:i:s"),
+                    "created_at" => now(),
                 ]);
             }
 

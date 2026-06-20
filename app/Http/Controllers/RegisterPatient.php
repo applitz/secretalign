@@ -531,7 +531,7 @@ class RegisterPatient extends Controller
                 $columnInfo = DB::selectOne("SHOW COLUMNS FROM $tableName WHERE Field = '$column'");
                 if ($columnInfo->Default !== null || $columnInfo->Null === 'YES') {
                     if ($column === 'created_at' && $columnInfo->Default === 'CURRENT_TIMESTAMP') {
-                        $columnDefaults[$column] = DB::raw('CURRENT_TIMESTAMP');
+                        $columnDefaults[$column] = now();
                     } else {
                         $columnDefaults[$column] = DB::raw('DEFAULT');
                     }
@@ -544,7 +544,7 @@ class RegisterPatient extends Controller
                 ->update($columnDefaults);
 
             DB::table('patients')->where('id', $patient->patient_id)->update([
-                "created_at" => DB::raw('CURRENT_TIMESTAMP'),
+                "created_at" => now(),
                 "first_name" => $first_name,
                 "last_name" => $last_name,
                 "dob" => $dob,
@@ -619,9 +619,9 @@ class RegisterPatient extends Controller
             session()->forget('patient_id');
         }
 
-         $hashids = new Hashids();
-            $hashCode = $hashids->encode($patient->id);
-    // dd($dataShining3d);
+        $hashids = new Hashids();
+        $hashCode = $hashids->encode($patient->id);
+        // dd($dataShining3d);
         $changePlan = 'true';
         return view("patients.add_patient", compact("patient", "mode", "medit_data","advisors", 'changePlan', 'baseUrl', 'code', 'dataShining3d', 'scanError', 'hashCode', 'doctorClinicalPreference' ));
     }
