@@ -2055,11 +2055,13 @@
                     if(response.patient_code){
                         document.getElementById('patientCode').value = response.patient_code;
                     }
-                    $("#3shape-section").addClass('d-none');
-                    $("#medit-link-section").addClass('d-none')
-                    $("#patient-wizard").removeClass('d-none');
+                    // $("#3shape-section").addClass('d-none');
+                    // $("#medit-link-section").addClass('d-none')
+                    // $("#patient-wizard").removeClass('d-none');
+
                     hideLoader();
                     $(".my-loader").hide();
+                    $("#medit-link-Modal").modal('hide');
                 }
                 else {
                     hideLoader();
@@ -2116,7 +2118,7 @@
             });
     }
 
-     function downloadMeditLinkStlFilesOld($uuid)
+    function downloadMeditLinkStlFilesOld($uuid)
     {
         $.ajax({
                 type: "POST",
@@ -2244,11 +2246,13 @@
                         window.dropzone_active_state('2', response.lower)
                         previewLowerStlFile(response.lower)
                     }
-                    $("#3shape-section").addClass('d-none');
-                    $("#medit-link-section").addClass('d-none')
-                    $("#patient-wizard").removeClass('d-none');
+                    // $("#3shape-section").addClass('d-none');
+                    // $("#medit-link-section").addClass('d-none')
+                    // $("#patient-wizard").removeClass('d-none');
+
                     hideLoader();
                     $(".my-loader").hide();
+                    $("#3shape-section-Modal").modal('hide');
                 }
                 else {
                     hideLoader();
