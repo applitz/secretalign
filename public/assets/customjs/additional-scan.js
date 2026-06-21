@@ -51,6 +51,12 @@ var AdditionalScan = function() {
 
         });
 
+        $(document).on('keypress', '#optional-3shape-section-Modal input', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                $('#additional-3shape-search').trigger('click');
+            }
+        });
 
     }
 
