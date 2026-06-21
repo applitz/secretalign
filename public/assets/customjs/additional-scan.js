@@ -110,6 +110,12 @@ var AdditionalScan = function() {
             });
         });
 
+        $(document).on('keypress', '#medit-link-additional-Modal input', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                $('#medit-link-search-additional-button').trigger('click');
+            }
+        });
     }
     return {
         init: function(){
