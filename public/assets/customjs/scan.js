@@ -66,8 +66,14 @@ var Scan = function() {
         //         hideLoader();
         //     });
         // });
+        $(document).on('keypress', '#3shape-section-Modal input', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                $('#3shape-search').trigger('click');
+            }
+        });
 
-         $(document).on('click', '#3shape-search', function (e) {
+        $(document).on('click', '#3shape-search', function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
 
