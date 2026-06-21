@@ -25,6 +25,12 @@ var Shining3d = function() {
             return date; // ✅ Date object
         }
 
+        $(document).on('keypress', '#order-from-shining3d-modal input', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                $('#order-from-shining3d').trigger('click');
+            }
+        });
 
         $(document).on('click', '#order-from-shining3d', function () {
             $(".my-loader").show();
