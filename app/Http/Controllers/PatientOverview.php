@@ -1768,6 +1768,103 @@ class PatientOverview extends Controller
         }
     }
 
+    public function approve_quick_setup(Request $request)
+    {
+        if (Auth::user()->role == 'doctor') {
+            $treatment_plan_id = $request->post('treatment_plan_id');
+            $comment = $request->post('comment');
+            $treatment_plan = DB::table('p_treatment_plans as tp')
+                ->where('tp.id', $treatment_plan_id)
+                ->Join("patients as p", function ($join) {
+                    $join->on("tp.patient_id", "=", "p.id")
+                        ->where("p.is_deleted", 0);
+                })
+                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package")
+                ->first();
+
+            $attachments = [];
+            if ($request->hasFile('attachments')) {
+                foreach ($request->file('attachments') as $file) {
+                    // Generate a unique file name or use the original name
+                    $filename = rand(1000, 9999) . time() . '.' . $file->getClientOriginalExtension();
+                    // $attachments[]=asset('storage/' . $filename);
+                    // Move the file to the desired directory (e.g., 'uploads')
+                    $file->storeAs('public/attachments', $filename);
+                    $attachments[] = $filename;
+                }
+            }
+            $attachments = implode(',', $attachments);
+            if (@$treatment_plan->case_holder == 'doctor') {
+
+                $details = [
+                    'subject' => 'Action Required: The Doctor Has Approved the Quick Setup : ' . $treatment_plan->first_name . ' ' . $treatment_plan->last_name,
+                    'title' => 'Action Required: The Doctor Has Approved the Quick Setup : ' . $treatment_plan->first_name . ' ' . $treatment_plan->last_name,
+                    'patient_name' => $treatment_plan->first_name." " . $treatment_plan->last_name,
+                    'comment' => $comment,
+                    'attachments' => $attachments,
+                ];
+
+                $staff = DB::table('users')
+                        ->where('role', 'staff')
+                        ->get(['first_name', 'last_name', 'email'])
+                        ->toArray();
+
+                DoctorSendToStaffForModificationJob::dispatch($staff, $details);
+
+                $task = (new TaskService($treatment_plan_id));
+                $task->complete_task("doctor", $treatment_plan->user_id); //complete doctor task
+                //$task_id = $task->create_task("staff", "Case Review", null, $comment, "doctor", "staff",$attachments);
+                $tasks = DB::table('tasks')
+                    ->where('treatment_plan_id', $treatment_plan_id)
+                    ->where('type', 'doctor')
+                    ->where('status', '!=', 'completed')
+                    ->orderByDesc('id')
+                    ->get();
+
+                foreach ($tasks as $task) {
+                    DB::table('tasks')->where('id', $task->id)->update([
+                        "status" => 'Quick Setup Approved',
+                        "user_id" => Auth::id(),
+                    ]);
+                }
+                $latest = DB::table('tasks')->insert([
+                    "treatment_plan_id" => $treatment_plan_id,
+                    "task" => 'Quick Setup Approved',
+                    "type" => 'staff',
+                    "user_id" => null,
+                    "status" => "pending",
+                    "created_at" => now()
+                ]);
+                $task_id = DB::table('tasks')->where('treatment_plan_id', $treatment_plan_id)->orderBy('id', 'desc')->first();
+                if ($request->hasFile('attachments') != null || $request->post('comment') != null) {
+                    DB::table('comments')->insert([
+                        "treatment_plan_id" => $treatment_plan_id,
+                        "task_id" => $task_id->id,
+                        "added_by" => Auth::user()->id,
+                        "from_role" => 'doctor',
+                        "to_role" => 'staff',
+                        "comment" => $comment,
+                        'attachments' => $attachments,
+                        // "created_at" => date("Y-m-d H:i:s"),
+
+                        "created_at" => now()
+                    ]);
+                }
+
+                if ($task_id != false) {
+                    DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
+                        "case_holder" => "staff",
+                        "send_for_approval" => false,
+                        "dr_request_modification" => true,
+                        "previous_case_holder" => "doctor",
+                        "status" => "Quick Setup Approved",
+                        "is_editable" => 0,
+                    ]);
+                }
+            }
+        }
+    }
+
     public function cancel_treatment_request(Request $request)
     {
         if (Auth::user()->role == 'lab') {

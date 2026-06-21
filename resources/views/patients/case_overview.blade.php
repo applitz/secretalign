@@ -190,7 +190,9 @@
 @section('javascript')
     <script src="{{ asset('public') }}/dashboard/vendors/glightbox/glightbox.min.js"></script>
     <script src="{{ asset('public') }}/dashboard/vendors/prism/prism.js"></script>
+    <script src="{{ asset('public/assets/customjs/caseoverview.js') }}?v={{ time() }}"></script>
     <script>
+        Caseoverview.init();
         $('.mySelect2').select2({
             closeOnSelect: false
         });
@@ -1307,6 +1309,43 @@
                 });
             });
 
+
+            $(document).on('click', '#approve-quick-setup', function (e) {
+                var $this = $(".btn-action");
+                // var comment = $("#comment").val();
+                if (!$("input[name=terms2]").is(":checked")) {
+                    toastError("You must agree to terms & conditions");
+                    return false;
+                }
+                var comment = window.commentEditor.getData();
+                $($this).prop("disabled", true);
+                var formData = new FormData();
+                formData.append('_token', '{{ csrf_token() }}')
+                formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('comment', comment)
+                // Loop through each file selected and append them to FormData
+                var fileInput = document.getElementById('attachments');
+
+                for (var i = 0; i < fileInput.files.length; i++) {
+                    formData.append('attachments[]', fileInput.files[i]);
+                }
+                $.ajax({
+                    "type": "POST",
+                    "url": "{{ url('/patient/case-overview/approve-quick-setup') }}",
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                }).done(function(response) {
+                    $("#comment").val('');
+                    $("#panel").remove();
+                    toastSuccess("Case sent to staff!");
+                }).fail(function(response) {
+                    $($this).prop("disabled", false);
+                    console.log(response);
+                    toastError("Enable to send case to staff!");
+                });
+            });
             $("#advisor-send-to-doctor").on('click', function() {
                 var $this = $(".btn-action");
                 // var comment = $("#comment").val();
