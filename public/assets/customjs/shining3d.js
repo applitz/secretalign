@@ -25,7 +25,7 @@ var Shining3d = function() {
             return date; // ✅ Date object
         }
 
-         $("#add-subaccount").validate({
+         $("#order-from-shining3d-form-modal").validate({
             ignore: [],
             rules: {
                 scanRegion: {
