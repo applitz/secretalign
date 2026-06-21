@@ -43,6 +43,13 @@ var Shining3d = function() {
             }
         );
 
+        $(document).on('keydown', '#order-from-shining3d-modal', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                $('#order-from-shining3d').trigger('click');
+            }
+        });
+
         $(document).on('click', '#order-from-shining3d', function () {
             $(".my-loader").show();
             const btn   = $('#order-from-shining3d');
