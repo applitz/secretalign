@@ -3019,7 +3019,7 @@
                             {{-- doctor button start --}}
                             @if (Auth::user()->role == 'doctor' && $patient->case_holder == 'doctor')
                                 @if ($patient->is_completed == 0)
-                                    @if ($patient->is_treatment_submitted == 1 && $patient->is_sent_to_lab == 1)
+                                    @if ($patient->is_treatment_submitted == 1 && $patient->is_sent_to_lab == 1 && $patient->setup_type == 1)
                                         <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                             id="approve">
                                             <span class="fas fa-check-circle me-1"
@@ -3027,6 +3027,15 @@
                                             Approve Treatment Plan
                                         </button>
                                     @endif
+
+                                    @if ($patient->is_treatment_submitted == 1 && $patient->is_sent_to_lab == 1 && $patient->setup_type == 2)
+                                        <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn"
+                                            id="approve-quick-setup">
+                                            <span class="fas fa-check-circle me-1" data-fa-transform="shrink-3"></span>
+                                                Approve Quick Setup
+                                        </button>
+                                    @endif
+
                                     {{-- Done By Parth --}}
                                     @if($patient->send_for_approval == 0)
                                         <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn" type="button" id="doctor-send-to-staff">

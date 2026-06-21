@@ -139,7 +139,7 @@ class PatientOverview extends Controller
                 $join->on("tp.lab", "=", "l.id")
                     ->where("l.role", "lab");
             })
-            ->select("tp.*", "p.id as patientId", "p.pricing_package", "p.first_name", "p.last_name", "p.dob", "p.user_id", "l.first_name as lab_first_name", "l.last_name as lab_last_name")
+            ->select("tp.*", "p.id as patientId", "p.pricing_package", "p.setup_type", "p.first_name", "p.last_name", "p.dob", "p.user_id", "l.first_name as lab_first_name", "l.last_name as lab_last_name")
             ->first();
         if (@$patient) {
             $data = compact("patient");
