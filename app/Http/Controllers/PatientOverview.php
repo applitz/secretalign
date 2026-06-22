@@ -1758,6 +1758,7 @@ class PatientOverview extends Controller
                     DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                         "case_holder" => "staff",
                         "send_for_approval" => false,
+                        "is_approved" => 0,
                         "dr_request_modification" => true,
                         "previous_case_holder" => "doctor",
                         "status" => "Doctor requests a Modification to Setup ". $treatment_plan->phase,
