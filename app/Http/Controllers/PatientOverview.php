@@ -354,9 +354,9 @@ class PatientOverview extends Controller
                     $join->on("tp.patient_id", "=", "p.id")
                         ->where("p.is_deleted", 0);
                 })
-                ->select("tp.*", "p.user_id", "p.first_name", "p.last_name")
+                ->select("tp.*", "p.user_id", "p.first_name", "p.last_name", "p.setup_type")
                 ->first();
-
+            dd($treatment_plan);
             $attachments = [];
             if ($request->hasFile('attachments')) {
                 foreach ($request->file('attachments') as $file) {
@@ -1780,7 +1780,7 @@ class PatientOverview extends Controller
                     $join->on("tp.patient_id", "=", "p.id")
                         ->where("p.is_deleted", 0);
                 })
-                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package")
+                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package", "p.id as patientsId")
                 ->first();
 
             $attachments = [];
@@ -1828,14 +1828,14 @@ class PatientOverview extends Controller
                         "user_id" => Auth::id(),
                     ]);
                 }
-                $latest = DB::table('tasks')->insert([
-                    "treatment_plan_id" => $treatment_plan_id,
-                    "task" => 'Quick Setup Approved',
-                    "type" => 'staff',
-                    "user_id" => null,
-                    "status" => "pending",
-                    "created_at" => now()
-                ]);
+                // $latest = DB::table('tasks')->insert([
+                //     "treatment_plan_id" => $treatment_plan_id,
+                //     "task" => 'Quick Setup Approved',
+                //     "type" => 'staff',
+                //     "user_id" => null,
+                //     "status" => "pending",
+                //     "created_at" => now()
+                // ]);
                 $task_id = DB::table('tasks')->where('treatment_plan_id', $treatment_plan_id)->orderBy('id', 'desc')->first();
                 if ($request->hasFile('attachments') != null || $request->post('comment') != null) {
                     DB::table('comments')->insert([
@@ -1853,6 +1853,9 @@ class PatientOverview extends Controller
                 }
 
                 if ($task_id != false) {
+                    DB::table('patients')->where('id', $treatment_plan->patientsId)->update([
+                        "setup_type" => 1
+                    ]);
                     DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                         "case_holder" => "staff",
                         "send_for_approval" => false,
