@@ -1495,7 +1495,7 @@ class PatientOverview extends Controller
                     $join->on("tp.patient_id", "=", "p.id")
                         ->where("p.is_deleted", 0);
                 })
-                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package")
+                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package", "p.setup_type", "p.is_setup_type_approved", "p.id as patientsId")
                 ->first();
 
             $attachments = [];
@@ -1617,6 +1617,13 @@ class PatientOverview extends Controller
                 } else {
                     $send_for_approval = false;
                     $status = 'Waiting Doctor’s Modification';
+                }
+
+                if($treatment_plan->setup_type == 1 && $treatment_plan->is_setup_type_approved == 1 && $treatment_plan->treatment_link == ''){
+                    DB::table('patients')->where('id', $treatment_plan->patientsId)->update([
+                        'setup_type' => 2,
+                        'is_setup_type_approved' => 0,
+                    ]);
                 }
                 DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
                     'is_completed' => "0",

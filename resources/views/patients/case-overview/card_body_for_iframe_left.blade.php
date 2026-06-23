@@ -3022,9 +3022,8 @@
                                     @if ($patient->is_treatment_submitted == 1 && $patient->is_sent_to_lab == 1 && $patient->setup_type == 1)
                                         <button class="btn btn-success rounded-pill me-1 mb-1 btn-action case-overview-btn"
                                             id="approve">
-                                            <span class="fas fa-check-circle me-1"
-                                                data-fa-transform="shrink-3"></span>
-                                            Approve Treatment Plan
+                                            <span class="fas fa-check-circle me-1" data-fa-transform="shrink-3"></span>
+                                                Approve Treatment Plan
                                         </button>
                                     @endif
 
