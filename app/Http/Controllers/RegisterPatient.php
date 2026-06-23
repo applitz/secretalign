@@ -927,6 +927,7 @@ class RegisterPatient extends Controller
                 DB::table('patients')->where('id', $patient->patient_id)->update([
                     "pricing_package" => $package,
                     "setup_type" => $setup_type,
+                    "is_setup_type_approved" => 0,
                 ]);
             }
 
@@ -1000,7 +1001,7 @@ class RegisterPatient extends Controller
                 }
             }
             if ($patient->first_name && $patient->last_name && $patient->dob) {
-                
+
                 // $nemotech = new NemoTechService($patient->first_name, $patient->last_name, $patient->dob, $patient->nemotech_patient_id);
                 // $patient_id = $nemotech->syncPatient();
                 // if($patient_id != null) {

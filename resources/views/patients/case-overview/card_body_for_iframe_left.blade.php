@@ -3174,10 +3174,17 @@
                                         $patient->is_approved == 0 &&
                                         $patient->is_completed == 0 &&
                                         $patient->is_continue == 0)
-                                    <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn"
-                                        type="button" id="send-to-lab-for-modification">
-                                        <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Lab for modification
-                                    </button>
+                                    @if($patient->setup_type == 1 && $patient->is_setup_type_approved == 1)
+                                        <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn" type="button" id="send-to-lab-for-modification-quick-setup">
+                                            <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Lab for modification
+                                        </button>
+                                    @else
+                                        <button class="btn btn-warning rounded-pill me-1 mb-1 btn-action case-overview-btn"
+                                            type="button" id="send-to-lab-for-modification">
+                                            <span class="fas fa-share me-1" data-fa-transform="shrink-3"></span>Send to Lab for modification
+                                        </button>
+                                    @endif
+
                                 @endif
 
                                 @if (($patient->is_completed == 1) && $patient->tracking_id == null)

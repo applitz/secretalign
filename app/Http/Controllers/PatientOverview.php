@@ -139,7 +139,7 @@ class PatientOverview extends Controller
                 $join->on("tp.lab", "=", "l.id")
                     ->where("l.role", "lab");
             })
-            ->select("tp.*", "p.id as patientId", "p.pricing_package", "p.setup_type", "p.first_name", "p.last_name", "p.dob", "p.user_id", "l.first_name as lab_first_name", "l.last_name as lab_last_name")
+            ->select("tp.*", "p.id as patientId", "p.pricing_package", "p.setup_type", "p.is_setup_type_approved", "p.first_name", "p.last_name", "p.dob", "p.user_id", "l.first_name as lab_first_name", "l.last_name as lab_last_name")
             ->first();
         if (@$patient) {
             $data = compact("patient");
@@ -356,7 +356,7 @@ class PatientOverview extends Controller
                 })
                 ->select("tp.*", "p.user_id", "p.first_name", "p.last_name", "p.setup_type")
                 ->first();
-            dd($treatment_plan);
+            // dd($treatment_plan);
             $attachments = [];
             if ($request->hasFile('attachments')) {
                 foreach ($request->file('attachments') as $file) {
@@ -403,6 +403,75 @@ class PatientOverview extends Controller
                             "case_holder" => "lab",
                             "previous_case_holder" => "staff",
                             "status" => "Waiting Lab Review",
+                        ]);
+                    }
+                }
+            }
+        }
+    }
+
+    public function request_modification_quick_setup(Request $request) //request modification from lab
+    {
+        if (Auth::user()->role == 'staff') {
+
+            $treatment_plan_id = $request->post('treatment_plan_id');
+            $comment = $request->post('comment');
+            $treatment_plan = DB::table('p_treatment_plans as tp')
+                ->where('tp.id', $treatment_plan_id)
+                ->Join("patients as p", function ($join) {
+                    $join->on("tp.patient_id", "=", "p.id")
+                        ->where("p.is_deleted", 0);
+                })
+                ->select("tp.*", "p.user_id", "p.first_name", "p.last_name", "p.setup_type", "p.is_setup_type_approved")
+                ->first();
+
+
+            $attachments = [];
+            if ($request->hasFile('attachments')) {
+                foreach ($request->file('attachments') as $file) {
+                    // Generate a unique file name or use the original name
+                    $filename = rand(1000, 9999) . time() . '.' . $file->getClientOriginalExtension();
+                    // $attachments[]=asset('storage/' . $filename);
+                    // Move the file to the desired directory (e.g., 'uploads')
+                    $file->storeAs('public/attachments', $filename);
+                    $attachments[] = $filename;
+                }
+            }
+            $attachments = implode(',', $attachments);
+
+            if (@$treatment_plan->case_holder == 'staff') {
+
+                if ($treatment_plan->is_sent_to_lab == 1 && $treatment_plan->is_treatment_submitted == 1 && $treatment_plan->lab != null && $treatment_plan->lab != '') {
+                    $lab_details = DB::table('users')->where('id', $treatment_plan->lab)->where('role', 'lab')->select('first_name', 'last_name', 'email')->first();
+                    $details = [
+                        'subject' => 'Action Required: '. Auth::user()->first_name. ' ' . Auth::user()->last_name . ' Approved Quick Setup for Patient ' . $treatment_plan->first_name . ' ' . $treatment_plan->last_name,
+                        'title' => 'Action Required: '. Auth::user()->first_name. ' ' . Auth::user()->last_name . ' Approved Quick Setup for Patient ' . $treatment_plan->first_name . ' ' . $treatment_plan->last_name,
+                        'patient_name' => $treatment_plan->first_name." " . $treatment_plan->last_name,
+                        'comment' => $comment,
+                        'lab_name' => $lab_details->first_name." " . $lab_details->last_name,
+                        'lab_email' => $lab_details->email,
+                        'attachments' => $attachments,
+                    ];
+
+                    SendToLabForModificationJob::dispatch($details);
+                    $task = new TaskService($treatment_plan_id);
+                    $task->complete_task("staff");
+                    if ($treatment_plan->is_continue == 1 || $treatment_plan->is_completed == 1) {
+                        $task_id = $task->create_task("lab", "Production", $treatment_plan->lab, $comment, "staff", "lab", $attachments); //comment from staff to lab
+                    } else {
+                        $task_id = $task->create_task("lab", "Quick Setup Approved", $treatment_plan->lab, $comment, "staff", "lab", $attachments); //comment from staff to lab
+                    }
+                    $routes = DB::table('users')->where('id', Auth::id())->pluck("email")->toArray();
+
+                    if ($task_id) {
+                        DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
+                            "is_sent_to_lab" => 1,
+                            "is_lab_cancel" => 0,
+                            "is_treatment_submitted" => 0,
+                            "dr_request_modification" => false,
+                            "case_holder" => "lab",
+                            "previous_case_holder" => "staff",
+                            "status" => "Quick Setup Approved",
                         ]);
                     }
                 }
@@ -1828,14 +1897,15 @@ class PatientOverview extends Controller
                         "user_id" => Auth::id(),
                     ]);
                 }
-                // $latest = DB::table('tasks')->insert([
-                //     "treatment_plan_id" => $treatment_plan_id,
-                //     "task" => 'Quick Setup Approved',
-                //     "type" => 'staff',
-                //     "user_id" => null,
-                //     "status" => "pending",
-                //     "created_at" => now()
-                // ]);
+
+                $latest = DB::table('tasks')->insert([
+                    "treatment_plan_id" => $treatment_plan_id,
+                    "task" => 'Quick Setup Approved',
+                    "type" => 'staff',
+                    "user_id" => null,
+                    "status" => "pending",
+                    "created_at" => now()
+                ]);
                 $task_id = DB::table('tasks')->where('treatment_plan_id', $treatment_plan_id)->orderBy('id', 'desc')->first();
                 if ($request->hasFile('attachments') != null || $request->post('comment') != null) {
                     DB::table('comments')->insert([
@@ -1854,7 +1924,8 @@ class PatientOverview extends Controller
 
                 if ($task_id != false) {
                     DB::table('patients')->where('id', $treatment_plan->patientsId)->update([
-                        "setup_type" => 1
+                        "setup_type" => 1,
+                        "is_setup_type_approved" => 1
                     ]);
                     DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                         "case_holder" => "staff",
@@ -2254,8 +2325,9 @@ class PatientOverview extends Controller
             ->Join("users as u", function ($join) {
                 $join->on("p.user_id", "=", "u.id");
             })
-            ->select("tp.*", "p.id as patientId", "p.user_id", "p.first_name", "p.last_name", "u.email as doctor_email", "p.pricing_package", "p.confidence_package_duration")
+            ->select("tp.*", "p.id as patientId", "p.user_id", "p.first_name", "p.last_name", "u.email as doctor_email", "p.pricing_package", "p.confidence_package_duration", "p.id as patientId")
             ->first();
+
         $attachments = [];
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
@@ -2310,6 +2382,9 @@ class PatientOverview extends Controller
                     $task_id = DB::table('tasks')->where('treatment_plan_id', $treatment_plan->id)->orderBy('id', 'desc')->first();
 
                     if ($task_id != null) {
+                        DB::table('patients')->where('id', $treatment_plan->patientId)->update([
+                            "is_setup_type_approved" => 2,
+                        ]);
                         DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
                             "is_completed" => 1,
                             "is_approved" => 1,

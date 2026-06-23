@@ -235,6 +235,7 @@ Route::post('/patient/case-overview/send-from-staff-to-advisor', [PatientOvervie
 Route::post('/patient/case-overview/send-from-advisor-to-doctor', [PatientOverview::class, 'send_from_advisor_to_doctor']);
 Route::post('/patient/case-overview/send-from-staff-to-doctor/reject-treatment', [PatientOverview::class, 'reject_treatment'])->name("reject-treatment");
 Route::post('/patient/case-overview/send-from-staff-to-lab-for-modification', [PatientOverview::class, 'request_modification'])->name('request.modification');
+Route::post('/patient/case-overview/send-from-staff-to-lab-for-modification-quick-setup', [PatientOverview::class, 'request_modification_quick_setup'])->name('request.modificationQuickSetup');
 Route::post('/patient/case/allow-user-to-edit', [PatientOverview::class, 'allow_edit']);
 Route::post('/patient/case-overview/case/approve', [PatientOverview::class, 'approveCase']);
 
