@@ -950,7 +950,11 @@ class RegisterPatient extends Controller
                         "recommended_advisor" => $advisor_id
                     ]);
 
-
+                    DB::table('patients')->where('id', $patient->patient_id)->update([
+                        // "pricing_package" => $package,
+                        "setup_type" => $setup_type,
+                        "is_setup_type_approved" => 0,
+                    ]);
                     $tasks = DB::table('tasks')
                             ->where('treatment_plan_id', $patient->id)
                             // ->where('type','doctor')
