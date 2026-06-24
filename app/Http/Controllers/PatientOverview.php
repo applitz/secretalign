@@ -646,10 +646,14 @@ class PatientOverview extends Controller
                     $join->on("tp.patient_id", "=", "p.id")
                         ->where("p.is_deleted", 0);
                 })
-                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package")
+                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package", "p.id as patientsId", "p.is_setup_type_approved", "p.setup_type")
                 ->first();
 
-
+        if($treatment_plan->patient_link != $patient_link || $treatment_plan->iframe_link != $iframe_link){
+            $is_link_updated = 1;
+        }else {
+            $is_link_updated = 0;
+        }
         if (!$treatment_plan) {
             return response()->json(['error' => 'Treatment plan not found.'], 404);
         }
@@ -708,6 +712,7 @@ class PatientOverview extends Controller
                     "iframe_link" => $iframe_link,
                     "patient_link" => $patient_link,
                     "is_treatment_submitted" => 1,
+                    "is_link_updated" => $is_link_updated,
                     "is_lab_cancel" => 0,
                     "status" => "Treatment Plan Completed",
                 ]);
@@ -1619,7 +1624,7 @@ class PatientOverview extends Controller
                     $status = 'Waiting Doctor’s Modification';
                 }
 
-                if($treatment_plan->setup_type == 1 && $treatment_plan->is_setup_type_approved == 1 && $treatment_plan->treatment_link == ''){
+                if($treatment_plan->setup_type == 1 && $treatment_plan->is_setup_type_approved == 1 && $treatment_plan->is_link_updated == 0){
                     DB::table('patients')->where('id', $treatment_plan->patientsId)->update([
                         'setup_type' => 2,
                         'is_setup_type_approved' => 0,
