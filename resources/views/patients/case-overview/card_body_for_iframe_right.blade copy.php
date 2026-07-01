@@ -2325,7 +2325,7 @@
                                     value="{{ $patient->iframe_link }}" name="iframe_link" id="iframe_link">
                             </div>
                             <div class="mb-3">
-                                <label>Patient's Nemo Link</label>
+                                <label>Patient's Link</label>
                                 <input class="form-control hyperlink patient_link" placeholder="https://"
                                     value="{{ $patient->patient_link }}" name="patient_link"
                                     id="patient_link">

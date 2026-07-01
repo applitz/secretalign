@@ -87,11 +87,11 @@
                 </p>
 
                 <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #919293;">
-                    Doctor's Nemo Link: <a href="{{ $iframe_link }}" target="_blank" style="color: #0000EE;">{{ $iframe_link }}</a>
+                    Doctor's Link: <a href="{{ $iframe_link }}" target="_blank" style="color: #0000EE;">{{ $iframe_link }}</a>
                 </p>
 
                 <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #919293;">
-                    Patient's Nemo Link: <a href="{{ $patient_link }}" target="_blank" style="color: #0000EE;">{{ $patient_link }}</a>
+                    Patient's Link: <a href="{{ $patient_link }}" target="_blank" style="color: #0000EE;">{{ $patient_link }}</a>
                 </p>
 
                 <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #919293;">

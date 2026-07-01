@@ -64,7 +64,7 @@
         text-align: center;
         transition: all 0.3s ease;
         cursor: pointer;
-    
+
         /* Arrow styling */
         appearance: none;
         -webkit-appearance: none;
@@ -77,17 +77,17 @@
         border: none;
         border-radius: 6px;
     }
-    
+
     .stylish-dropdown-half option {
         background: #fff;
         color: #000;
     }
-    
+
     .dropdown-error {
         border: 2px solid #e74c3c !important;
         box-shadow: 0 0 6px rgba(231, 76, 60, 0.7);
     }
-    
+
     .stylish-dropdown-half:focus {
         outline: none;
         box-shadow: 0 0 6px rgba(28, 132, 132, 0.6);
@@ -724,10 +724,10 @@
                 var patient_link = $("#patient_link").val();
 
                 if(iframe_link == ''){
-                    toastError("Enter valid doctor's nemo link");
+                    toastError("Enter valid Doctor's Link");
                     return false;
                 } else if(patient_link == ''){
-                    toastError("Enter valid patient's nemo link");
+                    toastError("Enter valid Patient's Link");
                     return false;
                 } else {
                     var formData = new FormData();
@@ -787,10 +787,10 @@
                 var patient_link = $("#patient_link").val();
 
                 if(iframe_link == ''){
-                    toastError("Enter valid doctor's nemo link");
+                    toastError("Enter valid Doctor's Link");
                     return false;
                 } else if(patient_link == ''){
-                    toastError("Enter valid patient's nemo link");
+                    toastError("Enter valid Patient's Link");
                     return false;
                 } else if(treatment_link == ''){
                     toastError("Enter valid files link");

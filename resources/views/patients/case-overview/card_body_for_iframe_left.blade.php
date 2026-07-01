@@ -2950,13 +2950,21 @@
                                     value="{{ $patient->treatment_link }}" name="treatment_link"
                                     id="treatment_link">
                             </div>
+
                             <div class="mb-3">
-                                <label>Doctor's Nemo Link</label>
+                                <label>Doctor's Link 1</label>
                                 <input class="form-control hyperlink" placeholder="https://"
                                     value="{{ $patient->iframe_link }}" name="iframe_link" id="iframe_link">
                             </div>
+
                             <div class="mb-3">
-                                <label>Patient's Nemo Link</label>
+                                <label>Doctor's Link 2 (Optional) </label>
+                                <input class="form-control hyperlink" placeholder="https://"
+                                    value="{{ $patient->iframe_link_optional }}" name="iframe_link_optional" id="iframe_link_optional">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Patient's Link</label>
                                 <input class="form-control hyperlink patient_link" placeholder="https://"
                                     value="{{ $patient->patient_link }}" name="patient_link"
                                     id="patient_link">

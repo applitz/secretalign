@@ -845,13 +845,14 @@
                 var comment = window.commentEditor.getData();
                 var treatment_link = $("#treatment_link").val();
                 var iframe_link = $("#iframe_link").val();
+                var iframe_link_optional = $("#iframe_link_optional").val();
                 var patient_link = $("#patient_link").val();
 
                 if(iframe_link == ''){
-                    toastError("Enter valid doctor's nemo link");
+                    toastError("Enter valid Doctor's Link");
                     return false;
                 } else if(patient_link == ''){
-                    toastError("Enter valid patient's nemo link");
+                    toastError("Enter valid Patient's Link");
                     return false;
                 } else {
                     var formData = new FormData();
@@ -860,6 +861,7 @@
                     formData.append('comment', comment)
                     formData.append('treatment_link', treatment_link)
                     formData.append('iframe_link', iframe_link)
+                    formData.append('iframe_link_optional', iframe_link_optional)
                     formData.append('patient_link', patient_link)
                     formData.append('_token', '{{ csrf_token() }}')
                     var fileInput = document.getElementById('attachments');
@@ -911,10 +913,10 @@
                 var patient_link = $("#patient_link").val();
 
                 if(iframe_link == ''){
-                    toastError("Enter valid doctor's nemo link");
+                    toastError("Enter valid Doctor's Link");
                     return false;
                 } else if(patient_link == ''){
-                    toastError("Enter valid patient's nemo link");
+                    toastError("Enter valid Patient's Link");
                     return false;
                 } else if(treatment_link == ''){
                     toastError("Enter valid files link");

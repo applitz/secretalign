@@ -31,10 +31,18 @@
                     @endif
                     <div class="row mt-5">
                         <div class="col-md-12">
-                            <a href="{{ route('iframe', request()->phase) }}" class="btn btn-primary"
-                                target="_blank">View on full screen</a>
+                            <a href="{{ route('iframe', request()->phase) }}" class="btn btn-primary" target="_blank">⛶ Full Screen</a>
+
+                            @if($patient->iframe_link_optional != null)
+                                <a href="{{ route('iframe-link-optional', request()->phase) }}" class="btn btn-primary" target="_blank">⛶ V2 Full Screen</a>
+                            @endif
                         </div>
                     </div>
+                    @if($patient->iframe_link_optional != null)
+                        <div class="text-danger mt-1">
+                            Kindly note your approved treatment plan version in the comments section prior to submission.
+                        </div>
+                    @endif
                 @else
                     <div class="row">
                         <div class="{{ $hasOptionalScans ? 'col-md-6' : 'col-md-12' }}">
