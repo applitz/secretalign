@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Audittrails;
 use App\Models\PatientTreatmentPlan;
 use App\Models\Patients;
 use Carbon\Carbon;
@@ -151,7 +152,7 @@ class MovixtechController extends Controller
 
 
     public function processMovix(Request $request)
-    {
+    {dd($request->all());
         $patientDetails = Patients::with([
             'treatmentPlans' => function ($query) use ($request) {
                 $query->where('patient_id', $request->patient_id)
@@ -228,6 +229,9 @@ class MovixtechController extends Controller
                 'case_id' => $caseId
             ], 500);
         }
+
+        // $objAudittrails = new Audittrails();
+        // $saveAudittrails = $objAudittrails->addAudittrails( $request->patient_id, $request->treatment_plan_id, "Patient Scan data Updated", 'D', null, $data);
 
         return response()->json([
             'status' => true,

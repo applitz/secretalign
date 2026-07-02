@@ -18,7 +18,7 @@ use App\Models\User;
 use App\Models\MeditLink;
 use Exception;
 use Illuminate\Support\Facades\Log;
-
+use App\Models\Audittrails;
 class RegisterPatient extends Controller
 {
     public $hashids;
@@ -653,6 +653,19 @@ class RegisterPatient extends Controller
         DB::table('p_treatment_plans')->where('patient_id', $patient_id)->where('id', $treatment_plan_id)->update([
             "treatment_type" => $treatment_type,
         ]);
+        // $data = $request->all();
+        // unset(
+        //     $data['_token'],
+        //     $data['treatment_plan_id'],
+        //     $data['patient_id']
+        // );
+        // if($data['treatment_type'] == 1) {
+        //     $data['treatment_type'] = 'Aligners Full-Service';
+        // } else {
+        //     $data['treatment_type'] = 'Treatment Planning Service';
+        // }
+        // $objAudittrails = new AuditTrails();
+        // $saveAudittrails = $objAudittrails->addAudittrails( $request->post('patient_id'), $request->post('treatment_plan_id'), "Patient Treatment Type Updated", 'D', null, $data);
     }
 
     public function save_patient_info(Request $request)
@@ -667,6 +680,14 @@ class RegisterPatient extends Controller
             "dob" => $dob,
             "staff_id" => Auth::user()->staff_id,
         ]);
+        // $data = $request->all();
+        // unset(
+        //     $data['_token'],
+        //     $data['treatment_plan_id'],
+        //     $data['patient_id']
+        // );
+        // $objAudittrails = new AuditTrails();
+        // $saveAudittrails = $objAudittrails->addAudittrails( $request->post('patient_id'), $request->post('treatment_plan_id'), "Patient Info Updated", 'D', null, $data);
         session(['patient_id' => $id]);
     }
     public function save_scan_data(Request $request)
@@ -869,7 +890,6 @@ class RegisterPatient extends Controller
 
     public function submit(Request $request)
     {
-        // dd($request->all());
         $id = $request->post('patient_id');
         $phase = $request->post('treatment_plan_id');
         $preferred_package = @$request->post('client_preferred_package');
@@ -1060,11 +1080,25 @@ class RegisterPatient extends Controller
                         // ->select("tp.*", "p.first_name", "p.last_name", "p.dob", "p.user_id", "p.pricing_package", "p.nemotech_patient_id")
                         // ->first());
                         session()->forget('patient_id');
+                        $data = $request->all();
+                        unset(
+                            $data['_token'],
+                            $data['client_preferred_package'],
+                            $data['client_setup_type'],
+                            $data['advisor'],
+                            $data['treatment_plan_id'],
+                            $data['patient_id']
+                        );
+
+                        $objAudittrails = new AuditTrails();
+                        $saveAudittrails = $objAudittrails->addAudittrails( $request->post('patient_id'), $request->post('treatment_plan_id'), "Patient Details Submitted", 'D', 'S', $data);
                         return redirect('/patient/case-overview/' . $this->hashids->encode($patient->id))->with("success", "Patient Case has been added!");
                         //return redirect('/orders/checkout/proceed/' . $id . '/' . $phase . '/initial-deposit');
                     }
                 }
             }
+
+
         }
 
         return redirect()->back()->with('error', 'Enable to submit. Make sure you have completely filled all required sections.');

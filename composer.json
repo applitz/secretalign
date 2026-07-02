@@ -13,6 +13,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "hashids/hashids": "^4.1",
         "intervention/image": "^3.11",
+        "jenssegers/agent": "^2.6",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",

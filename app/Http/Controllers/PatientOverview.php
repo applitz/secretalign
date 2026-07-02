@@ -36,6 +36,7 @@ use App\Models\User;
 use App\Jobs\SendReminderMailJob;
 use Carbon\Carbon;
 use App\Http\Services\NemoTechService;
+use App\Models\Audittrails;
 use Illuminate\Support\Str;
 use App\Models\TreatmentCheck;
 
@@ -308,6 +309,7 @@ class PatientOverview extends Controller
     public function submit_to_lab_for_treatment(Request $request)
     {
         if (Auth::user()->role == 'staff') {
+            $data = $request->all();
             $treatment_plan_id = $request->post('treatment_plan_id');
             $comment = $request->post('comment');
             $lab = $request->post('lab');
@@ -320,6 +322,7 @@ class PatientOverview extends Controller
                     // Move the file to the desired directory (e.g., 'uploads')
                     $file->storeAs('public/attachments', $filename);
                     $attachments[] = $filename;
+                    $data['attachments'][] = $filename;
                 }
             }
             $attachments = implode(',', $attachments);
@@ -332,7 +335,7 @@ class PatientOverview extends Controller
                                         $join->on("tp.patient_id", "=", "p.id")
                                             ->where("p.is_deleted", 0);
                                     })
-                                    ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package")
+                                    ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package", "p.id as patientsId")
                                     ->first();
 
 
@@ -394,12 +397,22 @@ class PatientOverview extends Controller
                     }
                 }
             }
+
+            unset(
+                $data['_token'],
+                $data['treatment_plan_id'],
+            );
+            $objAudittrails = new Audittrails();
+            $saveAudittrails = $objAudittrails->addAudittrails($treatment_plan->patientsId, $request->post('treatment_plan_id'), "Staff Send Case to Lab", 'S', 'L', $data);
         }
     }
     public function request_modification(Request $request) //request modification from lab
     {
         if (Auth::user()->role == 'staff') {
-
+            $data = $request->all();
+            unset(
+                $data['attachments']
+            );
             $treatment_plan_id = $request->post('treatment_plan_id');
             $comment = $request->post('comment');
             $treatment_plan = DB::table('p_treatment_plans as tp')
@@ -408,7 +421,7 @@ class PatientOverview extends Controller
                     $join->on("tp.patient_id", "=", "p.id")
                         ->where("p.is_deleted", 0);
                 })
-                ->select("tp.*", "p.user_id", "p.first_name", "p.last_name", "p.setup_type")
+                ->select("tp.*", "p.user_id", "p.first_name", "p.last_name", "p.setup_type", "p.id as patientsId")
                 ->first();
             // dd($treatment_plan);
             $attachments = [];
@@ -420,6 +433,7 @@ class PatientOverview extends Controller
                     // Move the file to the desired directory (e.g., 'uploads')
                     $file->storeAs('public/attachments', $filename);
                     $attachments[] = $filename;
+                    $data['attachments'][] = $filename;
                 }
             }
             $attachments = implode(',', $attachments);
@@ -459,6 +473,12 @@ class PatientOverview extends Controller
                             "status" => "Waiting Lab Review",
                         ]);
                     }
+                    unset(
+                        $data['_token'],
+                        $data['treatment_plan_id'],
+                    );
+                    $objAudittrails = new AuditTrails();
+                    $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientsId, $request->post('treatment_plan_id'), "Sent to Lab for Modification by Staff", 'S', 'L', $data);
                 }
             }
         }
@@ -467,7 +487,10 @@ class PatientOverview extends Controller
     public function request_modification_quick_setup(Request $request) //request modification from lab
     {
         if (Auth::user()->role == 'staff') {
-
+            $data = $request->all();
+            unset(
+                $data['attachments'],
+            );
             $treatment_plan_id = $request->post('treatment_plan_id');
             $comment = $request->post('comment');
             $treatment_plan = DB::table('p_treatment_plans as tp')
@@ -528,6 +551,12 @@ class PatientOverview extends Controller
                             "status" => "Quick Setup Approved",
                         ]);
                     }
+                    unset(
+                        $data['_token'],
+                        $data['treatment_plan_id'],
+                    );
+                    $objAudittrails = new AuditTrails();
+                    $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientsId, $request->post('treatment_plan_id'), "Sent to Lab for Modification by Staff", 'S', 'L', $data);
                 }
             }
         }
@@ -536,6 +565,12 @@ class PatientOverview extends Controller
     public function send_from_staff_to_lab(Request $request)
     {
         if (Auth::user()->role == 'staff') {
+            $data = $request->all();
+
+            unset(
+                $data['attachments'],
+            );
+
             $treatment_plan_id = $request->post('treatment_plan_id');
             $comment = $request->post('comment');
 
@@ -550,6 +585,7 @@ class PatientOverview extends Controller
                     // Move the file to the desired directory (e.g., 'uploads')
                     $file->storeAs('public/attachments', $filename);
                     $attachments[] = $filename;
+                    $data['attachments'][] = $filename;
                 }
             }
             $attachments = implode(',', $attachments);
@@ -559,13 +595,14 @@ class PatientOverview extends Controller
                                         $join->on("tp.patient_id", "=", "p.id")
                                             ->where("p.is_deleted", 0);
                                     })
-                                    ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package")
+                                    ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package", "p.id as patientsId")
                                     ->first();
 
             if ($lab == null) {
                 $lab = $treatment_plan->lab;
             }
             if (@$treatment_plan->case_holder == 'staff') {
+
                 $lab = DB::table('lab_requests')->where('treatment_plan_id', $treatment_plan->id)->where('is_canceled', 0)->orderByDesc('id')->first();
                 $lab_details = DB::table('users')->where('id', $lab->user_id)->where('role', 'lab')->select('first_name', 'last_name', 'email')->first();
 
@@ -624,6 +661,15 @@ class PatientOverview extends Controller
                     'attachments' => $attachments,
                 ];
                 RequestFilesToLabFromStaffJob::dispatch($details);
+
+                $data = $request->all();
+                unset(
+                    $data['_token'],
+                    $data['treatment_plan_id'],
+                );
+
+                $objAudittrails = new AuditTrails();
+                $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientsId, $request->post('treatment_plan_id'), "Staff Sent the Case to the Lab for File Request", 'S', 'L', $data);
             }
         }
     }
@@ -667,6 +713,10 @@ class PatientOverview extends Controller
     }
     public function submit_treatment(Request $request)
     {
+        $data = $request->all();
+        unset(
+            $data['attachments'],
+        );
         if (Auth::user()->role !== 'lab') {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
@@ -720,6 +770,7 @@ class PatientOverview extends Controller
                 $filename = rand(1000, 9999) . time() . '.' . $file->getClientOriginalExtension();
                 $file->storeAs('public/attachments', $filename);
                 $attachments[] = $filename;
+                $data['attachments'][] = $filename;
             }
         }
 
@@ -773,7 +824,14 @@ class PatientOverview extends Controller
                     "is_lab_cancel" => 0,
                     "status" => "Treatment Plan Completed",
                 ]);
+                // $data = $request->all();
+                unset(
+                    $data['_token'],
+                    $data['treatment_plan_id'],
+                );
 
+                $objAudittrails = new AuditTrails();
+                $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientsId, $request->post('treatment_plan_id'), "Lab Submit Treatment", 'L', 'S', $data);
                 return response()->json(['message' => 'Treatment submitted successfully.'], 200);
             } else {
                 return response()->json(['error' => 'Failed to assign task to staff.'], 500);
@@ -788,6 +846,10 @@ class PatientOverview extends Controller
         if (Auth::user()->role !== 'lab') {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
+        $data = $request->all();
+        unset(
+            $data['attachments'],
+        );
 
         $request->validate([
             'treatment_link' => 'nullable|string',
@@ -818,7 +880,7 @@ class PatientOverview extends Controller
                     $join->on("tp.patient_id", "=", "p.id")
                         ->where("p.is_deleted", 0);
                 })
-                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package")
+                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package", "p.id as patientsId")
                 ->first();
 
 
@@ -833,6 +895,7 @@ class PatientOverview extends Controller
                 $filename = rand(1000, 9999) . time() . '.' . $file->getClientOriginalExtension();
                 $file->storeAs('public/attachments', $filename);
                 $attachments[] = $filename;
+                $data['attachments'][] = $filename;
             }
         }
 
@@ -875,7 +938,13 @@ class PatientOverview extends Controller
                     "is_treatment_submitted" => 1,
                     "status" => "Production",
                 ]);
+                unset(
+                    $data['_token'],
+                    $data['treatment_plan_id'],
+                );
 
+                $objAudittrails = new AuditTrails();
+                $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientsId, $request->post('treatment_plan_id'), "Lab Submitted the Required Files", 'L', 'S', $data);
                 return response()->json(['message' => 'Treatment submitted successfully.'], 200);
             } else {
                 return response()->json(['error' => 'Failed to assign task to staff.'], 500);
@@ -986,6 +1055,10 @@ class PatientOverview extends Controller
     public function submit_tracking_id(Request $request)
     {
         if (Auth::user()->role == 'staff') {
+            $data = $request->all();
+            unset(
+                $data['attachments'],
+            );
             $treatment_plan_id = $request->post('treatment_plan_id');
             $comment = $request->post('comment');
             $tracking_id = ($request->post('tracking_id'));
@@ -995,7 +1068,7 @@ class PatientOverview extends Controller
                     $join->on("tp.patient_id", "=", "p.id")
                         ->where("p.is_deleted", 0);
                 })
-                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package", "p.first_name as p_first_name", "p.last_name as p_last_name")
+                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package", "p.id as patientsId",  "p.first_name as p_first_name", "p.last_name as p_last_name")
                 ->first();
             $tasks = DB::table('tasks')
                 ->where('treatment_plan_id', $treatment_plan_id)
@@ -1019,6 +1092,7 @@ class PatientOverview extends Controller
                     // Move the file to the desired directory (e.g., 'uploads')
                     $file->storeAs('public/attachments', $filename);
                     $attachments[] = $filename;
+                    $data['attachments'][] = $filename;
                 }
             }
             $attachments = implode(',', $attachments);
@@ -1097,6 +1171,13 @@ class PatientOverview extends Controller
                     "treatment_plan_id" => $treatment_plan->id,
                 ]);
 
+                unset(
+                    $data['_token'],
+                    $data['treatment_plan_id'],
+                );
+
+                $objAudittrails = new AuditTrails();
+                $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientsId, $request->post('treatment_plan_id'), "Staff Submitted Tracking ID", 'S', 'D', $data);
                 return response()->json(["status" => 200]);
             } elseif ((@$treatment_plan->case_holder == 'staff' && @$treatment_plan->is_continue == 1)) {
                 DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
@@ -1150,6 +1231,14 @@ class PatientOverview extends Controller
                     "body" => "View Tracking Nr. for " . $treatment_plan->p_last_name . "' Treatment Plan " . $treatment_plan->phase,
                     "treatment_plan_id" => $treatment_plan->id,
                 ]);
+
+                unset(
+                    $data['_token'],
+                    $data['treatment_plan_id'],
+                );
+
+                $objAudittrails = new AuditTrails();
+                $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientsId, $request->post('treatment_plan_id'), "Staff Submitted Tracking ID", 'S', 'D', $data);
                 return response()->json(["status" => 200]);
             }
         }
@@ -1549,6 +1638,11 @@ class PatientOverview extends Controller
     public function send_form_staff_to_doctor(Request $request)
     {
         if (Auth::user()->role == 'staff') {
+            $data = $request->all();
+
+            unset(
+                $data['attachments'],
+            );
             $treatment_plan_id = $request->post('treatment_plan_id');
             $comment = $request->post('comment');
             $treatment_plan = DB::table('p_treatment_plans as tp')
@@ -1569,6 +1663,7 @@ class PatientOverview extends Controller
                     // Move the file to the desired directory (e.g., 'uploads')
                     $file->storeAs('public/attachments', $filename);
                     $attachments[] = $filename;
+                    $data['attachments'][] = $filename;
                 }
             }
             $attachments = implode(',', $attachments);
@@ -1696,6 +1791,15 @@ class PatientOverview extends Controller
                     "previous_case_holder" => "staff",
                     "status" => $status,
                 ]);
+
+                unset(
+                    $data['_token'],
+                    $data['action'],
+                    $data['treatment_plan_id'],
+                );
+
+                $objAudittrails = new AuditTrails();
+                $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientsId, $request->post('treatment_plan_id'), "Staff Sent the Case to the Doctor for Approval", 'S', 'D', $data);
                 return response()->json(["status" => 200]);
             }
         }
@@ -2383,6 +2487,11 @@ class PatientOverview extends Controller
     // Done By Parth
     public function approveCase(Request $request)
     {
+        $data = $request->all();
+        unset(
+            $data['attachments'],
+        );
+
         $treatment_plan_id = $request->post('treatment_plan_id');
         $comment = $request->post('comment');
         $treatment_plan = DB::table('p_treatment_plans as tp')
@@ -2406,6 +2515,7 @@ class PatientOverview extends Controller
                 // Move the file to the desired directory (e.g., 'uploads')
                 $file->storeAs('public/attachments', $filename);
                 $attachments[] = $filename;
+                $data['attachments'] = $filename;
             }
         }
         $attachments = implode(',', $attachments);
@@ -2484,7 +2594,13 @@ class PatientOverview extends Controller
 
 
                     ApproveCaseByDoctorToStaffJob::dispatch($staff, $details);
+                    unset(
+                        $data['_token'],
+                        $data['treatment_plan_id'],
+                    );
 
+                    $objAudittrails = new AuditTrails();
+                    $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientId, $request->post('treatment_plan_id'), "Doctor Approved the Case and Sent It to Staff", 'D', 'S', $data);
                     // return redirect('/patients/view')->with('success', 'Case Approved');
                 }
             }
