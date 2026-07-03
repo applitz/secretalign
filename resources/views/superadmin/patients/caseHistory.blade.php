@@ -48,8 +48,7 @@
                 <div class="card-body">
 
                     <div class="timeline-count p-4">
-
-
+                        @csrf
                         <div class="table-responsive">
                             <table id="case-history-list" class="table table-striped">
                                 <thead>
@@ -88,9 +87,9 @@
                                             </td>
                                             <td>{{ $caseHistory->created_at->format('d-m-Y h:i:s A') }}</td>
                                             <td>
-                                                <a class="btn p-0 ms-2 viewCaseHistory" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#viewCaseHistoryModal">
+                                                <button class="btn p-0 ms-2 viewCaseHistory"  data-id="{{ $caseHistory->id }}" >
                                                     <i class="fa fa-eye text-primary" aria-hidden="true"></i>
-                                                </a>
+                                                </button>
                                             </td>
                                         </tr>
                                     @empty

@@ -194,6 +194,14 @@ class PatientsController extends Controller
         return $this->patientsService->changeTreatmentPlan($request);
     }
 
+    public function caseHistoryViewdata(Request $request)
+    {
+        $getCaseHistory = $this->patientsService->getCaseHistoryData($request->data);
+        $details =  view('superadmin.patients.caseHistoryViewdata', compact('getCaseHistory'));
+        echo $details;
+        exit;
+    }
+
     public function caseHistory($patientsId)
     {
         $getCaseHistory = $this->patientsService->getCaseHistory($patientsId);

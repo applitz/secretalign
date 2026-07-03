@@ -13,6 +13,7 @@ Route::middleware(['auth', 'auth.superadmin'])->prefix('superadmin')->group(func
     Route::post('patients/change-treatment-plan', [PatientsController::class, 'changeTreatmentPlan'])->name('patients.change-treatment-plan');
     Route::get('update-all-records-expiry-date', [PatientsController::class, 'updateExpiryDate'])->name('updateExpiryDate');
     Route::get('patients/case-history/{patientsId}', [PatientsController::class, 'caseHistory'])->name('patients.caseHistory');
+    Route::post('patients/caseHistory/viewdata', [PatientsController::class, 'caseHistoryViewdata'])->name('patients.casehistory.viewdata');
 });
 
 ?>

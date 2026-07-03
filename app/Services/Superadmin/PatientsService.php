@@ -255,4 +255,12 @@ class PatientsService extends CommonFunction
                 ->get();
 
     }
+    public function getCaseHistoryData($caseHistoryId)
+    {
+        return Audittrails::from('audit_trails')
+                ->join('patients', 'patients.id', '=', 'audit_trails.patient_id')
+                ->where('audit_trails.id', $caseHistoryId['caseHistoryId'])
+                ->select('audit_trails.*', 'patients.first_name', 'patients.last_name')
+                ->first();
+    }
 }
