@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Hashids\Hashids;
 use Carbon\Carbon;
-
+use App\Models\Audittrails;
 class PatientsService extends CommonFunction
 {
     public function getPatients($request)
@@ -189,6 +189,7 @@ class PatientsService extends CommonFunction
 
             }
 
+            $timelinehtml = '<a class="btn p-0 ms-2" href="'. url('/superadmin/patients/case-history/' . $patient->id).'"><i class="fa fa-history text-warning"></i></a>';
 
             $records['data'][] = [
 
@@ -215,7 +216,7 @@ class PatientsService extends CommonFunction
                 'case_holder' => $case_holder,
                 'action' => '<a class="btn p-0 ms-2 delete" data-id="' . $patient->id . '" data-name="' . htmlspecialchars($patient->last_name . ' ' . $patient->first_name) . '"
                             href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Delete" aria-label="Delete"><i class="fas fa-trash-alt"></i></a>' . $expiredHtml . $changeStatusHtml,
+                            title="Delete" aria-label="Delete"><i class="fas fa-trash-alt"></i></a>' . $expiredHtml . $changeStatusHtml. $timelinehtml,
 
             ];
         }
@@ -244,5 +245,14 @@ class PatientsService extends CommonFunction
             return response()->json(['success' => true, 'message' => 'Patient status updated successfully']);
         }
         return response()->json(['success' => false, 'message' => 'Patient not found']);
+    }
+
+
+    public function getCaseHistory($patientsId)
+    {
+        return Audittrails::where('patient_id', $patientsId)
+                ->orderBy('created_at', 'ASC')
+                ->get();
+
     }
 }

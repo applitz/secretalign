@@ -300,7 +300,7 @@ var Patients = function() {
         // });
 
         $("#patients-list").dataTable({
-            "pageLength": 20,
+            "pageLength": 10,
             "processing": true,
             "serverSide": true,
             "searching": false,
