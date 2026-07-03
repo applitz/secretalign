@@ -310,6 +310,9 @@ class PatientOverview extends Controller
     {
         if (Auth::user()->role == 'staff') {
             $data = $request->all();
+            unset(
+                $data['attachments']
+            );
             $treatment_plan_id = $request->post('treatment_plan_id');
             $comment = $request->post('comment');
             $lab = $request->post('lab');
@@ -2515,7 +2518,7 @@ class PatientOverview extends Controller
                 // Move the file to the desired directory (e.g., 'uploads')
                 $file->storeAs('public/attachments', $filename);
                 $attachments[] = $filename;
-                $data['attachments'] = $filename;
+                $data['attachments'][] = $filename;
             }
         }
         $attachments = implode(',', $attachments);
