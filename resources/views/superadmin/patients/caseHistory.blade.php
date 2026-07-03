@@ -51,7 +51,7 @@
 
 
                         <div class="table-responsive">
-                            <table class="table mb-0">
+                            <table id="case-history-list" class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -63,7 +63,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($getCaseHistory as $caseHistory)
+                                    @forelse($getCaseHistory as $caseHistory)
                                         <tr>
                                             <th>{{ $loop->index + 1 }}</th>
                                             <td>{{ $caseHistory->event }}</td>
@@ -93,7 +93,13 @@
                                                 </a>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    @empty
+
+                                        <td colspan="6" class="text-center">
+                                                No Case History Found
+                                        </td>
+
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
