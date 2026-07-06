@@ -162,6 +162,8 @@ class PatientsService extends CommonFunction
 
             $expiredHtml = '';
             $changeStatusHtml = '';
+            $changeCaseHolderHtml = '';
+            $changePlanHtml = '';
             if($patient->status != 'Cancelled' && $patient->status != 'Shipped' ) {
                 $changeStatusHtml = '<a class="btn p-0 ms-2 change-status"
                                     data-bs-toggle="modal"
@@ -187,6 +189,31 @@ class PatientsService extends CommonFunction
                                     <i class="fas fa-calendar-alt text-danger"></i>
                                 </a>';
 
+            }
+
+            if ($expiryDate && $patient->status != 'Shipped' && $patient->status != 'Pending' && $patient->status != 'Cancelled') {
+                $changePlanHtml = '<button  type="button"
+                                        class="btn p-0 ms-2 change-treatment-plan"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#changeTreatmentPlanModal"
+                                        data-patient-id="' . $patient->treatment_plan . '"
+                                        data-patient-name="' . htmlspecialchars($patient->last_name . ' ' . $patient->first_name, ENT_QUOTES, 'UTF-8') . '"
+                                        data-current-treatment-type="' . $patient->treatment_type . '"
+                                        title="Change Treatment Plan">
+                                    <i class="fas fa-random text-warning"></i>
+                                    </button>';
+            }
+
+            if ($expiryDate && $patient->status != 'Shipped' && $patient->status != 'Pending' && $patient->status != 'Cancelled') {
+
+                $changeCaseHolderHtml = '<button  type="button"
+                                            class="btn p-0 ms-2 change-case-holder"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#changeCaseHolderModal"
+                                            data-patient-id="' . $patient->treatment_plan . '"
+                                            data-patient-name="' . htmlspecialchars($patient->last_name . ' ' . $patient->first_name, ENT_QUOTES, 'UTF-8') . '"
+                                            data-current-case-holder="' . ucfirst(htmlspecialchars($patient->case_holder, ENT_QUOTES, 'UTF-8')) . '"
+                                            title="Change Case Holder"> <i class="fas fa-user-edit text-success"></i></button>';
             }
 
             $timelinehtml = '<a class="btn p-0 ms-2" href="'. url('/superadmin/patients/case-history/' . $patient->id).'"><i class="fa fa-history text-warning"></i></a>';
@@ -216,7 +243,7 @@ class PatientsService extends CommonFunction
                 'case_holder' => $case_holder,
                 'action' => '<a class="btn p-0 ms-2 delete" data-id="' . $patient->id . '" data-name="' . htmlspecialchars($patient->last_name . ' ' . $patient->first_name) . '"
                             href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="top"
-                            title="Delete" aria-label="Delete"><i class="fas fa-trash-alt"></i></a>' . $expiredHtml . $changeStatusHtml. $timelinehtml,
+                            title="Delete" aria-label="Delete"><i class="fas fa-trash-alt"></i></a>' . $expiredHtml . $changeStatusHtml. $changeCaseHolderHtml. $changePlanHtml. $timelinehtml,
 
             ];
         }
@@ -247,6 +274,29 @@ class PatientsService extends CommonFunction
         return response()->json(['success' => false, 'message' => 'Patient not found']);
     }
 
+    public function changeCaseHolder($request)
+    {
+        $patient = PatientTreatmentPlan::find($request->patient_id);
+        $previous_case_holder = $patient->case_holder;
+        if ($patient) {
+            $patient->previous_case_holder = $previous_case_holder;
+            $patient->case_holder = $request->new_case_holder;
+            $patient->save();
+            return response()->json(['success' => true, 'message' => 'Case holder updated successfully']);
+        }
+        return response()->json(['success' => false, 'message' => 'Patient not found']);
+    }
+
+    public function changeTreatmentPlan($request)
+    {
+        $patient = PatientTreatmentPlan::find($request->patient_id);
+        if ($patient) {
+            $patient->treatment_type = $request->new_treatment_plan;
+            $patient->save();
+            return response()->json(['success' => true, 'message' => ' Treatment Type updated successfully']);
+        }
+        return response()->json(['success' => false, 'message' => 'Patient not found']);
+    }
 
     public function getCaseHistory($patientsId)
     {
