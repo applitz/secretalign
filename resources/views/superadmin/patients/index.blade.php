@@ -137,10 +137,10 @@
 @endsection
 
 @section('javascript')
-<script src="{{ asset('public/assets/plugins/dataTables/1.11.5/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('public/assets/plugins/dataTables/1.11.5/js/dataTables.bootstrap5.min.js') }}"></script>
-<script src="{{ asset('public/assets/plugins/dataTables/responsive/2.2.9/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('public/assets/customjs/superadmin/patients.js') }}"></script>
+<script src="{{ asset('public/assets/plugins/dataTables/1.11.5/js/jquery.dataTables.min.js') }}?v={{ time() }}"></script>
+<script src="{{ asset('public/assets/plugins/dataTables/1.11.5/js/dataTables.bootstrap5.min.js') }}?v={{ time() }}"></script>
+<script src="{{ asset('public/assets/plugins/dataTables/responsive/2.2.9/js/dataTables.responsive.min.js') }}?v={{ time() }}"></script>
+<script src="{{ asset('public/assets/customjs/superadmin/patients.js') }}?v={{ time() }}"></script>
 
 
 <script>
