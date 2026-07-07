@@ -44,6 +44,8 @@ class Audittrails extends Model
         $auditTrail->url = str_replace(".", "/", $currentRoute);
         $auditTrail->ip = $_SERVER['REMOTE_ADDR'];
         $auditTrail->agent = $browser;
+        $auditTrail->created_at = now();
+        $auditTrail->updated_at = now();
         $auditTrail->save();
     }
 }
