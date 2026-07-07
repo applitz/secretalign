@@ -502,7 +502,7 @@ class PatientOverview extends Controller
                     $join->on("tp.patient_id", "=", "p.id")
                         ->where("p.is_deleted", 0);
                 })
-                ->select("tp.*", "p.user_id", "p.first_name", "p.last_name", "p.setup_type", "p.is_setup_type_approved")
+                ->select("tp.*", "p.user_id", "p.first_name", "p.last_name", "p.setup_type", "p.is_setup_type_approved", "p.id as patientsId")
                 ->first();
 
 
