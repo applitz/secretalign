@@ -2017,6 +2017,11 @@ class PatientOverview extends Controller
     public function approve_quick_setup(Request $request)
     {
         if (Auth::user()->role == 'doctor') {
+            $data = $request->all();
+
+            unset(
+                $data['attachments'],
+            );
             $treatment_plan_id = $request->post('treatment_plan_id');
             $comment = $request->post('comment');
             $treatment_plan = DB::table('p_treatment_plans as tp')
@@ -2037,6 +2042,7 @@ class PatientOverview extends Controller
                     // Move the file to the desired directory (e.g., 'uploads')
                     $file->storeAs('public/attachments', $filename);
                     $attachments[] = $filename;
+                    $data['attachments'][] = $filename;
                 }
             }
             $attachments = implode(',', $attachments);
@@ -2112,6 +2118,16 @@ class PatientOverview extends Controller
                         "is_editable" => 0,
                     ]);
                 }
+
+                unset(
+                    $data['_token'],
+                    $data['action'],
+                    $data['treatment_plan_id'],
+                );
+
+                $objAudittrails = new AuditTrails();
+                $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientsId, $request->post('treatment_plan_id'), "Doctor Approved Quick Setup", 'D', 'S', $data);
+
             }
         }
     }
