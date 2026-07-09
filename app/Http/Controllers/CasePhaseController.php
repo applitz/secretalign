@@ -57,7 +57,7 @@ class CasePhaseController extends Controller
             ->first();
 
         $now = now();
-        $planDue = @$previous_plan->treatment_plan_duration ? date("Y-m-d H:i:s", strtotime($previous_plan->treatment_plan_duration)) : null;
+        $planDue = @$previous_plan->expiry_date ? date("Y-m-d H:i:s", strtotime($previous_plan->expiry_date)) : null;
 
         if ( @$previous_plan->is_completed == 1 && ($planDue === null || $now <= $planDue) ) {
             // initiate new treatment
