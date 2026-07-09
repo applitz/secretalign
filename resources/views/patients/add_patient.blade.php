@@ -5048,13 +5048,35 @@
                 var trim_type_lower_upper = $("select[name='trim_type_lower_upper']").val();
                 fd.append("trim_type_lower_upper", trim_type_lower_upper);
 
-                if (aligner_trim_type_lower == '' || aligner_trim_type_lower == undefined ||
-                    aligner_trim_type_lower == null || aligner_trim_type_upper == '' ||
-                    aligner_trim_type_upper == undefined || aligner_trim_type_upper == null) {
-                        $("select[name=trim_type_upper]").addClass('is-invalid')
-                        $("select[name=trim_type_lower]").addClass('is-invalid')
-                    toastError("Aligner trim type lower and upper are required.");
-                    return false;
+                // Upper & Lower selected
+                if (upper_arch === '1' && lower_arch === '1') {
+                    if (!aligner_trim_type_upper || !aligner_trim_type_lower) {
+                        $("select[name=trim_type_upper]").toggleClass('is-invalid', !aligner_trim_type_upper);
+                        $("select[name=trim_type_lower]").toggleClass('is-invalid', !aligner_trim_type_lower);
+
+                        toastError("Aligner trim type upper and lower are required.");
+                        return false;
+                    }
+                }
+
+                // Only Upper selected
+                if (upper_arch === '1' && lower_arch !== '1') {
+                    if (!aligner_trim_type_upper) {
+                        $("select[name=trim_type_upper]").addClass('is-invalid');
+
+                        toastError("Aligner trim type upper is required.");
+                        return false;
+                    }
+                }
+
+                // Only Lower selected
+                if (lower_arch === '1' && upper_arch !== '1') {
+                    if (!aligner_trim_type_lower) {
+                        $("select[name=trim_type_lower]").addClass('is-invalid');
+
+                        toastError("Aligner trim type lower is required.");
+                        return false;
+                    }
                 }
                 $("select[name=trim_type_upper]").removeClass('is-invalid')
                 $("select[name=trim_type_lower]").removeClass('is-invalid')
@@ -5090,20 +5112,48 @@
                 var upper_teeth_to_cover = tla_ur.length + tla_ul.length;
                 var lower_teeth_to_cover = tla_lr.length + tla_ll.length;
 
-                if (upper_teeth_to_cover > 0 && upper_teeth_to_cover < 4) {
-                    toastError("Please select at least 4 upper teeth to cover.");
-                    return false;
+                // Upper Arch Validation
+                if (upper_arch === '1') {
+
+                    if (upper_teeth_to_cover === 0) {
+                        toastError("Please mark the last upper tooth you want the aligners to cover.");
+                        return false;
+                    }
+
+                    if (upper_teeth_to_cover < 4) {
+                        toastError("Please select at least 4 upper teeth to cover.");
+                        return false;
+                    }
                 }
 
-                if (lower_teeth_to_cover > 0 && lower_teeth_to_cover < 4) {
-                    toastError("Please select at least 4 lower teeth to cover.");
-                    return false;
+                // Lower Arch Validation
+                if (lower_arch === '1') {
+
+                    if (lower_teeth_to_cover === 0) {
+                        toastError("Please mark the last lower tooth you want the aligners to cover.");
+                        return false;
+                    }
+
+                    if (lower_teeth_to_cover < 4) {
+                        toastError("Please select at least 4 lower teeth to cover.");
+                        return false;
+                    }
                 }
 
-                if (tla_ur.length == 0 && tla_lr.length == 0 && tla_ul.length == 0 && tla_ll.length == 0) {
-                    toastError("Please mark the last tooth you want the aligners to cover (Special Instructions).");
-                    return false;
-                }
+                // if (upper_teeth_to_cover > 0 && upper_teeth_to_cover < 4) {
+                //     toastError("Please select at least 4 upper teeth to cover.");
+                //     return false;
+                // }
+
+                // if (lower_teeth_to_cover > 0 && lower_teeth_to_cover < 4) {
+                //     toastError("Please select at least 4 lower teeth to cover.");
+                //     return false;
+                // }
+
+                // if (tla_ur.length == 0 && tla_lr.length == 0 && tla_ul.length == 0 && tla_ll.length == 0) {
+                //     toastError("Please mark the last tooth you want the aligners to cover (Special Instructions).");
+                //     return false;
+                // }
 
                 //Add Pontic
                 var add_pontic_ur = $("input[name=add_pontic_ur]:checked").map(function() {
