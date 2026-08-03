@@ -167,7 +167,7 @@ if (!function_exists('createMovixLinkUrl')) {
         $case = PatientTreatmentPlan::where('id', $p_treatment_plans_id)->first();
         $controller = new MovixtechController();
         $getViewerLink = $controller->getViewerLink($caseId);
-
+        // dd($getViewerLink);
         if($caseType == 'optional'){
             $updateData['optional_scan_movix_link'] = $getViewerLink['url'];
             $updateData['optional_scan_movix_link_expires_at'] = Carbon::parse($getViewerLink['expires_at']);

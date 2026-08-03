@@ -1,80 +1,77 @@
 {{-- scan Data Start --}}
 
 <div class="tab-pane fade {{ $baseUrl !== null && $code !== null ? 'show active' : '' }} " id="pill-tab-div2" role="tabpanel">
-    <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
-        <div class="bg-warning me-3 icon-item"><span
-                class="fas fa-exclamation-circle text-white fs-3"></span></div>
-        <p class="mb-0 flex-1">
-            @if ($patient->phase <= 1)
-                You must upload the scan data!
-            @elseif ($patient->phase > 1)
 
-                @if (in_array($patient->dm_order_status, [
-                    'OrderStatusChangedToWaitingForNewFilesStageFileIncorrect',
-                    'OrderStatusChangedToWaitingForNewFilesStageFileUnusable',
-                    'OrderStatusChangedToWaitingForNewFilesStageFileCorrupted'
-                ]))
-                    @switch($patient->dm_order_status)
-                        @case('OrderStatusChangedToWaitingForNewFilesStageFileIncorrect')
-                            The stage file you uploaded is incorrect. Please re-upload the correct stage file.
-                            @break
+    @if($patient->dm_order_status !== null)
+        <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
+            <div class="bg-warning me-3 icon-item">
+                <span class="fas fa-exclamation-circle text-white fs-3"></span>
+            </div>
+            <p class="mb-0 flex-1">
+                @if ($patient->phase <= 1)
+                    You must upload the scan data!
+                @elseif ($patient->phase > 1)
 
-                        @case('OrderStatusChangedToWaitingForNewFilesStageFileUnusable')
-                            The stage file you uploaded is unusable. Please re-upload a valid stage STL file.
-                            @break
+                    @if (in_array($patient->dm_order_status, [ 'OrderStatusChangedToWaitingForNewFilesStageFileIncorrect',  'OrderStatusChangedToWaitingForNewFilesStageFileUnusable',  'OrderStatusChangedToWaitingForNewFilesStageFileCorrupted' ]))
+                        @switch($patient->dm_order_status)
+                            @case('OrderStatusChangedToWaitingForNewFilesStageFileIncorrect')
+                                The stage file you uploaded is incorrect. Please re-upload the correct stage file.
+                                @break
 
-                        @case('OrderStatusChangedToWaitingForNewFilesStageFileCorrupted')
-                            The stage file you uploaded is corrupted. Please re-upload the stage file.
-                            @break
-                    @endswitch
+                            @case('OrderStatusChangedToWaitingForNewFilesStageFileUnusable')
+                                The stage file you uploaded is unusable. Please re-upload a valid stage STL file.
+                                @break
 
-                @elseif (in_array($patient->dm_order_status, [
-                    'OrderStatusChangedToWaitingForNewFilesIOSIncorrect',
-                    'OrderStatusChangedToWaitingForNewFilesIOSCorrupted',
-                    'OrderStatusChangedToWaitingForNewFilesIOSUnusable',
-                    'OrderStatusChangedToOrderRejectedAnatomicalChanges',
-                    'OrderStatusChangedToOrderRejectedAdditionalTeeth'
-                ]))
-                    {{-- IOS or Rejection Issues --}}
-                    @switch($patient->dm_order_status)
-                        @case('OrderStatusChangedToWaitingForNewFilesIOSIncorrect')
-                            The IOS file you uploaded is incorrect. Please re-upload the correct IOS file.
-                            @break
+                            @case('OrderStatusChangedToWaitingForNewFilesStageFileCorrupted')
+                                The stage file you uploaded is corrupted. Please re-upload the stage file.
+                                @break
+                        @endswitch
 
-                        @case('OrderStatusChangedToWaitingForNewFilesIOSUnusable')
-                            The IOS file you uploaded is unusable. Please re-upload a valid IOS STL file.
-                            @break
+                    @elseif (in_array($patient->dm_order_status, [
+                        'OrderStatusChangedToWaitingForNewFilesIOSIncorrect', 'OrderStatusChangedToWaitingForNewFilesIOSCorrupted', 'OrderStatusChangedToWaitingForNewFilesIOSUnusable',
+                        'OrderStatusChangedToOrderRejectedAnatomicalChanges', 'OrderStatusChangedToOrderRejectedAdditionalTeeth'
+                    ]))
+                        {{-- IOS or Rejection Issues --}}
+                        @switch($patient->dm_order_status)
+                            @case('OrderStatusChangedToWaitingForNewFilesIOSIncorrect')
+                                The IOS file you uploaded is incorrect. Please re-upload the correct IOS file.
+                                @break
 
-                        @case('OrderStatusChangedToWaitingForNewFilesIOSCorrupted')
-                            The IOS file you uploaded is corrupted. Please re-upload the IOS file.
-                            @break
+                            @case('OrderStatusChangedToWaitingForNewFilesIOSUnusable')
+                                The IOS file you uploaded is unusable. Please re-upload a valid IOS STL file.
+                                @break
 
-                        @case('OrderStatusChangedToOrderRejectedAnatomicalChanges')
-                            Your order was rejected due to anatomical changes. Please re-upload updated IOS and stage files.
-                            @break
+                            @case('OrderStatusChangedToWaitingForNewFilesIOSCorrupted')
+                                The IOS file you uploaded is corrupted. Please re-upload the IOS file.
+                                @break
 
-                        @case('OrderStatusChangedToOrderRejectedAdditionalTeeth')
-                            Your order was rejected due to additional teeth detected. Please re-upload updated IOS and stage files.
-                            @break
-                    @endswitch
+                            @case('OrderStatusChangedToOrderRejectedAnatomicalChanges')
+                                Your order was rejected due to anatomical changes. Please re-upload updated IOS and stage files.
+                                @break
 
-                @elseif (in_array($patient->dm_order_status, [
-                            'OrderStatusChangedToWaitingForNewFilesAlignerNumberIncorrect'
-                        ]))
-                            {{-- Aligner Number Issues --}}
-                        The stage file you uploaded has an incorrect aligner number. Please re-upload the correct stage file.
-                @elseif ($patient->dm_order_status == 'OrderStatusChangedToOrderCompleted')
-                        <strong>🎉 Congratulations!</strong> Your order has been successfully completed.
-                        Your treatment plan is now ready and you can proceed with the next steps.
-                @else
-                    {{-- Default Message --}}
-                    Your order is under processing in Dental Monitoring.
-                    If you want to update scan data manually, you need to cancel the order first.
+                            @case('OrderStatusChangedToOrderRejectedAdditionalTeeth')
+                                Your order was rejected due to additional teeth detected. Please re-upload updated IOS and stage files.
+                                @break
+                        @endswitch
+
+                    @elseif (in_array($patient->dm_order_status, [
+                                'OrderStatusChangedToWaitingForNewFilesAlignerNumberIncorrect'
+                            ]))
+                                {{-- Aligner Number Issues --}}
+                            The stage file you uploaded has an incorrect aligner number. Please re-upload the correct stage file.
+                    @elseif ($patient->dm_order_status == 'OrderStatusChangedToOrderCompleted')
+                            <strong>🎉 Congratulations!</strong> Your order has been successfully completed.
+                            Your treatment plan is now ready and you can proceed with the next steps.
+                    @else
+                        {{-- Default Message --}}
+                        Your order is under processing in Dental Monitoring.
+                        If you want to update scan data manually, you need to cancel the order first.
+                    @endif
                 @endif
-            @endif
-        </p>
-        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+            </p>
+            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <div class="row mb-3">
         <div class="row mb-3">
             <span class="fw-medium font-sans-serif text-900" >Original bite registration STL File:</span>

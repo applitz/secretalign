@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <!--[if !mso]><!-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
+
+    <!-- Your title goes here -->
+    <title>{{ $title }}</title>
+    <!-- End title -->
+
+    <!-- Start stylesheet -->
+    <style type="text/css">
+      a,a[href],a:hover, a:link, a:visited {
+        /* This is the link colour */
+        text-decoration: none!important;
+        color: #0000EE;
+      }
+      .link {
+        text-decoration: underline!important;
+      }
+      p, p:visited {
+        /* Fallback paragraph style */
+        font-size:15px;
+        line-height:24px;
+        font-family:'Helvetica', Arial, sans-serif;
+        font-weight:300;
+        text-decoration:none;
+        color: #000000;
+      }
+      h1 {
+        /* Fallback heading style */
+        font-size:22px;
+        line-height:24px;
+        font-family:'Helvetica', Arial, sans-serif;
+        font-weight:normal;
+        text-decoration:none;
+        color: #000000;
+      }
+      .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td {line-height: 100%;}
+      .ExternalClass {width: 100%;}
+    </style>
+    <!-- End stylesheet -->
+
+</head>
+
+  <!-- You can change background colour here -->
+  <body style="text-align: center; margin: 0; padding-top: 50px; padding-bottom: 50px; padding-left: 0; padding-right: 0; -webkit-text-size-adjust: 100%;background-color: #f2f4f6; color: #000000" align="center">
+
+  <!-- Fallback force center content -->
+  <div style="text-align: center;">
+    <!-- Start container for logo -->
+    <table align="center" style="text-align: center; vertical-align: top; width: 600px; max-width: 600px; background-color: #ffffff;" width="600">
+      <tbody>
+        <tr>
+          <td style="width: 596px; vertical-align: top; padding-left: 0; padding-right: 0; padding-top: 20px; padding-bottom: 10px;" width="596">
+
+            <!-- Your logo is here -->
+            <img style="width: 187px; max-width: 187px; height: 55px; max-height: 55px; text-align: center; color: #ffffff;" alt="Logo" src="{{ asset('public') }}/assets/secret-logo.png" align="center" width="180" height="85">
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- End container for logo -->
+
+    <!-- Start single column section -->
+    <table align="center" style="text-align: left; vertical-align: top; width: 600px; max-width: 600px; background-color: #ffffff;" width="600">
+        <tbody>
+          <tr>
+            <td style="width: 596px; vertical-align: top; padding-left: 30px; padding-right: 30px; padding-top: 30px; padding-bottom: 20px;" width="596">
+                <h1 style="font-size: 20px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 600; text-decoration: none; color: #000000;">Dear {{ $doctor_name }}</h1>
+
+                <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #919293;">
+                    We ran a quality check on your recent upload and detected defects in your scan data. If you proceed with the current scan, there is a high risk that your case will be rejected.
+                </p>
+
+                <h1 style="font-size: 20px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 600; text-decoration: none; color: #000000;">
+                   Patient Name: {{ $patient_name }}
+                </h1>
+
+                <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #919293;">
+                    Please review your submission to resolve these issues before finalizing your case.
+                </p>
+
+                <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #919293;">
+                    If you believe this is an error or need assistance, please contact our support team.
+                </p>
+
+                <p style="font-size: 15px; line-height: 24px; font-family: 'Helvetica', Arial, sans-serif; font-weight: 400; text-decoration: none; color: #919293 !important;">
+                    Best regards,<br>The [SECRET Aligners] Team
+                </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- End single column section -->
+  </div>
+
+  </body>
+
+</html>

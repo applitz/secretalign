@@ -54,7 +54,7 @@
                                         $primaryLinkExpiresAt = $patient->primary_movix_link_expires_at;
                                         $primaryLinkValid = false;
 
-                                        if ($primaryLinkValid) {
+                                        if (!empty($primaryLink)) {
                                             if (empty($primaryLinkExpiresAt)) {
                                                 $primaryLinkValid = true;
                                             } else {
@@ -65,7 +65,6 @@
                                                 }
                                             }
                                         }
-
                                         $iframeUrl = $primaryLink;
 
                                         if (!$primaryLinkValid) {

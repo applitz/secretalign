@@ -46,6 +46,9 @@ class SendMovixFailMailNotification extends Notification
             ->subject($this->details['subject'])
             ->markdown('emails.send-movix-fail-mail', [
                 'title' => $this->details['title'],
+                'doctor_name'     => $this->details['doctor_name'],
+                'patient_name' => $this->details['patient_name'],
+                'messages' => $this->details['messages'],
             ]);
             return $mail;
 

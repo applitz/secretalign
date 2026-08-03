@@ -10,6 +10,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CheckMail;
+use App\Notifications\SendMovixFailMailNotification;
+
 class SendMovixFailMailNotificationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -33,6 +35,6 @@ class SendMovixFailMailNotificationJob implements ShouldQueue
     {
         $email = $this->details['email'];
         Notification::route('mail', $email)
-                ->notify(new CheckMail($this->details));
+                ->notify(new SendMovixFailMailNotification($this->details));
     }
 }

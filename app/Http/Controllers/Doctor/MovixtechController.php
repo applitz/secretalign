@@ -653,18 +653,18 @@ class MovixtechController extends Controller
 
         if ($request->webhook_type === 'task_done') {
 
-            if($caseType == 'optional' && $case->primary_case_movix_status !== 0){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Already validation failed for optional scan'
-                ], 500);
-            }
-
-            if($caseType == 'primary' && $case->optional_scan_case_movix_status !== 0){
+            if($caseType == 'primary' && $case->primary_case_movix_status !== 0){
                 return response()->json([
                     'status' => false,
                     'message' => 'Already validation failed for primary scan'
-                ], 500);
+                ], 200);
+            }
+
+            if($caseType == 'optional' && $case->optional_scan_case_movix_status !== 0){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Already validation failed for optional scan'
+                ], 200);
             }
 
             $messages = [];
@@ -678,12 +678,38 @@ class MovixtechController extends Controller
                     }
                 }
             }
-            $this->sendMailNotification($case->id, $case->patient_id, $messages);
-            dd();
+            $this->sendMailNotification($case->id, $case->patient_id, $caseType, $messages);
+
         }
 
         if ($request->webhook_type === 'task_failed') {
-            dd("task_failed webhook received", $request->all());
+            if($caseType == 'primary' && $case->primary_case_movix_status !== 0){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Already validation failed for primary scan'
+                ], 200);
+            }
+
+            if($caseType == 'optional' && $case->optional_scan_case_movix_status !== 0){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Already validation failed for optional scan'
+                ], 200);
+            }
+
+            $messages = [];
+            $caseId = $request->case_id;
+            $taskId = $request->task_id;
+            $taskDetails = $this->getTaskDetails($caseId, $taskId);
+
+            if($taskDetails['result'] && $taskDetails['result']['validations']){
+                foreach($taskDetails['result']['validations'] as $validations => $validation){
+                    if($validation['valid'] === false){
+                        $messages[] = $validation['message'];
+                    }
+                }
+            }
+            $this->sendMailNotification($case->id, $case->patient_id, $caseType, $messages);
         }
 
 
@@ -772,7 +798,7 @@ class MovixtechController extends Controller
         ], 200);
     }
 
-    public function sendMailNotification($pTreatmentPlansId, $patientId, array $messages = [])
+    public function sendMailNotification($pTreatmentPlansId, $patientId, $caseType, array $messages = [])
     {
         $getDoctorDetails = PatientTreatmentPlan::from('p_treatment_plans as tp')
                             ->join('patients as p', 'p.id', '=', 'tp.patient_id')
@@ -782,8 +808,24 @@ class MovixtechController extends Controller
                             ->select('u.first_name', 'u.last_name', 'u.email', 'p.first_name as p_first_name', 'p.last_name as p_last_name')
                             ->first();
         if($getDoctorDetails){
+
+            $objPatientTreatmentPlan = PatientTreatmentPlan::find($pTreatmentPlansId);
+            if($caseType == 'primary'){
+                $objPatientTreatmentPlan->primary_case_movix_status = 1;
+                $objPatientTreatmentPlan->is_editable = 1;
+                $objPatientTreatmentPlan->save();
+
+            }
+            if($caseType == 'optional'){
+                $objPatientTreatmentPlan->optional_scan_case_movix_status = 1;
+                $objPatientTreatmentPlan->is_editable = 1;
+                $objPatientTreatmentPlan->save();
+            }
+
             $details = [
                 'email'   => $getDoctorDetails->email,
+                'doctor_name'   => $getDoctorDetails->first_name . ' ' . $getDoctorDetails->last_name,
+                'patient_name'   => $getDoctorDetails->p_first_name . ' ' . $getDoctorDetails->p_last_name,
                 'subject' => 'Action Required: Scan defects detected in your case ' .
                             $getDoctorDetails->p_first_name . ' ' .
                             $getDoctorDetails->p_last_name,
@@ -792,6 +834,7 @@ class MovixtechController extends Controller
                             $getDoctorDetails->p_last_name,
                 'messages' => $messages,
             ];
+
             SendMovixFailMailNotificationJob::dispatch($details);
         }
         return response()->json([
