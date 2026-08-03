@@ -19,6 +19,7 @@ use App\Models\MeditLink;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use App\Models\Audittrails;
+use App\Models\PatientTreatmentPlan;
 class RegisterPatient extends Controller
 {
     public $hashids;
@@ -1102,6 +1103,21 @@ class RegisterPatient extends Controller
         }
 
         return redirect()->back()->with('error', 'Enable to submit. Make sure you have completely filled all required sections.');
+    }
+
+    public function checkMovixScanStatus (Request $request){
+        $getmovixScanStatus = PatientTreatmentPlan::where('id', $request->treatment_plan_id)
+                                ->where('patient_id', $request->patient_id)
+                                ->select('primary_movix_link', 'optional_scan_movix_link')
+                                ->first();
+        if($getmovixScanStatus){
+            if($getmovixScanStatus->primary_movix_link == null || $getmovixScanStatus->optional_scan_movix_link == null){
+                return response()->json(['status' => 'error', 'message' => 'Please upload the Movix Scan link.']);
+            }
+            return response()->json(['status' => 'success', 'data' => $getmovixScanStatus]);
+        }
+
+        return response()->json(['status' => 'success', 'data' => $getmovixScanStatus]);
     }
 
     public function submitOld(Request $request)

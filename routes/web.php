@@ -172,6 +172,7 @@ Route::post('/patient/scan-data/save', [RegisterPatient::class, 'save_scan_data'
 Route::post('/patient/prescription/save', [RegisterPatient::class, 'save_prescription']);
 Route::post('/patient/submit', [RegisterPatient::class, 'submit']);
 Route::post('/patient/validate-data', [RegisterPatient::class, 'validatePatientData']);
+Route::post('/patient/check-movix-scan-status', [RegisterPatient::class, 'checkMovixScanStatus']);
 
 //patient files
 Route::post('/patient/file/upload/{patient_id}/{treatment_plan_id}', [PatientFileController::class, 'file_upload']);

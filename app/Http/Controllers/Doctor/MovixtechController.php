@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
-
+use App\Jobs\SendMovixFailMailNotificationJob;
 class MovixtechController extends Controller
 {
 
@@ -585,6 +585,18 @@ class MovixtechController extends Controller
         );
     }
 
+    /**
+     * Get Task details
+     */
+    public function getTaskDetails($caseId, $taskId)
+    {
+        return $this->movixRequest(
+            'GET',
+            'api/v1/services/cases/'.$caseId.'/tasks/'.$taskId.'/',
+            true // form-data
+        );
+    }
+
     public function movixWebhook(Request $request){
 
         $logPath = storage_path('logs/processMovix/webhook');
@@ -604,43 +616,79 @@ class MovixtechController extends Controller
             $filePath,
             json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL
         );
+        $caseId = $request->case_id;
+        if (empty($caseId)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Missing case_id'
+            ], 200);
+        }
+        // ✅ Find record
+        $case = PatientTreatmentPlan::
+                where('primary_case_id', $caseId)
+                ->orWhere('optional_scan_case_id', $caseId)
+                ->first();
+
+        if (!$case) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Case not found'
+            ], 404);
+        }
+
+        if($case->primary_case_id == $caseId){
+            $caseType = 'primary';
+        } elseif($case->optional_scan_case_id == $caseId){
+            $caseType = 'optional';
+        } else {
+            $caseType = null;
+        }
+
+        if (!$caseType) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid Case ID'
+            ], 404);
+        }
+
+        if ($request->webhook_type === 'task_done') {
+
+            if($caseType == 'optional' && $case->primary_case_movix_status !== 0){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Already validation failed for optional scan'
+                ], 500);
+            }
+
+            if($caseType == 'primary' && $case->optional_scan_case_movix_status !== 0){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Already validation failed for primary scan'
+                ], 500);
+            }
+
+            $messages = [];
+            $caseId = $request->case_id;
+            $taskId = $request->task_id;
+            $taskDetails = $this->getTaskDetails($caseId, $taskId);
+            if($taskDetails['result'] && $taskDetails['result']['validations']){
+                foreach($taskDetails['result']['validations'] as $validations => $validation){
+                    if($validation['valid'] === false){
+                        $messages[] = $validation['message'];
+                    }
+                }
+            }
+            $this->sendMailNotification($case->id, $case->patient_id, $messages);
+            dd();
+        }
+
+        if ($request->webhook_type === 'task_failed') {
+            dd("task_failed webhook received", $request->all());
+        }
+
 
         if ($request->webhook_type === 'case_done') {
-            $caseId = $request->case_id;
 
-            if (empty($caseId)) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Missing case_id'
-                ], 200);
-            }
-            // ✅ Find record
-            $case = PatientTreatmentPlan::
-                    where('primary_case_id', $caseId)
-                    ->orWhere('optional_scan_case_id', $caseId)
-                    ->first();
-
-            if (!$case) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Case not found'
-                ], 404);
-            }
-
-            if($case->primary_case_id == $caseId){
-                $caseType = 'primary';
-            } elseif($case->optional_scan_case_id == $caseId){
-                $caseType = 'optional';
-            } else {
-                $caseType = null;
-            }
-
-            if (!$caseType) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Invalid Case ID'
-                ], 404);
-            }
 
             // ✅ Call summary API
             $summaryResponse = $this->getCaseSummary($caseId);
@@ -721,6 +769,34 @@ class MovixtechController extends Controller
         return response()->json([
             'status' => false,
             'message' => 'Invalid webhook type'
+        ], 200);
+    }
+
+    public function sendMailNotification($pTreatmentPlansId, $patientId, array $messages = [])
+    {
+        $getDoctorDetails = PatientTreatmentPlan::from('p_treatment_plans as tp')
+                            ->join('patients as p', 'p.id', '=', 'tp.patient_id')
+                            ->join('users as u', 'u.id', '=', 'p.user_id')
+                            ->where('tp.id', $pTreatmentPlansId)
+                            ->where('tp.patient_id', $patientId)
+                            ->select('u.first_name', 'u.last_name', 'u.email', 'p.first_name as p_first_name', 'p.last_name as p_last_name')
+                            ->first();
+        if($getDoctorDetails){
+            $details = [
+                'email'   => $getDoctorDetails->email,
+                'subject' => 'Action Required: Scan defects detected in your case ' .
+                            $getDoctorDetails->p_first_name . ' ' .
+                            $getDoctorDetails->p_last_name,
+                'title'   => 'Action Required: Scan defects detected in your case ' .
+                            $getDoctorDetails->p_first_name . ' ' .
+                            $getDoctorDetails->p_last_name,
+                'messages' => $messages,
+            ];
+            SendMovixFailMailNotificationJob::dispatch($details);
+        }
+        return response()->json([
+            'status' => true,
+            'message' => 'Mail notification sent successfully'
         ], 200);
     }
 }
