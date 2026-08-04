@@ -812,13 +812,13 @@ class MovixtechController extends Controller
             $objPatientTreatmentPlan = PatientTreatmentPlan::find($pTreatmentPlansId);
             if($caseType == 'primary'){
                 $objPatientTreatmentPlan->primary_case_movix_status = 1;
-                $objPatientTreatmentPlan->is_editable = 1;
+                // $objPatientTreatmentPlan->is_editable = 1;
                 $objPatientTreatmentPlan->save();
 
             }
             if($caseType == 'optional'){
                 $objPatientTreatmentPlan->optional_scan_case_movix_status = 1;
-                $objPatientTreatmentPlan->is_editable = 1;
+                // $objPatientTreatmentPlan->is_editable = 1;
                 $objPatientTreatmentPlan->save();
             }
 
