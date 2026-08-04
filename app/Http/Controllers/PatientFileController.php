@@ -523,6 +523,481 @@ class PatientFileController extends Controller
         ]);
     }
 
+    public function file_upload_new(Request $request, $patient_id, $treatment_plan_id)
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | Handle Chunk Upload
+        |--------------------------------------------------------------------------
+        */
+        if ($request->hasFile('chunk')) {
+            return $this->handleChunkUpload(
+                $request,
+                $patient_id,
+                $treatment_plan_id
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Existing Normal Upload
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            DB::table('p_treatment_plans')
+                ->where('patient_id', $patient_id)
+                ->where('id', $treatment_plan_id)
+                ->exists()
+        ) {
+
+            $key  = (int) $request->get('key');
+            $file = $request->file('file' . $key);
+
+            if (!$file) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'File not found'
+                ], 400);
+            }
+
+            $attachment = $file->getClientOriginalName();
+            $filename   = str_replace(' ', '-', $attachment);
+
+            $directory = $this->mkDr($patient_id);
+
+            $file_parts = pathinfo($filename);
+            $extension = strtolower($file_parts['extension'] ?? '');
+
+            // Check image or not
+            $isImage = str_starts_with(
+                $file->getMimeType(),
+                'image/'
+            );
+
+            // Final extension
+            $finalExtension =
+                ($isImage && $key != 4 && $key != 12)
+                    ? 'webp'
+                    : $extension;
+
+            $fName = rand(1000, 9999) . time();
+
+            $filename = $fName . '.' . $finalExtension;
+
+            /*
+            |--------------------------------------------------------------------------
+            | Duplicate filename check
+            |--------------------------------------------------------------------------
+            */
+
+            if (File::exists($directory . '/' . $filename)) {
+
+                $count = 2;
+
+                while (
+                    File::exists(
+                        $directory . '/' .
+                        $fName .
+                        '(' . $count . ').' .
+                        $finalExtension
+                    )
+                ) {
+                    $count++;
+                }
+
+                $filename =
+                    $fName .
+                    '(' . $count . ').' .
+                    $finalExtension;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Upload
+            |--------------------------------------------------------------------------
+            */
+
+            if ($isImage && $key != 4 && $key != 12) {
+
+                uploadWebpImage(
+                    $file,
+                    $directory,
+                    $filename
+                );
+
+            } else {
+
+                $file->move(
+                    $directory,
+                    $filename
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Update DB
+            |--------------------------------------------------------------------------
+            */
+
+            $column = $this->getFileColumn($key);
+
+            if ($column) {
+
+                DB::table('p_treatment_plans')
+                    ->where('id', $treatment_plan_id)
+                    ->update([
+                        $column => $filename,
+                    ]);
+            }
+
+            return response()->json([
+                'status'   => 'success',
+                'fileName' => $filename,
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Treatment plan not found'
+        ], 404);
+    }
+
+    private function handleChunkUpload(
+        Request $request,
+        $patient_id,
+        $treatment_plan_id
+    ) {
+        /*
+        |--------------------------------------------------------------------------
+        | Validate treatment plan
+        |--------------------------------------------------------------------------
+        */
+
+        $exists = DB::table('p_treatment_plans')
+            ->where('patient_id', $patient_id)
+            ->where('id', $treatment_plan_id)
+            ->exists();
+
+        if (!$exists) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Treatment plan not found'
+            ], 404);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Request data
+        |--------------------------------------------------------------------------
+        */
+
+        $key = (int) $request->get('key');
+
+        $chunkIndex = (int) $request->input('chunk_index');
+
+        $totalChunks = (int) $request->input('total_chunks');
+
+        $uploadId = preg_replace(
+            '/[^a-zA-Z0-9_-]/',
+            '',
+            (string) $request->input('upload_id')
+        );
+
+        $originalName = basename(
+            (string) $request->input('original_name')
+        );
+
+        $chunk = $request->file('chunk');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Basic validation
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$chunk) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Chunk not found'
+            ], 400);
+        }
+
+        if (
+            empty($uploadId) ||
+            empty($originalName) ||
+            $totalChunks <= 0 ||
+            $chunkIndex < 0 ||
+            $chunkIndex >= $totalChunks
+        ) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid chunk data'
+            ], 400);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Temp Directory
+        |--------------------------------------------------------------------------
+        */
+
+        $tempDirectory = storage_path(
+            'app/chunks/' . $uploadId
+        );
+
+        if (!File::exists($tempDirectory)) {
+
+            File::makeDirectory(
+                $tempDirectory,
+                0755,
+                true
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Save current chunk
+        |--------------------------------------------------------------------------
+        */
+
+        $chunkName = 'chunk_' . $chunkIndex;
+
+        $chunk->move(
+            $tempDirectory,
+            $chunkName
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Check all chunks
+        |--------------------------------------------------------------------------
+        */
+
+        $allChunksUploaded = true;
+
+        for ($i = 0; $i < $totalChunks; $i++) {
+
+            if (
+                !File::exists(
+                    $tempDirectory . '/chunk_' . $i
+                )
+            ) {
+
+                $allChunksUploaded = false;
+                break;
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Still waiting for chunks
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$allChunksUploaded) {
+
+            return response()->json([
+                'status' => 'success',
+                'completed' => false,
+                'chunkIndex' => $chunkIndex,
+                'uploadedChunks' => $chunkIndex + 1,
+                'totalChunks' => $totalChunks
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Determine extension
+        |--------------------------------------------------------------------------
+        */
+
+        $extension = strtolower(
+            pathinfo(
+                $originalName,
+                PATHINFO_EXTENSION
+            )
+        );
+
+        if (empty($extension)) {
+
+            File::deleteDirectory($tempDirectory);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid file extension'
+            ], 400);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Final Directory
+        |--------------------------------------------------------------------------
+        */
+
+        $directory = $this->mkDr($patient_id);
+
+        $fName = rand(1000, 9999) . time();
+
+        $filename = $fName . '.' . $extension;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Duplicate filename check
+        |--------------------------------------------------------------------------
+        */
+
+        if (File::exists($directory . '/' . $filename)) {
+
+            $count = 2;
+
+            while (
+                File::exists(
+                    $directory . '/' .
+                    $fName .
+                    '(' . $count . ').' .
+                    $extension
+                )
+            ) {
+                $count++;
+            }
+
+            $filename =
+                $fName .
+                '(' . $count . ').' .
+                $extension;
+        }
+
+        $finalPath = $directory . '/' . $filename;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Merge Chunks
+        |--------------------------------------------------------------------------
+        */
+
+        $output = fopen($finalPath, 'wb');
+
+        if (!$output) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unable to create final file'
+            ], 500);
+        }
+
+        try {
+
+            for ($i = 0; $i < $totalChunks; $i++) {
+
+                $chunkPath =
+                    $tempDirectory . '/chunk_' . $i;
+
+                $input = fopen(
+                    $chunkPath,
+                    'rb'
+                );
+
+                if (!$input) {
+
+                    throw new \Exception(
+                        'Unable to read chunk ' . $i
+                    );
+                }
+
+                stream_copy_to_stream(
+                    $input,
+                    $output
+                );
+
+                fclose($input);
+            }
+
+        } catch (\Throwable $e) {
+
+            fclose($output);
+
+            if (File::exists($finalPath)) {
+                File::delete($finalPath);
+            }
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unable to merge chunks'
+            ], 500);
+        }
+
+        fclose($output);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Delete Temp Chunks
+        |--------------------------------------------------------------------------
+        */
+
+        File::deleteDirectory(
+            $tempDirectory
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update Treatment Plan
+        |--------------------------------------------------------------------------
+        */
+
+        $column = $this->getFileColumn($key);
+
+        if ($column) {
+
+            DB::table('p_treatment_plans')
+                ->where('patient_id', $patient_id)
+                ->where('id', $treatment_plan_id)
+                ->update([
+                    $column => $filename
+                ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Final Response
+        |--------------------------------------------------------------------------
+        */
+
+        return response()->json([
+            'status' => 'success',
+            'completed' => true,
+            'fileName' => $filename
+        ]);
+    }
+    private function getFileColumn($key)
+    {
+        $columns = [
+            1  => 'fl_upper_arch',
+            2  => 'fl_lower_arch',
+            3  => 'fl_front',
+            4  => 'fl_smile',
+            5  => 'fl_profile',
+            6  => 'fl_frontal',
+            7  => 'fl_right_buccal',
+            8  => 'fl_left_buccal',
+            9  => 'fl_upper_occlusal',
+            10 => 'fl_lower_occlusal',
+            11 => 'fl_panorex',
+            12 => 'fl_lateral_ceph',
+            13 => 'fl_general_upload',
+            14 => 'fl_posterior_bite_turbos',
+            15 => 'fl_anterior_bite_turbos',
+            16 => 'fl_bite_keeper',
+            17 => 'fl_notes',
+            18 => 'optional_fl_upper_arch',
+            19 => 'optional_fl_lower_arch',
+        ];
+
+        return $columns[(int) $key] ?? null;
+    }
     public function file_upload_1(Request $request, $patient_id, $treatment_plan_id)
     {
         if (DB::table('p_treatment_plans')->where('patient_id', $patient_id)->where('id', $treatment_plan_id)->exists()) {

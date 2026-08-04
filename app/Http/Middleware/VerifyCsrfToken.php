@@ -16,6 +16,7 @@ class VerifyCsrfToken extends Middleware
         'patient/documentation/upload/*',
         'patient/documentation/revert/*',
         'patient/file/upload/*',
+        'patient/file/uploadnew/*',
         'patient/file/revert/*',
         'demo/patient/file/upload/*',
         'demo/patient/file/revert/*',

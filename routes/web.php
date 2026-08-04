@@ -175,6 +175,7 @@ Route::post('/patient/validate-data', [RegisterPatient::class, 'validatePatientD
 Route::post('/patient/check-movix-scan-status', [RegisterPatient::class, 'checkMovixScanStatus']);
 
 //patient files
+Route::post('/patient/file/uploadnew/{patient_id}/{treatment_plan_id}', [PatientFileController::class, 'file_upload_new']);
 Route::post('/patient/file/upload/{patient_id}/{treatment_plan_id}', [PatientFileController::class, 'file_upload']);
 Route::post('/patient/file/revert/{patient_id}/{treatment_plan_id}', [PatientFileController::class, 'file_revert']);
 Route::get('/patient/file/load/{patient_id}', [PatientFileController::class, 'file_load']);

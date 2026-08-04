@@ -2650,62 +2650,187 @@
 
         window.dropzone_destroy_state = dropzone_destroy_state
 
-        let dropzone_upload = (key, file) => {
-            let formData = new FormData();
-            formData.append('file'+key, file)
-            $.ajax({
-                url: '{{url('/patient/file/upload/'.$patient->patient_id.'/'.$patient->id)}}?key='+key,
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    dropzone_uploading_state(key)
-                },
-                success: function(response){
-                    if(response.status == 'success') {
-                        dropzone_active_state(key, response.fileName)
-                        $('._dropzone_template #key'+key).attr('file', response.fileName)
-                        const UPLOADEDFILE = response.fileName
+        // let dropzone_upload = (key, file) => {
+        //     let formData = new FormData();
+        //     formData.append('file'+key, file)
+        //     $.ajax({
+        //         url: '{{url('/patient/file/upload/'.$patient->patient_id.'/'.$patient->id)}}?key='+key,
+        //         type: 'POST',
+        //         data: formData,
+        //         contentType: false,
+        //         processData: false,
+        //         beforeSend: function () {
+        //             dropzone_uploading_state(key)
+        //         },
+        //         success: function(response){
+        //             if(response.status == 'success') {
+        //                 dropzone_active_state(key, response.fileName)
+        //                 $('._dropzone_template #key'+key).attr('file', response.fileName)
+        //                 const UPLOADEDFILE = response.fileName
 
-                        if(key == 1) {
-                            if(UPLOADEDFILE.split(".")[1] == 'stl') {
-                                window.previewUpperStlFile(response.fileName)
-                            } else {
-                                window.previewUpperPlyFile(response.fileName)
-                            }
-                        }
-                        if(key == 2) {
-                            if(UPLOADEDFILE.split(".")[1] == 'stl') {
-                                window.previewLowerStlFile(response.fileName)
-                            } else {
-                                window.previewLowerPlyFile(response.fileName)
-                            }
-                        }
+        //                 if(key == 1) {
+        //                     if(UPLOADEDFILE.split(".")[1] == 'stl') {
+        //                         window.previewUpperStlFile(response.fileName)
+        //                     } else {
+        //                         window.previewUpperPlyFile(response.fileName)
+        //                     }
+        //                 }
+        //                 if(key == 2) {
+        //                     if(UPLOADEDFILE.split(".")[1] == 'stl') {
+        //                         window.previewLowerStlFile(response.fileName)
+        //                     } else {
+        //                         window.previewLowerPlyFile(response.fileName)
+        //                     }
+        //                 }
 
-                        if(key == 18) {
-                            if(UPLOADEDFILE.split(".")[1] == 'stl') {
-                                window.previewOptionalUpperStlFile(response.fileName)
-                            } else {
-                                window.previewOptionalUpperPlyFile(response.fileName)
-                            }
-                        }
-                        if(key == 19) {
-                            if(UPLOADEDFILE.split(".")[1] == 'stl') {
-                                window.previewOptionalLowerStlFile(response.fileName)
-                            } else {
-                                window.previewOptionalLowerPlyFile(response.fileName)
-                            }
-                        }
-                    } else {
-                        dropzone_reset_state(key, "Unable to upload file")
-                    }
-                },
-                error: function(xhr, status, error){
-                    dropzone_reset_state(key, "Unable to upload file")
+        //                 if(key == 18) {
+        //                     if(UPLOADEDFILE.split(".")[1] == 'stl') {
+        //                         window.previewOptionalUpperStlFile(response.fileName)
+        //                     } else {
+        //                         window.previewOptionalUpperPlyFile(response.fileName)
+        //                     }
+        //                 }
+        //                 if(key == 19) {
+        //                     if(UPLOADEDFILE.split(".")[1] == 'stl') {
+        //                         window.previewOptionalLowerStlFile(response.fileName)
+        //                     } else {
+        //                         window.previewOptionalLowerPlyFile(response.fileName)
+        //                     }
+        //                 }
+        //             } else {
+        //                 dropzone_reset_state(key, "Unable to upload file")
+        //             }
+        //         },
+        //         error: function(xhr, status, error){
+        //             dropzone_reset_state(key, "Unable to upload file")
+        //         }
+        //     })
+        // }
+
+        let dropzone_upload = async (key, file) => {
+
+            const CHUNK_SIZE = 10 * 1024 * 1024; // 10 MB
+            const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+
+            // Unique ID for this upload
+            const uploadId =
+                Date.now() + '_' +
+                Math.random().toString(36).substring(2, 10);
+
+            dropzone_uploading_state(key);
+
+            try {
+
+                let finalResponse = null;
+
+                for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+
+                    const start = chunkIndex * CHUNK_SIZE;
+                    const end = Math.min(start + CHUNK_SIZE, file.size);
+
+                    const chunk = file.slice(start, end);
+
+                    let formData = new FormData();
+
+                    formData.append('chunk', chunk);
+                    formData.append('chunk_index', chunkIndex);
+                    formData.append('total_chunks', totalChunks);
+                    formData.append('upload_id', uploadId);
+                    formData.append('original_name', file.name);
+                    formData.append('file_size', file.size);
+
+                    finalResponse = await $.ajax({
+                        url: '{{ url('/patient/file/uploadnew/'.$patient->patient_id.'/'.$patient->id) }}?key=' + key,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false
+                    });
+
+                    /*
+                    * Upload progress
+                    */
+                    const progress = Math.round(
+                        ((chunkIndex + 1) / totalChunks) * 100
+                    );
+
+                    console.log(
+                        `Uploading chunk ${chunkIndex + 1}/${totalChunks} - ${progress}%`
+                    );
                 }
-            })
-        }
+
+                /*
+                * All chunks uploaded and merged
+                */
+                if (
+                    finalResponse &&
+                    finalResponse.status === 'success' &&
+                    finalResponse.completed === true
+                ) {
+
+                    const fileName = finalResponse.fileName;
+
+                    dropzone_active_state(key, fileName);
+
+                    $('._dropzone_template #key' + key)
+                        .attr('file', fileName);
+
+                    /*
+                    * Preview STL / PLY
+                    */
+                    const extension = fileName
+                        .split('.')
+                        .pop()
+                        .toLowerCase();
+
+                    if (key == 1) {
+
+                        if (extension === 'stl') {
+                            window.previewUpperStlFile(fileName);
+                        } else {
+                            window.previewUpperPlyFile(fileName);
+                        }
+
+                    } else if (key == 2) {
+
+                        if (extension === 'stl') {
+                            window.previewLowerStlFile(fileName);
+                        } else {
+                            window.previewLowerPlyFile(fileName);
+                        }
+
+                    } else if (key == 18) {
+
+                        if (extension === 'stl') {
+                            window.previewOptionalUpperStlFile(fileName);
+                        } else {
+                            window.previewOptionalUpperPlyFile(fileName);
+                        }
+
+                    } else if (key == 19) {
+
+                        if (extension === 'stl') {
+                            window.previewOptionalLowerStlFile(fileName);
+                        } else {
+                            window.previewOptionalLowerPlyFile(fileName);
+                        }
+                    }
+
+                } else {
+
+                    throw new Error('Unable to complete upload');
+                }
+
+            } catch (error) {
+
+                console.error('Chunk upload failed:', error);
+
+                dropzone_reset_state(
+                    key,
+                    "Unable to upload file"
+                );
+            }
+        };
 
         window.dropzone_upload = dropzone_upload
         let openImageEditor = (file, callback) => {
