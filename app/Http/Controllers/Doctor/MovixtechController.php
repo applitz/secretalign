@@ -276,6 +276,7 @@ class MovixtechController extends Controller
             $objPatientTreatmentPlan->primary_note = 'Primary Scan';
             $objPatientTreatmentPlan->primary_movixtech_status = 'Processing';
             $objPatientTreatmentPlan->primary_movix_note = null;
+            $objPatientTreatmentPlan->primary_case_movix_status = 0;
         }
 
         // ✅ Optional scan data
@@ -324,6 +325,7 @@ class MovixtechController extends Controller
             $objPatientTreatmentPlan->optional_scan_note = 'Optional Scan';
             $objPatientTreatmentPlan->optional_scan_movix_note = null;
             $objPatientTreatmentPlan->optional_movixtech_status = 'Processing';
+            $objPatientTreatmentPlan->optional_scan_case_movix_status = 0;
         }
         $objPatientTreatmentPlan->save();
         return response()->json([

@@ -21,6 +21,7 @@ use App\Http\Controllers\PatientOverview;
 use App\Http\Controllers\PatientDemo;
 use App\Http\Controllers\PhasePeriodController;
 use App\Http\Controllers\RegisterPatient;
+
 use App\Http\Controllers\MeditLinkController;
 use App\Http\Controllers\StripeCheckout;
 use App\Http\Controllers\TaskController;

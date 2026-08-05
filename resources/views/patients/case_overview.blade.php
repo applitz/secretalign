@@ -1034,10 +1034,81 @@
                     toastError("Enable to send case advior!");
                 });
             });
-
             $("#request-treatment").on('click', function() {
-
                 var $this = $(".btn-action");
+                var patient_id= "{{ $patient->patient_id }}";
+                var treatment_plan_id= "{{ $patient->id }}";
+
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('input[name="_token"]').val(),
+                    },
+                    url: "{{ url('/staff/patient/check-movix-scan-status-staff') }}",
+                    data: {
+                        "_token" : "{{ csrf_token() }}",
+                        "treatment_plan_id" : treatment_plan_id,
+                        "patient_id" : patient_id,
+                    },
+                    beforeSend: function () {
+                        $(".my-loader").show();
+                    },
+                    success: function(data) {
+                        if (data.status === 'success') {
+
+                            var lab = $("#lab").val();
+                            // console.log(lab);
+                            //    var comment = $("#comment").val();
+                            var comment = window.commentEditor.getData();
+                            if (lab == '' || lab == null || lab == undefined) {
+                                toastError("Select Lab to Send!");
+                                return false;
+                            }
+                            var formData = new FormData();
+                            $($this).prop("disabled", true);
+                            formData.append('treatment_plan_id', '{{ $patient->id }}')
+                            formData.append('comment', comment)
+                            formData.append('lab', lab)
+                            formData.append('_token', '{{ csrf_token() }}')
+                            var fileInput = document.getElementById('attachments');
+
+                            // Loop through each file selected and append them to FormData
+                            for (var i = 0; i < fileInput.files.length; i++) {
+                                formData.append('attachments[]', fileInput.files[i]);
+                            }
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ route('request-treatment') }}",
+                                data: formData,
+                                cache: false,
+                                processData: false,
+                                contentType: false,
+                            }).done(function(response) {
+                                $("#comment").val('');
+                                $("#lab").val('');
+                                $("#panel").remove();
+                                $("#block-edit").attr('data', '0');
+                                $("#block-edit").html(`<span class="fas fas fa-edit me-2"></span>Allow Edit`);
+                                toastSuccess("Case sent to Lab!");
+                            }).fail(function(response) {
+                                $($this).prop("disabled", false);
+                                console.log(response)
+                                toastError("Enable to send case to Lab!");
+                            });
+
+                        } else {
+                            $(".my-loader").hide();
+                            $("#movix-scan-status-staff-modal").modal('show');
+                        }
+                    }
+                });
+            });
+
+
+            $(document).on('click', '#yes-send-to-lab-case', function() {
+                var $this = $(".btn-action");
+                var patient_id= "{{ $patient->patient_id }}";
+                var treatment_plan_id= "{{ $patient->id }}";
                 var lab = $("#lab").val();
                 // console.log(lab);
                 //    var comment = $("#comment").val();
@@ -1058,6 +1129,7 @@
                 for (var i = 0; i < fileInput.files.length; i++) {
                     formData.append('attachments[]', fileInput.files[i]);
                 }
+
                 $.ajax({
                     type: "POST",
                     url: "{{ route('request-treatment') }}",
@@ -1071,6 +1143,7 @@
                     $("#panel").remove();
                     $("#block-edit").attr('data', '0');
                     $("#block-edit").html(`<span class="fas fas fa-edit me-2"></span>Allow Edit`);
+                     $("#movix-scan-status-staff-modal").modal('hide');
                     toastSuccess("Case sent to Lab!");
                 }).fail(function(response) {
                     $($this).prop("disabled", false);

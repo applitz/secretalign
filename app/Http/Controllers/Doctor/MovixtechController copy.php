@@ -152,7 +152,7 @@ class MovixtechController extends Controller
 
 
     public function processMovix(Request $request)
-    {dd($request->all());
+    {
         $patientDetails = Patients::with([
             'treatmentPlans' => function ($query) use ($request) {
                 $query->where('patient_id', $request->patient_id)

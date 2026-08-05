@@ -2385,109 +2385,9 @@
 
 
             // Final submit button logic
-            // $(document).on("click", "#yes-submit-case", function () {
-            //     // Check if terms and conditions are accepted
-            //     if ($("input[name=terms_and_conditions]").is(":checked")) {
-            //         var advisor = $("#advisor").val();
-            //         var comment = $("#comment").val();// Get advisor selection
-            //         const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
-            //         const setup_type = $('input[name="setup_type"]:checked').val();
-            //         if (comment === undefined || comment === null) {
-            //             comment = "";
-            //         }
-            //         if (advisor === undefined || advisor === null) {
-            //             advisor = "";
-            //         }
-            //         // Validate consultant agreement checkbox if advisor is selected
-            //         if (advisor && !consultantAgreementChecked) {
-            //             toastError("You must agree to the additional consultation terms.");
-            //             return;
-            //         }
-
-            //         if (!setup_type) {
-            //             toastError("You must select your preferred package.");
-            //             return;
-            //         }
-
-            //         // Submit the form
-            //         $("#final-submit-form").append(`<input type="hidden" name="advisor" value="${advisor}" />`);
-            //         $("#final-submit-form").append(`<input type="hidden" name="comment" value="${comment}" />`);
-
-            //         // Submit the form
-            //         $("#final-submit-form").submit();
-            //     } else {
-            //         toastError("You must accept the Packages and Terms & Conditions agreement.");
-            //     }
-            // });
-
-            // // Final submit button logic
-            // $(document).on("click", "#final-confirm-and-submit-btn", function () {
-            //     // Check if terms and conditions are accepted
-            //     if ($("input[name=terms_and_conditions]").is(":checked")) {
-
-            //         var patient_id= "{{ $patient->patient_id }}";
-            //         var treatment_plan_id= "{{ $patient->id }}";
-
-            //         $.ajax({
-            //             type: "POST",
-            //             headers: {
-            //                 'X-CSRF-TOKEN': $('input[name="_token"]').val(),
-            //             },
-            //             url: "{{ url('/patient/check-movix-scan-status') }}",
-            //             data: {
-            //                 "_token" : "{{ csrf_token() }}",
-            //                 "treatment_plan_id" : treatment_plan_id,
-            //                 "patient_id" : patient_id,
-            //             },
-            //             beforeSend: function () {
-            //                 $(".my-loader").show();
-            //             },
-            //             success: function(data) {
-            //                 // var response = JSON.parse(data);
-            //                 if(data.status == 'error'){
-            //                      $(".my-loader").hide();
-            //                      $("#movix-scan-status-modal").modal('show');
-            //                 } else {
-            //                     var advisor = $("#advisor").val();
-            //                     var comment = $("#comment").val();// Get advisor selection
-            //                     const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
-            //                     const setup_type = $('input[name="setup_type"]:checked').val();
-            //                     if (comment === undefined || comment === null) {
-            //                         comment = "";
-            //                     }
-            //                     if (advisor === undefined || advisor === null) {
-            //                         advisor = "";
-            //                     }
-            //                     // Validate consultant agreement checkbox if advisor is selected
-            //                     if (advisor && !consultantAgreementChecked) {
-            //                         toastError("You must agree to the additional consultation terms.");
-            //                         return;
-            //                     }
-
-            //                     if (!setup_type) {
-            //                         toastError("You must select your preferred package.");
-            //                         return;
-            //                     }
-
-            //                     // Submit the form
-            //                     $("#final-submit-form").append(`<input type="hidden" name="advisor" value="${advisor}" />`);
-            //                     $("#final-submit-form").append(`<input type="hidden" name="comment" value="${comment}" />`);
-
-            //                     // Submit the form
-            //                     $("#final-submit-form").submit();
-            //                 }
-            //             }
-            //         });
-            //     } else {
-            //         toastError("You must accept the Packages and Terms & Conditions agreement.");
-            //     }
-            // });
-
-            // Final submit button logic
-            $(document).on("click", "#final-confirm-and-submit-btn", function () {
+            $(document).on("click", "#yes-submit-case", function () {
                 // Check if terms and conditions are accepted
                 if ($("input[name=terms_and_conditions]").is(":checked")) {
-
                     var advisor = $("#advisor").val();
                     var comment = $("#comment").val();// Get advisor selection
                     const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
@@ -2519,6 +2419,106 @@
                     toastError("You must accept the Packages and Terms & Conditions agreement.");
                 }
             });
+
+            // Final submit button logic
+            $(document).on("click", "#final-confirm-and-submit-btn", function () {
+                // Check if terms and conditions are accepted
+                if ($("input[name=terms_and_conditions]").is(":checked")) {
+
+                    var patient_id= "{{ $patient->patient_id }}";
+                    var treatment_plan_id= "{{ $patient->id }}";
+
+                    $.ajax({
+                        type: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': $('input[name="_token"]').val(),
+                        },
+                        url: "{{ url('/patient/check-movix-scan-status') }}",
+                        data: {
+                            "_token" : "{{ csrf_token() }}",
+                            "treatment_plan_id" : treatment_plan_id,
+                            "patient_id" : patient_id,
+                        },
+                        beforeSend: function () {
+                            $(".my-loader").show();
+                        },
+                        success: function(data) {
+                            // var response = JSON.parse(data);
+                            if(data.status == 'error'){
+                                 $(".my-loader").hide();
+                                 $("#movix-scan-status-modal").modal('show');
+                            } else {
+                                var advisor = $("#advisor").val();
+                                var comment = $("#comment").val();// Get advisor selection
+                                const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
+                                const setup_type = $('input[name="setup_type"]:checked').val();
+                                if (comment === undefined || comment === null) {
+                                    comment = "";
+                                }
+                                if (advisor === undefined || advisor === null) {
+                                    advisor = "";
+                                }
+                                // Validate consultant agreement checkbox if advisor is selected
+                                if (advisor && !consultantAgreementChecked) {
+                                    toastError("You must agree to the additional consultation terms.");
+                                    return;
+                                }
+
+                                if (!setup_type) {
+                                    toastError("You must select your preferred package.");
+                                    return;
+                                }
+
+                                // Submit the form
+                                $("#final-submit-form").append(`<input type="hidden" name="advisor" value="${advisor}" />`);
+                                $("#final-submit-form").append(`<input type="hidden" name="comment" value="${comment}" />`);
+
+                                // Submit the form
+                                $("#final-submit-form").submit();
+                            }
+                        }
+                    });
+                } else {
+                    toastError("You must accept the Packages and Terms & Conditions agreement.");
+                }
+            });
+
+            // Final submit button logic
+            // $(document).on("click", "#final-confirm-and-submit-btn", function () {
+            //     // Check if terms and conditions are accepted
+            //     if ($("input[name=terms_and_conditions]").is(":checked")) {
+
+            //         var advisor = $("#advisor").val();
+            //         var comment = $("#comment").val();// Get advisor selection
+            //         const consultantAgreementChecked = $("#consultant_agreement").is(":checked");
+            //         const setup_type = $('input[name="setup_type"]:checked').val();
+            //         if (comment === undefined || comment === null) {
+            //             comment = "";
+            //         }
+            //         if (advisor === undefined || advisor === null) {
+            //             advisor = "";
+            //         }
+            //         // Validate consultant agreement checkbox if advisor is selected
+            //         if (advisor && !consultantAgreementChecked) {
+            //             toastError("You must agree to the additional consultation terms.");
+            //             return;
+            //         }
+
+            //         if (!setup_type) {
+            //             toastError("You must select your preferred package.");
+            //             return;
+            //         }
+
+            //         // Submit the form
+            //         $("#final-submit-form").append(`<input type="hidden" name="advisor" value="${advisor}" />`);
+            //         $("#final-submit-form").append(`<input type="hidden" name="comment" value="${comment}" />`);
+
+            //         // Submit the form
+            //         $("#final-submit-form").submit();
+            //     } else {
+            //         toastError("You must accept the Packages and Terms & Conditions agreement.");
+            //     }
+            // });
         });
     });
 </script>

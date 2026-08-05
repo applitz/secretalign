@@ -822,3 +822,25 @@
         </div>
     </div>
 </div>
+
+{{-- movix-scan-status-staff-modal --}}
+<div class="modal fade" id="movix-scan-status-staff-modal" tabindex="-1" aria-labelledby="movix-scan-status-staff-modal-Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="movix-scan-status-staff-modal-Label">Scan Defects Detected</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <p>Defects have been detected in your scan, which may result in your case being rejected. Are you sure you want to send to lab?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="yes-send-to-lab-case">Yes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
