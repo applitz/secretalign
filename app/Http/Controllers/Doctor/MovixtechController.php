@@ -680,8 +680,9 @@ class MovixtechController extends Controller
                     }
                 }
             }
-            $this->sendMailNotification($case->id, $case->patient_id, $caseType, $messages);
-
+            if(!empty($messages)){
+                $this->sendMailNotification($case->id, $case->patient_id, $caseType, $messages);
+            }
         }
 
         if ($request->webhook_type === 'task_failed') {
@@ -711,7 +712,9 @@ class MovixtechController extends Controller
                     }
                 }
             }
-            $this->sendMailNotification($case->id, $case->patient_id, $caseType, $messages);
+            if(!empty($messages)){
+                $this->sendMailNotification($case->id, $case->patient_id, $caseType, $messages);
+            }
         }
 
 
