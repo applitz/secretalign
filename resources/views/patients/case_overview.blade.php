@@ -1090,6 +1090,7 @@
                                 $("#block-edit").attr('data', '0');
                                 $("#block-edit").html(`<span class="fas fas fa-edit me-2"></span>Allow Edit`);
                                 toastSuccess("Case sent to Lab!");
+                                $(".my-loader").hide();
                             }).fail(function(response) {
                                 $($this).prop("disabled", false);
                                 console.log(response)

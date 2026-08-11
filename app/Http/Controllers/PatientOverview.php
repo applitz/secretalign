@@ -309,6 +309,7 @@ class PatientOverview extends Controller
     public function submit_to_lab_for_treatment(Request $request)
     {
         if (Auth::user()->role == 'staff') {
+
             $data = $request->all();
             unset(
                 $data['attachments']
@@ -370,7 +371,6 @@ class PatientOverview extends Controller
                     } else {
                         $task_id = $task->create_task("lab", "Setup " . $treatment_plan->phase, $lab, $comment, "staff", "lab", $attachments); //comment from staff to lab
                     }
-
                     if ($task_id != false) {
                         //add lab request
                         if ($treatment_plan->is_treatment_submitted == 0 && $treatment_plan->is_sent_to_lab == 0) {

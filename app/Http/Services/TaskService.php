@@ -63,7 +63,9 @@ class TaskService
     }
     public function create_task($type, $task, $user_id = null, $comment = null, $from_role = null, $to_role = null,$attachments=null,$isMail=null)
     {
-        if (!DB::table("tasks")->where("treatment_plan_id", $this->treatment_plan_id)->where("type", $type)->where("status", "pending")->exists()) {
+        $taskDetails =  DB::table("tasks")->where("treatment_plan_id", $this->treatment_plan_id)->where("type", $type)->where("status", "pending")->first();
+
+        if (!$taskDetails) {
             $latest = DB::table('tasks')->insertGetId([
                 "treatment_plan_id" => $this->treatment_plan_id,
                 "task" => $task,
@@ -91,6 +93,7 @@ class TaskService
 
                         return $latest;
         }
+        return $taskDetails->id;
     }
 
     public function create_task_withoutMail($type, $task, $user_id = null, $comment = null, $from_role = null, $to_role = null,$attachments=null)
