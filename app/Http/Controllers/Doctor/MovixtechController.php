@@ -790,8 +790,8 @@ class MovixtechController extends Controller
             // ✅ Single DB update (better)
             $case->update($updateData);
 
-            if(!empty($messages)){
-                $this->sendMailNotification($case->id, $case->patient_id, $caseType, $messages);
+            if($message != null){
+                $this->sendMailNotification($case->id, $case->patient_id, $caseType, $message);
             }
             return response()->json([
                 'status' => true,
