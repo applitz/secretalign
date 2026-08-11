@@ -719,8 +719,6 @@ class MovixtechController extends Controller
 
 
         if ($request->webhook_type === 'case_done') {
-
-
             // ✅ Call summary API
             $summaryResponse = $this->getCaseSummary($caseId);
             // ✅ Handle response safely
@@ -791,7 +789,8 @@ class MovixtechController extends Controller
             $case->update($updateData);
 
             if($message != null){
-                $this->sendMailNotification($case->id, $case->patient_id, $caseType, $message);
+                $mailMessage[] = $message;
+                $this->sendMailNotification($case->id, $case->patient_id, $caseType, $mailMessage);
             }
             return response()->json([
                 'status' => true,
