@@ -29,29 +29,54 @@ class TaskController extends Controller
             }
             $tasks = DB::table('tasks as t')
                 ->where($whereClauses)
-                ->Join("p_treatment_plans as tp", function ($join) {
-                    ->where('tp.is_deleted', 0);
-                    $join->on("t.treatment_plan_id", "=", "tp.id")
+                ->join('p_treatment_plans as tp', function ($join) {
+                    $join->on('t.treatment_plan_id', '=', 'tp.id')
+                        ->where('tp.is_deleted', 0);
                 })
-                ->Join("patients as p", function ($join) {
-                    $join->on("p.id", "=", "tp.patient_id")
+                ->join('patients as p', function ($join) {
+                    $join->on('p.id', '=', 'tp.patient_id')
                         ->where('p.is_deleted', 0);
                 })
-                ->Join("users as u", function ($join) {
-                    $join->on("u.id", "=", "p.user_id");
+                ->join('users as u', function ($join) {
+                    $join->on('u.id', '=', 'p.user_id');
                 })
                 ->select(
-                    "t.*",
-                    "u.first_name",
-                    "u.last_name",
-                    "tp.phase",
-                    "tp.cancellation_date",
-                    "p.first_name as p_first_name",
-                    "p.last_name as p_last_name",
-                    "tp.previous_case_holder",
+                    't.*',
+                    'u.first_name',
+                    'u.last_name',
+                    'tp.phase',
+                    'tp.cancellation_date',
+                    'p.first_name as p_first_name',
+                    'p.last_name as p_last_name',
+                    'tp.previous_case_holder'
                 )
-                ->orderByDesc("t.created_at")
+                ->orderByDesc('t.created_at')
                 ->paginate(20);
+            // $tasks = DB::table('tasks as t')
+            //     ->where($whereClauses)
+            //     ->Join("p_treatment_plans as tp", function ($join) {
+            //         ->where('tp.is_deleted', 0);
+            //         $join->on("t.treatment_plan_id", "=", "tp.id")
+            //     })
+            //     ->Join("patients as p", function ($join) {
+            //         $join->on("p.id", "=", "tp.patient_id")
+            //             ->where('p.is_deleted', 0);
+            //     })
+            //     ->Join("users as u", function ($join) {
+            //         $join->on("u.id", "=", "p.user_id");
+            //     })
+            //     ->select(
+            //         "t.*",
+            //         "u.first_name",
+            //         "u.last_name",
+            //         "tp.phase",
+            //         "tp.cancellation_date",
+            //         "p.first_name as p_first_name",
+            //         "p.last_name as p_last_name",
+            //         "tp.previous_case_holder",
+            //     )
+            //     ->orderByDesc("t.created_at")
+            //     ->paginate(20);
             $data = [
                 "tasks" => $tasks,
             ];

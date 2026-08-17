@@ -1263,14 +1263,16 @@
                 });
             });
 
-            $("#staff-send-to-doctor").on('click', function() {
+            $(document).on('click', '#yes-update-scan-file', function(){
                 var $this = $(".btn-action");
+                var requestNewScanCheckbox = $("#requestNewScanCheckbox").is(":checked");
                 // var comment = $("#comment").val();
                 var comment = window.commentEditor.getData();
                 var staff_send_to_doctor_for_approval = $(this).attr('data-staff-send-to-doctor-for-approval');
                 $(this).prop("disabled", true);
                 var formData = new FormData();
                 formData.append('treatment_plan_id', '{{ $patient->id }}')
+                formData.append('requestNewScanCheckbox', requestNewScanCheckbox)
                 formData.append('comment', comment)
                 formData.append('action', 'send-from-staff-to-doctor')
                 // formData.append('staff_send_to_doctor_for_approval', staff_send_to_doctor_for_approval)
@@ -1298,6 +1300,10 @@
                     console.log(response);
                     toastError("Enable to send case to doctor!");
                 });
+            });
+
+            $("#staff-send-to-doctor").on('click', function() {
+                $("#confirmation-update-new-scan-modal").modal('show');
             });
 
             $("#staff-send-to-doctor-for-approval").on('click', function() {

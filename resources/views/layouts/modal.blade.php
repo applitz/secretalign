@@ -844,3 +844,39 @@
         </div>
     </div>
 </div>
+
+{{-- confirmation-update-new-scan-modal --}}
+<div class="modal fade" id="confirmation-update-new-scan-modal" tabindex="-1" aria-labelledby="confirmation-update-new-scan-modal-Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmation-update-new-scan-modal-Label">
+                    New Scan File Request
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <p>If you need to update your scan file, please check the box below.</p>
+
+                <div class="form-check mt-3">
+                    <input class="form-check-input" type="checkbox" id="requestNewScanCheckbox" name="request_new_scan" value="1">
+                    <label class="form-check-label" for="requestNewScanCheckbox">
+                        I would like to request new scan files.
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="yes-update-scan-file">
+                    Send to the Doctor for Modification
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
