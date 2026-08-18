@@ -237,7 +237,7 @@ class PatientController extends Controller
                     'treatment_plan_id' => $result['treatment_plan_id'],
                     'redirect_url'      => $redirectUrl,
                 ],
-            ], 201);
+            ], 200);
 
         } catch (Throwable $e) {
 
