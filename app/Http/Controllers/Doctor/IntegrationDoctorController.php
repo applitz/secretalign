@@ -54,6 +54,7 @@ class IntegrationDoctorController extends Controller
     public function ThreeShapeObtainAuthorizationCodeCallback(Request $request)
     {
         $url = $request->getRequestUri();
+        dd($url);
         $threeshape_api_uri = 'https://identity.3shape.com';
         $threeshape_client_id= 'SecretAlign.Production';
         $threeshape_redirect_uri = 'https://secretalign-user.com/integration-3shape';
