@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 use App\Http\Controllers\Doctor\PatientsController;
+use App\Http\Controllers\Doctor\IntegrationDoctorController;
 use App\Http\Controllers\Doctor\Shining3dController;
 use App\Http\Controllers\Doctor\MovixtechController;
 use App\Http\Controllers\Doctor\ClinicalPreferencesController;
@@ -35,6 +36,15 @@ Route::middleware(['auth', 'auth.doctor'])->group(function () {
 
     Route::get('patient/upload-new-scan/{phase}', [PatientsController::class, 'updateNewScan'])->name('patient.upload-new-scan');
     Route::post('patient/update-new-scan', [MovixtechController::class, 'updateNewScanSubmit'])->name('patient.update-new-scan');
+
+    //integrations
+    Route::get('/patient/integrations/3shape-setup', [IntegrationDoctorController::class, 'SetupThreeShapeIntegration']);
+    Route::get('/patient/integrations/3shape-disable', [IntegrationDoctorController::class, 'DisableThreeShapeIntegration']);
+    Route::get('/patient/integration-3shape/obtain-authorization-code', [IntegrationDoctorController::class, 'ThreeShapeObtainAuthorizationCode']);
+    Route::get('/patient/integration-3shape', [IntegrationDoctorController::class, 'ThreeShapeObtainAuthorizationCodeCallback']);
+    Route::post('/patient/integrations/3shape-search-cases', [IntegrationDoctorController::class, 'ThreeShapeSearchCase']);
+
+    Route::post('/patient/integrations/3shape-search-cases-additional', [IntegrationDoctorController::class, 'ThreeShapeSearchCaseAdditional']);
 });
 
 ?>

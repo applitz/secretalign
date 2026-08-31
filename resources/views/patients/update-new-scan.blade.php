@@ -199,7 +199,7 @@
                         @if(Auth::user()->three_shape_access_token != null)
                             <button type="button" class="btn btn-primary order-from-button" id="select-from-3shape">
                         @else
-                            <a class="btn btn-primary order-from-button" href="{{ url('/integration-3shape/obtain-authorization-code') }}">
+                            <a class="btn btn-primary order-from-button" href="{{ url('/patient/integration-3shape/obtain-authorization-code') }}">
                         @endif
 
                             <div class="d-flex align-items-center justify-content-center">
