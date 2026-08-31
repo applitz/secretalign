@@ -23,13 +23,7 @@ class IntegrationDoctorController extends Controller
     public function DisableThreeShapeIntegration()
     {
         $previousUrl = url()->previous();
-        $previousUrl = url()->previous();
-        $redirectData = [ 'url' => $previousUrl, 'type' => 'update-scan', 'patient_id' => null];
-        if (preg_match('/patient\/upload-new-scan\/([^\/\?]+)/', $previousUrl, $matches)) {
-            $redirectData['type'] = 'update-scan';
-            $redirectData['patient_id'] = $matches[1];
-        }
-        dd($redirectData);
+
         DB::table('users')->where('id', Auth::user()->id)->update([
            "three_shape_access_token" => null,
            "three_shape_refresh_token" => null,
@@ -39,7 +33,7 @@ class IntegrationDoctorController extends Controller
         {
             $delete= $token->delete();
         }
-        return redirect('/patient/create')->with('success', 'Successfully Disabled 3Shape Integration');
+        return redirect($previousUrl)->with('success', 'Successfully Disabled 3Shape Integration');
     }
 
     public function ThreeShapeObtainAuthorizationCode(Request $request)
