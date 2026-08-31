@@ -4654,6 +4654,33 @@
             }
         });
 
+        $("#3shape-search").on('submit', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            const case_id = $("#3shape-search input[name=_case_id]").val(),
+            patient_id = $("#3shape-search input[name=_patient_id]").val(),
+            three_shape_case_id = $("#3shape-search input[name=_three_shape_case_id]").val(),
+            three_shape_search_for_case = $("#3shape-search input[name=_three_shape_search_for_case]").val();
+            $.ajax({
+                type: "POST",
+                url: "{{ url('/integrations/3shape-search-cases') }}",
+                data: {
+                    "_token" : "{{ csrf_token() }}",
+                    "case_id" : case_id,
+                    "patient_id" : patient_id,
+                    "three_shape_case_id" : three_shape_case_id,
+                    "three_shape_search_for_patient" : three_shape_search_for_case,
+                },
+                beforeSend: function () {
+                    showLoader();
+                    $(".my-loader").show();
+                }
+            }).done(function (response) {
+                $("#3shape-search-result").html(response);
+                hideLoader();
+                $(".my-loader").hide();
+            });
+        });
         UpdateScanData.init();
     });
 </script>
