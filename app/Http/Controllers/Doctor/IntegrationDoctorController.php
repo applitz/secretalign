@@ -26,7 +26,7 @@ class IntegrationDoctorController extends Controller
         $previousUrl = url()->previous();
         $redirectData = [ 'url' => $previousUrl, 'type' => 'update-scan', 'patient_id' => null];
         if (preg_match('/patient\/edit\/([^\/\?]+)/', $previousUrl, $matches)) {
-            $redirectData['type'] = 'edit';
+            $redirectData['type'] = 'update-scan';
             $redirectData['patient_id'] = $matches[1];
         }
         dd($redirectData);
