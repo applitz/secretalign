@@ -57,7 +57,7 @@ class IntegrationDoctorController extends Controller
         dd($url);
         $threeshape_api_uri = 'https://identity.3shape.com';
         $threeshape_client_id= 'SecretAlign.Production';
-        $threeshape_redirect_uri = 'https://secretalign-user.com/integration-3shape';
+        $threeshape_redirect_uri = 'https://secretalign-user.com/patient/integration-3shape';
         $threeshape_challenge = 'NpwHAEDhRMkZVKi0JyVBvivx9QR3wF-UU1WKobImKwE';
         $threeshape_code_verifier ='4-WXwM2gMHWu5RoHcYmbcrQPUBYmpgwYlz8_4GHNbXo';
         $query = parse_url($url, PHP_URL_QUERY);
