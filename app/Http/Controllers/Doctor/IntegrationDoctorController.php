@@ -20,6 +20,22 @@ class IntegrationDoctorController extends Controller
         $this->middleware('auth');
     }
 
+    public function DisableThreeShapeIntegration()
+    {
+        $previousUrl = url()->previous();
+        dd($previousUrl);
+        DB::table('users')->where('id', Auth::user()->id)->update([
+           "three_shape_access_token" => null,
+           "three_shape_refresh_token" => null,
+        ]);
+        $tokens = ThreeShape::where('user_id',Auth::id())->get();
+        foreach($tokens as $token)
+        {
+            $delete= $token->delete();
+        }
+        return redirect('/patient/create')->with('success', 'Successfully Disabled 3Shape Integration');
+    }
+
     public function ThreeShapeObtainAuthorizationCode(Request $request)
     {
        // dd(env('THREE_SHAPE_API_URI'));

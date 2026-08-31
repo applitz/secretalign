@@ -139,7 +139,7 @@
                             {{-- <a class="btn btn-warning waves-effect waves-light" href="javascript:void(0);" id="optional-cancel-3shape-select">Cancel</a> --}}
                         </div>
                             @if(Auth::user()->three_shape_access_token != null)
-                                <a class="btn btn-danger float-end" href="{{url('/integrations/3shape-disable')}}">
+                                <a class="btn btn-danger float-end" href="{{url('/patient/integrations/3shape-disable')}}">
                                     <div class="d-flex align-items-center justify-content-center ">
                                     <span>Logout From</span>
                                     <img class="ms- 1" src="{{asset('public/assets/communicate-logo-white.png')}}" width="75px">
