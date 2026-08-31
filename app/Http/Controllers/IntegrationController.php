@@ -463,6 +463,10 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
                     $patientId = $redirectData['patient_id'] ?? null;
                     return redirect('/patient/edit/'.$patientId)->with('success', 'Successfully Integrated');
                 }
+                if($type == 'update-scan'){
+                    $patientId = $redirectData['patient_id'] ?? null;
+                    return redirect('/patient/upload-new-scan/'.$patientId)->with('success', 'Successfully Integrated');
+                }
                 return redirect('/patient/create')->with('success', 'Successfully Integrated');
             }
 
