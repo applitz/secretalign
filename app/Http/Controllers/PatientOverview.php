@@ -1638,6 +1638,193 @@ class PatientOverview extends Controller
         }
         return response()->json(["status" => 400]);
     }
+    public function send_to_the_doctor_for_modification(Request $request)
+    {        
+        if (Auth::user()->role == 'staff') {
+            $data = $request->all();
+            unset(
+                $data['attachments'],
+            );
+            $treatment_plan_id = $request->post('treatment_plan_id');
+            $comment = $request->post('comment');
+            $treatment_plan = DB::table('p_treatment_plans as tp')
+                ->where('tp.id', $treatment_plan_id)
+                ->Join("patients as p", function ($join) {
+                    $join->on("tp.patient_id", "=", "p.id")
+                        ->where("p.is_deleted", 0);
+                })
+                ->select("tp.*", "p.first_name", "p.last_name", "p.user_id", "p.pricing_package", "p.setup_type", "p.is_setup_type_approved", "p.id as patientsId")
+                ->first();
+
+            $attachments = [];
+            if ($request->hasFile('attachments')) {
+                foreach ($request->file('attachments') as $file) {
+                    // Generate a unique file name or use the original name
+                    $filename = rand(1000, 9999) . time() . '.' . $file->getClientOriginalExtension();
+                    // $attachments[]=asset('storage/' . $filename);
+                    // Move the file to the desired directory (e.g., 'uploads')
+                    $file->storeAs('public/attachments', $filename);
+                    $attachments[] = $filename;
+                    $data['attachments'][] = $filename;
+                }
+            }
+            $attachments = implode(',', $attachments);
+            $patient_id = $treatment_plan->patient_id;
+            $doctor_id = DB::table('patients')->where('id', $patient_id)->first();
+            $doctorDetails = DB::table('users')->where('id', $doctor_id->user_id)->select('email', 'first_name', 'last_name')->get()->toArray();
+            $lab_routes = $doctorDetails[0]->email;
+
+            if($request->post('action') == 'send-from-staff-to-doctor'){
+                $details = [
+                    'subject' => 'Action Required: Additional Information Needed for Your Case of ' . $treatment_plan->first_name . ' ' . $treatment_plan->last_name,
+                    'doctor_name' => $doctorDetails[0]->first_name." ".$doctorDetails[0]->last_name,
+                    'patient_name' => $treatment_plan->first_name." ".$treatment_plan->last_name,
+                    'comment' => $comment,
+                    'attachments' => $attachments,
+                    'email' => $lab_routes,
+                ];
+                SentToDoctorForModificatinJob::dispatch($details);
+            }
+
+
+            // \Illuminate\Support\Facades\Notification::route('mail', $lab_routes)
+            //     ->notify(new \App\Notifications\ModifyAlert($comment, $attachments, $treatment_plan->first_name, $treatment_plan->last_name));
+            // dd('here');
+            if (@$treatment_plan->case_holder == 'staff') {
+                if ($treatment_plan->is_treatment_submitted == 1) {
+                    $aligner_steps = intval($request->post('steps'));
+                    if ($aligner_steps > 0) {
+                        $currentDate = date('Y-m-d');  // Get the current date
+                        $cancellationDate = date('Y-m-d', strtotime($currentDate . ' +31 days'));  // Add 31 days | Will be cancelled on this date
+
+                        if($request->post('action') && $request->post('action') == 'send-for-approval'){
+                            $details = [
+                                'subject' => 'Action Required: ' . Auth::user()->first_name . ' ' . Auth::user()->last_name . ' has requested approval for Patient : ' . $treatment_plan->first_name . ' ' . $treatment_plan->last_name,
+                                'title' => 'Action Required: ' . Auth::user()->first_name . ' ' . Auth::user()->last_name . ' has requested approval for Patient : ' . $treatment_plan->first_name . ' ' . $treatment_plan->last_name,
+                                'doctor_name' => $doctorDetails[0]->first_name." ".$doctorDetails[0]->last_name,
+                                'patient_name' => $treatment_plan->first_name." ".$treatment_plan->last_name,
+                                'comment' => $comment,
+                                'attachments' => $attachments,
+                                'aligner_steps' => $aligner_steps,
+                                'email' => $lab_routes,
+                                'iframe_link' => $treatment_plan->iframe_link,
+                                'patient_link' => $treatment_plan->patient_link,
+                                'staff_name' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
+                            ];
+
+                            SendToDoctorFromStaffForApprovalJob::dispatch($details);
+                        }
+                        DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
+                            "aligner_steps" => $aligner_steps,
+                            "is_lab_cancel" => 0,
+                            "cancellation_date" => $cancellationDate,
+                        ]);
+                    }
+                }
+
+                $tasks = DB::table('tasks')
+                    ->where('treatment_plan_id', $treatment_plan_id)
+                    ->where('type', 'staff')
+                    ->where('status', '!=', 'completed')
+                    ->orderByDesc('id')
+                    ->get();
+
+                foreach ($tasks as $task) {
+                    DB::table('tasks')->where('id', $task->id)->update([
+                        "status" => 'completed',
+                        "user_id" => Auth::id(),
+                    ]);
+                }
+
+                $task_id = DB::table('tasks')->where('treatment_plan_id', $treatment_plan_id)->orderBy('id', 'desc')->first();
+                if ($treatment_plan->case_holder == 'staff' && $treatment_plan->previous_case_holder == 'staff') {
+                    $title = 'Review and Approve Treatment Plan ' . $treatment_plan->phase;
+                } elseif ($treatment_plan->case_holder == 'staff' && $treatment_plan->previous_case_holder == 'advisor') {
+                    $title = 'Review and Approve Advisor Comment ' . $treatment_plan->phase;
+                } elseif (($request->post('action') == 'send-from-staff-to-doctor') && $request->post('requestNewScanCheckbox') == 'no') {
+                    $title = 'Modification requested';
+                } elseif (($request->post('action') == 'send-from-staff-to-doctor') && $request->post('requestNewScanCheckbox') == 'yes') {
+                    $title = 'New Scan Files requested';
+                } else {
+                    $title = 'Review Setup ' . $treatment_plan->phase;
+                }
+
+
+                $latest = DB::table('tasks')->insert([
+                    "treatment_plan_id" => $treatment_plan_id,
+                    "task" => $title,
+                    "type" => 'doctor',
+                    "user_id" => $treatment_plan->user_id,
+                    "status" => "pending",
+                    "created_at" => now()
+                ]);
+                if ($request->hasFile('attachments') != null || $request->post('comment') != null) {
+                    DB::table('comments')->insert([
+                        "treatment_plan_id" => $treatment_plan_id,
+                        "task_id" => $task_id->id,
+                        "added_by" => Auth::user()->id,
+                        "from_role" => 'staff',
+                        "to_role" => 'doctor',
+                        "comment" => $comment,
+                        'attachments' => $attachments,
+                        // "created_at" => date("Y-m-d H:i:s"),
+
+                        "created_at" => now()
+                    ]);
+                }
+                if($request->post('action') && $request->post('action') == 'send-for-approval'){
+                    $send_for_approval = true;
+                    $status = 'Waiting Doctor’s Review';
+                } elseif ($request->post('action') && ($request->post('action') == 'send-from-staff-to-doctor') && $request->post('requestNewScanCheckbox') == 'no') {
+                    $send_for_approval = false;
+                    $status = 'Waiting Doctor’s Modification';
+                } elseif ($request->post('action') && ($request->post('action') == 'send-from-staff-to-doctor') && $request->post('requestNewScanCheckbox') == 'yes') {
+                    $send_for_approval = false;
+                    $status = 'New Scan Files requested';
+                } else {
+                    $send_for_approval = false;
+                    $status = 'Waiting Doctor’s Modification';
+                }
+
+                if($treatment_plan->setup_type == 1 && $treatment_plan->is_setup_type_approved == 1 && $treatment_plan->is_link_updated == 0){
+                    DB::table('patients')->where('id', $treatment_plan->patientsId)->update([
+                        'setup_type' => 2,
+                        'is_setup_type_approved' => 0,
+                    ]);
+                }
+                DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
+                    'is_completed' => "0",
+                    'is_lab_cancel' => 0,
+                    'send_for_approval' => $send_for_approval,
+                    'request_new_scan' => $request->post('requestNewScanCheckbox') == 'yes' ? 1 : 0,
+                    'dr_request_modification' => false,
+                    "case_holder" => "doctor",
+                    "previous_case_holder" => "staff",
+                    "status" => $status,
+                ]);
+
+                unset(
+                    $data['_token'],
+                    $data['action'],
+                    $data['treatment_plan_id'],
+                );
+
+                $objAudittrails = new AuditTrails();
+                
+                if($request->post('action') && $request->post('action') == 'send-for-approval'){
+                    $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientsId, $request->post('treatment_plan_id'), "Staff Sent the Case to the Doctor for Approval", 'S', 'D', $data);
+                } elseif ($request->post('action') && ($request->post('action') == 'send-from-staff-to-doctor') && $request->post('requestNewScanCheckbox') == 'no') {
+                    $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientsId, $request->post('treatment_plan_id'), "Staff Sent the Case to the Doctor for Modification", 'S', 'D', $data);
+                } elseif ($request->post('action') && ($request->post('action') == 'send-from-staff-to-doctor') && $request->post('requestNewScanCheckbox') == 'yes') {
+                    $saveAudittrails = $objAudittrails->addAudittrails( $treatment_plan->patientsId, $request->post('treatment_plan_id'), "Staff Requested New Scan Files", 'S', 'D', $data);
+                }
+
+                return response()->json(["status" => 200]);
+            }
+        }
+        return response()->json(["status" => 400]);
+    }
+    
     public function send_form_staff_to_doctor(Request $request)
     {
         if (Auth::user()->role == 'staff') {

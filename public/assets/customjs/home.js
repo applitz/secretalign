@@ -29,6 +29,7 @@ var Home = function() {
                 { 'title': 'Setup Type', "data": "setup_type", orderable: false, searchable: false },
                 { 'title': 'Task Date', "data": "created_at", orderable: false, searchable: false },
                 { 'title': 'Due Date', "data": "due_date", orderable: false, searchable: false },
+                { 'title': 'Update New Scan', "data": "request_new_scan", orderable: false, searchable: false},
                 { 'title': '', "data": "case_overview", orderable: false, searchable: false },
             ],
             "order": [[1, 'DESC']],

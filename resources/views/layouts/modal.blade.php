@@ -845,6 +845,120 @@
     </div>
 </div>
 
+{{-- request_new_scan_modal --}}
+<div class="modal fade" id="request_new_scan_modal" tabindex="-1" aria-labelledby="request_new_scan_modal_Label" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="request_new_scan_modal_Label">
+                    Upload New Scan File
+                </h5>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="row mb-3">
+                        <span class="fw-medium font-sans-serif text-900" >Original bite registration STL File:</span>
+                    </div>
+                    <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-6 col-12 _dropzone_template" template-key="1">
+
+                        <input class="d-none" name="file1" id="key1" file="" data-field="1" type="file">
+                        <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="upper-jaw-box" key="1" style="background: url('{{asset('public/assets/vector/upper-jaw.webp')}}');">
+                            <div class="_dropzone_added _dropzone_added_hidden d-flex flex-column align-items-center justify-content-center">
+                                <span class="text-white fw-semibold" data-text></span>
+                                <img src="{{asset('public/assets')}}/check-mark.webp" style="width: 50px;height: 50px;">
+                            </div>
+                            <div class="_dropzone_hover _dropzone_hover_hidden d-flex flex-column align-items-center justify-content-center">
+                                <span class="text-white fw-semibold" data-text>Drag & drop file</span>
+                                <img src="{{asset('public/assets')}}/download-circular-button.webp" style="width: 50px;height: 50px;">
+                            </div>
+                            <div class="_dropzone_loading _dropzone_loading_hidden d-flex flex-column align-items-center justify-content-center">
+                                <span class="text-white fw-semibold" data-text>Uploading...</span>
+                                <img src="{{asset('public/assets')}}/circle-loading.webp" class="_dropzone_loading_animation" style="width: 50px;height: 50px;">
+                            </div>
+                            <div class="_dropzone_remove _dropzone_remove_hidden d-flex flex-column align-items-center justify-content-center">
+                                <span class="text-white fw-semibold" data-text>Delete file</span>
+                                <img src="{{asset('public/assets')}}/x-mark.webp" style="width: 50px; height: 50px;">
+                            </div>
+
+                        </div>
+                        <label class="form-label mb-3" for="fl_upper_arch">Upper Arch</label>
+                        <div class="mb-3" style="width: 60%;">
+                            <div class="progress animated-progress">
+                                <div class="progress-bar bg-primary" id="upper-arch-progress-bar" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            </div>
+                        </div>
+                        <div class="mb-3" id="stl-upper-arch-preview">
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-6 col-12 _dropzone_template" template-key="2">
+                        <input class="d-none" name="file2" id="key2" file="" data-field="2" type="file">
+                        <div class="p-2 border border-primary border-2 d-block mb-1 _dropzone" id="lower-jaw-box" key="2" style="background-image: url('{{asset('public/assets/vector/down-jaw.webp')}}')">
+                            <div class="_dropzone_added _dropzone_added_hidden d-flex flex-column align-items-center justify-content-center">
+                                <span class="text-white fw-semibold" data-text></span>
+                                <img src="{{asset('public/assets')}}/check-mark.webp" style="width: 50px;height: 50px;">
+                            </div>
+                            <div class="_dropzone_hover _dropzone_hover_hidden d-flex flex-column align-items-center justify-content-center">
+                                <span class="text-white fw-semibold" data-text>Drag & drop file</span>
+                                <img src="{{asset('public/assets')}}/download-circular-button.webp" style="width: 50px;height: 50px;">
+                            </div>
+                            <div class="_dropzone_loading _dropzone_loading_hidden d-flex flex-column align-items-center justify-content-center">
+                                <span class="text-white fw-semibold" data-text>Uploading...</span>
+                                <img src="{{asset('public/assets')}}/circle-loading.webp" class="_dropzone_loading_animation" style="width: 50px;height: 50px;">
+                            </div>
+                            <div class="_dropzone_remove _dropzone_remove_hidden d-flex flex-column align-items-center justify-content-center">
+                                <span class="text-white fw-semibold" data-text>Delete file</span>
+                                <img src="{{asset('public/assets')}}/x-mark.webp" style="width: 50px; height: 50px;">
+                            </div>
+
+                        </div>
+                        <label class="form-label mb-3" for="fl_lower_arch">Lower Arch</label>
+                        <div class="mb-3" style="width: 60%;">
+                            <div class="progress animated-progress">
+                                <div class="progress-bar bg-primary" id="lower-arch-progress-bar" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            </div>
+                        </div>
+                            <div class="mb-3 " id="stl-lower-arch-preview">
+
+                            </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <span class="fw-medium font-sans-serif text-900">
+                            Quick Upload Notes:
+                        </span>
+                        <span class="">
+                            &bull;  Only STL files are accepted.
+                        </span>
+                        <span class="">
+                            &bull; No separate bite registration file needed! Just ensure it was completed during the scan; the data is already embedded in your Upper and Lower STL files.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="yes-upload-new-scan">
+                    Yes, Upload
+                </button>
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 {{-- confirmation-update-new-scan-modal --}}
 <div class="modal fade" id="confirmation-update-new-scan-modal" tabindex="-1" aria-labelledby="confirmation-update-new-scan-modal-Label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Doctor;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendmailCancelDMOrderJob;
 use App\Jobs\SendmailConfirmDMOrderJob;
+use App\Models\Patients;
 use App\Models\PatientTreatmentPlan;
 use Illuminate\Http\Request;
 use App\Services\PatientsService;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use CURLFile;
+use Hashids\Hashids;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -21,10 +23,11 @@ use function PHPUnit\Framework\isNull;
 class PatientsController extends Controller
 {
     protected $patientsService;
-
+    public $hashids;
     public function __construct(PatientsService $patientsService)
     {
         $this->patientsService = $patientsService;
+        $this->hashids = new Hashids();
     }
 
     /**
@@ -672,5 +675,120 @@ class PatientsController extends Controller
                 'message' => 'An error occurred. Please try again after some time.',
             ], 404);
         }
+    }
+
+    public function updateNewScan($phase){
+        $data = [];
+        $whereClauses = [["tp.id", $this->hashids->decode($phase)], ["tp.is_deleted", 0],];
+
+        $patient = DB::table('p_treatment_plans as tp')
+            ->where($whereClauses)
+            //->where('tp.is_submitted', 1)
+            ->Join("patients as p", function ($join) {
+                $join->on("tp.patient_id", '=', "p.id")
+                    ->where('p.is_deleted', 0);
+                if (Auth::user()->role == 'doctor') {
+                    $join->where('p.user_id', Auth::user()->id);
+                }
+            })
+            ->leftJoin("users as l", function ($join) {
+                $join->on("tp.lab", "=", "l.id")
+                    ->where("l.role", "lab");
+            })
+            ->select("tp.*", "p.id as patientId", "p.pricing_package", "p.setup_type", "p.is_setup_type_approved", "p.first_name", "p.last_name", "p.dob", "p.user_id", "l.first_name as lab_first_name", "l.last_name as lab_last_name")
+            ->first();
+        $data['patient'] = $patient;
+        $mode = 'update';
+        $hashids = new Hashids();
+        $hashCode = $hashids->encode($patient->id);
+        return view("patients.update-new-scan", compact("patient", "data", "hashCode","mode"));
+    }
+
+    public function updateNewScanSubmit(Request $request){
+        $patientDetails = Patients::with([
+            'treatmentPlans' => function ($query) use ($request) {
+                $query->where('patient_id', $request->patient_id)
+                    ->where('id', $request->treatment_plan_id)
+                    ->select(
+                        'id',
+                        'patient_id',
+                        'fl_upper_arch',
+                        'fl_lower_arch',
+                        'optional_fl_upper_arch',
+                        'optional_fl_lower_arch'
+                    );
+            }
+        ])
+        ->select('id', 'first_name', 'last_name')
+        ->where('id', $request->patient_id)
+        ->first();
+        dd($patientDetails);
+        if (!$patientDetails || $patientDetails->treatmentPlans->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Patient or treatment plan not found'
+            ], 404);
+        }
+
+        $plan = $patientDetails->treatmentPlans->first();
+
+        $caseId = null;
+        $note = null;
+        $upperFile = null;
+        $lowerFile = null;
+        $clientName = $patientDetails->first_name . ' ' . $patientDetails->last_name;
+
+        // ✅ Decide which scan to use
+        if (!empty($plan->fl_upper_arch) && !empty($plan->fl_lower_arch)) {
+            $upperFile = $plan->fl_upper_arch;
+            $lowerFile = $plan->fl_lower_arch;
+            $note = 'Primary Scan';
+        }
+        elseif (!empty($plan->optional_fl_upper_arch) && !empty($plan->optional_fl_lower_arch)) {
+            $upperFile = $plan->optional_fl_upper_arch;
+            $lowerFile = $plan->optional_fl_lower_arch;
+            $note = 'Optional Scan';
+            $clientName .= ' (Optional)';
+        }
+        else {
+            return response()->json([
+                'status' => false,
+                'message' => 'No valid scan files found'
+            ], 400);
+        }
+
+        // ✅ Single call only
+        $result  = $this->createCase(
+            $request->patient_id,
+            $request->treatment_plan_id,
+            $upperFile,
+            $lowerFile,
+            $clientName,
+            $note
+        );
+        if (!$result['status']) {
+            return response()->json([
+                'status' => false,
+                'message' => $result['message']
+            ], 500);
+        }
+        $caseId = $result['case_id'];
+        $runCase = $this->runCase($caseId);
+        if (empty($runCase) || (isset($runCase['success']) && !$runCase['success'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Case created but failed to run',
+                'case_id' => $caseId
+            ], 500);
+        }
+
+        // $objAudittrails = new Audittrails();
+        // $saveAudittrails = $objAudittrails->addAudittrails( $request->patient_id, $request->treatment_plan_id, "Patient Scan data Updated", 'D', null, $data);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Case created and started successfully',
+            'case_id' => $caseId
+        ]);
     }
 }

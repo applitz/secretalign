@@ -1266,11 +1266,10 @@
 
             $(document).on('click', '#yes-update-scan-file', function(){
                 var $this = $(".btn-action");
-                var requestNewScanCheckbox = $("#requestNewScanCheckbox").is(":checked");
+                var requestNewScanCheckbox = $("#requestNewScanCheckbox").is(":checked") ? 'yes' : 'no';
                 // var comment = $("#comment").val();
                 var comment = window.commentEditor.getData();
-                var staff_send_to_doctor_for_approval = $(this).attr('data-staff-send-to-doctor-for-approval');
-                $(this).prop("disabled", true);
+                var staff_send_to_doctor_for_approval = $(this).attr('data-staff-send-to-doctor-for-approval');                
                 var formData = new FormData();
                 formData.append('treatment_plan_id', '{{ $patient->id }}')
                 formData.append('requestNewScanCheckbox', requestNewScanCheckbox)
@@ -1286,7 +1285,7 @@
                 }
                 $.ajax({
                     "type": "POST",
-                    "url": "{{ url('/patient/case-overview/send-from-staff-to-doctor') }}",
+                    "url": "{{ url('/patient/case-overview/send-to-the-doctor-for-modification') }}",
                     data: formData,
                     cache: false,
                     processData: false,
@@ -1295,53 +1294,16 @@
                     $("#comment").val('');
                     $("#lab").val('');
                     $("#panel").remove();
+                    $("#confirmation-update-new-scan-modal").modal('hide');
                     toastSuccess("Case sent to doctor!");
                 }).fail(function(response) {
-                    $($this).prop("disabled", false);
-                    console.log(response);
-                    toastError("Enable to send case to doctor!");
+                    $("#confirmation-update-new-scan-modal").modal('hide');
+                    toastError("Unable to send case to doctor!");
                 });
             });
 
-            // $("#staff-send-to-doctor").on('click', function() {
-            //     $("#confirmation-update-new-scan-modal").modal('show');
-            // });
-
             $("#staff-send-to-doctor").on('click', function() {
-                var $this = $(".btn-action");
-                // var comment = $("#comment").val();
-                var comment = window.commentEditor.getData();
-                var staff_send_to_doctor_for_approval = $(this).attr('data-staff-send-to-doctor-for-approval');
-                $(this).prop("disabled", true);
-                var formData = new FormData();
-                formData.append('treatment_plan_id', '{{ $patient->id }}')
-                formData.append('comment', comment)
-                formData.append('action', 'send-from-staff-to-doctor')
-                // formData.append('staff_send_to_doctor_for_approval', staff_send_to_doctor_for_approval)
-                formData.append('_token', '{{ csrf_token() }}')
-                var fileInput = document.getElementById('attachments');
-
-                // Loop through each file selected and append them to FormData
-                for (var i = 0; i < fileInput.files.length; i++) {
-                    formData.append('attachments[]', fileInput.files[i]);
-                }
-                $.ajax({
-                    "type": "POST",
-                    "url": "{{ url('/patient/case-overview/send-from-staff-to-doctor') }}",
-                    data: formData,
-                    cache: false,
-                    processData: false,
-                    contentType: false,
-                }).done(function(response) {
-                    $("#comment").val('');
-                    $("#lab").val('');
-                    $("#panel").remove();
-                    toastSuccess("Case sent to doctor!");
-                }).fail(function(response) {
-                    $($this).prop("disabled", false);
-                    console.log(response);
-                    toastError("Enable to send case to doctor!");
-                });
+                $("#confirmation-update-new-scan-modal").modal('show');
             });
 
             $("#staff-send-to-doctor-for-approval").on('click', function() {

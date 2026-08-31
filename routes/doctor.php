@@ -32,6 +32,9 @@ Route::middleware(['auth', 'auth.doctor'])->group(function () {
     Route::get('movix-get-access-token', [MovixtechController::class, 'getAccessToken'])->name('movix-get-access-token');
     Route::get('movix-create-webhook', [MovixtechController::class, 'createWebhook'])->name('movix-create-webhook');
     Route::get('movix-get-webhook', [MovixtechController::class, 'getWebhooks'])->name('movix-get-webhook');
+
+    Route::get('patient/upload-new-scan/{phase}', [PatientsController::class, 'updateNewScan'])->name('patient.upload-new-scan');
+    Route::post('patient/update-new-scan', [MovixtechController::class, 'updateNewScanSubmit'])->name('patient.update-new-scan');
 });
 
 ?>

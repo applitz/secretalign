@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use App\Jobs\SendMovixFailMailNotificationJob;
+use App\Http\Services\TaskService;
+use App\Jobs\SendToStaffFromDoctorModificationJob;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 class MovixtechController extends Controller
 {
 
@@ -332,6 +337,222 @@ class MovixtechController extends Controller
             'status' => true,
             'message' => 'Case created and started successfully',
         ]);
+    }
+
+    public function updateNewScanSubmit (Request $request)
+    {
+        $comment = $request->post('comment');
+        $patientDetails = Patients::with([
+            'treatmentPlans' => function ($query) use ($request) {
+                $query->where('patient_id', $request->patient_id)
+                    ->where('id', $request->treatment_plan_id)
+                    ->select(
+                        'id',
+                        'patient_id',
+                        'primary_movixtech_status',
+                        'optional_movixtech_status',
+                        'fl_upper_arch',
+                        'fl_lower_arch',
+                        'optional_fl_upper_arch',
+                        'case_holder',
+                        'optional_fl_lower_arch',
+                    );
+            }
+        ])
+        ->select('id', 'first_name', 'last_name', 'user_id')
+        ->where('id', $request->patient_id)
+        ->first();
+
+        if (!$patientDetails || $patientDetails->treatmentPlans->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Patient or treatment plan not found'
+            ], 404);
+        }
+        $plan = $patientDetails->treatmentPlans->first();
+
+        if ($plan->case_holder == 'doctor') {
+            // ❌ Both scans missing
+            if (empty($plan->fl_upper_arch) && empty($plan->fl_lower_arch) && empty($plan->optional_fl_upper_arch) && empty($plan->optional_fl_lower_arch))
+            {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'No valid scan files found'
+                ], 400);
+
+            }
+            $clientName = $patientDetails->first_name . ' ' . $patientDetails->last_name;
+            $patientId = $patientDetails->id;
+            $objPatientTreatmentPlan = PatientTreatmentPlan::find($request->treatment_plan_id);
+            // ✅ Primary scan data
+            if (!empty($plan->fl_upper_arch) || !empty($plan->fl_lower_arch)) {
+                $primaryUpperFile = $plan->fl_upper_arch;
+                $primaryLowerFile = $plan->fl_lower_arch;
+                $primaryCaseId = $plan->primary_case_id;
+                $primaryMovixtechStatus = $plan->primary_movixtech_status;
+                $createCaseResponse = $this->createCase($clientName, 'Primary Scan');
+
+                if (!$createCaseResponse['status']) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Failed to create case for primary scan: ' . $createCaseResponse['message']
+                    ], 500);
+                }
+                $primaryCaseId = $createCaseResponse['data']['case_id'];
+                $presignedLinks = $this->getPresignedLinks($primaryCaseId);
+                if (empty($presignedLinks['upper_jaw']['url']) ||  empty($presignedLinks['lower_jaw']['url'])) {
+                    return [
+                        'status' => false,
+                        'message' => 'Presigned URL missing'
+                    ];
+                }
+
+                $upperPath = storage_path("PatientFiles/Patient{$patientId}/".$primaryUpperFile);
+                $lowerPath = storage_path("PatientFiles/Patient{$patientId}/".$primaryLowerFile);
+
+                if (!file_exists($upperPath) || !file_exists($lowerPath)) {
+                    return [
+                        'status' => false,
+                        'message' => 'File not found'
+                    ];
+                }
+
+                $uploadToPresignedUrlUpper = $this->uploadToPresignedUrl($presignedLinks['upper_jaw']['url'], $upperPath);
+                $uploadToPresignedUrlLower = $this->uploadToPresignedUrl($presignedLinks['lower_jaw']['url'], $lowerPath);
+                if($uploadToPresignedUrlUpper === false || $uploadToPresignedUrlLower === false){
+                    return [
+                        'status' => false,
+                        'message' => 'Failed to upload files to presigned URLs'
+                    ];
+                }
+                $runCase = $this->runCase($primaryCaseId);
+                $objPatientTreatmentPlan->primary_case_id = $primaryCaseId;
+                $objPatientTreatmentPlan->primary_client = $clientName;
+                $objPatientTreatmentPlan->primary_note = 'Primary Scan';
+                $objPatientTreatmentPlan->primary_movixtech_status = 'Processing';
+                $objPatientTreatmentPlan->primary_movix_note = null;
+                $objPatientTreatmentPlan->primary_case_movix_status = 0;
+            }
+
+            // ✅ Optional scan data
+            if (!empty($plan->optional_fl_upper_arch) || !empty($plan->optional_fl_lower_arch)) {
+                $optionalUpperFile = $plan->optional_fl_upper_arch;
+                $optionalLowerFile = $plan->optional_fl_lower_arch;
+                $optionalCaseId = $plan->optional_scan_case_id;
+                $optionalMovixtechStatus = $plan->optional_scan_movixtech_status;
+                $createCaseResponse = $this->createCase($clientName, 'Optional Scan');
+                if (!$createCaseResponse['status']) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Failed to create case for optional scan: ' . $createCaseResponse['message']
+                    ], 500);
+                }
+                $optionalCaseId = $createCaseResponse['data']['case_id'];
+                $optionalPresignedLinks = $this->getPresignedLinks($optionalCaseId);
+                if (empty($optionalPresignedLinks['upper_jaw']['url']) ||  empty($optionalPresignedLinks['lower_jaw']['url'])) {
+                    return [
+                        'status' => false,
+                        'message' => 'Presigned URL missing'
+                    ];
+                }
+
+                $upperPath = storage_path("PatientFiles/Patient{$patientId}/".$optionalUpperFile);
+                $lowerPath = storage_path("PatientFiles/Patient{$patientId}/".$optionalLowerFile);
+
+                if (!file_exists($upperPath) || !file_exists($lowerPath)) {
+                    return [
+                        'status' => false,
+                        'message' => 'File not found'
+                    ];
+                }
+
+                $uploadToPresignedUrlUpperOptional = $this->uploadToPresignedUrl($optionalPresignedLinks['upper_jaw']['url'], $upperPath);
+                $uploadToPresignedUrlLowerOptional = $this->uploadToPresignedUrl($optionalPresignedLinks['lower_jaw']['url'], $lowerPath);
+                if($uploadToPresignedUrlUpperOptional === false || $uploadToPresignedUrlLowerOptional === false){
+                    return [
+                        'status' => false,
+                        'message' => 'Failed to upload files to presigned URLs'
+                    ];
+                }
+                $runOptionalCase = $this->runCase($optionalCaseId);
+                $objPatientTreatmentPlan->optional_scan_case_id = $optionalCaseId;
+                $objPatientTreatmentPlan->optional_scan_client = $clientName;
+                $objPatientTreatmentPlan->optional_scan_note = 'Optional Scan';
+                $objPatientTreatmentPlan->optional_scan_movix_note = null;
+                $objPatientTreatmentPlan->optional_movixtech_status = 'Processing';
+                $objPatientTreatmentPlan->optional_scan_case_movix_status = 0;
+            }
+            $objPatientTreatmentPlan->save();
+
+            $task = (new TaskService($request->treatment_plan_id));
+            $task->complete_task("doctor", $plan->user_id); //complete doctor task
+                //$task_id = $task->create_task("staff", "Case Review", null, $comment, "doctor", "staff",$attachments);
+                $tasks = DB::table('tasks')
+                    ->where('treatment_plan_id', $request->treatment_plan_id)
+                    ->where('type', 'doctor')
+                    ->where('status', '!=', 'completed')
+                    ->orderByDesc('id')
+                    ->get();
+
+                foreach ($tasks as $task) {
+                    DB::table('tasks')->where('id', $task->id)->update([
+                        "status" => 'completed',
+                        "user_id" => Auth::id(),
+                    ]);
+                }
+                $latest = DB::table('tasks')->insert([
+                    "treatment_plan_id" => $request->treatment_plan_id,
+                    "task" => 'Case Review',
+                    "type" => 'staff',
+                    "user_id" => null,
+                    "status" => "pending",
+                    "created_at" => now()
+                ]);
+                $task_id = DB::table('tasks')->where('treatment_plan_id', $request->treatment_plan_id)->orderBy('id', 'desc')->first();
+                if ($request->hasFile('attachments') != null || $request->post('comment') != null) {
+                    DB::table('comments')->insert([
+                        "treatment_plan_id" => $request->treatment_plan_id,
+                        "task_id" => $task_id->id,
+                        "added_by" => Auth::user()->id,
+                        "from_role" => 'doctor',
+                        "to_role" => 'staff',
+                        "comment" => $comment,
+                        "created_at" => now()
+                    ]);
+                }
+
+                $details = [
+                    'subject' => 'Action Required: Additional Information Needed for Your Case of ' . $plan->first_name . ' ' . $plan->last_name,
+                    'title' => 'Action Required: Additional Information Needed for Your Case of ' . $plan->first_name . ' ' . $plan->last_name,
+                    'comment' => $comment,
+                    'patient_name' => $plan->first_name." ".$plan->last_name,
+                ];
+
+                $staff = DB::table('users')
+                        ->where('role', 'staff')
+                        ->get(['first_name', 'last_name', 'email'])
+                        ->toArray();
+
+                SendToStaffFromDoctorModificationJob::dispatch($staff, $details);
+                if ($task_id != false) {
+                    DB::table('p_treatment_plans')->where('id', $request->treatment_plan_id)->update([
+                        "case_holder" => "staff",
+                        "request_new_scan" => 0,
+                        "previous_case_holder" => "doctor",
+                        "status" => "Waiting Staff Review",
+                        "is_editable" => 0,
+                    ]);
+                }
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Case created and started successfully',
+                ]);
+        }
+
+        return response()->json([
+            'status' => false,
+            'message' => 'You do not have permission to process this case. Only the doctor who created the case can process it.'
+        ], 400);
     }
 
 
