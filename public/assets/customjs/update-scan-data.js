@@ -156,7 +156,6 @@ var UpdateScanData = function() {
             });
 
         });
-
         // For #comment
         ClassicEditor
             .create(document.querySelector('#comment'))
