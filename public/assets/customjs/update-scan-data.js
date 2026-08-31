@@ -115,6 +115,48 @@ var UpdateScanData = function() {
             $("#3shape-section-Modal").modal("show");
         });
 
+        $(document).on('keypress', '#3shape-section-Modal input', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                $('#3shape-search').trigger('click');
+            }
+        });
+
+        $(document).on('click', '#3shape-search', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            const modal = $("#3shape-section-Modal");
+            const case_id = modal.find('input[name="_case_id"]').val();
+            const patient_id = modal.find('input[name="_patient_id"]').val();
+            const three_shape_case_id = modal.find('input[name="_three_shape_case_id"]').val();
+            const three_shape_search_for_case = modal.find('input[name="_three_shape_search_for_case"]').val();
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('input[name="_token"]').val(),
+                },
+                url: baseUrl + "/integrations/3shape-search-cases",
+                data: {
+                    case_id: case_id,
+                    patient_id: patient_id,
+                    three_shape_case_id: three_shape_case_id,
+                    three_shape_search_for_patient: three_shape_search_for_case,
+                },
+                beforeSend: function () {
+                    showLoader();
+                },
+                success: function (response) {
+                    $("#3shape-search-result").html(response);
+                },
+                complete: function () {
+                    hideLoader();
+                }
+            });
+
+        });
+
         // For #comment
         ClassicEditor
             .create(document.querySelector('#comment'))
