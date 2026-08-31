@@ -1809,62 +1809,7 @@
 
         window.dropzone_destroy_state = dropzone_destroy_state
 
-        // let dropzone_upload = (key, file) => {
-        //     let formData = new FormData();
-        //     formData.append('file'+key, file)
-        //     $.ajax({
-        //         url: '{{url('/patient/file/upload/'.$patient->patient_id.'/'.$patient->id)}}?key='+key,
-        //         type: 'POST',
-        //         data: formData,
-        //         contentType: false,
-        //         processData: false,
-        //         beforeSend: function () {
-        //             dropzone_uploading_state(key)
-        //         },
-        //         success: function(response){
-        //             if(response.status == 'success') {
-        //                 dropzone_active_state(key, response.fileName)
-        //                 $('._dropzone_template #key'+key).attr('file', response.fileName)
-        //                 const UPLOADEDFILE = response.fileName
-
-        //                 if(key == 1) {
-        //                     if(UPLOADEDFILE.split(".")[1] == 'stl') {
-        //                         window.previewUpperStlFile(response.fileName)
-        //                     } else {
-        //                         window.previewUpperPlyFile(response.fileName)
-        //                     }
-        //                 }
-        //                 if(key == 2) {
-        //                     if(UPLOADEDFILE.split(".")[1] == 'stl') {
-        //                         window.previewLowerStlFile(response.fileName)
-        //                     } else {
-        //                         window.previewLowerPlyFile(response.fileName)
-        //                     }
-        //                 }
-
-        //                 if(key == 18) {
-        //                     if(UPLOADEDFILE.split(".")[1] == 'stl') {
-        //                         window.previewOptionalUpperStlFile(response.fileName)
-        //                     } else {
-        //                         window.previewOptionalUpperPlyFile(response.fileName)
-        //                     }
-        //                 }
-        //                 if(key == 19) {
-        //                     if(UPLOADEDFILE.split(".")[1] == 'stl') {
-        //                         window.previewOptionalLowerStlFile(response.fileName)
-        //                     } else {
-        //                         window.previewOptionalLowerPlyFile(response.fileName)
-        //                     }
-        //                 }
-        //             } else {
-        //                 dropzone_reset_state(key, "Unable to upload file")
-        //             }
-        //         },
-        //         error: function(xhr, status, error){
-        //             dropzone_reset_state(key, "Unable to upload file")
-        //         }
-        //     })
-        // }
+       
 
         let dropzone_upload = async (key, file) => {
 
