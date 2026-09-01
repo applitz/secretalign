@@ -14,7 +14,6 @@ class MeditIntegrationController extends Controller
 
     public function MeditLinkObtainAuthorizationCodeCallback(Request $request)
     {
-        dd($request->all());
         try {
             Log::info("got back");
 
@@ -30,7 +29,7 @@ class MeditIntegrationController extends Controller
                     CURLOPT_FOLLOWLOCATION => true,
                     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                     CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => 'code='.$request->get('code').'&state='.$request->get('state').'&grant_type=authorization_code&redirect_uri='.env("MEDIT_LINK_REDIRECT_URL").'?me&scope=CASE%20FILE%20USER%20GROUP',
+                    CURLOPT_POSTFIELDS => 'code='.$request->get('code').'&state='.$request->get('state').'&grant_type=authorization_code&redirect_uri='.env("UPDATE_SCAN_MEDIT_LINK_REDIRECT_URL").'?me&scope=CASE%20FILE%20USER%20GROUP',
                     CURLOPT_HTTPHEADER => array(
                         'Authorization: Basic ' . base64_encode(env("MEDIT_LINK_CLIENT_ID") . ":" . env("MEDIT_LINK_CLIENT_KEY")),
                         'Content-Type: application/x-www-form-urlencoded',
