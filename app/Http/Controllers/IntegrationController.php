@@ -208,7 +208,7 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
     Session::flash($session_key, $session_msg);
     $redirectData = session('redirect_back_medit', []);
     if($redirectData['type'] == 'update-scan') {
-        return redirect($redirectData['url']);
+        return redirect($redirectData['url']."?modal=medit");
     }
     return view("integration.integration_callback");
 }
