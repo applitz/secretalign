@@ -205,6 +205,7 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
 
     Session::flash($session_key, $session_msg);
     $redirectData = session('redirect_back_medit', []);
+    dd($redirectData);
     if($redirectData['type'] == 'update-scan') {
         $redirectData = session('redirect_back_medit', []);
         return redirect($redirectData['url']);
