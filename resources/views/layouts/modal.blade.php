@@ -972,12 +972,12 @@
             </div>
 
             <div class="modal-body">
-                <p>If you need to update your scan file, please check the box below.</p>
+                <p>If you <b>ONLY</b> need to update the <b>SCAN FILES</b>, please check the box below </p>
 
                 <div class="form-check mt-3">
                     <input class="form-check-input" type="checkbox" id="requestNewScanCheckbox" name="request_new_scan" value="1">
                     <label class="form-check-label" for="requestNewScanCheckbox">
-                        I would like to request new scan files.
+                        <b>Update Scan files only</b>
                     </label>
                 </div>
             </div>
