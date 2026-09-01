@@ -291,7 +291,7 @@
                                 @if(Auth::user()->medit_link_access_token != null)
                                         href="javascript:void(0);" id="select-from-medit-link"
                                 @else
-                                    href="{{url('/integration-medit-link/obtain-authorization-code')}}"
+                                    href="{{url('/patient/integration-medit-link/obtain-authorization-code')}}"
                                 @endif
                         >
                             <div class="d-flex align-items-center justify-content-center">
@@ -1809,7 +1809,7 @@
 
         window.dropzone_destroy_state = dropzone_destroy_state
 
-       
+
 
         let dropzone_upload = async (key, file) => {
 

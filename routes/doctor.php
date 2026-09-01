@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Artisan;
 
 use App\Http\Controllers\Doctor\PatientsController;
 use App\Http\Controllers\Doctor\IntegrationDoctorController;
+use App\Http\Controllers\Doctor\MeditIntegrationController;
 use App\Http\Controllers\Doctor\Shining3dController;
 use App\Http\Controllers\Doctor\MovixtechController;
 use App\Http\Controllers\Doctor\ClinicalPreferencesController;
@@ -45,6 +46,9 @@ Route::middleware(['auth', 'auth.doctor'])->group(function () {
     Route::post('/patient/integrations/3shape-search-cases', [IntegrationDoctorController::class, 'ThreeShapeSearchCase']);
 
     Route::post('/patient/integrations/3shape-search-cases-additional', [IntegrationDoctorController::class, 'ThreeShapeSearchCaseAdditional']);
+
+    Route::get('/patient/integration-medit-link/obtain-authorization-code', [MeditIntegrationController::class, 'MeditLinkObtainAuthorizationCode']);
+    Route::get('/patient/integration-medit-link', [MeditIntegrationController::class, 'MeditLinkObtainAuthorizationCodeCallback']);
 });
 
 ?>
