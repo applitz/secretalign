@@ -150,7 +150,9 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
 {
     try {
         Log::info("got back");
-
+        $redirectData = session('redirect_back', []);
+                // session()->forget('redirect_back');
+                dd($redirectData);
         if (!Auth::user()->medit_link_access_token || !Auth::user()->medit_link_refresh_token  || !Auth::user()->medit_link_group_uuid) {
             $curl = curl_init();
 
