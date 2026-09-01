@@ -15,7 +15,7 @@ class MeditIntegrationController extends Controller
             $redirectData['type'] = 'update-scan';
             $redirectData['patient_id'] = $matches[1];
         }
-        session(['redirect_back' => $redirectData]);
+        session(['redirect_back_medit' => $redirectData]);
         return redirect()->away("https://openapi-auth.meditlink.com/oauth/authorize?client_id=".env("MEDIT_LINK_CLIENT_ID")."&response_type=code&redirect_uri=".env("MEDIT_LINK_REDIRECT_URL")."?me&scope=CASE FILE USER GROUP&state=updateScan");
     }
 }

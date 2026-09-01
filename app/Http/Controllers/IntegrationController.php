@@ -148,10 +148,11 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
     }
     public function MeditLinkObtainAuthorizationCodeCallback(Request $request)
 {
+
+
     try {
         Log::info("got back");
-        $redirectData = session('redirect_back_medit', []);
-        dd($redirectData);
+
         if (!Auth::user()->medit_link_access_token || !Auth::user()->medit_link_refresh_token  || !Auth::user()->medit_link_group_uuid) {
             $curl = curl_init();
 
@@ -205,9 +206,8 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
     }
 
     Session::flash($session_key, $session_msg);
-
+    $redirectData = session('redirect_back_medit', []);
     if($redirectData['type'] == 'update-scan') {
-        $redirectData = session('redirect_back_medit', []);
         return redirect($redirectData['url']);
     }
     return view("integration.integration_callback");

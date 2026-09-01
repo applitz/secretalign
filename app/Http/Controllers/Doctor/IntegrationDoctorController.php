@@ -45,7 +45,7 @@ class IntegrationDoctorController extends Controller
             $redirectData['type'] = 'update-scan';
             $redirectData['patient_id'] = $matches[1];
         }
-        session(['redirect_back_medit' => $redirectData]);
+        session(['redirect_back' => $redirectData]);
         $threeshape_api_uri = 'https://identity.3shape.com';
         $threeshape_client_id= 'SecretAlign.Production';
         $threeshape_redirect_uri = 'https://secretalign-user.com/integration-3shape';
