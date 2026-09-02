@@ -49,7 +49,7 @@ Route::middleware(['auth', 'auth.doctor'])->group(function () {
 
     Route::get('/patient/integration-medit-link/obtain-authorization-code', [MeditIntegrationController::class, 'MeditLinkObtainAuthorizationCode']);
     Route::get('/patient/integration-medit-link', [MeditIntegrationController::class, 'MeditLinkObtainAuthorizationCodeCallback']);
-    Route::get('/integrations/medit-link-disable', [MeditIntegrationController::class, 'DisableMeditLinkIntegration']);
+    Route::get('/patient/integrations/medit-link-disable', [MeditIntegrationController::class, 'DisableMeditLinkIntegration']);
 });
 
 ?>
