@@ -571,6 +571,18 @@
     });
 </script>
 @endif
+@if (($data['model'] ?? '') === '3shape')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalElement = document.getElementById('3shape-Modal');
+
+        if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        }
+    });
+</script>
+@endif
 
 <script type="module">
     import { STLLoader } from "{{asset('public/assets/three/examples/jsm/loaders/STLLoader.js')}}";

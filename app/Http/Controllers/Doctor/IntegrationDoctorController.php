@@ -23,7 +23,8 @@ class IntegrationDoctorController extends Controller
     public function DisableThreeShapeIntegration()
     {
         $previousUrl = url()->previous();
-
+        // Remove query string from previous URL
+        $previousUrl = strtok($previousUrl, '?');
         DB::table('users')->where('id', Auth::user()->id)->update([
            "three_shape_access_token" => null,
            "three_shape_refresh_token" => null,
