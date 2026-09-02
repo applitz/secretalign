@@ -167,6 +167,16 @@ class PatientsService extends CommonFunction
                 </a>
             </div>';
             }
+
+            if ($patient->request_new_scan == 1) {
+                $caseOverview = '<div class="font-sans-serif btn-reveal-trigger"><a class="badge badge-soft-primary text-600 btn-sm btn-reveal-sm transition-none"
+                            href="'. route('patient.upload-new-scan', $hashids->encode($patient->treatment_plan_id)) .'" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                            Case Overview</a></div>';
+            } else {
+                $caseOverview = '<div class="font-sans-serif btn-reveal-trigger"><a class="badge badge-soft-primary text-600 btn-sm btn-reveal-sm transition-none"
+                            href="'. route('patient.case-overview', $hashids->encode($patient->treatment_plan_id)) .'" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                            Case Overview</a></div>';
+            }
             $records['data'][] = [
 
                 'id' => $patient->treatment_plan,
@@ -186,8 +196,7 @@ class PatientsService extends CommonFunction
                                     ? '<span class="badge fw-semi-bold rounded-pill status badge-soft-primary">Quick Setup</span>'
                                     : ''),
                 'setup_approval_date' => $patient->setup_approval_date ? date_formate($patient->setup_approval_date) : '',
-                'case_overview' => '<a class="badge  badge-soft-primary text-600 btn-sm btn-reveal-sm transition-none" href="' . url('/patient/case-overview/' . $hashids->encode($patient->treatment_plan)) . '"
-                                data-boundary="viewport" aria-haspopup="true" aria-expanded="false">Case Overview</a>',
+                'case_overview' => $caseOverview,
                 'continue_treatment' => $continueTreatment,
                 'case_holder' => $case_holder,
                 'request_new_plan' => ($patient->status == 'Shipped' && checkForRequestNewPlan($patient->id))
