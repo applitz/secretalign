@@ -119,6 +119,7 @@ class PatientsService extends CommonFunction
                 'tp.case_holder',
                 'tp.is_completed',
                 'tp.completed_at',
+                'tp.request_new_scan',
                 'tp.treatment_plan_duration',
                 'tp.cancellation_date',
                 'tp.setup_approval_date',
