@@ -1445,19 +1445,22 @@
 
                 if(response.upper || response.lower) {
                     if(response.upper) {
-                        $('#key1').attr('file', response.upper);
-                        window.dropzone_active_state('1', response.upper)
                         window.destroyPreview1();
                         $("#stl-upper-arch-preview").html("");
                         $("#upper-arch-progress-bar").css('width', '0%').text('0%');
+
+                        $('#key1').attr('file', response.upper);
+                        window.dropzone_active_state('1', response.upper)
+
                         previewUpperStlFile(response.upper)
                     }
                     if(response.lower) {
-                        $('#key2').attr('file', response.lower);
-                        window.dropzone_active_state('2', response.lower)
+
                         window.destroyPreview2();
                         $("#stl-lower-arch-preview").html("");
                         $("#lower-arch-progress-bar").css('width', '0%').text('0%');
+                        $('#key2').attr('file', response.lower);
+                        window.dropzone_active_state('2', response.lower)
                         previewLowerStlFile(response.lower)
                     }
                     if(response.patient_name){
