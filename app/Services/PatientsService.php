@@ -119,7 +119,6 @@ class PatientsService extends CommonFunction
                 'tp.case_holder',
                 'tp.is_completed',
                 'tp.completed_at',
-                'tp.request_new_scan',
                 'tp.treatment_plan_duration',
                 'tp.cancellation_date',
                 'tp.setup_approval_date',
@@ -170,14 +169,16 @@ class PatientsService extends CommonFunction
             }
 
             if ($patient->request_new_scan == 1) {
+
                 $caseOverview = '<div class="font-sans-serif btn-reveal-trigger"><a class="badge badge-soft-primary text-600 btn-sm btn-reveal-sm transition-none"
-                            href="'. route('patient.upload-new-scan', $hashids->encode($patient->treatment_plan_id)) .'" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                            href="'. route('patient.upload-new-scan', $hashids->encode($patient->treatment_plan)) .'" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
                             Case Overview</a></div>';
             } else {
                 $caseOverview = '<div class="font-sans-serif btn-reveal-trigger"><a class="badge badge-soft-primary text-600 btn-sm btn-reveal-sm transition-none"
-                            href="'. route('patient.case-overview', $hashids->encode($patient->treatment_plan_id)) .'" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                            href="'. route('patient.case-overview', $hashids->encode($patient->treatment_plan)) .'" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
                             Case Overview</a></div>';
             }
+
             $records['data'][] = [
 
                 'id' => $patient->treatment_plan,

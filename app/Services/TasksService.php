@@ -172,6 +172,7 @@ class TasksService extends CommonFunction
                     'data-boundary="viewport" aria-haspopup="true" aria-expanded="false">'.$patient->task .'</a>';
 
             if ($patient->request_new_scan == 1) {
+
                 $caseOverview = '<div class="font-sans-serif btn-reveal-trigger"><a class="badge badge-soft-primary text-600 btn-sm btn-reveal-sm transition-none"
                             href="'. route('patient.upload-new-scan', $hashids->encode($patient->treatment_plan_id)) .'" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
                             Case Overview</a></div>';
