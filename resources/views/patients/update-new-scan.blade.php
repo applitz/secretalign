@@ -574,7 +574,7 @@
 @if (($data['model'] ?? '') === '3shape')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const modalElement = document.getElementById('3shape-Modal');
+        const modalElement = document.getElementById('3shape-section-Modal');
 
         if (modalElement) {
             const modal = new bootstrap.Modal(modalElement);
