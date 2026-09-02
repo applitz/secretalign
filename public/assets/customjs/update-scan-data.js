@@ -1,5 +1,3 @@
-const { sharing } = require("webpack");
-
 var UpdateScanData = function() {
     var updateScan = function() {
         $(document).on('click', '#update-scan-data', function(e) {
