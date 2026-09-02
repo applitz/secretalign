@@ -1,3 +1,5 @@
+const { sharing } = require("webpack");
+
 var UpdateScanData = function() {
     var updateScan = function() {
         $(document).on('click', '#update-scan-data', function(e) {
@@ -107,17 +109,41 @@ var UpdateScanData = function() {
             });
         });
 
-        $("#select-from-medit-link").on('click', function () {
-            $("#medit-link-Modal").modal("show");
-        });
 
-        $("#cancel-medit-link-select").on('click', function () {
-            // $("#3shape-section").addClass('d-none');
-            // $("#medit-link-section").addClass('d-none')
-            // $("#patient-wizard").removeClass('d-none');
-            $("#medit-link-Modal").modal("hide");
-        });
 
+
+        // For #comment
+        ClassicEditor
+            .create(document.querySelector('#comment'))
+            .then(editor => {
+                editor.ui.view.editable.element.style.height = '150px';
+                window.commentEditor = editor; // store reference
+            })
+            .catch(error => console.error(error));
+        // For #reminder-note
+        ClassicEditor
+            .create(document.querySelector('#reminder-note'))
+            .then(editor => {
+                editor.ui.view.editable.element.style.height = '150px';
+                window.reminderEditor = editor; // store reference
+            })
+            .catch(error => console.error(error));
+
+        // For .classicEditor (if multiple, handle separately)
+        document.querySelectorAll('.classicEditor').forEach((el, index) => {
+            ClassicEditor
+                .create(el)
+                .then(editor => {
+                    editor.ui.view.editable.element.style.height = '150px';
+                    window['classicEditor' + index] = editor; // store reference
+                })
+                .catch(error => console.error(error));
+        });
+        for (instance in CKEDITOR.instances)
+            CKEDITOR.instances[instance].updateElement();
+    }
+
+    var shining3d = function() {
         $("#cancel-3shape-select").on('click', function () {
             $("#3shape-section-Modal").modal("hide");
         });
@@ -171,39 +197,25 @@ var UpdateScanData = function() {
             });
 
         });
-        // For #comment
-        ClassicEditor
-            .create(document.querySelector('#comment'))
-            .then(editor => {
-                editor.ui.view.editable.element.style.height = '150px';
-                window.commentEditor = editor; // store reference
-            })
-            .catch(error => console.error(error));
-        // For #reminder-note
-        ClassicEditor
-            .create(document.querySelector('#reminder-note'))
-            .then(editor => {
-                editor.ui.view.editable.element.style.height = '150px';
-                window.reminderEditor = editor; // store reference
-            })
-            .catch(error => console.error(error));
-
-        // For .classicEditor (if multiple, handle separately)
-        document.querySelectorAll('.classicEditor').forEach((el, index) => {
-            ClassicEditor
-                .create(el)
-                .then(editor => {
-                    editor.ui.view.editable.element.style.height = '150px';
-                    window['classicEditor' + index] = editor; // store reference
-                })
-                .catch(error => console.error(error));
+    }
+    var meditLink = function() {
+        $("#select-from-medit-link").on('click', function () {
+            $("#medit-link-Modal").modal("show");
         });
-        for (instance in CKEDITOR.instances)
-            CKEDITOR.instances[instance].updateElement();
-        }
+
+        $("#cancel-medit-link-select").on('click', function () {
+            $("#medit-link-Modal").modal("hide");
+        });
+    }
+    var treeshapeIntegration = function() {
+
+    }
     return {
         init: function() {
             updateScan();
+            shining3d();
+            meditLink();
+            treeshapeIntegration();
         }
     }
 }();
