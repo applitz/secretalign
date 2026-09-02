@@ -171,9 +171,16 @@ class TasksService extends CommonFunction
                     'href="'. route('patient.case-overview', $hashids->encode($patient->treatment_plan_id)) .'"'.
                     'data-boundary="viewport" aria-haspopup="true" aria-expanded="false">'.$patient->task .'</a>';
 
-            $caseOverview = '<div class="font-sans-serif btn-reveal-trigger"><a class="badge badge-soft-primary text-600 btn-sm btn-reveal-sm transition-none"
+            if ($patient->request_new_scan == 1) {
+                $requestNewScan = '<div class="font-sans-serif btn-reveal-trigger"><a class="badge badge-soft-warning text-600 btn-sm btn-reveal-sm transition-none"
+                            href="'. route('patient.upload-new-scan', $hashids->encode($patient->treatment_plan_id)) .'" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                            Case Overview</a></div>';
+            } else {
+                $caseOverview = '<div class="font-sans-serif btn-reveal-trigger"><a class="badge badge-soft-primary text-600 btn-sm btn-reveal-sm transition-none"
                             href="'. route('patient.case-overview', $hashids->encode($patient->treatment_plan_id)) .'" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
                             Case Overview</a></div>';
+            }
+
 
             if(Auth::user()->role == 'doctor'){
                 if($patient->cancellation_date){
