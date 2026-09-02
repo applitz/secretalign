@@ -107,6 +107,21 @@ var UpdateScanData = function() {
             });
         });
 
+        $("#select-from-medit-link").on('click', function () {
+            $("#medit-link-Modal").modal("show");
+        });
+
+        $("#cancel-medit-link-select").on('click', function () {
+            // $("#3shape-section").addClass('d-none');
+            // $("#medit-link-section").addClass('d-none')
+            // $("#patient-wizard").removeClass('d-none');
+            $("#medit-link-Modal").modal("hide");
+        });
+
+        $("#cancel-3shape-select").on('click', function () {
+            $("#3shape-section-Modal").modal("hide");
+        });
+
         $("#select-from-3shape").on('click', function (e) {
             e.preventDefault();
             $("#_three_shape_case_id").val("");
