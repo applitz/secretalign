@@ -121,6 +121,7 @@ class PatientsService extends CommonFunction
                 'tp.completed_at',
                 'tp.treatment_plan_duration',
                 'tp.cancellation_date',
+                'tp.request_new_scan',
                 'tp.setup_approval_date',
                 'tp.recommended_advisor',
                 'u.first_name as d_first_name',
