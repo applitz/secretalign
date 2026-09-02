@@ -559,7 +559,7 @@
 @endsection
 @section('javascript')
 
-@if (($data['model'] ?? '') === 'medit' && !empty(Auth::user()->medit_link_access_token))
+@if (($data['model'] ?? '') === 'medit')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const modalElement = document.getElementById('medit-link-Modal');
