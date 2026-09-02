@@ -292,7 +292,7 @@
                                 <a class="btn btn-warning waves-effect waves-light" href="javascript:void(0);" id="cancel-medit-link-select">Cancel</a>
                             </div>
                             @if(Auth::user()->medit_link_access_token != null)
-                                <a class="btn btn-danger float-end" href="{{url('/integrations/medit-link-disable')}}">
+                                <a class="btn btn-danger float-end" href="{{url('/patient/integrations/medit-link-disable')}}">
                                 <div class="d-flex align-items-center justify-content-center ">
                                     <span>Logout From</span>
                                     <img class="ms-2"  src="{{asset('public/assets/medit-link-logo.svg')}}" width="52px">
@@ -364,7 +364,7 @@
                                 <a class="btn btn-warning waves-effect waves-light" href="javascript:void(0);" id="cancel-medit-link-select">Cancel</a>
                             </div>
                             @if(Auth::user()->medit_link_access_token != null)
-                                <a class="btn btn-danger float-end" href="{{url('/integrations/medit-link-disable')}}">
+                                <a class="btn btn-danger float-end" href="{{url('/patient/integrations/medit-link-disable')}}">
                                 <div class="d-flex align-items-center justify-content-center ">
                                     <span>Logout From</span>
                                     <img class="ms-2"  src="{{asset('public/assets/medit-link-logo.svg')}}" width="52px">
@@ -559,7 +559,7 @@
 @endsection
 @section('javascript')
 
-@if (($data['model'] ?? '') === 'medit')
+@if (($data['model'] ?? '') === 'medit' && Auth::user()->medit_link_access_token != null)
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const modalElement = document.getElementById('medit-link-Modal');
