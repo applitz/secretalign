@@ -1444,23 +1444,27 @@
             }).done(function (response) {
 
                 if(response.upper || response.lower) {
+                    window.destroyPreview1();
+                    $("#stl-upper-arch-preview").html("");
+                    $("#upper-arch-progress-bar").css('width', '0%').text('0%');
+
+                    window.destroyPreview2();
+                    $("#stl-lower-arch-preview").html("");
+                    $("#lower-arch-progress-bar").css('width', '0%').text('0%');
+
                     if(response.upper) {
                         $('#key1').attr('file', response.upper);
                         window.dropzone_active_state('1', response.upper)
-                        window.destroyPreview1();
-                        $("#stl-upper-arch-preview").html("");
-                        $("#upper-arch-progress-bar").css('width', '0%').text('0%');
+
                         previewUpperStlFile(response.upper)
                     }
                     if(response.lower) {
                         $('#key2').attr('file', response.lower);
                         window.dropzone_active_state('2', response.lower)
-                        window.destroyPreview2();
-                        $("#stl-lower-arch-preview").html("");
-                        $("#lower-arch-progress-bar").css('width', '0%').text('0%');
+
                         previewLowerStlFile(response.lower)
                     }
-                                                if(response.patient_name){
+                    if(response.patient_name){
                             document.getElementById('first_name').value = response.first_name;
                             document.getElementById('last_name').value = response.last_name;
                     }
