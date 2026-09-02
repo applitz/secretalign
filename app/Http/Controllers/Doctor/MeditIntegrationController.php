@@ -13,6 +13,7 @@ class MeditIntegrationController extends Controller
     public function MeditLinkObtainAuthorizationCode()
     {
         $previousUrl = url()->previous();
+        $previousUrl = strtok($previousUrl, '?');
         $redirectData = [ 'url' => $previousUrl, 'type' => 'update-scan', 'patient_id' => null];
         if (preg_match('/patient\/upload-new-scan\/([^\/\?]+)/', $previousUrl, $matches)) {
             $redirectData['type'] = 'update-scan';
