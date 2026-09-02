@@ -1456,7 +1456,7 @@
                         $('#key1').attr('file', response.upper);
                         window.dropzone_active_state('1', response.upper)
 
-                        previewUpperStlFile(response.upper)
+                        // previewUpperStlFile(response.upper)
                     }
                     if(response.lower) {
                         $('#key2').attr('file', response.lower);
