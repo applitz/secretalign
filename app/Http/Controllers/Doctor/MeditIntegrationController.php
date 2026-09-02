@@ -25,6 +25,8 @@ class MeditIntegrationController extends Controller
     public function DisableMeditLinkIntegration()
     {
         $previousUrl = url()->previous();
+        // Remove query string from previous URL
+        $previousUrl = strtok($previousUrl, '?');
         DB::table('users')->where('id', Auth::user()->id)->update([
             "medit_link_access_token" => null,
             "medit_link_refresh_token" => null,
