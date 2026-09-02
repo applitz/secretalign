@@ -677,8 +677,9 @@ class PatientsController extends Controller
         }
     }
 
-    public function updateNewScan($phase){
+    public function updateNewScan(Request $request, $phase){
         $data = [];
+        $data['model'] = $request->get('modal') ?? '';
         $whereClauses = [["tp.id", $this->hashids->decode($phase)], ["tp.is_deleted", 0],];
 
         $patient = DB::table('p_treatment_plans as tp')

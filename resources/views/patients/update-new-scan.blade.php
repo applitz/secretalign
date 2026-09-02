@@ -559,7 +559,18 @@
 @endsection
 @section('javascript')
 
+@if (($data['model'] ?? '') === 'medit')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalElement = document.getElementById('medit-link-Modal');
 
+        if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        }
+    });
+</script>
+@endif
 
 <script type="module">
     import { STLLoader } from "{{asset('public/assets/three/examples/jsm/loaders/STLLoader.js')}}";
