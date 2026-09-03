@@ -166,10 +166,16 @@ class TasksService extends CommonFunction
             }
 
 
+            $routeName = $patient->request_new_scan == 1
+                ? 'patient.upload-new-scan'
+                : 'patient.case-overview';
 
-            $task = '<a class="btn btn-link '. $badgeClass .' text-600 btn-sm btn-reveal-sm transition-none"'.
-                    'href="'. route('patient.case-overview', $hashids->encode($patient->treatment_plan_id)) .'"'.
-                    'data-boundary="viewport" aria-haspopup="true" aria-expanded="false">'.$patient->task .'</a>';
+            $task = '<a class="btn btn-link ' . $badgeClass . ' text-600 btn-sm btn-reveal-sm transition-none"'
+                . ' href="' . route($routeName, $hashids->encode($patient->treatment_plan_id)) . '"'
+                . ' data-boundary="viewport" aria-haspopup="true" aria-expanded="false">'
+                . $patient->task
+                . '</a>';
+
 
             if ($patient->request_new_scan == 1) {
 
@@ -201,12 +207,12 @@ class TasksService extends CommonFunction
                 $advisor = 'N/A';
             }
 
-            $requestNewScan = '';
-            if ($patient->request_new_scan == 1) {
-                $requestNewScan = '<div class="font-sans-serif btn-reveal-trigger"><a class="badge badge-soft-warning text-600 btn-sm btn-reveal-sm transition-none"
-                            href="'. route('patient.upload-new-scan', $hashids->encode($patient->treatment_plan_id)) .'" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
-                            Update New Scan</a></div>';
-            }
+            // $requestNewScan = '';
+            // if ($patient->request_new_scan == 1) {
+            //     $requestNewScan = '<div class="font-sans-serif btn-reveal-trigger"><a class="badge badge-soft-warning text-600 btn-sm btn-reveal-sm transition-none"
+            //                 href="'. route('patient.upload-new-scan', $hashids->encode($patient->treatment_plan_id)) .'" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+            //                 Update New Scan</a></div>';
+            // }
 
             $records['data'][] = [
                 'user_full_name' => $patient->user_full_name,
@@ -222,7 +228,7 @@ class TasksService extends CommonFunction
                 'phase' => '<span class="badge fw-semi-bold rounded-pill status badge-soft-info">Phase '. $patient->phase .'</span>',
                 'previous_case_holder' => ucfirst($patient->previous_case_holder),
                 'due_date' => $due_date,
-                'request_new_scan' => $requestNewScan,
+                // 'request_new_scan' => $requestNewScan,
                 'case_overview' => $caseOverview,
                 'advisor' => $advisor,
                 'created_at' => date_formate($patient->created_at)."<br>".date("h:i A", strtotime($patient->created_at)),
