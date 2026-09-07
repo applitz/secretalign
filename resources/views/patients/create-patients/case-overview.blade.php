@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="pill-tab-div5" role="tabpanel" aria-labelledby="pill-tab-li5">
+<div class="tab-pane fade {{ (isset($activeTab) && $activeTab == 'pill-tab-div5') ? 'show active' : '' }}" id="pill-tab-div5" role="tabpanel" aria-labelledby="pill-tab-li5">
     <div id="overview-container"></div>
     <div class="mb-3 text-end">
         <button class="btn btn-primary btn-sm waves-effect waves-light px-3 previous-tab" data-target="#pill-tab-li4">Previous</button>

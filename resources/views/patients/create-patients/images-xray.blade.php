@@ -1,5 +1,5 @@
 {{-- Images / Xray Start --}}
-<div class="tab-pane fade" id="pill-tab-div3" role="tabpanel">
+<div class="tab-pane fade {{ (isset($activeTab) && $activeTab == 'pill-tab-div3') ? 'show active' : '' }}" id="pill-tab-div3" role="tabpanel">
     <div class="row mb-3">
 
     {{-- Front Start --}}

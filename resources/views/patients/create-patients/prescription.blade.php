@@ -1,4 +1,4 @@
- <div class="tab-pane fade" id="pill-tab-div4" role="tabpanel">
+<div class="tab-pane fade {{ (isset($activeTab) && $activeTab == 'pill-tab-div4') ? 'show active' : '' }}" id="pill-tab-div4" role="tabpanel">
     <h3>Your preferred treatment instructions.</h3>
     <div class="mb-3">
         <div class="form-check form-check-inline">

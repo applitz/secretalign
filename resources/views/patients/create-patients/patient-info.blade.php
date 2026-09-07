@@ -1,5 +1,5 @@
 {{-- Patient Info Start --}}
-    <div class="tab-pane fade {{ $baseUrl == null && $code == null ? 'show active' : '' }}" id="pill-tab-div1" role="tabpanel">
+    <div class="tab-pane fade {{ (isset($activeTab) ? $activeTab == 'pill-tab-div1' : ($baseUrl == null && $code == null)) ? 'show active' : '' }}" id="pill-tab-div1" role="tabpanel">
         <div class="mb-3">
             <label class="form-label">Patient ID</label>
             <input type="text" class="form-control" placeholder="patient ID" disabled value="{{$hashids->encode($patient->patient_id)}}">
@@ -17,7 +17,7 @@
         <div class="mb-3">
             <label class="form-label" for="dob">Date of Birth</label>
             <input class="form-control pickr" id="dob" name="dob" value="{{ @$patient->dob }}"
-                type="text" placeholder="d/m/y"
+                type="text" placeholder="d/m/y" autocomplete="off"
                 data-options='{"dateFormat":"d/m/y","disableMobile":true}' />
         </div>
         <div class="mb-3 text-end">

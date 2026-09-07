@@ -92,7 +92,7 @@
                             <h6 class="text-700 mb-0">Start Date: </h6>
                             </div>
                             <div class="col-12 position-relative">
-                            <input type="text" class="form-control pickr" name="additional_medit_link_medit_link_start_date" value="{{date("Y-m-d", strtotime("-1 month"))}}">
+                            <input type="text" class="form-control pickr" name="additional_medit_link_medit_link_start_date" autocomplete="off" value="{{date("Y-m-d", strtotime("-1 month"))}}">
                             </div>
                         </div>
                         </div>
@@ -102,7 +102,7 @@
                             <h6 class="text-700 mb-0">End Date: </h6>
                             </div>
                             <div class="col-12 position-relative">
-                            <input type="text" class="form-control pickr" name="additional_medit_link_medit_link_end_date" value="{{date("Y-m-d")}}">
+                            <input type="text" class="form-control pickr" name="additional_medit_link_medit_link_end_date" autocomplete="off" value="{{date("Y-m-d")}}">
                             </div>
                         </div>
                         </div>

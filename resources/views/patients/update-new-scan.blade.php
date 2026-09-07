@@ -186,7 +186,7 @@
                                 <h6 class="text-700 mb-0">Start Date: </h6>
                                 </div>
                                 <div class="col-12 position-relative">
-                                <input type="text" class="form-control pickr" name="_medit_link_start_date" value="{{date("Y-m-d", strtotime("-1 month"))}}">
+                                <input type="text" class="form-control pickr" name="_medit_link_start_date" autocomplete="off" value="{{date("Y-m-d", strtotime("-1 month"))}}">
                                 </div>
                             </div>
                             </div>
@@ -196,7 +196,7 @@
                                 <h6 class="text-700 mb-0">End Date: </h6>
                                 </div>
                                 <div class="col-12 position-relative">
-                                <input type="text" class="form-control pickr" name="_medit_link_end_date" value="{{date("Y-m-d")}}">
+                                <input type="text" class="form-control pickr" name="_medit_link_end_date" autocomplete="off" value="{{date("Y-m-d")}}">
                                 </div>
                             </div>
                             </div>
@@ -3967,7 +3967,25 @@
         $(document).ready(function() {
             const fp = flatpickr($(".pickr"), {
                 dateFormat: "d-m-Y", // 2026-02-06
-                allowInput: true
+                allowInput: true,
+                onReady: function(selectedDates, dateStr, instance) {
+                    if (instance._input) {
+                        instance._input.removeEventListener("focus", instance.open);
+                    }
+                    instance.close();
+                },
+                onOpen: function(selectedDates, dateStr, instance) {
+                    if (instance._input && (instance._input.offsetWidth === 0 || instance._input.offsetHeight === 0 || $(instance._input).is(':hidden'))) {
+                        instance.close();
+                    }
+                }
+            });
+
+            if (document.activeElement && $(document.activeElement).hasClass('pickr')) {
+                document.activeElement.blur();
+            }
+            document.querySelectorAll('.flatpickr-calendar.open').forEach(function(cal) {
+                cal.classList.remove('open');
             });
 
             function parseDMY(dateStr) {

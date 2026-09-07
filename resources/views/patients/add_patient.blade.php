@@ -546,52 +546,56 @@
                 <h4 class="card-title">Add Your Patient Information</h4>
                 <p class="card-title-desc">You must complete all steps</p>
 
+                @php
+                    $activeTab = request()->get('tab', (isset($baseUrl) && $baseUrl !== null && isset($code) && $code !== null ? 'pill-tab-div2' : 'pill-tab-div1'));
+                @endphp
+
                 <ul class="nav nav-pills gap-3" id="pill-myTab" role="tablist">
                     <li class="nav-item flex-grow-1">
-                        <a class="nav-link text-900 active" id="pill-tab-li1" data-bs-toggle="tab"
-                        href="#pill-tab-div1" role="tab" aria-controls="pill-tab-div1" aria-selected="true">
+                        <a class="nav-link text-900 {{ $activeTab == 'pill-tab-div1' ? 'active' : '' }}" id="pill-tab-li1" data-bs-toggle="tab"
+                        href="#pill-tab-div1" role="tab" aria-controls="pill-tab-div1" aria-selected="{{ $activeTab == 'pill-tab-div1' ? 'true' : 'false' }}">
                             <span class="rounded-circle border border-white me-2" style="padding: 4px 8px;">1</span>
                             Patient Info
                         </a>
                     </li>
                     <li class="nav-item flex-grow-1">
-                        <a class="nav-link text-900" id="pill-tab-li-treatment-type" data-bs-toggle="tab"
-                        href="#pill-tab-li-treatment-type-div" role="tab" aria-controls="pill-tab-li-treatment-type-div" aria-selected="false">
+                        <a class="nav-link text-900 {{ $activeTab == 'pill-tab-li-treatment-type-div' ? 'active' : '' }}" id="pill-tab-li-treatment-type" data-bs-toggle="tab"
+                        href="#pill-tab-li-treatment-type-div" role="tab" aria-controls="pill-tab-li-treatment-type-div" aria-selected="{{ $activeTab == 'pill-tab-li-treatment-type-div' ? 'true' : 'false' }}">
                             <span class="rounded-circle border border-white me-2" style="padding: 4px 8px;">2</span>
                             Treatment Type
                         </a>
                     </li>
                     <li class="nav-item flex-grow-1">
-                        <a class="nav-link text-900" id="pill-tab-li2" data-bs-toggle="tab"
-                        href="#pill-tab-div2" role="tab" aria-controls="pill-tab-div2" aria-selected="false">
+                        <a class="nav-link text-900 {{ $activeTab == 'pill-tab-div2' ? 'active' : '' }}" id="pill-tab-li2" data-bs-toggle="tab"
+                        href="#pill-tab-div2" role="tab" aria-controls="pill-tab-div2" aria-selected="{{ $activeTab == 'pill-tab-div2' ? 'true' : 'false' }}">
                             <span class="rounded-circle border border-white me-2" style="padding: 4px 8px;">3</span>
                             Scan Data
                         </a>
                     </li>
                     <li class="nav-item flex-grow-1">
-                        <a class="nav-link text-900" id="pill-tab-li3" data-bs-toggle="tab"
-                        href="#pill-tab-div3" role="tab" aria-controls="pill-tab-div3" aria-selected="false">
+                        <a class="nav-link text-900 {{ $activeTab == 'pill-tab-div3' ? 'active' : '' }}" id="pill-tab-li3" data-bs-toggle="tab"
+                        href="#pill-tab-div3" role="tab" aria-controls="pill-tab-div3" aria-selected="{{ $activeTab == 'pill-tab-div3' ? 'true' : 'false' }}">
                             <span class="rounded-circle border border-white me-2" style="padding: 4px 8px;">4</span>
                             Images / X-Rays
                         </a>
                     </li>
                     <li class="nav-item flex-grow-1">
-                        <a class="nav-link text-900" id="pill-tab-li4" data-bs-toggle="tab"
-                        href="#pill-tab-div4" role="tab" aria-controls="pill-tab-div4" aria-selected="false">
+                        <a class="nav-link text-900 {{ $activeTab == 'pill-tab-div4' ? 'active' : '' }}" id="pill-tab-li4" data-bs-toggle="tab"
+                        href="#pill-tab-div4" role="tab" aria-controls="pill-tab-div4" aria-selected="{{ $activeTab == 'pill-tab-div4' ? 'true' : 'false' }}">
                             <span class="rounded-circle border border-white me-2" style="padding: 4px 8px;">5</span>
                             Prescription
                         </a>
                     </li>
                     <li class="nav-item flex-grow-1">
-                        <a class="nav-link text-900" id="pill-tab-li5" data-bs-toggle="tab"
-                        href="#pill-tab-div5" role="tab" aria-controls="pill-tab-div5" aria-selected="false">
+                        <a class="nav-link text-900 {{ $activeTab == 'pill-tab-div5' ? 'active' : '' }}" id="pill-tab-li5" data-bs-toggle="tab"
+                        href="#pill-tab-div5" role="tab" aria-controls="pill-tab-div5" aria-selected="{{ $activeTab == 'pill-tab-div5' ? 'true' : 'false' }}">
                             <span class="rounded-circle border border-white me-2" style="padding: 4px 8px;" >6</span>
                             Case Overview
                         </a>
                     </li>
                     <li class="nav-item flex-grow-1">
-                        <a class="nav-link text-900" id="pill-tab-li6" data-bs-toggle="tab"
-                        href="#pill-tab-div6" role="tab" aria-controls="pill-tab-div6" aria-selected="false">
+                        <a class="nav-link text-900 {{ $activeTab == 'pill-tab-div6' ? 'active' : '' }}" id="pill-tab-li6" data-bs-toggle="tab"
+                        href="#pill-tab-div6" role="tab" aria-controls="pill-tab-div6" aria-selected="{{ $activeTab == 'pill-tab-div6' ? 'true' : 'false' }}">
                             <span class="rounded-circle border border-white me-2" style="padding: 4px 8px;" >7</span>
                             Confirm &amp; Submit
                         </a>
@@ -940,14 +944,14 @@
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="startDate" class="form-label">Start Date</label>
-                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['startDate'] ? date('d-m-Y', strtotime($dataShining3d['startDate'])) : '' }}" placeholder="Select start date">
+                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" autocomplete="off" value="{{ $dataShining3d['startDate'] ? date('d-m-Y', strtotime($dataShining3d['startDate'])) : '' }}" placeholder="Select start date">
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="endDate" class="form-label">End Date</label>
-                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" value="{{ $dataShining3d['endDate'] ? date('d-m-Y', strtotime($dataShining3d['endDate'])) : '' }}" placeholder="Select end date">
+                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" autocomplete="off" value="{{ $dataShining3d['endDate'] ? date('d-m-Y', strtotime($dataShining3d['endDate'])) : '' }}" placeholder="Select end date">
                                         <input type="hidden" id="order-from-shining3d-label-model-shining3d-doctor-id" value="{{ $dataShining3d['doctorId'] }}">
                                         <input type="hidden" id="order-from-shining3d-label-model-shining3d-auth-token" value="{{ $dataShining3d['authToken'] }}">
                                         <input type="hidden" id="order-from-shining3d-label-model-shining3d-org-type" value="{{ $dataShining3d['orgType'] }}">
@@ -1126,14 +1130,14 @@
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="startDate" class="form-label">Start Date</label>
-                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" placeholder="Select start date">
+                                        <input type="text" id="startDate" class="form-control pickr flatpickr-input" autocomplete="off" placeholder="Select start date">
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="endDate" class="form-label">End Date</label>
-                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" placeholder="Select end date">
+                                        <input type="text" id="endDate" class="form-control pickr flatpickr-input" autocomplete="off" placeholder="Select end date">
                                     </div>
                                 </div>
                             </div>
@@ -4543,9 +4547,18 @@
                 }
             });
 
+            // Close any open flatpickr calendar when switching tabs
+            $('a[data-bs-toggle="tab"]').on('show.bs.tab shown.bs.tab hide.bs.tab hidden.bs.tab', function () {
+                document.querySelectorAll('.flatpickr-calendar.open').forEach(function(cal) {
+                    cal.classList.remove('open');
+                });
+            });
+
             @if(@$_GET['tab'])
-                try { showLoader(); $(".my-loader").show(); } catch(e) { }
-                fetchOverview()
+                @if(@$_GET['tab'] == 'pill-tab-div5')
+                    try { showLoader(); $(".my-loader").show(); } catch(e) { }
+                    fetchOverview();
+                @endif
                 let tabSelector = 'ul.nav-pills a[href="#{{ $_GET["tab"] }}"]';
                 let tabEl = document.querySelector(tabSelector);
 
@@ -4631,7 +4644,28 @@
         $(document).ready(function() {
             const fp = flatpickr($(".pickr"), {
                 dateFormat: "d-m-Y", // 2026-02-06
-                allowInput: true
+                allowInput: true,
+                onReady: function(selectedDates, dateStr, instance) {
+                    if (instance._input) {
+                        // Prevent opening on automatic focus/autofill/tab restore
+                        instance._input.removeEventListener("focus", instance.open);
+                    }
+                    instance.close();
+                },
+                onOpen: function(selectedDates, dateStr, instance) {
+                    // Prevent calendar from opening or remaining open if input is hidden
+                    if (instance._input && (instance._input.offsetWidth === 0 || instance._input.offsetHeight === 0 || $(instance._input).is(':hidden'))) {
+                        instance.close();
+                    }
+                }
+            });
+
+            // Blur any auto-focused pickr and close any open calendar
+            if (document.activeElement && $(document.activeElement).hasClass('pickr')) {
+                document.activeElement.blur();
+            }
+            document.querySelectorAll('.flatpickr-calendar.open').forEach(function(cal) {
+                cal.classList.remove('open');
             });
 
             function parseDMY(dateStr) {
