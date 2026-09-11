@@ -63,7 +63,7 @@
 
                 <div class="modal-body">
                     <input type="hidden" name="patient_id" value="{{ $patient->patient_id }}">
-                    <input type="hidden" name="patient_link" value="{{ $patient->patient_link ?? '' }}" class="form-control">
+                    <input type="hidden" name="patient_link" value="{{ route('mail-iframe', ['phase' => Crypt::encryptString(request()->phase)]) }}" class="form-control">
 
                     <div class="mb-3">
                         <label class="form-label">Patient's Email</label>

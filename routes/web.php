@@ -208,6 +208,7 @@ Route::get('/patient/fetch-case-overview/{phase}', [PatientOverview::class, 'fet
 Route::get('/patient/case-overview/{phase}', [PatientOverview::class, 'overview'])->name('patient.case-overview');
 Route::post('/patient/case-overview/download-gdrive-files', [PatientOverview::class, 'downloadGDriveFiles'])->name('patient.download-gdrive-files');
 Route::get('/patient/full-screen/{phase}', [PatientOverview::class, 'iframe'])->name('iframe');
+Route::get('/patient/{phase}', [PatientOverview::class, 'mailiframe'])->name('mail-iframe');
 Route::get('/patient/full-screen-iframe-link-optional/{phase}', [PatientOverview::class, 'iframeLinkOptional'])->name('iframe-link-optional');
 Route::post('/patient/case-overview/chane-pricing-package', [PatientOverview::class, 'change_pricing_package']);
 
