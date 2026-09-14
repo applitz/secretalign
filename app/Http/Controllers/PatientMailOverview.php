@@ -32,9 +32,9 @@ class PatientMailOverview extends Controller
 
         $whereClauses = [["tp.id", $this->hashids->decode($phase)], ["tp.is_deleted", 0],];
 
-        if (Auth::user()->role == 'lab') {
-            array_push($whereClauses, ["tp.lab", Auth::user()->id]);
-        }
+        // if (Auth::user()->role == 'lab') {
+        //     array_push($whereClauses, ["tp.lab", Auth::user()->id]);
+        // }
 
         $patient = DB::table('p_treatment_plans as tp')
             ->where($whereClauses)
