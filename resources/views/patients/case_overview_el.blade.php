@@ -97,7 +97,10 @@
             OrbitControls
         } from '{{ asset('public/assets/three/examples/jsm/controls/OrbitControls.js') }}';
 
+    (function initPrimaryViewer() {
         const container = document.getElementById('canvas');
+        if (!container) return;
+
         const scene = new THREE.Scene();
         scene.name = 'myscene';
         scene.background = new THREE.Color(0xaaaaaa);
@@ -130,8 +133,20 @@
 
         THREE.Cache.enabled = true;
 
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+        const getPrimarySize = () => {
+            const width = container.clientWidth || 720;
+            const height = container.clientHeight || 480;
+            return {
+                width,
+                height
+            };
+        };
+        const {
+            width: pWidth,
+            height: pHeight
+        } = getPrimarySize();
+        renderer.setSize(pWidth, pHeight);
+        container.appendChild(renderer.domElement);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);
@@ -161,8 +176,10 @@
                 scene.add(mesh);
                 filesLoaded++;
                 currentProgress += percentage;
-                loadingBar.style.width = currentProgress + '%';
-                loadingBar.textContent = Math.floor(currentProgress) + '%';
+                if (loadingBar) {
+                    loadingBar.style.width = currentProgress + '%';
+                    loadingBar.textContent = Math.floor(currentProgress) + '%';
+                }
             },
             (xhr) => {
             },
@@ -182,8 +199,10 @@
                 scene.add(mesh);
                 filesLoaded++;
                 currentProgress += percentage;
-                loadingBar.style.width = currentProgress + '%' + ' modules loaded';
-                loadingBar.textContent = Math.floor(currentProgress) + '%';
+                if (loadingBar) {
+                    loadingBar.style.width = currentProgress + '%' + ' modules loaded';
+                    loadingBar.textContent = Math.floor(currentProgress) + '%';
+                }
             },
             (xhr) => {
             },
@@ -206,18 +225,19 @@
                 scene.traverse(function(object) {
                     console.log(object);
                     if (object.visible === true && object.type === "Mesh") {
-                        document.getElementById('current-module').textContent = object.tag;
+                        const curMod = document.getElementById('current-module');
+                        if (curMod) curMod.textContent = object.tag;
                     }
                     if (visible === '1') {
-                        if (object.tag === document.getElementById('current-module').textContent && object
-                            .type === "Mesh") {
+                        const curMod = document.getElementById('current-module');
+                        const curTag = curMod ? curMod.textContent : '';
+                        if (object.tag === curTag && object.type === "Mesh") {
                             object.visible = true;
                             camera.position.z = camera_z;
                             camera.position.x = camera_x;
                             camera.position.y = 0;
                         }
-                        if (object.tag === document.getElementById('current-module').textContent && object
-                            .type === "Mesh" && object.visible == false) {
+                        if (object.tag === curTag && object.type === "Mesh" && object.visible == false) {
                             // alert(object.tag+' hidden');
                             object.visible = true;
                             camera.position.z = camera_z;
@@ -225,13 +245,13 @@
                             camera.position.y = 0;
                         }
                     } else {
-                        if (objectid != object.name && object.type == 'Mesh' && object.tag == document
-                            .getElementById('current-module').textContent) {
+                        const curMod = document.getElementById('current-module');
+                        const curTag = curMod ? curMod.textContent : '';
+                        if (objectid != object.name && object.type == 'Mesh' && object.tag == curTag) {
                             object.visible = false;
                             console.log(object);
                         }
-                        if (objectid == object.name && object.type == 'Mesh' && object.tag == document
-                            .getElementById('current-module').textContent) {
+                        if (objectid == object.name && object.type == 'Mesh' && object.tag == curTag) {
                             object.visible = true;
                             camera.position.z = 0;
                             camera.position.x = 0;
@@ -257,8 +277,10 @@
                         scene.add(mesh);
                         filesLoaded++;
                         currentProgress += percentage;
-                        loadingBar.style.width = currentProgress + '%';
-                        loadingBar.textContent = Math.floor(currentProgress) + '%' + ' modules loaded';
+                        if (loadingBar) {
+                            loadingBar.style.width = currentProgress + '%';
+                            loadingBar.textContent = Math.floor(currentProgress) + '%' + ' modules loaded';
+                        }
                         console.log('scene updated');
                         console.log(scene);
                         if (currentProgress > 95) {
@@ -266,7 +288,6 @@
                         }
                     },
                     (xhr) => {
-                        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
                     },
                     (error) => {
                         console.log(error)
@@ -282,8 +303,10 @@
                         scene.add(mesh);
                         filesLoaded++;
                         currentProgress += percentage;
-                        loadingBar.style.width = currentProgress + '%';
-                        loadingBar.textContent = Math.floor(currentProgress) + '%' + ' modules loaded';
+                        if (loadingBar) {
+                            loadingBar.style.width = currentProgress + '%';
+                            loadingBar.textContent = Math.floor(currentProgress) + '%' + ' modules loaded';
+                        }
                         console.log('scene updated');
                         console.log(scene);
                         if (currentProgress > 95) {
@@ -291,7 +314,6 @@
                         }
                     },
                     (xhr) => {
-                        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
                     },
                     (error) => {
                         console.log(error)
@@ -300,15 +322,18 @@
                     });
                 // },i * 50);
             }
-            document.getElementById('slider').addEventListener('mousedown', function(event) {
-                document.getElementById('slider').addEventListener('mousemove', onDocumentMouseMove);
-                document.getElementById('slider').addEventListener('mouseout', function(event) {
-                    document.getElementById('slider').removeEventListener('mousemove', onDocumentMouseMove);
+            const slider = document.getElementById('slider');
+            if (slider) {
+                slider.addEventListener('mousedown', function(event) {
+                    slider.addEventListener('mousemove', onDocumentMouseMove);
+                    slider.addEventListener('mouseout', function(event) {
+                        slider.removeEventListener('mousemove', onDocumentMouseMove);
+                    });
                 });
-            });
-            document.addEventListener('mouseup', function(event) {
-                document.getElementById('slider').removeEventListener('mousemove', onDocumentMouseMove);
-            });
+                document.addEventListener('mouseup', function(event) {
+                    slider.removeEventListener('mousemove', onDocumentMouseMove);
+                });
+            }
 
         var quaternion = new THREE.Quaternion();
 
@@ -356,8 +381,9 @@
 
 
             scene.traverse(function(object) {
-                if (object.visible === true && object.type === "Mesh") {
-                    document.getElementById('current-module').textContent = objectid;
+                const curMod = document.getElementById('current-module');
+                if (object.visible === true && object.type === "Mesh" && curMod) {
+                    curMod.textContent = objectid;
                 }
                 if (object.type == 'Mesh' && object.tag == objectid) {
                     object.visible = true;
@@ -373,111 +399,114 @@
                         object.visible = false;
                     }
 
-                    if (objectname === 'mandibular' && object.name === 'mandibular' && object.tag ==
-                        document.getElementById('current-module').textContent) {
+                    const curTag = curMod ? curMod.textContent : '';
+                    if (objectname === 'mandibular' && object.name === 'mandibular' && object.tag == curTag) {
                         object.visible = true;
                     }
-                    if (objectname === 'maxillary' && object.name === 'maxillary' && object.tag ==
-                        document.getElementById('current-module').textContent) {
+                    if (objectname === 'maxillary' && object.name === 'maxillary' && object.tag == curTag) {
                         object.visible = true;
                     }
                 }
                 console.log(object.tag);
             });
         }));
-        document.getElementById('play-button').addEventListener('click', event => {
-            console.log(buttons)
-            var i = 0;
-            buttons.forEach((button) => {
-                setTimeout(function() {
+        const playBtn = document.getElementById('play-button');
+        if (playBtn) {
+            playBtn.addEventListener('click', event => {
+                console.log(buttons)
+                var i = 0;
+                buttons.forEach((button) => {
+                    setTimeout(function() {
 
-                    // jQuery('label.step-trigger:nth-child('+i+')').addClass('active');
-                    const camera_z = button.getAttribute("data-cameraz");
-                    const camera_x = button.getAttribute("data-camerax");
-                    const objectid = button.getAttribute("id");
-                    console.log(camera_z + ',' + camera_x + ',' + objectid);
-                    camera.position.z = camera_z;
-                    camera.position.x = camera_x;
-                    if (jQuery('.current-view').text().length > 0) {
-                        // camera.position.y = -6;
-                        var info = jQuery('.current-view').text().split(',');
-                        if (info[0] !== 'null' && info[2] !== 'maxillary' && info[2] !==
-                            'mandibular') {
-                            camera.position.z = info[0];
-                        } else {
-                            camera.position.z = 0;
-                        }
-                        if (info[1] !== 'null' && info[2] !== 'maxillary' && info[2] !==
-                            'mandibular') {
-                            camera.position.x = info[1];
-                        } else {
-                            // camera.position.x = 0;
-                        }
-                        if (info[2] === 'maxillary') {
-                            var objectname = 'maxillary';
-                        } else if (info[2] === 'mandibular') {
-                            var objectname = 'mandibular';
-                        }
-
-
-                    } else {
-                        camera.position.y = 0;
-                    }
-                    scene.traverse(function(object) {
-                        if (object.visible === true && object.type === "Mesh") {
-                            document.getElementById('current-module').textContent =
-                            objectid;
-                        }
-                        if (object.type == 'Mesh' && object.tag == objectid) {
-                            object.visible = true;
-                        }
-                        if (object.type == 'Mesh' && object.tag !== objectid) {
-                            object.visible = false;
-                        }
-                        if (objectname) {
-                            if (objectname === 'maxillary' && object.name ===
+                        // jQuery('label.step-trigger:nth-child('+i+')').addClass('active');
+                        const camera_z = button.getAttribute("data-cameraz");
+                        const camera_x = button.getAttribute("data-camerax");
+                        const objectid = button.getAttribute("id");
+                        console.log(camera_z + ',' + camera_x + ',' + objectid);
+                        camera.position.z = camera_z;
+                        camera.position.x = camera_x;
+                        if (jQuery('.current-view').text().length > 0) {
+                            // camera.position.y = -6;
+                            var info = jQuery('.current-view').text().split(',');
+                            if (info[0] !== 'null' && info[2] !== 'maxillary' && info[2] !==
                                 'mandibular') {
-                                object.visible = false;
+                                camera.position.z = info[0];
+                            } else {
+                                camera.position.z = 0;
                             }
-                            if (objectname === 'mandibular' && object.name ===
-                                'maxillary') {
-                                object.visible = false;
+                            if (info[1] !== 'null' && info[2] !== 'maxillary' && info[2] !==
+                                'mandibular') {
+                                camera.position.x = info[1];
+                            } else {
+                                // camera.position.x = 0;
+                            }
+                            if (info[2] === 'maxillary') {
+                                var objectname = 'maxillary';
+                            } else if (info[2] === 'mandibular') {
+                                var objectname = 'mandibular';
                             }
 
-                            if (objectname === 'mandibular' && object.name ===
-                                'mandibular' && object.tag == document.getElementById(
-                                    'current-module').textContent) {
-                                object.visible = true;
-                            }
-                            if (objectname === 'maxillary' && object.name === 'maxillary' &&
-                                object.tag == document.getElementById('current-module')
-                                .textContent) {
-                                object.visible = true;
-                            }
+
+                        } else {
+                            camera.position.y = 0;
                         }
-                    });
-                    // jQuery('label.step-trigger:nth-child('+i+')').removeClass('active');
-                    if (i === buttons.length) {
-                        i = 0;
-                    }
-                }, 500 * i);
-                i++;
-            });
+                        scene.traverse(function(object) {
+                            const curMod = document.getElementById('current-module');
+                            if (object.visible === true && object.type === "Mesh" && curMod) {
+                                curMod.textContent =
+                                objectid;
+                            }
+                            if (object.type == 'Mesh' && object.tag == objectid) {
+                                object.visible = true;
+                            }
+                            if (object.type == 'Mesh' && object.tag !== objectid) {
+                                object.visible = false;
+                            }
+                            if (objectname) {
+                                if (objectname === 'maxillary' && object.name ===
+                                    'mandibular') {
+                                    object.visible = false;
+                                }
+                                if (objectname === 'mandibular' && object.name ===
+                                    'maxillary') {
+                                    object.visible = false;
+                                }
 
-        });
+                                const curTag = curMod ? curMod.textContent : '';
+                                if (objectname === 'mandibular' && object.name ===
+                                    'mandibular' && object.tag == curTag) {
+                                    object.visible = true;
+                                }
+                                if (objectname === 'maxillary' && object.name === 'maxillary' &&
+                                    object.tag == curTag) {
+                                    object.visible = true;
+                                }
+                            }
+                        });
+                        // jQuery('label.step-trigger:nth-child('+i+')').removeClass('active');
+                        if (i === buttons.length) {
+                            i = 0;
+                        }
+                    }, 500 * i);
+                    i++;
+                });
+
+            });
+        }
 
         function animate() {
             requestAnimationFrame(animate);
-            container.appendChild(renderer.domElement);
             controls.update();
             renderer.render(scene, camera);
 
         };
-        export const ZoomBar = () => {
-            return (
-                '<div className="zoom-wrapper"><div className="zoom-bar"><div className="button" id="zoom-out">-</div><div className="button" id="zoom-in">+</div></div></div>');
-        };
         animate();
+    })();
+
+    export const ZoomBar = () => {
+        return (
+            '<div className="zoom-wrapper"><div className="zoom-bar"><div className="button" id="zoom-out">-</div><div className="button" id="zoom-in">+</div></div></div>');
+    };
         jQuery(document).ready(function() {
             jQuery('#customRange2').on('input', function() {
                 var currentStep = parseInt(jQuery(this).val()) + 1

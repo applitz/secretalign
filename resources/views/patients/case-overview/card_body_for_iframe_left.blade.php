@@ -2865,8 +2865,9 @@
             </div>
         </div>
     </div>
+
     @if ($patient->is_submitted != 0 && Auth::user()->role == $patient->case_holder && (Auth::user()->role != 'lab' || DB::table('lab_requests')->where('treatment_plan_id', @$patient->id)->where('user_id', Auth::user()->id)->where('is_canceled', 0)->exists()))
-        {{-- @dd($patient); --}}
+
         @if ($patient->is_rejected == 1 || $patient->is_cancelled == 1)
             @if ($patient->is_cancelled == 1)
                 <div class="card">

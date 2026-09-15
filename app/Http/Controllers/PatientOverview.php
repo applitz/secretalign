@@ -239,7 +239,7 @@ class PatientOverview extends Controller
         }
         abort(403, 'Unauthorized request!');
     }
-    
+
     public function iframeLinkOptional (Request $request, $phase)
     {
 
@@ -2207,7 +2207,6 @@ class PatientOverview extends Controller
     {
         if (Auth::user()->role == 'doctor') {
             $data = $request->all();
-
             unset(
                 $data['attachments'],
             );
