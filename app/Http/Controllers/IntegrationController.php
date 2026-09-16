@@ -591,11 +591,11 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
                         'path' => storage_path('logs/3shape.log'),
                     ])->info('3Shape API Response', [
                         'response' => $response,
-                        'count' => @$response->Count
+                        'cases_count' => count($response->Cases ?? []),
+                        'has_more_cases' => $response->HasMoreCases ?? false,
                     ]);
-                    if (@$response->Count > 0) {
-                        $results = $response->Cases ?? [];
-                    }
+
+                    $results = $response->Cases ?? [];
                 }
                 return view("layouts.three_shape_patients", compact("results"))->render();
             }
