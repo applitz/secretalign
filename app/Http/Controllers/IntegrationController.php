@@ -584,15 +584,16 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
                     if (@$response->Id == $three_shape_case_id) {
                         $results = [$response];
                     }
+                } elseif (!empty($three_shape_search_for_case)) {
+                    $response = $this->searchThreeShapeCases($threeshape_region_uri, $three_shape_search_for_case, $token->three_shape_access_token);
                     Log::build([
                         'driver' => 'single',
                         'path' => storage_path('logs/3shape.log'),
                     ])->info('3Shape API Response', [
                         'response' => $response,
+                        'cases_count' => count($response->Cases ?? []),
+                        'has_more_cases' => $response->HasMoreCases ?? false,
                     ]);
-
-                } elseif (!empty($three_shape_search_for_case)) {
-                    $response = $this->searchThreeShapeCases($threeshape_region_uri, $three_shape_search_for_case, $token->three_shape_access_token);
 
                     $results = $response->Cases ?? [];
                 }
@@ -643,7 +644,7 @@ private function fetchThreeShapeCase($baseUri, $caseId, $accessToken)
     $curl = curl_init();
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => $baseUri . '/api/v3/cases/' . $caseId,
+        CURLOPT_URL => $baseUri . '/api/cases/' . $caseId,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => [
             'Authorization: Bearer ' . $accessToken,
