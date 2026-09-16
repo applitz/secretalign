@@ -120,13 +120,6 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
 
     $response = curl_exec($curl);
     curl_close($curl);
-    Log::build([
-        'driver' => 'single',
-        'path' => storage_path('logs/3shape.log'),
-    ])->info('3Shape API Response', [
-        'searchString' => $searchString,
-        'response' => $response,
-    ]);
     return json_decode($response);
 }
 
@@ -593,6 +586,12 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
                     }
                 } elseif (!empty($three_shape_search_for_case)) {
                     $response = $this->searchThreeShapeCases($threeshape_region_uri, $three_shape_search_for_case, $token->three_shape_access_token);
+                    Log::build([
+                        'driver' => 'single',
+                        'path' => storage_path('logs/3shape.log'),
+                    ])->info('3Shape API Response', [
+                        'response' => $response,
+                    ]);
                     if (@$response->Count > 0) {
                         $results = $response->Cases ?? [];
                     }
