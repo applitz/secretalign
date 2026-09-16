@@ -590,7 +590,7 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
                         'driver' => 'single',
                         'path' => storage_path('logs/3shape.log'),
                     ])->info('3Shape API Response', [
-                        // 'response' => $response,
+                        'response' => $response,
                         'count' => @$response->Count
                     ]);
                     if (@$response->Count > 0) {
