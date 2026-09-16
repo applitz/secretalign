@@ -111,7 +111,7 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
     $curl = curl_init();
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => $baseUri . '/api/v3/cases/search?page=0&searchString=' . urlencode($searchString),
+        CURLOPT_URL => $baseUri . '/api/cases/search?page=0&searchString=' . urlencode($searchString),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => [
             'Authorization: Bearer ' . $accessToken,
