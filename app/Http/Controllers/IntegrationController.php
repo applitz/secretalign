@@ -596,7 +596,6 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
                         $results = $response->Cases ?? [];
                     }
                 }
-                dd($results);
                 return view("layouts.three_shape_patients", compact("results"))->render();
             }
         } catch (Exception $e) {
