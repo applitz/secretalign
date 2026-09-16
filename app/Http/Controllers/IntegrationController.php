@@ -643,7 +643,7 @@ private function fetchThreeShapeCase($baseUri, $caseId, $accessToken)
     $curl = curl_init();
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => $baseUri . '/api/v3/cases/' . $caseId,
+        CURLOPT_URL => $baseUri . '/api/v3/cases/search?page=0&actorid=' . $caseId,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => [
             'Authorization: Bearer ' . $accessToken,
