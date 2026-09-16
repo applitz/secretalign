@@ -111,7 +111,7 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
     $curl = curl_init();
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => $baseUri . '/api/cases/search?page=0&searchString=' . urlencode($searchString),
+        CURLOPT_URL => $baseUri . '/api/v3/cases/search?page=0&searchString=' . urlencode($searchString),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => [
             'Authorization: Bearer ' . $accessToken,
@@ -590,7 +590,8 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
                         'driver' => 'single',
                         'path' => storage_path('logs/3shape.log'),
                     ])->info('3Shape API Response', [
-                        'response' => $response,
+                        // 'response' => $response,
+                        'count' => @$response->Count
                     ]);
                     if (@$response->Count > 0) {
                         $results = $response->Cases ?? [];
