@@ -586,15 +586,6 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
                     }
                 } elseif (!empty($three_shape_search_for_case)) {
                     $response = $this->searchThreeShapeCases($threeshape_region_uri, $three_shape_search_for_case, $token->three_shape_access_token);
-                    Log::build([
-                        'driver' => 'single',
-                        'path' => storage_path('logs/3shape.log'),
-                    ])->info('3Shape API Response', [
-                        'response' => $response,
-                        'cases_count' => count($response->Cases ?? []),
-                        'has_more_cases' => $response->HasMoreCases ?? false,
-                    ]);
-
                     $results = $response->Cases ?? [];
                 }
                 return view("layouts.three_shape_patients", compact("results"))->render();
