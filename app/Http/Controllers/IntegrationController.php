@@ -107,10 +107,11 @@ private function isTokenExpired($accessToken)
 }
 private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
 {
+
     $curl = curl_init();
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => $baseUri . '/api/cases/search?searchString=' . urlencode($searchString) . '&page=0',
+        CURLOPT_URL => $baseUri . '/api/v3/cases/search?page=0&searchString=' . urlencode($searchString),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => [
             'Authorization: Bearer ' . $accessToken,
@@ -119,7 +120,13 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
 
     $response = curl_exec($curl);
     curl_close($curl);
-
+    Log::build([
+        'driver' => 'single',
+        'path' => storage_path('logs/3shape.log'),
+    ])->info('3Shape API Response', [
+        'searchString' => $searchString,
+        'response' => $response,
+    ]);
     return json_decode($response);
 }
 
@@ -590,7 +597,7 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
                         $results = $response->Cases ?? [];
                     }
                 }
-
+                dd($results);
                 return view("layouts.three_shape_patients", compact("results"))->render();
             }
         } catch (Exception $e) {
@@ -638,7 +645,7 @@ private function fetchThreeShapeCase($baseUri, $caseId, $accessToken)
     $curl = curl_init();
 
     curl_setopt_array($curl, [
-        CURLOPT_URL => $baseUri . '/api/cases/' . $caseId,
+        CURLOPT_URL => $baseUri . '/api/v3/cases/' . $caseId,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => [
             'Authorization: Bearer ' . $accessToken,
