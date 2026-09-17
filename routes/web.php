@@ -177,6 +177,7 @@ Route::post('/patient/validate-data', [RegisterPatient::class, 'validatePatientD
 Route::post('/patient/check-movix-scan-status', [RegisterPatient::class, 'checkMovixScanStatus']);
 
 //patient files
+Route::post('/patient/{patient_id}/images/classify', [\App\Http\Controllers\ImageClassifierController::class, 'classify'])->middleware('throttle:30,1');
 Route::post('/patient/file/uploadnew/{patient_id}/{treatment_plan_id}', [PatientFileController::class, 'file_upload_new']);
 Route::post('/patient/file/upload/{patient_id}/{treatment_plan_id}', [PatientFileController::class, 'file_upload']);
 Route::post('/patient/file/revert/{patient_id}/{treatment_plan_id}', [PatientFileController::class, 'file_revert']);
@@ -350,6 +351,5 @@ Route::post('/patient/case-overview/secret/login', [PatientOverview::class, 'get
 Route::get('/iframe-proxy/{patientId}', [PatientOverview::class, 'load'])->name('iframe.proxy');
 Route::get('/patient/nemo/{id}', [PatientOverview::class, 'openNemoLink'])->name('patient.nemo.link');
 Route::get('/demo/viewer', [PatientDemo::class, 'stlViewer']);
-
 
 

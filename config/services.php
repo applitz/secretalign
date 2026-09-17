@@ -31,4 +31,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'openrouter' => [
+        'key' => env('OPENROUTER_KEY'),
+        'model' => env('OPENROUTER_MODEL', 'google/gemini-2.5-flash-lite'),
+        'fallback_model' => env('OPENROUTER_FALLBACK_MODEL', 'google/gemini-2.5-flash'),
+        // Confidence below which an image is treated as "needs manual review".
+        'min_confidence' => env('OPENROUTER_MIN_CONFIDENCE', 0.6),
+    ],
+
 ];

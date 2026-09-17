@@ -1,5 +1,45 @@
 {{-- Images / Xray Start --}}
 <div class="tab-pane fade {{ (isset($activeTab) && $activeTab == 'pill-tab-div3') ? 'show active' : '' }}" id="pill-tab-div3" role="tabpanel">
+
+    {{-- Auto-segregation bulk uploader --}}
+    <div class="card border border-primary mb-3" id="autoseg-card"
+         data-classify-url="{{ url('/patient/'.(@$patient->patient_id ?: '0').'/images/classify') }}">
+        <div class="card-body">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <div>
+                    <h6 class="mb-1 fw-semibold"><i class="mdi mdi-auto-fix"></i> Auto-upload &amp; sort images</h6>
+                    <p class="text-muted mb-0" style="font-size:12px;">
+                        Drop a patient's photos &amp; X-rays (or a whole folder). They're sorted into the
+                        right slots automatically. Duplicates are skipped. Max <strong>15</strong> images.
+                    </p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-primary btn-sm px-3" id="autoseg-pick-files">Select images</button>
+                    <button type="button" class="btn btn-outline-primary btn-sm px-3" id="autoseg-pick-folder">Select folder</button>
+                    <input type="file" id="autoseg-input-files" accept="image/*" multiple class="d-none">
+                    <input type="file" id="autoseg-input-folder" webkitdirectory directory multiple class="d-none">
+                </div>
+            </div>
+
+            <div id="autoseg-dropzone" class="mt-3 py-4 px-3 text-center text-muted"
+                 style="border:2px dashed #b9c7d6;border-radius:8px;cursor:pointer;transition:.15s;">
+                <i class="mdi mdi-cloud-upload-outline" style="font-size:26px;"></i>
+                <div style="font-size:13px;">Drag &amp; drop images or a folder here, or use the buttons above</div>
+            </div>
+
+            <div id="autoseg-status" class="mt-2" style="font-size:13px;"></div>
+            <div id="autoseg-skipped" class="mt-2 text-muted" style="font-size:12px;"></div>
+
+            {{-- Needs-review: images the AI couldn't place confidently / slot collisions --}}
+            <div id="autoseg-review" class="mt-3 d-none">
+                <h6 class="fw-semibold mb-2" style="font-size:13px;">
+                    Needs your review <span class="text-muted" style="font-weight:400;">— pick the correct slot, then Place</span>
+                </h6>
+                <div id="autoseg-review-list" class="row g-2"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="row mb-3">
 
     {{-- Front Start --}}
@@ -351,4 +391,253 @@
             fn="0" @endif>Next</button>
     </div>
 </div>
+
+{{-- Auto-segregation uploader logic --}}
+<script>
+(function () {
+    const card = document.getElementById('autoseg-card');
+    if (!card) return;
+
+    const CLASSIFY_URL = card.dataset.classifyUrl;
+    const MAX = 15;
+    const SLOT_TO_KEY = {
+        'Front': 3, 'Smile': 4, 'Profile': 5, 'Frontal (Intraoral)': 6,
+        'Right Buccal': 7, 'Left Buccal': 8, 'Upper Occlusal': 9, 'Lower Occlusal': 10,
+        'Panorex': 11, 'Lateral Ceph': 12, 'General Upload': 13
+    };
+    const SLOTS = Object.keys(SLOT_TO_KEY);
+    const IMG_RE = /\.(jpe?g|png|webp|gif|bmp)$/i; // heic can't be canvas-decoded in Chrome
+
+    const statusEl = document.getElementById('autoseg-status');
+    const skippedEl = document.getElementById('autoseg-skipped');
+    const reviewWrap = document.getElementById('autoseg-review');
+    const reviewList = document.getElementById('autoseg-review-list');
+    const dz = document.getElementById('autoseg-dropzone');
+
+    function csrf() {
+        const m = document.querySelector('meta[name="csrf-token"]');
+        if (m && m.content) return m.content;
+        const i = document.querySelector('input[name="_token"]');
+        return i ? i.value : '';
+    }
+    function setStatus(html, cls) {
+        statusEl.innerHTML = html ? '<span class="' + (cls || '') + '">' + html + '</span>' : '';
+    }
+    function renderSkipped(skipped, dupes) {
+        const parts = [];
+        if (dupes && dupes.length) parts.push('Skipped ' + dupes.length + ' duplicate' + (dupes.length > 1 ? 's' : ''));
+        if (skipped && skipped.length) parts.push('Skipped ' + skipped.length + ' non-image file' + (skipped.length > 1 ? 's' : ''));
+        skippedEl.textContent = parts.join('  ·  ');
+    }
+
+    // Recurse into dropped folders using the webkit entries API.
+    async function filesFromDrop(dt) {
+        if (!dt.items || !dt.items.length || !dt.items[0].webkitGetAsEntry) {
+            return Array.from(dt.files || []);
+        }
+        const roots = Array.from(dt.items).map(it => it.webkitGetAsEntry && it.webkitGetAsEntry()).filter(Boolean);
+        const out = [];
+        async function walk(entry) {
+            if (entry.isFile) {
+                await new Promise(res => entry.file(f => { out.push(f); res(); }, () => res()));
+            } else if (entry.isDirectory) {
+                const reader = entry.createReader();
+                await new Promise(res => {
+                    const read = () => reader.readEntries(async es => {
+                        if (!es.length) { res(); return; }
+                        for (const e of es) await walk(e);
+                        read();
+                    }, () => res());
+                    read();
+                });
+            }
+        }
+        for (const r of roots) await walk(r);
+        return out;
+    }
+
+    async function sha256(file) {
+        const buf = await file.arrayBuffer();
+        const h = await crypto.subtle.digest('SHA-256', buf);
+        return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Resize to <=768px longest edge, JPEG q80, honoring EXIF orientation.
+    async function resizeToDataUri(file, max) {
+        max = max || 768;
+        let bmp;
+        try {
+            bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+        } catch (e) {
+            bmp = await new Promise((res, rej) => {
+                const im = new Image();
+                im.onload = () => res(im);
+                im.onerror = rej;
+                im.src = URL.createObjectURL(file);
+            });
+        }
+        const w = bmp.width, h = bmp.height;
+        const scale = Math.min(1, max / Math.max(w, h));
+        const nw = Math.max(1, Math.round(w * scale));
+        const nh = Math.max(1, Math.round(h * scale));
+        const c = document.createElement('canvas');
+        c.width = nw; c.height = nh;
+        c.getContext('2d').drawImage(bmp, 0, 0, nw, nh);
+        if (bmp.close) bmp.close();
+        return c.toDataURL('image/jpeg', 0.8);
+    }
+
+    function slotFilled(key) {
+        const el = document.getElementById('key' + key);
+        const f = el ? (el.getAttribute('file') || '') : '';
+        return f && f !== 'null' && f.trim() !== '';
+    }
+
+    async function handleFiles(fileList) {
+        reviewWrap.classList.add('d-none');
+        reviewList.innerHTML = '';
+        const all = Array.from(fileList || []);
+        if (!all.length) return;
+
+        const imageFiles = [], skipped = [];
+        for (const f of all) {
+            if ((f.type && f.type.indexOf('image/') === 0) || IMG_RE.test(f.name)) imageFiles.push(f);
+            else skipped.push(f.name);
+        }
+
+        // Duplicate detection by content hash.
+        setStatus('<span class="spinner-border spinner-border-sm"></span> Reading ' + imageFiles.length + ' file(s)…');
+        const seen = new Set(), uniq = [], dupes = [];
+        for (const f of imageFiles) {
+            let h;
+            try { h = await sha256(f); } catch (e) { h = f.name + ':' + f.size; }
+            if (seen.has(h)) dupes.push(f.name);
+            else { seen.add(h); uniq.push(f); }
+        }
+        renderSkipped(skipped, dupes);
+
+        if (uniq.length === 0) { setStatus('No images found to classify.', 'text-warning'); return; }
+        if (uniq.length > MAX) {
+            setStatus('Too many images: ' + uniq.length + ' (max ' + MAX + '). Please select ' + MAX + ' or fewer.', 'text-danger fw-semibold');
+            return;
+        }
+
+        setStatus('<span class="spinner-border spinner-border-sm"></span> Preparing ' + uniq.length + ' image(s)…');
+        const payload = [], files = [];
+        for (let i = 0; i < uniq.length; i++) {
+            let uri = null;
+            try { uri = await resizeToDataUri(uniq[i]); } catch (e) { uri = null; }
+            if (!uri) { skipped.push(uniq[i].name); renderSkipped(skipped, dupes); continue; }
+            files[i] = uniq[i];
+            payload.push({ index: i, data_uri: uri });
+        }
+        if (!payload.length) { setStatus('Could not read any of the selected images.', 'text-danger'); return; }
+
+        setStatus('<span class="spinner-border spinner-border-sm"></span> Classifying ' + payload.length + ' image(s)…');
+        let data;
+        try {
+            const res = await fetch(CLASSIFY_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrf() },
+                body: JSON.stringify({ images: payload })
+            });
+            data = await res.json();
+            if (!res.ok || data.status !== 'success') {
+                setStatus((data && data.message) || ('Classification failed (' + res.status + ').'), 'text-danger fw-semibold');
+                return;
+            }
+        } catch (e) {
+            setStatus('Classification request failed: ' + e.message, 'text-danger fw-semibold');
+            return;
+        }
+        placeResults(data.results || [], (typeof data.min_confidence === 'number' ? data.min_confidence : 0.6), files);
+    }
+
+    function placeResults(results, minConf, files) {
+        if (typeof window.dropzone_upload !== 'function') {
+            setStatus('Uploader is not ready yet — please try again in a moment.', 'text-danger');
+            return;
+        }
+        const claimed = new Set();
+        const review = [];
+        // Highest confidence claims its slot first, so collisions send the weaker one to review.
+        const ordered = results.slice().sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
+        let placed = 0;
+        for (const r of ordered) {
+            const file = files[r.index];
+            if (!file) continue;
+            const key = SLOT_TO_KEY[r.slot];
+            if (key && (r.confidence || 0) >= minConf && !slotFilled(key) && !claimed.has(key)) {
+                claimed.add(key);
+                window.dropzone_upload(key, file);
+                placed++;
+            } else {
+                review.push(r);
+            }
+        }
+        let msg = '<strong>' + placed + '</strong> image' + (placed !== 1 ? 's' : '') + ' auto-placed into slots.';
+        if (review.length) msg += ' <strong>' + review.length + '</strong> need your review below.';
+        setStatus(msg, placed ? 'text-success' : 'text-warning');
+        renderReview(review, files);
+    }
+
+    function renderReview(items, files) {
+        reviewList.innerHTML = '';
+        if (!items.length) { reviewWrap.classList.add('d-none'); return; }
+        reviewWrap.classList.remove('d-none');
+        for (const r of items) {
+            const file = files[r.index];
+            if (!file) continue;
+            const col = document.createElement('div');
+            col.className = 'col-6 col-md-3 col-lg-2';
+            const box = document.createElement('div');
+            box.className = 'border rounded p-2 h-100';
+            const img = document.createElement('img');
+            img.style.cssText = 'width:100%;height:80px;object-fit:cover;border-radius:4px;';
+            img.src = URL.createObjectURL(file);
+            const conf = document.createElement('div');
+            conf.className = 'text-muted mt-1';
+            conf.style.fontSize = '11px';
+            conf.textContent = 'AI: ' + r.slot + ' (' + Math.round((r.confidence || 0) * 100) + '%)';
+            const sel = document.createElement('select');
+            sel.className = 'form-select form-select-sm mt-1';
+            SLOTS.forEach(s => {
+                const o = document.createElement('option');
+                o.value = s; o.textContent = s;
+                if (s === r.slot) o.selected = true;
+                sel.appendChild(o);
+            });
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-sm btn-primary w-100 mt-2';
+            btn.textContent = 'Place';
+            btn.onclick = function () {
+                const slot = sel.value, key = SLOT_TO_KEY[slot];
+                if (!key) return;
+                if (slotFilled(key) && !confirm(slot + ' already has a file. Replace it?')) return;
+                window.dropzone_upload(key, file);
+                col.remove();
+                if (!reviewList.children.length) reviewWrap.classList.add('d-none');
+            };
+            box.append(img, conf, sel, btn);
+            col.appendChild(box);
+            reviewList.appendChild(col);
+        }
+    }
+
+    // --- wire up controls ---
+    document.getElementById('autoseg-pick-files').addEventListener('click', () => document.getElementById('autoseg-input-files').click());
+    document.getElementById('autoseg-pick-folder').addEventListener('click', () => document.getElementById('autoseg-input-folder').click());
+    document.getElementById('autoseg-input-files').addEventListener('change', function (e) { handleFiles(e.target.files); e.target.value = ''; });
+    document.getElementById('autoseg-input-folder').addEventListener('change', function (e) { handleFiles(e.target.files); e.target.value = ''; });
+    dz.addEventListener('click', () => document.getElementById('autoseg-input-files').click());
+    ['dragenter', 'dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); dz.style.borderColor = '#2f6f8f'; dz.style.background = '#eef6ff'; }));
+    ['dragleave', 'drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); dz.style.borderColor = '#b9c7d6'; dz.style.background = ''; }));
+    dz.addEventListener('drop', async function (e) {
+        setStatus('<span class="spinner-border spinner-border-sm"></span> Reading dropped items…');
+        const files = await filesFromDrop(e.dataTransfer);
+        handleFiles(files);
+    });
+})();
+</script>
 {{-- Images / Xray End --}}

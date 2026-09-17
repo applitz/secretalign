@@ -27,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        URL::forceScheme('https');
+        // Force HTTPS everywhere except local development (local runs over http).
+        if (!$this->app->environment('local')) {
+            URL::forceScheme('https');
+        }
     }
 }
