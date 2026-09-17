@@ -550,35 +550,48 @@
             setStatus('Classification request failed: ' + e.message, 'text-danger fw-semibold');
             return;
         }
-        placeResults(data.results || [], (typeof data.min_confidence === 'number' ? data.min_confidence : 0.6), files);
+        await placeResults(data.results || [], (typeof data.min_confidence === 'number' ? data.min_confidence : 0.6), files);
     }
 
-    function placeResults(results, minConf, files) {
+    async function placeResults(results, minConf, files) {
         if (typeof window.dropzone_upload !== 'function') {
             setStatus('Uploader is not ready yet — please try again in a moment.', 'text-danger');
             return;
         }
         const claimed = new Set();
         const review = [];
+        const toPlace = [];
         // Highest confidence claims its slot first, so collisions send the weaker one to review.
         const ordered = results.slice().sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
-        let placed = 0;
         for (const r of ordered) {
             const file = files[r.index];
             if (!file) continue;
             const key = SLOT_TO_KEY[r.slot];
             if (key && (r.confidence || 0) >= minConf && !slotFilled(key) && !claimed.has(key)) {
                 claimed.add(key);
-                window.dropzone_upload(key, file);
-                placed++;
+                toPlace.push({ key: key, file: file });
             } else {
                 review.push(r);
             }
         }
-        let msg = '<strong>' + placed + '</strong> image' + (placed !== 1 ? 's' : '') + ' auto-placed into slots.';
+        renderReview(review, files);
+
+        // Upload ONE AT A TIME. The existing chunked uploader + some servers (incl. the
+        // PHP built-in dev server) don't handle many simultaneous uploads well; sequential
+        // is reliable everywhere and gives clear progress.
+        let placed = 0;
+        for (let i = 0; i < toPlace.length; i++) {
+            setStatus('<span class="spinner-border spinner-border-sm"></span> Uploading ' + (i + 1) + ' of ' + toPlace.length + '…');
+            try {
+                await window.dropzone_upload(toPlace[i].key, toPlace[i].file);
+                placed++;
+            } catch (e) {
+                // dropzone_upload shows its own error state on that slot; keep going.
+            }
+        }
+        let msg = '<strong>' + placed + '</strong> of ' + toPlace.length + ' image' + (toPlace.length !== 1 ? 's' : '') + ' placed into slots.';
         if (review.length) msg += ' <strong>' + review.length + '</strong> need your review below.';
         setStatus(msg, placed ? 'text-success' : 'text-warning');
-        renderReview(review, files);
     }
 
     function renderReview(items, files) {
