@@ -52,42 +52,28 @@
                 </p>
             </div>
 
-            <div class="row g-3 align-items-stretch">
-                {{-- Left half: drag & drop / select from computer --}}
-                <div class="col-md-6 d-flex flex-column">
-                    <div class="d-flex gap-2 mb-2 flex-wrap">
-                        <button type="button" class="btn btn-primary btn-sm px-3" id="autoseg-pick-files">Select images</button>
-                        <button type="button" class="btn btn-outline-primary btn-sm px-3" id="autoseg-pick-folder">Select folder</button>
-                        <input type="file" id="autoseg-input-files" accept="image/*" multiple class="d-none">
-                        <input type="file" id="autoseg-input-folder" webkitdirectory directory multiple class="d-none">
-                    </div>
-                    <div id="autoseg-dropzone" class="flex-grow-1 py-4 px-3 text-center text-muted d-flex flex-column justify-content-center"
-                         style="border:2px dashed #b9c7d6;border-radius:8px;cursor:pointer;transition:.15s;min-height:120px;">
-                        <i class="mdi mdi-cloud-upload-outline" style="font-size:26px;"></i>
-                        <div style="font-size:13px;">Drag &amp; drop images or a folder here, or use the buttons above</div>
-                    </div>
+            {{-- Toolbar: local pickers + Google Drive link, all on one line --}}
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                <button type="button" class="btn btn-primary btn-sm px-3" id="autoseg-pick-files">Select images</button>
+                <button type="button" class="btn btn-outline-primary btn-sm px-3" id="autoseg-pick-folder">Select folder</button>
+                <input type="file" id="autoseg-input-files" accept="image/*" multiple class="d-none">
+                <input type="file" id="autoseg-input-folder" webkitdirectory directory multiple class="d-none">
+                <div class="input-group input-group-sm flex-grow-1" style="min-width:260px;">
+                    <span class="input-group-text" title="Share the folder/file as 'Anyone with the link'"><i class="mdi mdi-google-drive"></i></span>
+                    <input type="text" class="form-control hyperlink" placeholder="Paste a Google Drive folder/file link (shared 'Anyone with the link')"
+                        value="{{ @$patient->fl_general_upload_drive_link }}"
+                        name="general_upload_hyperlink" id="general_upload_hyperlink">
+                    <button type="button" class="btn btn-primary" id="autoseg-drive-scan">
+                        <i class="mdi mdi-magnify-scan"></i> Scan link
+                    </button>
                 </div>
+            </div>
 
-                {{-- Right half: pull from a Google Drive link (folder or file) --}}
-                <div class="col-md-6 d-flex flex-column">
-                    <label class="form-label mb-2 fw-semibold" for="general_upload_hyperlink" style="font-size:13px;">
-                        <i class="mdi mdi-google-drive"></i> Google Drive link (folder or file)
-                    </label>
-                    <div class="input-group">
-                        <input type="text" class="form-control hyperlink" placeholder="https://drive.google.com/..."
-                            value="{{ @$patient->fl_general_upload_drive_link }}"
-                            name="general_upload_hyperlink" id="general_upload_hyperlink">
-                        <button type="button" class="btn btn-primary px-3" id="autoseg-drive-scan">
-                            <i class="mdi mdi-magnify-scan"></i> Scan link
-                        </button>
-                    </div>
-                    <div class="flex-grow-1 py-3 px-3 mt-2 text-muted"
-                         style="border:2px dashed #b9c7d6;border-radius:8px;min-height:120px;font-size:12px;">
-                        <div class="mb-1"><i class="mdi mdi-information-outline"></i> Share the folder/file as <strong>"Anyone with the link"</strong>.</div>
-                        We fetch its images and sort them into slots just like a normal upload. The link is also
-                        saved as the patient's General Upload drive link.
-                    </div>
-                </div>
+            {{-- Full-width drag & drop zone --}}
+            <div id="autoseg-dropzone" class="py-4 px-3 text-center text-muted d-flex flex-column justify-content-center"
+                 style="border:2px dashed #b9c7d6;border-radius:8px;cursor:pointer;transition:.15s;min-height:140px;">
+                <i class="mdi mdi-cloud-upload-outline" style="font-size:26px;"></i>
+                <div style="font-size:13px;">Drag &amp; drop images or a folder here, use the buttons above, or paste a Google Drive link and hit Scan.</div>
             </div>
 
             <div id="autoseg-status" class="mt-2" style="font-size:13px;"></div>
