@@ -86,14 +86,27 @@ Respond with ONLY a JSON object, no prose, no code fence:
 TXT;
 
     private const PROMPT_B = <<<'TXT'
-These are TWO lateral buccal intraoral photos of one orthodontic patient: IMAGE 1
-first, then IMAGE 2 (direct, non-mirrored photos). Usually one is the patient's RIGHT
-side and one is the LEFT side, but they could both be the SAME side (e.g. two shots of
-the right). Judge each image on its own, using the other only for comparison. In a
-direct photo, the side where the anterior teeth (canines/incisors) sit toward the RIGHT
-of the frame is the patient's Right Buccal; toward the LEFT of the frame is Left Buccal.
-Return ONLY JSON: {"image_1": "Right Buccal" or "Left Buccal",
-"image_2": "Right Buccal" or "Left Buccal", "why": "<max 15 words>"}
+These are the TWO lateral BUCCAL (side) intraoral photos of one orthodontic patient,
+IMAGE 1 then IMAGE 2. They are DIRECT, non-mirrored photos taken from the side with cheek
+retractors. Usually one is the patient's RIGHT side and one is the LEFT (rarely both the
+same side). Decide each photo independently using EXACTLY this method:
+
+Step 1 - Find the FRONT of the mouth in the photo. The front teeth are the flat, wide
+CENTRAL INCISORS at the midline and, right beside them, the CANINE (the single longest,
+most pointed/triangular tooth). These sit at one END of the row of teeth.
+Step 2 - Find the BACK of the mouth: the PREMOLARS and MOLARS are the wide teeth with
+bumpy chewing surfaces at the OTHER end of the row.
+Step 3 - Note which side of the FRAME the FRONT teeth (incisors + canine) are on: the
+LEFT edge or the RIGHT edge of the image.
+Step 4 - Apply the direct-photo rule:
+   * FRONT teeth toward the RIGHT edge of the frame  => "Right Buccal"
+   * FRONT teeth toward the LEFT edge of the frame   => "Left Buccal"
+
+Do this for IMAGE 1 and IMAGE 2 separately. Ignore lips, cheeks and the nose; use only
+the teeth. Return ONLY JSON, no prose:
+{"image_1": "Right Buccal" or "Left Buccal",
+ "image_2": "Right Buccal" or "Left Buccal",
+ "why": "front teeth on the <left|right> in image1, <left|right> in image2"}
 TXT;
 
     private const PROMPT_C = <<<'TXT'
@@ -138,7 +151,8 @@ TXT;
         // Pass 2 - pairwise disambiguation for the two hard "left/right, upper/lower"
         // slot families. Comparing the two side-by-side is far more reliable than
         // judging each alone (the model is otherwise confidently wrong on these).
-        $results = $this->resolvePair($images, $results, 'Buccal', self::PROMPT_B, ['Right Buccal', 'Left Buccal']);
+        // Buccal L/R is the hardest call; use the stronger model for the pair comparison.
+        $results = $this->resolvePair($images, $results, 'Buccal', self::PROMPT_B, ['Right Buccal', 'Left Buccal'], $this->fallbackModel);
         $results = $this->resolvePair($images, $results, 'Occlusal', self::PROMPT_C, ['Upper Occlusal', 'Lower Occlusal']);
 
         // Return in the same order as the input.
@@ -272,7 +286,7 @@ TXT;
      * @param  array<int, string>  $validSlots  the two acceptable slot names for this family
      * @return array<int, array{index:int, slot:string, confidence:float, reason:string}>  keyed by index
      */
-    private function resolvePair(array $images, array $results, string $needle, string $prompt, array $validSlots): array
+    private function resolvePair(array $images, array $results, string $needle, string $prompt, array $validSlots, ?string $model = null): array
     {
         $matchIdx = [];
         foreach ($results as $idx => $r) {
@@ -291,7 +305,7 @@ TXT;
         }
 
         [$i1, $i2] = $matchIdx;
-        $pair = $this->classifyPair($byIndex[$i1], $byIndex[$i2], $prompt, $validSlots);
+        $pair = $this->classifyPair($byIndex[$i1], $byIndex[$i2], $prompt, $validSlots, $model ?? $this->model);
 
         if ($pair !== null) {
             $label = strtolower($needle).' pair';
@@ -311,14 +325,14 @@ TXT;
      * @param  array<int, string>  $validSlots
      * @return array{image_1:string, image_2:string, why:string}|null
      */
-    private function classifyPair(string $dataUri1, string $dataUri2, string $prompt, array $validSlots): ?array
+    private function classifyPair(string $dataUri1, string $dataUri2, string $prompt, array $validSlots, ?string $model = null): ?array
     {
         try {
             $resp = Http::withToken($this->key)
                 ->withOptions(['version' => 1.1])
                 ->timeout(90)
                 ->post(self::ENDPOINT, [
-                    'model' => $this->model,
+                    'model' => $model ?? $this->model,
                     'temperature' => 0,
                     'messages' => [
                         ['role' => 'user', 'content' => [
