@@ -53,11 +53,13 @@ decide which standard record slot it belongs to. Use these rules:
   * Occlusal views look straight into ONE dental arch (the biting surfaces of the
     molars form a U/horseshoe). Decide upper vs lower by the SOFT TISSUE inside the
     arch, NOT by the photo's orientation:
-      - 'Upper Occlusal': the roof of the mouth (hard PALATE) fills the centre - a
-        fixed vault with ridged folds (rugae) just behind the front teeth. No tongue.
-      - 'Lower Occlusal': the floor of the mouth with the TONGUE fills the centre - a
-        large soft muscular organ, often with a midline groove. If a tongue is
-        clearly visible in the middle of the arch, it is 'Lower Occlusal'.
+      - 'Upper Occlusal': the roof of the mouth (hard PALATE) fills the centre - a firm
+        pale vault with WAVY horizontal ridges (rugae) just behind the front teeth and a
+        midline seam. No tongue.
+      - 'Lower Occlusal': the TONGUE / floor of the mouth fills the centre - either the
+        tongue's bumpy top (soft, papillae, midline groove) or, when the tongue is down,
+        the wet floor of the mouth with a central vertical fold (frenulum) and saliva.
+        Soft and wet, never the ridged pale palate.
   * A straight-on view of front teeth in bite (both arches, symmetric)
     -> 'Frontal (Intraoral)'.
   * A side/lateral view of the teeth in bite -> a Buccal view. These are DIRECT
@@ -110,17 +112,26 @@ the teeth. Return ONLY JSON, no prose:
 TXT;
 
     private const PROMPT_C = <<<'TXT'
-These are TWO occlusal (biting-surface) intraoral photos of one orthodontic patient:
-IMAGE 1 first, then IMAGE 2. Each looks straight into one dental arch. Usually one shows
-the UPPER arch and one shows the LOWER arch, but they could both be the SAME arch (e.g.
-two upper shots). Judge each image on its own, using the other only for comparison, by
-the soft tissue in the CENTRE of the horseshoe of teeth (ignore anything outside it):
-- UPPER arch: the roof of the mouth (hard PALATE) fills the centre - a fixed vault with
-  ridged folds (rugae). No tongue inside the arch.
-- LOWER arch: the TONGUE (a large soft muscular organ, often with a midline groove)
-  fills the centre.
-Return ONLY JSON: {"image_1": "Upper Occlusal" or "Lower Occlusal",
-"image_2": "Upper Occlusal" or "Lower Occlusal", "why": "<max 15 words>"}
+These are the TWO occlusal (biting-surface) intraoral photos of one orthodontic patient,
+IMAGE 1 then IMAGE 2. Each looks straight into ONE dental arch (the teeth form a
+U/horseshoe). Usually one is the UPPER arch and one is the LOWER arch (rarely both the
+same). Decide each image by the TISSUE INSIDE the horseshoe of teeth:
+
+UPPER arch = "Upper Occlusal": the roof of the mouth / hard PALATE fills the centre.
+Tell-tale sign: WAVY horizontal ridges (palatal rugae) just behind the front teeth, on a
+firm, pale, dome-shaped vault with a midline seam. There is NO tongue.
+
+LOWER arch = "Lower Occlusal": the TONGUE and floor of the mouth fill the centre.
+Tell-tale sign: either the tongue's bumpy top surface (soft, covered in tiny papillae,
+with a midline groove) OR - when the tongue is pushed down - the wet FLOOR of the mouth
+beneath it, a soft recessed area with a central vertical fold (frenulum) and pooled
+saliva. It is soft and wet, never the ridged pale palate.
+
+Work step by step: for each image, first name what fills the centre (palatal rugae/vault
+vs tongue/floor-of-mouth), then label it. Return ONLY JSON, no prose:
+{"image_1": "Upper Occlusal" or "Lower Occlusal",
+ "image_2": "Upper Occlusal" or "Lower Occlusal",
+ "why": "centre of image1 = <rugae|tongue/floor>, image2 = <rugae|tongue/floor>"}
 TXT;
 
     private string $key;
@@ -153,7 +164,7 @@ TXT;
         // judging each alone (the model is otherwise confidently wrong on these).
         // Buccal L/R is the hardest call; use the stronger model for the pair comparison.
         $results = $this->resolvePair($images, $results, 'Buccal', self::PROMPT_B, ['Right Buccal', 'Left Buccal'], $this->fallbackModel);
-        $results = $this->resolvePair($images, $results, 'Occlusal', self::PROMPT_C, ['Upper Occlusal', 'Lower Occlusal']);
+        $results = $this->resolvePair($images, $results, 'Occlusal', self::PROMPT_C, ['Upper Occlusal', 'Lower Occlusal'], $this->fallbackModel);
 
         // Return in the same order as the input.
         return array_values($results);
