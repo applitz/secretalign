@@ -60,13 +60,20 @@ decide which standard record slot it belongs to. Use these rules:
         tongue's bumpy top (soft, papillae, midline groove) or, when the tongue is down,
         the wet floor of the mouth with a central vertical fold (frenulum) and saliva.
         Soft and wet, never the ridged pale palate.
-  * Teeth-in-bite views (front teeth touching, seen from the front or side) are told
-    apart ONLY by where the FRONT teeth (flat central INCISORS + pointed CANINE) sit in
-    the IMAGE frame. Ignore the patient's anatomical left/right and any mirroring - use
-    only the position in the picture:
-      - FRONT teeth near the CENTRE of the image, arch roughly symmetric -> 'Frontal (Intraoral)'.
-      - FRONT teeth in the LEFT half of the image  -> 'Left Buccal'.
-      - FRONT teeth in the RIGHT half of the image -> 'Right Buccal'.
+  * For a teeth-together bite view, SCAN the row of teeth from the LEFT edge of the image
+    across to the RIGHT edge, and note the ORDER in which the FRONT teeth (flat central
+    INCISORS + pointed CANINE) and the back MOLARS appear. Use only positions in the
+    image; ignore the patient's anatomical side and any mirroring:
+      - FRONT teeth come FIRST (on the left) and the teeth become MOLARS toward the right
+        -> 'Left Buccal'.
+      - MOLARS come first (on the left) and the FRONT teeth appear LATER (toward the
+        right) -> 'Right Buccal'.
+      - The FRONT teeth sit in the MIDDLE with the arch curving away SYMMETRICALLY on BOTH
+        sides (you see left teeth and right teeth roughly equally, neither side's molars
+        dominating) -> 'Frontal (Intraoral)'.
+    A Buccal view shows mostly ONE side (front teeth at one end, molars at the other). A
+    Frontal view is a straight-on, symmetric both-sides view. When a full side of molars
+    is visible trailing off to one edge, it is a Buccal, NOT Frontal.
 TXT;
 
     private const PROMPT_A_USER = <<<'TXT'
