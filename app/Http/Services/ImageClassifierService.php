@@ -60,13 +60,13 @@ decide which standard record slot it belongs to. Use these rules:
         tongue's bumpy top (soft, papillae, midline groove) or, when the tongue is down,
         the wet floor of the mouth with a central vertical fold (frenulum) and saliva.
         Soft and wet, never the ridged pale palate.
-  * A straight-on view of front teeth in bite (both arches, symmetric)
-    -> 'Frontal (Intraoral)'.
-  * A side/lateral view of the teeth in bite -> a Buccal view. These are DIRECT
-    (non-mirrored) photos. Find the anterior teeth (pointed canines/incisors, near the
-    front of the mouth) vs the posterior molars. If the anterior teeth are on the RIGHT
-    side of the image -> 'Right Buccal'; if the anterior teeth are on the LEFT side of
-    the image -> 'Left Buccal'.
+  * Teeth-in-bite views (front teeth touching, seen from the front or side) are told
+    apart ONLY by where the FRONT teeth (flat central INCISORS + pointed CANINE) sit in
+    the IMAGE frame. Ignore the patient's anatomical left/right and any mirroring - use
+    only the position in the picture:
+      - FRONT teeth near the CENTRE of the image, arch roughly symmetric -> 'Frontal (Intraoral)'.
+      - FRONT teeth in the LEFT half of the image  -> 'Left Buccal'.
+      - FRONT teeth in the RIGHT half of the image -> 'Right Buccal'.
 TXT;
 
     private const PROMPT_A_USER = <<<'TXT'
@@ -89,26 +89,24 @@ TXT;
 
     private const PROMPT_B = <<<'TXT'
 These are the TWO lateral BUCCAL (side) intraoral photos of one orthodontic patient,
-IMAGE 1 then IMAGE 2. They are DIRECT, non-mirrored photos taken from the side with cheek
-retractors. Usually one is the patient's RIGHT side and one is the LEFT (rarely both the
-same side). Decide each photo independently using EXACTLY this method:
+IMAGE 1 then IMAGE 2 (taken with cheek retractors).
 
-Step 1 - Find the FRONT of the mouth in the photo. The front teeth are the flat, wide
-CENTRAL INCISORS at the midline and, right beside them, the CANINE (the single longest,
-most pointed/triangular tooth). These sit at one END of the row of teeth.
-Step 2 - Find the BACK of the mouth: the PREMOLARS and MOLARS are the wide teeth with
-bumpy chewing surfaces at the OTHER end of the row.
-Step 3 - Note which side of the FRAME the FRONT teeth (incisors + canine) are on: the
-LEFT edge or the RIGHT edge of the image.
-Step 4 - Apply the direct-photo rule:
-   * FRONT teeth toward the RIGHT edge of the frame  => "Right Buccal"
-   * FRONT teeth toward the LEFT edge of the frame   => "Left Buccal"
+Classify EACH image using ONLY the left/right POSITION of the front teeth WITHIN THE
+PICTURE. Do NOT think about the patient's anatomical left or right. Do NOT think about
+mirrors or camera direction. Use only where things are in the image frame.
 
-Do this for IMAGE 1 and IMAGE 2 separately. Ignore lips, cheeks and the nose; use only
-the teeth. Return ONLY JSON, no prose:
+For each image, do this:
+Step 1 - Find the FRONT teeth: the flat, square CENTRAL INCISORS and the pointed CANINE
+beside them (the middle/front of the smile). The wide, bumpy MOLARS are the BACK teeth.
+Step 2 - Decide which HALF of the picture the FRONT teeth are in (left half or right half).
+Step 3 - Label using this exact mapping (no exceptions, no flipping):
+   * FRONT teeth in the LEFT half of the image  =>  "Left Buccal"
+   * FRONT teeth in the RIGHT half of the image =>  "Right Buccal"
+
+Ignore lips, cheeks, retractors and skin. Return ONLY JSON, no prose:
 {"image_1": "Right Buccal" or "Left Buccal",
  "image_2": "Right Buccal" or "Left Buccal",
- "why": "front teeth on the <left|right> in image1, <left|right> in image2"}
+ "why": "front teeth in <left|right> half of image1, <left|right> half of image2"}
 TXT;
 
     private const PROMPT_C = <<<'TXT'
