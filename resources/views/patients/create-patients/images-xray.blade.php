@@ -21,9 +21,19 @@
         #pill-tab-div3 .autoseg-actions .autoseg-edit { background: #2f6f8f; }
         #pill-tab-div3 .autoseg-actions .autoseg-unassign { background: #b7791f; }
         #pill-tab-div3 .autoseg-actions .autoseg-del { background: #c0392b; }
-        #pill-tab-div3 .autoseg-actions .autoseg-swap { background: #0d9488; }
         /* highlight buccal slots the AI is unsure about (check L/R) */
         #pill-tab-div3 ._dropzone.autoseg-uncertain { outline: 3px solid #f59e0b; outline-offset: -3px; }
+        /* one centered Swap L/R button sitting in the gap between the two buccal boxes */
+        #pill-tab-div3 #autoseg-buccal-swap {
+            position: absolute; z-index: 20; transform: translate(-50%, -50%);
+            display: none; align-items: center; gap: 6px; white-space: nowrap;
+            padding: 8px 12px; border: 0; border-radius: 999px;
+            background: #0d9488; color: #fff; font-size: 12px; font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,.35); cursor: pointer;
+        }
+        #pill-tab-div3 #autoseg-buccal-swap.show { display: inline-flex; }
+        #pill-tab-div3 #autoseg-buccal-swap:hover { background: #0f766e; }
+        #pill-tab-div3 #autoseg-buccal-swap:disabled { opacity: .6; cursor: default; }
         #pill-tab-div3 #autoseg-review-list .autoseg-suggest { outline: 2px solid #16a34a; }
         /* Delete (×) button on review (unassigned) cards */
         #pill-tab-div3 #autoseg-review-list .autoseg-review-card { position: relative; }
@@ -52,18 +62,18 @@
                 </p>
             </div>
 
-            {{-- Toolbar: local pickers + Google Drive link, all on one line --}}
-            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                <button type="button" class="btn btn-primary btn-sm px-3" id="autoseg-pick-files">Select images</button>
-                <button type="button" class="btn btn-outline-primary btn-sm px-3" id="autoseg-pick-folder">Select folder</button>
+            {{-- Toolbar: local pickers + Google Drive link, all on one row --}}
+            <div class="d-flex flex-nowrap align-items-center gap-2 mb-2">
+                <button type="button" class="btn btn-primary btn-sm px-3 flex-shrink-0" id="autoseg-pick-files">Select images</button>
+                <button type="button" class="btn btn-outline-primary btn-sm px-3 flex-shrink-0" id="autoseg-pick-folder">Select folder</button>
                 <input type="file" id="autoseg-input-files" accept="image/*" multiple class="d-none">
                 <input type="file" id="autoseg-input-folder" webkitdirectory directory multiple class="d-none">
-                <div class="input-group input-group-sm flex-grow-1" style="min-width:260px;">
-                    <span class="input-group-text" title="Share the folder/file as 'Anyone with the link'"><i class="mdi mdi-google-drive"></i></span>
+                <div class="input-group input-group-sm flex-grow-1" style="min-width:180px;">
+                    <span class="input-group-text" style="background-color:#1c8484;border-color:#1c8484;color:#fff;" title="Share the folder/file as 'Anyone with the link'"><i class="mdi mdi-google-drive"></i></span>
                     <input type="text" class="form-control hyperlink" placeholder="Paste a Google Drive folder/file link (shared 'Anyone with the link')"
                         value="{{ @$patient->fl_general_upload_drive_link }}"
                         name="general_upload_hyperlink" id="general_upload_hyperlink">
-                    <button type="button" class="btn btn-primary" id="autoseg-drive-scan">
+                    <button type="button" class="btn btn-primary flex-shrink-0" id="autoseg-drive-scan">
                         <i class="mdi mdi-magnify-scan"></i> Scan link
                     </button>
                 </div>
@@ -654,18 +664,6 @@
         const del = document.createElement('button'); del.type = 'button'; del.className = 'autoseg-del'; del.textContent = 'Delete';
         del.addEventListener('click', function () { if (typeof window.dropzone_destroy_state === 'function') window.dropzone_destroy_state(key); });
         btns.append(edit, unassign, del);
-        // Buccal slots (Right=7, Left=8): one-click swap. The AI can't tell R from L
-        // reliably, but the pair is always opposite, so swapping both fixes it in one click.
-        if (key === 7 || key === 8) {
-            const swap = document.createElement('button');
-            swap.type = 'button'; swap.className = 'autoseg-swap'; swap.textContent = '⇄ Swap L/R';
-            swap.title = 'Swap the Right and Left buccal images';
-            swap.addEventListener('click', function () {
-                swap.disabled = true;
-                swapBuccalSides().finally(() => { swap.disabled = false; });
-            });
-            btns.append(swap);
-        }
         ov.append(lbl, sel, btns);
         dzEl.appendChild(ov);
     }
@@ -679,6 +677,7 @@
         if (fL) { await uploadToSlot(R, fL); } else if (typeof window.dropzone_destroy_state === 'function') { window.dropzone_destroy_state(R); }
         if (fR) { await uploadToSlot(L, fR); } else if (typeof window.dropzone_destroy_state === 'function') { window.dropzone_destroy_state(L); }
         clearBuccalUncertainty();
+        positionBuccalSwap();
     }
 
     // Highlight (or clear) the two buccal slots when the AI was unsure of Left/Right.
@@ -688,6 +687,43 @@
     function clearBuccalUncertainty() {
         [7, 8].forEach(k => { const el = slotDom(k); if (el) el.classList.remove('autoseg-uncertain'); });
     }
+
+    // A single "⇄ Swap L/R" button placed in the gap between the Right (7) and Left (8)
+    // buccal boxes. The AI can't tell R from L reliably, but the pair is always opposite,
+    // so swapping both fixes it in one click.
+    function ensureBuccalSwapBtn() {
+        let btn = document.getElementById('autoseg-buccal-swap');
+        if (btn) return btn;
+        const row = slotDom(7) && slotDom(7).closest('.row');
+        if (!row) return null;
+        if (getComputedStyle(row).position === 'static') row.style.position = 'relative';
+        btn = document.createElement('button');
+        btn.type = 'button'; btn.id = 'autoseg-buccal-swap';
+        btn.innerHTML = '⇄ Swap L/R';
+        btn.title = 'Swap the Right and Left buccal images';
+        btn.addEventListener('click', function () {
+            btn.disabled = true;
+            swapBuccalSides().finally(() => { btn.disabled = false; });
+        });
+        row.appendChild(btn);
+        return btn;
+    }
+
+    // Show the button (centered between the two boxes) only when both buccal slots are filled.
+    function positionBuccalSwap() {
+        const btn = ensureBuccalSwapBtn();
+        if (!btn) return;
+        const d7 = slotDom(7), d8 = slotDom(8);
+        if (!d7 || !d8 || !slotFilled(7) || !slotFilled(8)) { btn.classList.remove('show'); return; }
+        const row = btn.parentElement;
+        const rr = row.getBoundingClientRect();
+        const b7 = d7.getBoundingClientRect(), b8 = d8.getBoundingClientRect();
+        if (!b7.width || !b8.width) { btn.classList.remove('show'); return; } // step hidden
+        btn.style.left = ((b7.left + b7.right + b8.left + b8.right) / 4 - rr.left) + 'px';
+        btn.style.top = ((b7.top + b7.bottom + b8.top + b8.bottom) / 4 - rr.top) + 'px';
+        btn.classList.add('show');
+    }
+    window.addEventListener('resize', positionBuccalSwap);
 
     // Show the actual photo on a slot (or restore its placeholder when empty).
     function refreshSlot(key) {
@@ -705,6 +741,7 @@
             dzEl.classList.remove('autoseg-img');
             dzEl.style.backgroundImage = dzEl.dataset.placeholderBg || '';
         }
+        if (key === 7 || key === 8) positionBuccalSwap();
     }
     function refreshAllSlots() { ALL_IMAGE_KEYS.forEach(refreshSlot); }
 
@@ -830,11 +867,12 @@
         updateReviewStatus();
 
         // Right/Left buccal can't be guaranteed by the AI. When both buccals were placed,
-        // flag them so the user glances and hits "⇄ Swap L/R" (one click) if they're swapped.
+        // flag them and show the centered "⇄ Swap L/R" button (one click) if they're swapped.
         if (slotFilled(7) && slotFilled(8)) {
             markBuccalUncertain();
+            positionBuccalSwap();
             const cur = statusEl.textContent || '';
-            setStatus((cur ? cur + ' ' : '') + 'Please verify the highlighted <strong>Right/Left Buccal</strong> — use “⇄ Swap L/R” on hover if they are swapped.', 'text-warning');
+            setStatus((cur ? cur + ' ' : '') + 'Please verify the highlighted <strong>Right/Left Buccal</strong> — hit the “⇄ Swap L/R” button between them if they are swapped.', 'text-warning');
         }
     }
 
