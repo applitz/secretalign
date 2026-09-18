@@ -21,6 +21,17 @@
         #pill-tab-div3 .autoseg-actions .autoseg-edit { background: #2f6f8f; }
         #pill-tab-div3 .autoseg-actions .autoseg-del { background: #c0392b; }
         #pill-tab-div3 #autoseg-review-list .autoseg-suggest { outline: 2px solid #16a34a; }
+        /* Delete (×) button on review (unassigned) cards */
+        #pill-tab-div3 #autoseg-review-list .autoseg-review-card { position: relative; }
+        #pill-tab-div3 #autoseg-review-list .autoseg-review-del {
+            position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 50%;
+            border: 0; background: rgba(192,57,43,.92); color: #fff; font-size: 15px; line-height: 1;
+            padding: 0; cursor: pointer; opacity: 0; transition: opacity .12s; z-index: 7;
+            box-shadow: 0 1px 3px rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center;
+        }
+        #pill-tab-div3 #autoseg-review-list .autoseg-review-card:hover .autoseg-review-del { opacity: 1; }
+        /* Drag-over highlight when dropping a review image onto a slot */
+        #pill-tab-div3 ._dropzone.autoseg-dragover { outline: 3px dashed #16a34a; outline-offset: -3px; }
     </style>
 
     {{-- Auto-segregation bulk uploader --}}
@@ -670,10 +681,18 @@
         const col = document.createElement('div');
         col.className = 'col-6 col-md-3 col-lg-2';
         const box = document.createElement('div');
-        box.className = 'border rounded p-2 h-100' + (suggest ? ' autoseg-suggest' : '');
+        box.className = 'border rounded p-2 h-100 autoseg-review-card' + (suggest ? ' autoseg-suggest' : '');
+        const objUrl = URL.createObjectURL(file);
+        // Free the object URL and drop the card once it's placed or discarded.
+        function removeCard() { URL.revokeObjectURL(objUrl); col.remove(); updateReviewStatus(); }
         const img = document.createElement('img');
         img.style.cssText = 'width:100%;height:80px;object-fit:cover;border-radius:4px;';
-        img.src = URL.createObjectURL(file);
+        img.src = objUrl;
+        // Delete (×): discard this unassigned image without placing it anywhere.
+        const del = document.createElement('button');
+        del.type = 'button'; del.className = 'autoseg-review-del'; del.title = 'Discard this image';
+        del.innerHTML = '&times;';
+        del.addEventListener('click', function (e) { e.stopPropagation(); removeCard(); });
         const sel = document.createElement('select');
         sel.className = 'form-select form-select-sm mt-2';
         SLOTS.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; if (s === defaultSlot) o.selected = true; sel.appendChild(o); });
@@ -687,10 +706,9 @@
             if (slotFilled(key)) { occupantSlot = slotName(key); occupant = await grabSlotFile(key); }
             try { await uploadToSlot(key, file); } catch (e) {}
             if (occupant) addReviewItem(occupant, occupantSlot, false);
-            col.remove();
-            updateReviewStatus();
+            removeCard();
         };
-        box.append(img, sel, btn);
+        box.append(del, img, sel, btn);
         col.appendChild(box);
         reviewList.appendChild(col);
     }
