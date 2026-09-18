@@ -116,6 +116,23 @@ Ignore lips, cheeks, retractors and skin. Return ONLY JSON, no prose:
  "why": "front teeth in <left|right> half of image1, <left|right> half of image2"}
 TXT;
 
+    // Used when labelled reference photos are configured (few-shot).
+    private const PROMPT_B_REF = <<<'TXT'
+The FIRST image is a CONFIRMED "Left Buccal" example. The SECOND image is a CONFIRMED
+"Right Buccal" example. The THIRD and FOURTH images are the patient's two buccal photos
+to classify.
+
+For the THIRD and FOURTH images, decide which example each one MATCHES, based purely on
+the LAYOUT of the teeth in the frame - which side the FRONT teeth (flat central incisors
++ pointed canine) sit on versus the back molars. Give each the same label as the example
+it matches. Use ONLY positions in the picture; ignore anatomy and mirroring.
+
+Return ONLY JSON. Here "image_1" = the THIRD image and "image_2" = the FOURTH image:
+{"image_1": "Right Buccal" or "Left Buccal",
+ "image_2": "Right Buccal" or "Left Buccal",
+ "why": "front teeth side in each patient photo"}
+TXT;
+
     private const PROMPT_C = <<<'TXT'
 These are the TWO occlusal (biting-surface) intraoral photos of one orthodontic patient,
 IMAGE 1 then IMAGE 2. Each looks straight into ONE dental arch (the teeth form a
@@ -167,8 +184,11 @@ TXT;
         // Pass 2 - pairwise disambiguation for the two hard "left/right, upper/lower"
         // slot families. Comparing the two side-by-side is far more reliable than
         // judging each alone (the model is otherwise confidently wrong on these).
-        // Buccal L/R is the hardest call; use the stronger model for the pair comparison.
-        $results = $this->resolvePair($images, $results, 'Buccal', self::PROMPT_B, ['Right Buccal', 'Left Buccal'], $this->fallbackModel);
+        // Buccal L/R is the hardest call; use the stronger model for the pair comparison,
+        // and labelled reference photos as few-shot examples when they are available.
+        $buccalRefs = $this->loadBuccalReferences();
+        $buccalPrompt = $buccalRefs ? self::PROMPT_B_REF : self::PROMPT_B;
+        $results = $this->resolvePair($images, $results, 'Buccal', $buccalPrompt, ['Right Buccal', 'Left Buccal'], $this->fallbackModel, $buccalRefs);
         $results = $this->resolvePair($images, $results, 'Occlusal', self::PROMPT_C, ['Upper Occlusal', 'Lower Occlusal'], $this->fallbackModel);
 
         // Return in the same order as the input.
@@ -302,7 +322,7 @@ TXT;
      * @param  array<int, string>  $validSlots  the two acceptable slot names for this family
      * @return array<int, array{index:int, slot:string, confidence:float, reason:string}>  keyed by index
      */
-    private function resolvePair(array $images, array $results, string $needle, string $prompt, array $validSlots, ?string $model = null): array
+    private function resolvePair(array $images, array $results, string $needle, string $prompt, array $validSlots, ?string $model = null, array $refs = []): array
     {
         $matchIdx = [];
         foreach ($results as $idx => $r) {
@@ -321,7 +341,7 @@ TXT;
         }
 
         [$i1, $i2] = $matchIdx;
-        $pair = $this->classifyPair($byIndex[$i1], $byIndex[$i2], $prompt, $validSlots, $model ?? $this->model);
+        $pair = $this->classifyPair($byIndex[$i1], $byIndex[$i2], $prompt, $validSlots, $model ?? $this->model, $refs);
 
         if ($pair !== null) {
             $label = strtolower($needle).' pair';
@@ -341,9 +361,19 @@ TXT;
      * @param  array<int, string>  $validSlots
      * @return array{image_1:string, image_2:string, why:string}|null
      */
-    private function classifyPair(string $dataUri1, string $dataUri2, string $prompt, array $validSlots, ?string $model = null): ?array
+    private function classifyPair(string $dataUri1, string $dataUri2, string $prompt, array $validSlots, ?string $model = null, array $refs = []): ?array
     {
         try {
+            // When labelled reference examples are supplied, put them FIRST (left ref,
+            // then right ref) so the two patient images become the 3rd and 4th images.
+            $content = [['type' => 'text', 'text' => $prompt]];
+            if (! empty($refs['left']) && ! empty($refs['right'])) {
+                $content[] = ['type' => 'image_url', 'image_url' => ['url' => $refs['left']]];
+                $content[] = ['type' => 'image_url', 'image_url' => ['url' => $refs['right']]];
+            }
+            $content[] = ['type' => 'image_url', 'image_url' => ['url' => $dataUri1]];
+            $content[] = ['type' => 'image_url', 'image_url' => ['url' => $dataUri2]];
+
             $resp = Http::withToken($this->key)
                 ->withOptions(['version' => 1.1])
                 ->timeout(90)
@@ -351,11 +381,7 @@ TXT;
                     'model' => $model ?? $this->model,
                     'temperature' => 0,
                     'messages' => [
-                        ['role' => 'user', 'content' => [
-                            ['type' => 'text', 'text' => $prompt],
-                            ['type' => 'image_url', 'image_url' => ['url' => $dataUri1]],
-                            ['type' => 'image_url', 'image_url' => ['url' => $dataUri2]],
-                        ]],
+                        ['role' => 'user', 'content' => $content],
                     ],
                 ]);
 
@@ -375,6 +401,66 @@ TXT;
 
             return null;
         }
+    }
+
+    /**
+     * Load the configured Left/Right buccal reference photos (if both exist) as small
+     * data URIs, to use as few-shot examples. Returns [] when not configured.
+     *
+     * @return array{left?:string, right?:string}
+     */
+    private function loadBuccalReferences(): array
+    {
+        $left = (string) config('services.openrouter.buccal_ref_left');
+        $right = (string) config('services.openrouter.buccal_ref_right');
+        if ($left === '' || $right === '' || ! is_file($left) || ! is_file($right)) {
+            return [];
+        }
+        $lu = $this->fileToDataUri($left);
+        $ru = $this->fileToDataUri($right);
+
+        return ($lu && $ru) ? ['left' => $lu, 'right' => $ru] : [];
+    }
+
+    /**
+     * Read an image file and return it as a base64 data URI, resized to <=768px (GD)
+     * to keep the request small. Falls back to the raw bytes if GD can't handle it.
+     */
+    private function fileToDataUri(string $path, int $max = 768): ?string
+    {
+        $info = @getimagesize($path);
+        $mime = $info['mime'] ?? 'image/jpeg';
+
+        if (function_exists('imagecreatetruecolor')) {
+            $src = null;
+            if ($mime === 'image/jpeg') {
+                $src = @imagecreatefromjpeg($path);
+            } elseif ($mime === 'image/png') {
+                $src = @imagecreatefrompng($path);
+            } elseif ($mime === 'image/webp') {
+                $src = @imagecreatefromwebp($path);
+            }
+            if ($src) {
+                $w = imagesx($src);
+                $h = imagesy($src);
+                $scale = min(1, $max / max($w, $h));
+                $nw = max(1, (int) round($w * $scale));
+                $nh = max(1, (int) round($h * $scale));
+                $dst = imagecreatetruecolor($nw, $nh);
+                imagecopyresampled($dst, $src, 0, 0, 0, 0, $nw, $nh, $w, $h);
+                ob_start();
+                imagejpeg($dst, null, 80);
+                $bytes = ob_get_clean();
+                imagedestroy($src);
+                imagedestroy($dst);
+
+                return 'data:image/jpeg;base64,'.base64_encode((string) $bytes);
+            }
+        }
+
+        $raw = @file_get_contents($path);
+
+        return $raw === false ? null : 'data:'.$mime.';base64,'.base64_encode($raw);
     }
 
     /**
