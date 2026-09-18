@@ -27,7 +27,7 @@
         #pill-tab-div3 #autoseg-buccal-swap {
             position: absolute; z-index: 20; transform: translate(-50%, -50%);
             display: none; align-items: center; gap: 6px; white-space: nowrap;
-            padding: 8px 12px; border: 0; border-radius: 999px;
+            width: auto; max-width: none; padding: 8px 12px; border: 0; border-radius: 999px;
             background: #0d9488; color: #fff; font-size: 12px; font-weight: 600;
             box-shadow: 0 2px 8px rgba(0,0,0,.35); cursor: pointer;
         }
