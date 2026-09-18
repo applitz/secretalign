@@ -38,28 +38,53 @@
     {{-- Auto-segregation bulk uploader --}}
     <div class="card border border-primary mb-3" id="autoseg-card"
          data-classify-url="{{ url('/patient/'.(@$patient->patient_id ?: '0').'/images/classify') }}"
+         data-drive-url="{{ url('/patient/'.(@$patient->patient_id ?: '0').'/images/drive-fetch') }}"
          data-img-base="{{ asset('storage/PatientFiles/Patient'.(@$patient->patient_id ?: '0')) }}/">
         <div class="card-body">
-            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
-                <div>
-                    <h6 class="mb-1 fw-semibold"><i class="mdi mdi-auto-fix"></i> Auto-upload &amp; sort images</h6>
-                    <p class="text-muted mb-0" style="font-size:12px;">
-                        Drop a patient's photos &amp; X-rays (or a whole folder). They're sorted into the
-                        right slots automatically. Duplicates are skipped. Max <strong>15</strong> images.
-                    </p>
-                </div>
-                <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-primary btn-sm px-3" id="autoseg-pick-files">Select images</button>
-                    <button type="button" class="btn btn-outline-primary btn-sm px-3" id="autoseg-pick-folder">Select folder</button>
-                    <input type="file" id="autoseg-input-files" accept="image/*" multiple class="d-none">
-                    <input type="file" id="autoseg-input-folder" webkitdirectory directory multiple class="d-none">
-                </div>
+            <div class="mb-2">
+                <h6 class="mb-1 fw-semibold"><i class="mdi mdi-auto-fix"></i> Auto-upload &amp; sort images</h6>
+                <p class="text-muted mb-0" style="font-size:12px;">
+                    Drop a patient's photos &amp; X-rays (or a whole folder), or paste a Google Drive link.
+                    They're sorted into the right slots automatically. Duplicates are skipped. Max <strong>15</strong> images.
+                </p>
             </div>
 
-            <div id="autoseg-dropzone" class="mt-3 py-4 px-3 text-center text-muted"
-                 style="border:2px dashed #b9c7d6;border-radius:8px;cursor:pointer;transition:.15s;">
-                <i class="mdi mdi-cloud-upload-outline" style="font-size:26px;"></i>
-                <div style="font-size:13px;">Drag &amp; drop images or a folder here, or use the buttons above</div>
+            <div class="row g-3 align-items-stretch">
+                {{-- Left half: drag & drop / select from computer --}}
+                <div class="col-md-6 d-flex flex-column">
+                    <div class="d-flex gap-2 mb-2 flex-wrap">
+                        <button type="button" class="btn btn-primary btn-sm px-3" id="autoseg-pick-files">Select images</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm px-3" id="autoseg-pick-folder">Select folder</button>
+                        <input type="file" id="autoseg-input-files" accept="image/*" multiple class="d-none">
+                        <input type="file" id="autoseg-input-folder" webkitdirectory directory multiple class="d-none">
+                    </div>
+                    <div id="autoseg-dropzone" class="flex-grow-1 py-4 px-3 text-center text-muted d-flex flex-column justify-content-center"
+                         style="border:2px dashed #b9c7d6;border-radius:8px;cursor:pointer;transition:.15s;min-height:120px;">
+                        <i class="mdi mdi-cloud-upload-outline" style="font-size:26px;"></i>
+                        <div style="font-size:13px;">Drag &amp; drop images or a folder here, or use the buttons above</div>
+                    </div>
+                </div>
+
+                {{-- Right half: pull from a Google Drive link (folder or file) --}}
+                <div class="col-md-6 d-flex flex-column">
+                    <label class="form-label mb-2 fw-semibold" for="general_upload_hyperlink" style="font-size:13px;">
+                        <i class="mdi mdi-google-drive"></i> Google Drive link (folder or file)
+                    </label>
+                    <div class="input-group">
+                        <input type="text" class="form-control hyperlink" placeholder="https://drive.google.com/..."
+                            value="{{ @$patient->fl_general_upload_drive_link }}"
+                            name="general_upload_hyperlink" id="general_upload_hyperlink">
+                        <button type="button" class="btn btn-primary px-3" id="autoseg-drive-scan">
+                            <i class="mdi mdi-magnify-scan"></i> Scan link
+                        </button>
+                    </div>
+                    <div class="flex-grow-1 py-3 px-3 mt-2 text-muted"
+                         style="border:2px dashed #b9c7d6;border-radius:8px;min-height:120px;font-size:12px;">
+                        <div class="mb-1"><i class="mdi mdi-information-outline"></i> Share the folder/file as <strong>"Anyone with the link"</strong>.</div>
+                        We fetch its images and sort them into slots just like a normal upload. The link is also
+                        saved as the patient's General Upload drive link.
+                    </div>
+                </div>
             </div>
 
             <div id="autoseg-status" class="mt-2" style="font-size:13px;"></div>
@@ -399,15 +424,7 @@
     </div>
     {{-- General Upload End --}}
 
-    {{-- General Upload Drive Start --}}
-    <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-6 col-12">
-        <label class="form-label" for="general_upload_hyperlink">General Upload (Drive
-            Link)</label>
-        <input class="form-control hyperlink" placeholder="https://"
-            value="{{ @$patient->fl_general_upload_drive_link }}"
-            name="general_upload_hyperlink" id="general_upload_hyperlink">
-    </div>
-    {{-- General Upload Drive end --}}
+    {{-- General Upload (Drive Link) moved into the auto-upload panel at the top of this step --}}
     </div>
 
     <div class="mb-3 text-end">
@@ -434,6 +451,7 @@
     if (!card) return;
 
     const CLASSIFY_URL = card.dataset.classifyUrl;
+    const DRIVE_URL = card.dataset.driveUrl || '';
     const MAX = 15;
     const SLOT_TO_KEY = {
         'Front': 3, 'Smile': 4, 'Profile': 5, 'Frontal (Intraoral)': 6,
@@ -805,6 +823,55 @@
         const files = await filesFromDrop(e.dataTransfer);
         handleFiles(files);
     });
+
+    // --- Google Drive link: fetch images server-side, then reuse the same pipeline ---
+    const driveScanBtn = document.getElementById('autoseg-drive-scan');
+    const driveInput = document.getElementById('general_upload_hyperlink');
+
+    function dataUriToFile(uri, name) {
+        const comma = uri.indexOf(',');
+        const head = uri.slice(0, comma);
+        const b64 = uri.slice(comma + 1);
+        const mime = (head.match(/data:([^;]+)/) || [null, 'image/jpeg'])[1];
+        const bin = atob(b64);
+        const arr = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        return new File([arr], name || 'drive-image.jpg', { type: mime });
+    }
+
+    async function scanDriveLink() {
+        if (!DRIVE_URL || !driveInput) return;
+        const link = (driveInput.value || '').trim();
+        if (!link) { setStatus('Paste a Google Drive link first.', 'text-warning'); return; }
+        driveScanBtn.disabled = true;
+        setStatus('<span class="spinner-border spinner-border-sm"></span> Fetching images from Google Drive…');
+        let data;
+        try {
+            const res = await fetch(DRIVE_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrf() },
+                body: JSON.stringify({ link: link })
+            });
+            data = await res.json();
+            if (!res.ok || data.status !== 'success') {
+                setStatus((data && data.message) || ('Could not fetch from Drive (' + res.status + ').'), 'text-danger fw-semibold');
+                return;
+            }
+        } catch (e) {
+            setStatus('Drive fetch failed: ' + e.message, 'text-danger fw-semibold');
+            return;
+        } finally {
+            driveScanBtn.disabled = false;
+        }
+        if (data.skipped && data.skipped.length) {
+            skippedEl.textContent = 'Skipped ' + data.skipped.length + ' non-image/unreadable file' + (data.skipped.length > 1 ? 's' : '') + ' from Drive';
+        }
+        const files = (data.images || []).map((im, i) => dataUriToFile(im.data_uri, im.name || ('drive-' + i + '.jpg')));
+        if (!files.length) { setStatus('No usable images found at that link.', 'text-warning'); return; }
+        handleFiles(files); // same classify + placement pipeline as dropped/selected files
+    }
+
+    if (driveScanBtn) driveScanBtn.addEventListener('click', scanDriveLink);
 
     // Keep each image slot's preview in sync with its file attribute — covers
     // auto-segregation, manual per-slot uploads, and files already present on load.

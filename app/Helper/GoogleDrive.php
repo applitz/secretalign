@@ -110,6 +110,87 @@ function listPublicDriveFilesOld($url)
     }
 }
 
+/**
+ * Pull a Drive file id out of a single-file share link, e.g.
+ *   https://drive.google.com/file/d/<ID>/view?usp=sharing
+ *   https://drive.google.com/open?id=<ID>
+ *   https://drive.google.com/uc?id=<ID>&export=download
+ */
+function extractFileId(string $url): ?string
+{
+    if (preg_match('#/file/d/([^/?]+)#', $url, $m)) {
+        return $m[1];
+    }
+    if (preg_match('#[?&]id=([^&]+)#', $url, $m)) {
+        return $m[1];
+    }
+    return null;
+}
+
+/**
+ * List image files inside a public Drive folder link (jpg/png/webp/gif/bmp,
+ * or anything with an image/* mime). Mirrors listPublicDriveFiles() but for the
+ * Images / X-Rays auto-segregation uploader. Returns Google\Service\Drive\DriveFile[].
+ */
+function listPublicDriveImages($url)
+{
+    if (!isGoogleDriveLink($url) || !checkTreatmentLinkIsPublicOrNot($url)) {
+        return [];
+    }
+    $folderId = extractFolderId($url);
+    if (!$folderId) {
+        return [];
+    }
+
+    $client = new Google\Client();
+    $client->setApplicationName('SECRETALIGN');
+    $client->setDeveloperKey('AIzaSyBmRLqMpqVZUtrPnbyJZ6iakwLeFGliEK8');
+    $service = new Google\Service\Drive($client);
+    $response = $service->files->listFiles([
+        'q' => "'$folderId' in parents and trashed = false",
+        'orderBy' => 'name',
+        'pageSize' => 1000,
+        'fields' => 'files(id, name, mimeType)',
+    ]);
+
+    return array_values(array_filter($response->getFiles(), function ($file) {
+        $ext = strtolower(pathinfo($file->name, PATHINFO_EXTENSION));
+        $mime = strtolower((string) $file->mimeType);
+        return in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp', 'heic'])
+            || str_starts_with($mime, 'image/');
+    }));
+}
+
+/**
+ * Download the raw bytes of a public Drive file by id, preferring the API
+ * (alt=media, avoids the virus-scan interstitial) and falling back to the
+ * public direct-download URL. Returns null on failure.
+ */
+function downloadPublicDriveFileBytes(string $fileId): ?string
+{
+    try {
+        $client = new Google\Client();
+        $client->setApplicationName('SECRETALIGN');
+        $client->setDeveloperKey('AIzaSyBmRLqMpqVZUtrPnbyJZ6iakwLeFGliEK8');
+        $service = new Google\Service\Drive($client);
+        $response = $service->files->get($fileId, ['alt' => 'media']);
+        $bytes = (string) $response->getBody();
+        if ($bytes !== '') {
+            return $bytes;
+        }
+    } catch (\Throwable $e) {
+        // fall through to the public URL
+    }
+
+    try {
+        $ctx = stream_context_create(['http' => ['timeout' => 60], 'https' => ['timeout' => 60]]);
+        $bytes = @file_get_contents("https://drive.google.com/uc?export=download&id={$fileId}", false, $ctx);
+        return ($bytes !== false && $bytes !== '') ? $bytes : null;
+    } catch (\Throwable $e) {
+        return null;
+    }
+}
+
 function extractStepIdentifier($fileName)
 {
     if (preg_match('/^([LU])_Step[_\-](\d{1,2})/', $fileName, $matches)) {

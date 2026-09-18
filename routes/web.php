@@ -178,6 +178,7 @@ Route::post('/patient/check-movix-scan-status', [RegisterPatient::class, 'checkM
 
 //patient files
 Route::post('/patient/{patient_id}/images/classify', [\App\Http\Controllers\ImageClassifierController::class, 'classify'])->middleware('throttle:30,1');
+Route::post('/patient/{patient_id}/images/drive-fetch', [\App\Http\Controllers\DriveImportController::class, 'fetch'])->middleware('throttle:20,1');
 Route::post('/patient/file/uploadnew/{patient_id}/{treatment_plan_id}', [PatientFileController::class, 'file_upload_new']);
 Route::post('/patient/file/upload/{patient_id}/{treatment_plan_id}', [PatientFileController::class, 'file_upload']);
 Route::post('/patient/file/revert/{patient_id}/{treatment_plan_id}', [PatientFileController::class, 'file_revert']);
