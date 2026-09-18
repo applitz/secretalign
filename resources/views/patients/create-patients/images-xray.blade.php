@@ -21,6 +21,9 @@
         #pill-tab-div3 .autoseg-actions .autoseg-edit { background: #2f6f8f; }
         #pill-tab-div3 .autoseg-actions .autoseg-unassign { background: #b7791f; }
         #pill-tab-div3 .autoseg-actions .autoseg-del { background: #c0392b; }
+        #pill-tab-div3 .autoseg-actions .autoseg-swap { background: #0d9488; }
+        /* highlight buccal slots the AI is unsure about (check L/R) */
+        #pill-tab-div3 ._dropzone.autoseg-uncertain { outline: 3px solid #f59e0b; outline-offset: -3px; }
         #pill-tab-div3 #autoseg-review-list .autoseg-suggest { outline: 2px solid #16a34a; }
         /* Delete (×) button on review (unassigned) cards */
         #pill-tab-div3 #autoseg-review-list .autoseg-review-card { position: relative; }
@@ -665,8 +668,39 @@
         const del = document.createElement('button'); del.type = 'button'; del.className = 'autoseg-del'; del.textContent = 'Delete';
         del.addEventListener('click', function () { if (typeof window.dropzone_destroy_state === 'function') window.dropzone_destroy_state(key); });
         btns.append(edit, unassign, del);
+        // Buccal slots (Right=7, Left=8): one-click swap. The AI can't tell R from L
+        // reliably, but the pair is always opposite, so swapping both fixes it in one click.
+        if (key === 7 || key === 8) {
+            const swap = document.createElement('button');
+            swap.type = 'button'; swap.className = 'autoseg-swap'; swap.textContent = '⇄ Swap L/R';
+            swap.title = 'Swap the Right and Left buccal images';
+            swap.addEventListener('click', function () {
+                swap.disabled = true;
+                swapBuccalSides().finally(() => { swap.disabled = false; });
+            });
+            btns.append(swap);
+        }
         ov.append(lbl, sel, btns);
         dzEl.appendChild(ov);
+    }
+
+    // Exchange the Right Buccal (key 7) and Left Buccal (key 8) images in one click.
+    async function swapBuccalSides() {
+        const R = 7, L = 8;
+        const fR = slotFilled(R) ? await grabSlotFile(R) : null;
+        const fL = slotFilled(L) ? await grabSlotFile(L) : null;
+        if (!fR && !fL) return;
+        if (fL) { await uploadToSlot(R, fL); } else if (typeof window.dropzone_destroy_state === 'function') { window.dropzone_destroy_state(R); }
+        if (fR) { await uploadToSlot(L, fR); } else if (typeof window.dropzone_destroy_state === 'function') { window.dropzone_destroy_state(L); }
+        clearBuccalUncertainty();
+    }
+
+    // Highlight (or clear) the two buccal slots when the AI was unsure of Left/Right.
+    function markBuccalUncertain() {
+        [7, 8].forEach(k => { const el = slotDom(k); if (el && el.classList.contains('autoseg-img')) el.classList.add('autoseg-uncertain'); });
+    }
+    function clearBuccalUncertainty() {
+        [7, 8].forEach(k => { const el = slotDom(k); if (el) el.classList.remove('autoseg-uncertain'); });
     }
 
     // Show the actual photo on a slot (or restore its placeholder when empty).
@@ -808,6 +842,14 @@
         review.forEach(it => addReviewItem(it.file, it.slot, suggestKey !== null && it === review[0]));
         setStatus('');
         updateReviewStatus();
+
+        // Right/Left buccal can't be guaranteed by the AI. When both buccals were placed,
+        // flag them so the user glances and hits "⇄ Swap L/R" (one click) if they're swapped.
+        if (slotFilled(7) && slotFilled(8)) {
+            markBuccalUncertain();
+            const cur = statusEl.textContent || '';
+            setStatus((cur ? cur + ' ' : '') + 'Please verify the highlighted <strong>Right/Left Buccal</strong> — use “⇄ Swap L/R” on hover if they are swapped.', 'text-warning');
+        }
     }
 
     // --- wire up controls ---
