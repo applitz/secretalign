@@ -867,12 +867,10 @@
         updateReviewStatus();
 
         // Right/Left buccal can't be guaranteed by the AI. When both buccals were placed,
-        // flag them and show the centered "⇄ Swap L/R" button (one click) if they're swapped.
+        // highlight them and show the centered "⇄ Swap L/R" button (one click) if they're swapped.
         if (slotFilled(7) && slotFilled(8)) {
             markBuccalUncertain();
             positionBuccalSwap();
-            const cur = statusEl.textContent || '';
-            setStatus((cur ? cur + ' ' : '') + 'Please verify the highlighted <strong>Right/Left Buccal</strong> — hit the “⇄ Swap L/R” button between them if they are swapped.', 'text-warning');
         }
     }
 
