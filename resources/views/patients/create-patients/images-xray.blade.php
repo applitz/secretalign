@@ -1,9 +1,32 @@
 {{-- Images / Xray Start --}}
 <div class="tab-pane fade {{ (isset($activeTab) && $activeTab == 'pill-tab-div3') ? 'show active' : '' }}" id="pill-tab-div3" role="tabpanel">
 
+    <style>
+        /* Image-slot preview + hover action menu (Images/X-Rays step only) */
+        #pill-tab-div3 ._dropzone.autoseg-img { background-size: cover; background-position: center; background-color: #11161b; }
+        #pill-tab-div3 ._dropzone.autoseg-img ._dropzone_added,
+        #pill-tab-div3 ._dropzone.autoseg-img ._dropzone_hover,
+        #pill-tab-div3 ._dropzone.autoseg-img ._dropzone_remove,
+        #pill-tab-div3 ._dropzone.autoseg-img ._dropzone_edit { display: none !important; }
+        #pill-tab-div3 ._dropzone .autoseg-actions {
+            position: absolute; inset: 0; background: rgba(17, 22, 27, .84);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 8px; opacity: 0; pointer-events: none; transition: opacity .12s; z-index: 6; padding: 12px; text-align: center;
+        }
+        #pill-tab-div3 ._dropzone.autoseg-img:hover .autoseg-actions { opacity: 1; pointer-events: auto; }
+        #pill-tab-div3 .autoseg-actions label { color: #cfe3ee; font-size: 11px; margin: 0; }
+        #pill-tab-div3 .autoseg-actions .autoseg-type { width: 90%; font-size: 12px; padding: 4px 6px; border-radius: 4px; border: 0; }
+        #pill-tab-div3 .autoseg-actions .autoseg-btns { display: flex; gap: 8px; margin-top: 2px; }
+        #pill-tab-div3 .autoseg-actions .autoseg-btns button { border: 0; border-radius: 4px; padding: 5px 12px; font-size: 12px; cursor: pointer; color: #fff; }
+        #pill-tab-div3 .autoseg-actions .autoseg-edit { background: #2f6f8f; }
+        #pill-tab-div3 .autoseg-actions .autoseg-del { background: #c0392b; }
+        #pill-tab-div3 #autoseg-review-list .autoseg-suggest { outline: 2px solid #16a34a; }
+    </style>
+
     {{-- Auto-segregation bulk uploader --}}
     <div class="card border border-primary mb-3" id="autoseg-card"
-         data-classify-url="{{ url('/patient/'.(@$patient->patient_id ?: '0').'/images/classify') }}">
+         data-classify-url="{{ url('/patient/'.(@$patient->patient_id ?: '0').'/images/classify') }}"
+         data-img-base="{{ asset('storage/PatientFiles/Patient'.(@$patient->patient_id ?: '0')) }}/">
         <div class="card-body">
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
                 <div>
@@ -553,13 +576,138 @@
         await placeResults(data.results || [], (typeof data.min_confidence === 'number' ? data.min_confidence : 0.6), files);
     }
 
+    const IMG_BASE = card.dataset.imgBase || '';
+    // The 10 "standard" photo slots (Front..Lateral Ceph); General Upload (13) is extra.
+    const STANDARD_KEYS = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const ALL_IMAGE_KEYS = STANDARD_KEYS.concat([13]);
+
+    function slotName(key) { for (const s in SLOT_TO_KEY) if (SLOT_TO_KEY[s] === key) return s; return ''; }
+    function slotDom(key) { return document.querySelector('#pill-tab-div3 ._dropzone[key="' + key + '"]'); }
+    function fileNameOf(key) {
+        const el = document.getElementById('key' + key);
+        const f = el ? (el.getAttribute('file') || '') : '';
+        return (f && f !== 'null' && f.trim() !== '') ? f.trim() : '';
+    }
+
+    // Fetch the image currently in a slot as a File (for moving between slots).
+    async function grabSlotFile(key) {
+        const fn = fileNameOf(key);
+        if (!fn) return null;
+        try {
+            const url = fn.indexOf('blob:') === 0 ? fn : (IMG_BASE + encodeURIComponent(fn));
+            const blob = await (await fetch(url)).blob();
+            return new File([blob], 'image.jpg', { type: blob.type || 'image/jpeg' });
+        } catch (e) { return null; }
+    }
+
+    // Build the hover action menu (Change type / Edit / Delete) for an image slot, once.
+    function ensureOverlay(key) {
+        const dzEl = slotDom(key);
+        if (!dzEl || dzEl.querySelector('.autoseg-actions')) return;
+        const ov = document.createElement('div');
+        ov.className = 'autoseg-actions';
+        ov.addEventListener('click', e => e.stopPropagation()); // don't trigger the file picker
+        const lbl = document.createElement('label'); lbl.textContent = 'Change type';
+        const sel = document.createElement('select'); sel.className = 'autoseg-type';
+        SLOTS.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sel.appendChild(o); });
+        sel.value = slotName(key);
+        sel.addEventListener('change', function () {
+            const toSlot = sel.value;
+            sel.value = slotName(key);
+            changeSlotType(key, toSlot);
+        });
+        const btns = document.createElement('div'); btns.className = 'autoseg-btns';
+        const edit = document.createElement('button'); edit.type = 'button'; edit.className = 'autoseg-edit'; edit.textContent = 'Edit';
+        edit.addEventListener('click', function () { const t = dzEl.querySelector('._dropzone_edit'); if (t) t.click(); });
+        const del = document.createElement('button'); del.type = 'button'; del.className = 'autoseg-del'; del.textContent = 'Delete';
+        del.addEventListener('click', function () { if (typeof window.dropzone_destroy_state === 'function') window.dropzone_destroy_state(key); });
+        btns.append(edit, del);
+        ov.append(lbl, sel, btns);
+        dzEl.appendChild(ov);
+    }
+
+    // Show the actual photo on a slot (or restore its placeholder when empty).
+    function refreshSlot(key) {
+        const dzEl = slotDom(key);
+        if (!dzEl) return;
+        if (dzEl.dataset.placeholderBg === undefined) dzEl.dataset.placeholderBg = dzEl.style.backgroundImage || '';
+        const fn = fileNameOf(key);
+        if (fn) {
+            ensureOverlay(key);
+            const sel = dzEl.querySelector('.autoseg-type'); if (sel) sel.value = slotName(key);
+            dzEl.classList.add('autoseg-img');
+            const url = fn.indexOf('blob:') === 0 ? fn : (IMG_BASE + encodeURIComponent(fn));
+            dzEl.style.backgroundImage = "url('" + url + "')";
+        } else {
+            dzEl.classList.remove('autoseg-img');
+            dzEl.style.backgroundImage = dzEl.dataset.placeholderBg || '';
+        }
+    }
+    function refreshAllSlots() { ALL_IMAGE_KEYS.forEach(refreshSlot); }
+
+    async function uploadToSlot(key, file) {
+        await window.dropzone_upload(key, file);
+        refreshSlot(key);
+    }
+
+    // Move the image in `fromKey` to `toSlot`. If the target is occupied, its current
+    // image is bumped to the review row (minimal clicks); if empty, it moves directly.
+    async function changeSlotType(fromKey, toSlot) {
+        const toKey = SLOT_TO_KEY[toSlot];
+        if (!toKey || toKey === fromKey) return;
+        const movingFile = await grabSlotFile(fromKey);
+        if (!movingFile) { return; }
+        let occupant = null, occupantSlot = '';
+        if (slotFilled(toKey)) { occupantSlot = slotName(toKey); occupant = await grabSlotFile(toKey); }
+        await uploadToSlot(toKey, movingFile);                 // overwrites target's DB reference
+        if (typeof window.dropzone_destroy_state === 'function') window.dropzone_destroy_state(fromKey);
+        if (occupant) addReviewItem(occupant, occupantSlot, false);
+        updateReviewStatus();
+    }
+
+    function addReviewItem(file, defaultSlot, suggest) {
+        reviewWrap.classList.remove('d-none');
+        const col = document.createElement('div');
+        col.className = 'col-6 col-md-3 col-lg-2';
+        const box = document.createElement('div');
+        box.className = 'border rounded p-2 h-100' + (suggest ? ' autoseg-suggest' : '');
+        const img = document.createElement('img');
+        img.style.cssText = 'width:100%;height:80px;object-fit:cover;border-radius:4px;';
+        img.src = URL.createObjectURL(file);
+        const sel = document.createElement('select');
+        sel.className = 'form-select form-select-sm mt-2';
+        SLOTS.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; if (s === defaultSlot) o.selected = true; sel.appendChild(o); });
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'btn btn-sm btn-primary w-100 mt-2'; btn.textContent = 'Place';
+        btn.onclick = async function () {
+            const slot = sel.value, key = SLOT_TO_KEY[slot];
+            if (!key) return;
+            btn.disabled = true;
+            let occupant = null, occupantSlot = '';
+            if (slotFilled(key)) { occupantSlot = slotName(key); occupant = await grabSlotFile(key); }
+            try { await uploadToSlot(key, file); } catch (e) {}
+            if (occupant) addReviewItem(occupant, occupantSlot, false);
+            col.remove();
+            updateReviewStatus();
+        };
+        box.append(img, sel, btn);
+        col.appendChild(box);
+        reviewList.appendChild(col);
+    }
+
+    // Clear the status line once nothing is left needing review.
+    function updateReviewStatus() {
+        if (!reviewList.children.length) { reviewWrap.classList.add('d-none'); setStatus(''); }
+        else reviewWrap.classList.remove('d-none');
+    }
+
     async function placeResults(results, minConf, files) {
         if (typeof window.dropzone_upload !== 'function') {
             setStatus('Uploader is not ready yet — please try again in a moment.', 'text-danger');
             return;
         }
         const claimed = new Set();
-        const review = [];
+        const review = [];   // {file, slot}
         const toPlace = [];
         // Highest confidence claims its slot first, so collisions send the weaker one to review.
         const ordered = results.slice().sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
@@ -571,71 +719,29 @@
                 claimed.add(key);
                 toPlace.push({ key: key, file: file });
             } else {
-                review.push(r);
+                review.push({ file: file, slot: r.slot });
             }
         }
-        renderReview(review, files);
 
-        // Upload ONE AT A TIME. The existing chunked uploader + some servers (incl. the
-        // PHP built-in dev server) don't handle many simultaneous uploads well; sequential
-        // is reliable everywhere and gives clear progress.
-        let placed = 0;
+        // Upload one at a time (reliable everywhere; clear progress).
         for (let i = 0; i < toPlace.length; i++) {
             setStatus('<span class="spinner-border spinner-border-sm"></span> Uploading ' + (i + 1) + ' of ' + toPlace.length + '…');
-            try {
-                await window.dropzone_upload(toPlace[i].key, toPlace[i].file);
-                placed++;
-            } catch (e) {
-                // dropzone_upload shows its own error state on that slot; keep going.
-            }
+            try { await uploadToSlot(toPlace[i].key, toPlace[i].file); } catch (e) {}
         }
-        let msg = '<strong>' + placed + '</strong> of ' + toPlace.length + ' image' + (toPlace.length !== 1 ? 's' : '') + ' placed into slots.';
-        if (review.length) msg += ' <strong>' + review.length + '</strong> need your review below.';
-        setStatus(msg, placed ? 'text-success' : 'text-warning');
-    }
 
-    function renderReview(items, files) {
-        reviewList.innerHTML = '';
-        if (!items.length) { reviewWrap.classList.add('d-none'); return; }
-        reviewWrap.classList.remove('d-none');
-        for (const r of items) {
-            const file = files[r.index];
-            if (!file) continue;
-            const col = document.createElement('div');
-            col.className = 'col-6 col-md-3 col-lg-2';
-            const box = document.createElement('div');
-            box.className = 'border rounded p-2 h-100';
-            const img = document.createElement('img');
-            img.style.cssText = 'width:100%;height:80px;object-fit:cover;border-radius:4px;';
-            img.src = URL.createObjectURL(file);
-            const conf = document.createElement('div');
-            conf.className = 'text-muted mt-1';
-            conf.style.fontSize = '11px';
-            conf.textContent = 'AI: ' + r.slot + ' (' + Math.round((r.confidence || 0) * 100) + '%)';
-            const sel = document.createElement('select');
-            sel.className = 'form-select form-select-sm mt-1';
-            SLOTS.forEach(s => {
-                const o = document.createElement('option');
-                o.value = s; o.textContent = s;
-                if (s === r.slot) o.selected = true;
-                sel.appendChild(o);
-            });
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'btn btn-sm btn-primary w-100 mt-2';
-            btn.textContent = 'Place';
-            btn.onclick = function () {
-                const slot = sel.value, key = SLOT_TO_KEY[slot];
-                if (!key) return;
-                if (slotFilled(key) && !confirm(slot + ' already has a file. Replace it?')) return;
-                window.dropzone_upload(key, file);
-                col.remove();
-                if (!reviewList.children.length) reviewWrap.classList.add('d-none');
-            };
-            box.append(img, conf, sel, btn);
-            col.appendChild(box);
-            reviewList.appendChild(col);
+        // Leftover inference: exactly one image left over AND exactly one standard slot
+        // empty -> it almost certainly belongs there, so pre-select that slot.
+        const totalImages = toPlace.length + review.length;
+        let suggestKey = null;
+        if (review.length === 1 && totalImages === 10) {
+            const empty = STANDARD_KEYS.filter(k => !slotFilled(k));
+            if (empty.length === 1) { review[0].slot = slotName(empty[0]); suggestKey = empty[0]; }
         }
+
+        reviewList.innerHTML = '';
+        review.forEach(it => addReviewItem(it.file, it.slot, suggestKey !== null && it === review[0]));
+        setStatus('');
+        updateReviewStatus();
     }
 
     // --- wire up controls ---
@@ -651,6 +757,20 @@
         const files = await filesFromDrop(e.dataTransfer);
         handleFiles(files);
     });
+
+    // Keep each image slot's preview in sync with its file attribute — covers
+    // auto-segregation, manual per-slot uploads, and files already present on load.
+    function watchSlots() {
+        ALL_IMAGE_KEYS.forEach(function (key) {
+            const el = document.getElementById('key' + key);
+            if (!el || el.__autosegWatched) return;
+            el.__autosegWatched = true;
+            new MutationObserver(function () { refreshSlot(key); }).observe(el, { attributes: true, attributeFilter: ['file'] });
+        });
+    }
+    watchSlots();
+    refreshAllSlots();
+    window.addEventListener('load', function () { watchSlots(); refreshAllSlots(); });
 })();
 </script>
 {{-- Images / Xray End --}}
