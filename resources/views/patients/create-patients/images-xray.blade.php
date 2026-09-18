@@ -531,7 +531,7 @@
 
     async function handleFiles(fileList) {
         reviewWrap.classList.add('d-none');
-        reviewList.innerHTML = '';
+        clearReview();
         const all = Array.from(fileList || []);
         if (!all.length) return;
 
@@ -732,6 +732,7 @@
         };
         box.append(del, img, sel, btn);
         col.appendChild(box);
+        col.__objUrl = objUrl; // tracked so clearReview() can revoke it
         reviewList.appendChild(col);
     }
 
@@ -739,6 +740,13 @@
     function updateReviewStatus() {
         if (!reviewList.children.length) { reviewWrap.classList.add('d-none'); setStatus(''); }
         else reviewWrap.classList.remove('d-none');
+    }
+
+    // Empty the review row, revoking each card's object URL so unassigned images
+    // never linger in memory (they are client-only and are never persisted).
+    function clearReview() {
+        Array.from(reviewList.children).forEach(function (c) { if (c.__objUrl) URL.revokeObjectURL(c.__objUrl); });
+        reviewList.innerHTML = '';
     }
 
     async function placeResults(results, minConf, files) {
@@ -778,7 +786,7 @@
             if (empty.length === 1) { review[0].slot = slotName(empty[0]); suggestKey = empty[0]; }
         }
 
-        reviewList.innerHTML = '';
+        clearReview();
         review.forEach(it => addReviewItem(it.file, it.slot, suggestKey !== null && it === review[0]));
         setStatus('');
         updateReviewStatus();
