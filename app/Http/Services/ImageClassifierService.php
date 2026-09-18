@@ -94,43 +94,25 @@ Respond with ONLY a JSON object, no prose, no code fence:
 {"slot": "<one slot exactly as written above>", "confidence": <0.0-1.0>, "reason": "<max 10 words>"}
 TXT;
 
-    private const PROMPT_B = <<<'TXT'
-These are the TWO lateral BUCCAL (side) intraoral photos of one orthodontic patient,
-IMAGE 1 then IMAGE 2 (taken with cheek retractors).
+    // Buccal Left/Right, decided WITHOUT ever asking the model for the clinical label.
+    // The model is unreliable at "left vs right buccal" (a mirror/anatomy judgement), but
+    // reliable at reading WHERE things sit in the frame. So we ask only for the horizontal
+    // pixel position of two landmarks and derive the side in PHP:
+    //   front teeth LEFT of the molars  -> Left Buccal
+    //   front teeth RIGHT of the molars -> Right Buccal
+    private const PROMPT_BUCCAL_POS = <<<'TXT'
+This is a single side-view (buccal) intraoral photo of teeth in bite, taken with a cheek retractor.
 
-Classify EACH image using ONLY the left/right POSITION of the front teeth WITHIN THE
-PICTURE. Do NOT think about the patient's anatomical left or right. Do NOT think about
-mirrors or camera direction. Use only where things are in the image frame.
+Report where two landmarks sit HORIZONTALLY in THIS image, as a number from 0 to 100:
+0 = the far LEFT edge of the image, 100 = the far RIGHT edge.
+- "front_x": the FRONT teeth = the flat, square central incisors and the pointed CANINE next to them (the middle/front of the smile).
+- "back_x": the widest BACK molar visible (the big chewing teeth at the rear of the mouth).
 
-For each image, do this:
-Step 1 - Find the FRONT teeth: the flat, square CENTRAL INCISORS and the pointed CANINE
-beside them (the middle/front of the smile). The wide, bumpy MOLARS are the BACK teeth.
-Step 2 - Decide which HALF of the picture the FRONT teeth are in (left half or right half).
-Step 3 - Label using this exact mapping (no exceptions, no flipping):
-   * FRONT teeth in the LEFT half of the image  =>  "Left Buccal"
-   * FRONT teeth in the RIGHT half of the image =>  "Right Buccal"
+Judge ONLY by where each landmark appears in this picture. Do NOT consider the patient's
+anatomical left/right, the camera direction, or any mirroring. Just read pixel positions.
 
-Ignore lips, cheeks, retractors and skin. Return ONLY JSON, no prose:
-{"image_1": "Right Buccal" or "Left Buccal",
- "image_2": "Right Buccal" or "Left Buccal",
- "why": "front teeth in <left|right> half of image1, <left|right> half of image2"}
-TXT;
-
-    // Used when labelled reference photos are configured (few-shot).
-    private const PROMPT_B_REF = <<<'TXT'
-The FIRST image is a CONFIRMED "Left Buccal" example. The SECOND image is a CONFIRMED
-"Right Buccal" example. The THIRD and FOURTH images are the patient's two buccal photos
-to classify.
-
-For the THIRD and FOURTH images, decide which example each one MATCHES, based purely on
-the LAYOUT of the teeth in the frame - which side the FRONT teeth (flat central incisors
-+ pointed canine) sit on versus the back molars. Give each the same label as the example
-it matches. Use ONLY positions in the picture; ignore anatomy and mirroring.
-
-Return ONLY JSON. Here "image_1" = the THIRD image and "image_2" = the FOURTH image:
-{"image_1": "Right Buccal" or "Left Buccal",
- "image_2": "Right Buccal" or "Left Buccal",
- "why": "front teeth side in each patient photo"}
+Return ONLY JSON, no prose:
+{"front_x": <0-100>, "back_x": <0-100>, "why": "<max 12 words>"}
 TXT;
 
     // Used to decide Frontal vs Buccal for one bite view against two labelled references
@@ -198,24 +180,22 @@ TXT;
 
         $results = $this->classifyPassOne($images);
 
-        // Pass 2 - pairwise disambiguation for the two hard "left/right, upper/lower"
-        // slot families. Comparing the two side-by-side is far more reliable than
-        // judging each alone (the model is otherwise confidently wrong on these).
-        // If all three bite-view references exist, match EVERY intraoral bite view
-        // (Frontal / Left Buccal / Right Buccal) against them - this reliably fixes both
-        // the Frontal-vs-Buccal confusion and the Left/Right flip in one step. Otherwise
-        // fall back to the pairwise buccal prompt.
+        // Pass 2 - fix the two hard slot families.
+        //
+        // Buccal Left/Right: the model cannot reliably say "left vs right buccal" (a
+        // mirror/anatomy judgement it gets confidently wrong, and references make it worse
+        // because it misreads their geometry too). Instead we ask ONLY for the horizontal
+        // position of the front teeth vs the back molars in each image, and derive the side
+        // deterministically in PHP. If bite-view references exist, we still use them first
+        // to fix the (different, non-mirror) Frontal-vs-Buccal confusion.
         $biteRefs = $this->loadBiteViewReferences();
         if ($biteRefs) {
-            // 1) fix Frontal-vs-Buccal per image against references, then
-            // 2) assign Left/Right by comparing the two buccals as a pair (reliable).
             $results = $this->refineBiteViews($images, $results, $biteRefs);
-            $results = $this->resolvePair($images, $results, 'Buccal', self::PROMPT_B_REF, ['Right Buccal', 'Left Buccal'], $this->fallbackModel, ['left' => $biteRefs['left'], 'right' => $biteRefs['right']]);
-        } else {
-            $buccalRefs = $this->loadBuccalReferences();
-            $buccalPrompt = $buccalRefs ? self::PROMPT_B_REF : self::PROMPT_B;
-            $results = $this->resolvePair($images, $results, 'Buccal', $buccalPrompt, ['Right Buccal', 'Left Buccal'], $this->fallbackModel, $buccalRefs);
         }
+        $results = $this->resolveBuccalSides($images, $results);
+
+        // Occlusal upper/lower is a soft-tissue (palate vs tongue) judgement, still reliable
+        // as a pair comparison.
         $results = $this->resolvePair($images, $results, 'Occlusal', self::PROMPT_C, ['Upper Occlusal', 'Lower Occlusal'], $this->fallbackModel);
 
         // Return in the same order as the input.
@@ -431,6 +411,135 @@ TXT;
     }
 
     /**
+     * Assign Left/Right to every buccal image by reading the FRONT-teeth vs BACK-molar
+     * horizontal position in the frame (one parallel call per buccal image), never by
+     * asking the model for the clinical side. Rule: front teeth left of the molars =>
+     * Left Buccal; front teeth right of the molars => Right Buccal.
+     *
+     * @param  array<int, array{index:int, data_uri:string}>  $images
+     * @param  array<int, array{index:int, slot:string, confidence:float, reason:string}>  $results  keyed by index
+     * @return array<int, array{index:int, slot:string, confidence:float, reason:string}>  keyed by index
+     */
+    private function resolveBuccalSides(array $images, array $results): array
+    {
+        $buccalIdx = [];
+        foreach ($results as $idx => $r) {
+            if (str_contains($r['slot'], 'Buccal')) {
+                $buccalIdx[] = $idx;
+            }
+        }
+        if (empty($buccalIdx)) {
+            return $results;
+        }
+
+        $byIndex = [];
+        foreach ($images as $img) {
+            $byIndex[$img['index']] = $img['data_uri'];
+        }
+
+        // One position read per buccal image, in parallel.
+        $responses = Http::pool(fn ($pool) => array_map(fn ($idx) => $pool->as((string) $idx)
+            ->withToken($this->key)
+            ->withOptions(['version' => 1.1])
+            ->timeout(90)
+            ->post(self::ENDPOINT, [
+                'model' => $this->model,
+                'temperature' => 0,
+                'messages' => [['role' => 'user', 'content' => [
+                    ['type' => 'text', 'text' => self::PROMPT_BUCCAL_POS],
+                    ['type' => 'image_url', 'image_url' => ['url' => $byIndex[$idx]]],
+                ]]],
+            ]), $buccalIdx));
+
+        // Parse the two positions for each buccal image.
+        $pos = []; // idx => ['front' => float, 'back' => float, 'sep' => float]
+        foreach ($buccalIdx as $idx) {
+            $p = $this->parseBuccalPosition($responses[(string) $idx] ?? null);
+            if ($p !== null) {
+                $pos[$idx] = $p;
+            }
+        }
+
+        // Turn a parsed position into a side + confidence, and write it back.
+        $apply = function (int $idx, string $side, float $conf, string $why) use (&$results) {
+            $results[$idx]['slot'] = $side;
+            $results[$idx]['confidence'] = $conf;
+            $results[$idx]['reason'] = 'buccal position: '.$why;
+        };
+        $sideOf = fn (array $p) => $p['front'] < $p['back'] ? 'Left Buccal' : 'Right Buccal';
+
+        // The common, reliable case: exactly two buccals. They must be opposite sides, so
+        // reconcile if the position reads happen to agree (or one failed to parse).
+        if (count($buccalIdx) === 2 && isset($pos[$buccalIdx[0]], $pos[$buccalIdx[1]])) {
+            [$a, $b] = $buccalIdx;
+            $pa = $pos[$a];
+            $pb = $pos[$b];
+            $sa = $sideOf($pa);
+            $sb = $sideOf($pb);
+            if ($sa !== $sb) {
+                // Opposite as expected — trust each read.
+                $apply($a, $sa, $pa['sep'] >= 15 ? 0.9 : 0.6, $pa['why']);
+                $apply($b, $sb, $pb['sep'] >= 15 ? 0.9 : 0.6, $pb['why']);
+            } else {
+                // Both read the same side: force opposite using the RELATIVE front position
+                // (front teeth further left => the Left Buccal). Lower confidence so the
+                // pair is flagged for a quick human glance.
+                if ($pa['front'] <= $pb['front']) {
+                    $apply($a, 'Left Buccal', 0.55, 'relative: front teeth further left');
+                    $apply($b, 'Right Buccal', 0.55, 'relative: front teeth further right');
+                } else {
+                    $apply($a, 'Right Buccal', 0.55, 'relative: front teeth further right');
+                    $apply($b, 'Left Buccal', 0.55, 'relative: front teeth further left');
+                }
+            }
+
+            return $results;
+        }
+
+        // Fallback: any other count (1, or 3+). Decide each image on its own read.
+        foreach ($buccalIdx as $idx) {
+            if (! isset($pos[$idx])) {
+                continue; // keep whatever pass 1 said
+            }
+            $p = $pos[$idx];
+            $apply($idx, $sideOf($p), $p['sep'] >= 15 ? 0.9 : 0.6, $p['why']);
+        }
+
+        return $results;
+    }
+
+    /**
+     * Parse a PROMPT_BUCCAL_POS reply into front/back positions.
+     *
+     * @return array{front:float, back:float, sep:float, why:string}|null
+     */
+    private function parseBuccalPosition($response): ?array
+    {
+        try {
+            if (! $response || ! method_exists($response, 'successful') || ! $response->successful()) {
+                return null;
+            }
+            $json = $this->extractJson((string) data_get($response->json(), 'choices.0.message.content'));
+            if ($json === null || ! isset($json['front_x']) || ! isset($json['back_x'])) {
+                return null;
+            }
+            $front = (float) $json['front_x'];
+            $back = (float) $json['back_x'];
+
+            return [
+                'front' => $front,
+                'back' => $back,
+                'sep' => abs($front - $back),
+                'why' => (string) ($json['why'] ?? ''),
+            ];
+        } catch (Throwable $e) {
+            Log::warning('ImageClassifier parseBuccalPosition failed: '.$e->getMessage());
+
+            return null;
+        }
+    }
+
+    /**
      * Match every intraoral bite view (Frontal / Left Buccal / Right Buccal) against the
      * three labelled reference photos, one parallel call per candidate. This resolves the
      * Frontal-vs-Buccal confusion and the Left/Right flip together.
@@ -520,25 +629,6 @@ TXT;
         $ru = $this->fileToDataUri($r);
 
         return ($fu && $lu && $ru) ? ['frontal' => $fu, 'left' => $lu, 'right' => $ru] : [];
-    }
-
-    /**
-     * Load the configured Left/Right buccal reference photos (if both exist) as small
-     * data URIs, to use as few-shot examples. Returns [] when not configured.
-     *
-     * @return array{left?:string, right?:string}
-     */
-    private function loadBuccalReferences(): array
-    {
-        $left = (string) config('services.openrouter.buccal_ref_left');
-        $right = (string) config('services.openrouter.buccal_ref_right');
-        if ($left === '' || $right === '' || ! is_file($left) || ! is_file($right)) {
-            return [];
-        }
-        $lu = $this->fileToDataUri($left);
-        $ru = $this->fileToDataUri($right);
-
-        return ($lu && $ru) ? ['left' => $lu, 'right' => $ru] : [];
     }
 
     /**
