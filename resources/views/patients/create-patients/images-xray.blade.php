@@ -448,6 +448,7 @@
     const reviewWrap = document.getElementById('autoseg-review');
     const reviewList = document.getElementById('autoseg-review-list');
     const dz = document.getElementById('autoseg-dropzone');
+    let draggedReview = null; // the review card currently being dragged onto a slot (task 5)
 
     function csrf() {
         const m = document.querySelector('meta[name="csrf-token"]');
@@ -699,8 +700,16 @@
         // Free the object URL and drop the card once it's placed or discarded.
         function removeCard() { URL.revokeObjectURL(objUrl); col.remove(); updateReviewStatus(); }
         const img = document.createElement('img');
-        img.style.cssText = 'width:100%;height:80px;object-fit:cover;border-radius:4px;';
+        img.style.cssText = 'width:100%;height:80px;object-fit:cover;border-radius:4px;cursor:grab;';
         img.src = objUrl;
+        // Task 5: drag this thumbnail onto any slot box to place it there.
+        img.draggable = true;
+        img.addEventListener('dragstart', function (e) {
+            draggedReview = { file: file, remove: removeCard };
+            try { e.dataTransfer.setData('text/plain', 'autoseg-review'); } catch (_) {}
+            if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
+        });
+        img.addEventListener('dragend', function () { draggedReview = null; });
         // Delete (×): discard this unassigned image without placing it anywhere.
         const del = document.createElement('button');
         del.type = 'button'; del.className = 'autoseg-review-del'; del.title = 'Discard this image';
@@ -799,9 +808,41 @@
             new MutationObserver(function () { refreshSlot(key); }).observe(el, { attributes: true, attributeFilter: ['file'] });
         });
     }
+
+    // Task 5: let a review (unassigned) thumbnail be dropped onto any slot box.
+    // Only our internal review drags are intercepted (draggedReview set) so that
+    // dropping real files/folders onto a slot keeps working as before.
+    function setupSlotDropTargets() {
+        ALL_IMAGE_KEYS.forEach(function (key) {
+            const el = slotDom(key);
+            if (!el || el.__autosegDrop) return;
+            el.__autosegDrop = true;
+            el.addEventListener('dragover', function (e) {
+                if (!draggedReview) return;
+                e.preventDefault();
+                if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+                el.classList.add('autoseg-dragover');
+            });
+            el.addEventListener('dragleave', function () { el.classList.remove('autoseg-dragover'); });
+            el.addEventListener('drop', async function (e) {
+                if (!draggedReview) return;           // let native file-drop handling run
+                e.preventDefault();
+                e.stopPropagation();                  // don't fall through to the file-drop handler
+                el.classList.remove('autoseg-dragover');
+                const d = draggedReview; draggedReview = null;
+                let occupant = null, occupantSlot = '';
+                if (slotFilled(key)) { occupantSlot = slotName(key); occupant = await grabSlotFile(key); }
+                try { await uploadToSlot(key, d.file); } catch (err) {}
+                if (occupant) addReviewItem(occupant, occupantSlot, false);
+                if (typeof d.remove === 'function') d.remove();
+            });
+        });
+    }
+
     watchSlots();
+    setupSlotDropTargets();
     refreshAllSlots();
-    window.addEventListener('load', function () { watchSlots(); refreshAllSlots(); });
+    window.addEventListener('load', function () { watchSlots(); setupSlotDropTargets(); refreshAllSlots(); });
 })();
 </script>
 {{-- Images / Xray End --}}
