@@ -16,9 +16,10 @@
         #pill-tab-div3 ._dropzone.autoseg-img:hover .autoseg-actions { opacity: 1; pointer-events: auto; }
         #pill-tab-div3 .autoseg-actions label { color: #cfe3ee; font-size: 11px; margin: 0; }
         #pill-tab-div3 .autoseg-actions .autoseg-type { width: 90%; font-size: 12px; padding: 4px 6px; border-radius: 4px; border: 0; }
-        #pill-tab-div3 .autoseg-actions .autoseg-btns { display: flex; gap: 8px; margin-top: 2px; }
-        #pill-tab-div3 .autoseg-actions .autoseg-btns button { border: 0; border-radius: 4px; padding: 5px 12px; font-size: 12px; cursor: pointer; color: #fff; }
+        #pill-tab-div3 .autoseg-actions .autoseg-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 2px; }
+        #pill-tab-div3 .autoseg-actions .autoseg-btns button { border: 0; border-radius: 4px; padding: 5px 10px; font-size: 12px; cursor: pointer; color: #fff; }
         #pill-tab-div3 .autoseg-actions .autoseg-edit { background: #2f6f8f; }
+        #pill-tab-div3 .autoseg-actions .autoseg-unassign { background: #b7791f; }
         #pill-tab-div3 .autoseg-actions .autoseg-del { background: #c0392b; }
         #pill-tab-div3 #autoseg-review-list .autoseg-suggest { outline: 2px solid #16a34a; }
         /* Delete (×) button on review (unassigned) cards */
@@ -630,9 +631,21 @@
         const btns = document.createElement('div'); btns.className = 'autoseg-btns';
         const edit = document.createElement('button'); edit.type = 'button'; edit.className = 'autoseg-edit'; edit.textContent = 'Edit';
         edit.addEventListener('click', function () { const t = dzEl.querySelector('._dropzone_edit'); if (t) t.click(); });
+        // Unassign: pull the image out of this slot and send it back to the review row
+        // (keeps the image; unlike Delete, which removes it for good).
+        const unassign = document.createElement('button'); unassign.type = 'button'; unassign.className = 'autoseg-unassign'; unassign.textContent = 'Unassign';
+        unassign.addEventListener('click', async function () {
+            unassign.disabled = true;
+            const slot = slotName(key);
+            const file = await grabSlotFile(key);
+            if (!file) { unassign.disabled = false; return; }
+            if (typeof window.dropzone_destroy_state === 'function') window.dropzone_destroy_state(key);
+            addReviewItem(file, slot, false);
+            unassign.disabled = false;
+        });
         const del = document.createElement('button'); del.type = 'button'; del.className = 'autoseg-del'; del.textContent = 'Delete';
         del.addEventListener('click', function () { if (typeof window.dropzone_destroy_state === 'function') window.dropzone_destroy_state(key); });
-        btns.append(edit, del);
+        btns.append(edit, unassign, del);
         ov.append(lbl, sel, btns);
         dzEl.appendChild(ov);
     }
