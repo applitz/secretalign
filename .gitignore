@@ -5,6 +5,10 @@
 /vendor
 .env
 .env.backup
+# Local/stray environment files — never commit secrets
+*.env
+DOC-*.env
+(1).env
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
