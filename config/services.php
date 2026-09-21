@@ -33,17 +33,10 @@ return [
 
     'openrouter' => [
         'key' => env('OPENROUTER_KEY'),
-        'model' => env('OPENROUTER_MODEL', 'google/gemini-2.5-flash-lite'),
+        'model' => env('OPENROUTER_MODEL', 'google/gemini-2.5-flash'),
         'fallback_model' => env('OPENROUTER_FALLBACK_MODEL', 'google/gemini-2.5-flash'),
         // Confidence below which an image is treated as "needs manual review".
         'min_confidence' => env('OPENROUTER_MIN_CONFIDENCE', 0.6),
-        // Optional labelled reference photos used as few-shot examples for the hardest
-        // calls (Frontal vs Left/Right Buccal). Drop real, confirmed examples here (kept
-        // out of the repo, in storage). If all three exist, every intraoral bite view is
-        // matched against them.
-        'ref_frontal' => env('OPENROUTER_REF_FRONTAL', storage_path('app/references/frontal.jpg')),
-        'buccal_ref_left' => env('OPENROUTER_BUCCAL_REF_LEFT', storage_path('app/references/buccal_left.jpg')),
-        'buccal_ref_right' => env('OPENROUTER_BUCCAL_REF_RIGHT', storage_path('app/references/buccal_right.jpg')),
     ],
 
 ];

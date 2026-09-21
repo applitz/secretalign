@@ -94,42 +94,33 @@ Respond with ONLY a JSON object, no prose, no code fence:
 {"slot": "<one slot exactly as written above>", "confidence": <0.0-1.0>, "reason": "<max 10 words>"}
 TXT;
 
-    // Buccal Left/Right, decided WITHOUT ever asking the model for the clinical label.
-    // The model is unreliable at "left vs right buccal" (a mirror/anatomy judgement), but
-    // reliable at reading WHERE things sit in the frame. So we ask only for the horizontal
-    // pixel position of two landmarks and derive the side in PHP:
-    //   front teeth LEFT of the molars  -> Left Buccal
-    //   front teeth RIGHT of the molars -> Right Buccal
-    private const PROMPT_BUCCAL_POS = <<<'TXT'
-This is a single side-view (buccal) intraoral photo of teeth in bite, taken with a cheek retractor.
+    // ONE call per intraoral bite view that answers BOTH hard questions at once, so the
+    // whole of Pass 2 fits in a single parallel batch:
+    //  (a) Frontal vs Buccal - by symmetry (both sides visible) vs one-sided layout.
+    //  (b) If Buccal, the horizontal FRAME position of the front teeth vs the back molars.
+    // We never ask the model for "left vs right buccal" (a mirror/anatomy call it gets
+    // confidently wrong); PHP derives the side from the positions:
+    //   front teeth LEFT of the molars -> Left Buccal; RIGHT of the molars -> Right Buccal.
+    private const PROMPT_BITEVIEW_POS = <<<'TXT'
+This is an intraoral bite photo (teeth together, taken with a cheek retractor). Answer about
+THIS image only, judging PURELY by the layout of the teeth in the frame - ignore the
+patient's anatomy, the camera direction, and any mirroring.
 
-Report where two landmarks sit HORIZONTALLY in THIS image, as a number from 0 to 100:
-0 = the far LEFT edge of the image, 100 = the far RIGHT edge.
-- "front_x": the FRONT teeth = the flat, square central incisors and the pointed CANINE next to them (the middle/front of the smile).
-- "back_x": the widest BACK molar visible (the big chewing teeth at the rear of the mouth).
+1) "type":
+   - "frontal" = a straight-on view: the front teeth are centred and the arch curves away
+     SYMMETRICALLY, so the left side and the right side are visible roughly equally (neither
+     side's molars dominate).
+   - "buccal" = a SIDE view: only ONE side is shown - the front teeth (flat central incisors
+     + pointed canine) sit toward ONE end and a run of MOLARS trails off toward the OTHER end.
 
-Judge ONLY by where each landmark appears in this picture. Do NOT consider the patient's
-anatomical left/right, the camera direction, or any mirroring. Just read pixel positions.
-
-Return ONLY JSON, no prose:
-{"front_x": <0-100>, "back_x": <0-100>, "why": "<max 12 words>"}
-TXT;
-
-    // Used to decide Frontal vs Buccal for one bite view against two labelled references
-    // (left/right is decided separately by the reliable pair comparison).
-    private const PROMPT_BITEVIEW = <<<'TXT'
-The FIRST image is a CONFIRMED "Frontal (Intraoral)" example: a straight-on view where
-the front teeth are centred and BOTH the left and right sides of the arch are visible
-roughly symmetrically.
-The SECOND image is a CONFIRMED BUCCAL (side) example: only ONE side is shown - the front
-teeth sit toward one edge and a full run of molars trails off toward the other edge.
-
-IMAGE 3 is the photo to classify. Is IMAGE 3 a FRONTAL view (symmetric, both sides) or a
-BUCCAL side view (one side, molars trailing to an edge)? Judge only by the layout of the
-teeth in the frame.
+2) If "buccal", report the horizontal position from 0 to 100 (0 = far LEFT edge, 100 = far
+   RIGHT edge) of:
+   - "front_x": the FRONT teeth (central incisors + pointed canine)
+   - "back_x": the widest BACK molar visible
+   If "frontal", set both front_x and back_x to 50.
 
 Return ONLY JSON, no prose:
-{"type": "Frontal" or "Buccal", "confidence": <0.0-1.0>, "why": "max 15 words"}
+{"type": "frontal" or "buccal", "front_x": <0-100>, "back_x": <0-100>, "why": "<max 12 words>"}
 TXT;
 
     private const PROMPT_C = <<<'TXT'
@@ -184,19 +175,11 @@ TXT;
         //
         // Buccal Left/Right: the model cannot reliably say "left vs right buccal" (a
         // mirror/anatomy judgement it gets confidently wrong, and references make it worse
-        // because it misreads their geometry too). Instead we ask ONLY for the horizontal
-        // position of the front teeth vs the back molars in each image, and derive the side
-        // deterministically in PHP. If bite-view references exist, we still use them first
-        // to fix the (different, non-mirror) Frontal-vs-Buccal confusion.
-        $biteRefs = $this->loadBiteViewReferences();
-        if ($biteRefs) {
-            $results = $this->refineBiteViews($images, $results, $biteRefs);
-        }
-        $results = $this->resolveBuccalSides($images, $results);
-
-        // Occlusal upper/lower is a soft-tissue (palate vs tongue) judgement, still reliable
-        // as a pair comparison.
-        $results = $this->resolvePair($images, $results, 'Occlusal', self::PROMPT_C, ['Upper Occlusal', 'Lower Occlusal'], $this->fallbackModel);
+        // because it misreads their geometry too). Instead the whole of Pass 2 runs as ONE
+        // parallel batch: a merged Frontal-vs-Buccal + front/back position read per bite
+        // view, plus the occlusal upper/lower pair - then PHP derives every label. This keeps
+        // the round-trips to two total (Pass 1, then Pass 2) instead of a sequential chain.
+        $results = $this->runPassTwo($images, $results);
 
         // Return in the same order as the input.
         return array_values($results);
@@ -319,189 +302,151 @@ TXT;
     }
 
     /**
-     * Pass 2 - if exactly two images share a hard slot family (Buccal or Occlusal),
-     * compare them as a pair to reliably assign the two opposite sides.
+     * Pass 2, as ONE parallel batch. For each intraoral bite view (Frontal / Buccal) we send
+     * a single merged call that returns Frontal-vs-Buccal AND, for buccals, the front/back
+     * horizontal positions; and - when there are exactly two occlusals - one pair call for
+     * upper/lower. All of these fire together in a single Http::pool, then PHP derives the
+     * labels. This keeps Pass 2 to one network round-trip instead of a sequential chain.
      *
      * @param  array<int, array{index:int, data_uri:string}>  $images
      * @param  array<int, array{index:int, slot:string, confidence:float, reason:string}>  $results  keyed by index
-     * @param  string  $needle       substring identifying the family, e.g. 'Buccal' or 'Occlusal'
-     * @param  string  $prompt       the pair-comparison prompt
-     * @param  array<int, string>  $validSlots  the two acceptable slot names for this family
      * @return array<int, array{index:int, slot:string, confidence:float, reason:string}>  keyed by index
      */
-    private function resolvePair(array $images, array $results, string $needle, string $prompt, array $validSlots, ?string $model = null, array $refs = []): array
+    private function runPassTwo(array $images, array $results): array
     {
-        $matchIdx = [];
-        foreach ($results as $idx => $r) {
-            if (str_contains($r['slot'], $needle)) {
-                $matchIdx[] = $idx;
-            }
-        }
-
-        if (count($matchIdx) !== 2) {
-            return $results; // only the clean 2-image case is reliable
-        }
-
         $byIndex = [];
         foreach ($images as $img) {
             $byIndex[$img['index']] = $img['data_uri'];
         }
 
-        [$i1, $i2] = $matchIdx;
-        $pair = $this->classifyPair($byIndex[$i1], $byIndex[$i2], $prompt, $validSlots, $model ?? $this->model, $refs);
+        $biteIdx = []; // Frontal (Intraoral) / Left Buccal / Right Buccal
+        $occIdx = [];  // Upper/Lower Occlusal
+        foreach ($results as $idx => $r) {
+            if (str_contains($r['slot'], 'Buccal') || $r['slot'] === 'Frontal (Intraoral)') {
+                $biteIdx[] = $idx;
+            } elseif (str_contains($r['slot'], 'Occlusal')) {
+                $occIdx[] = $idx;
+            }
+        }
 
-        if ($pair !== null) {
-            $label = strtolower($needle).' pair';
-            $results[$i1]['slot'] = $pair['image_1'];
-            $results[$i2]['slot'] = $pair['image_2'];
-            $results[$i1]['reason'] = $label.': '.$pair['why'];
-            $results[$i2]['reason'] = $label.': '.$pair['why'];
-            // Pair comparison is reliable; lift confidence so it auto-places.
-            $results[$i1]['confidence'] = max($results[$i1]['confidence'], 0.9);
-            $results[$i2]['confidence'] = max($results[$i2]['confidence'], 0.9);
+        if (empty($biteIdx) && count($occIdx) !== 2) {
+            return $results;
+        }
+
+        // One pool: a merged bite-view call per bite image + the occlusal pair call.
+        $responses = Http::pool(function ($pool) use ($biteIdx, $occIdx, $byIndex) {
+            $reqs = [];
+            foreach ($biteIdx as $idx) {
+                $reqs[] = $pool->as('bite_'.$idx)
+                    ->withToken($this->key)
+                    ->withOptions(['version' => 1.1])
+                    ->timeout(90)
+                    ->post(self::ENDPOINT, [
+                        'model' => $this->model,
+                        'temperature' => 0,
+                        'messages' => [['role' => 'user', 'content' => [
+                            ['type' => 'text', 'text' => self::PROMPT_BITEVIEW_POS],
+                            ['type' => 'image_url', 'image_url' => ['url' => $byIndex[$idx]]],
+                        ]]],
+                    ]);
+            }
+            if (count($occIdx) === 2) {
+                $reqs[] = $pool->as('occ')
+                    ->withToken($this->key)
+                    ->withOptions(['version' => 1.1])
+                    ->timeout(90)
+                    ->post(self::ENDPOINT, [
+                        'model' => $this->fallbackModel,
+                        'temperature' => 0,
+                        'messages' => [['role' => 'user', 'content' => [
+                            ['type' => 'text', 'text' => self::PROMPT_C],
+                            ['type' => 'image_url', 'image_url' => ['url' => $byIndex[$occIdx[0]]]],
+                            ['type' => 'image_url', 'image_url' => ['url' => $byIndex[$occIdx[1]]]],
+                        ]]],
+                    ]);
+            }
+
+            return $reqs;
+        });
+
+        // Bite views: frontal stays frontal; buccals collect positions, then reconcile.
+        $pos = []; // buccal idx => ['front','back','sep','why']
+        foreach ($biteIdx as $idx) {
+            $b = $this->parseBiteView($responses['bite_'.$idx] ?? null);
+            if ($b === null) {
+                continue; // keep Pass 1's guess
+            }
+            if ($b['type'] === 'frontal') {
+                $results[$idx]['slot'] = 'Frontal (Intraoral)';
+                $results[$idx]['confidence'] = 0.9;
+                $results[$idx]['reason'] = 'bite-view: frontal (symmetric)';
+            } else {
+                $pos[$idx] = ['front' => $b['front'], 'back' => $b['back'], 'sep' => abs($b['front'] - $b['back']), 'why' => $b['why']];
+            }
+        }
+        $results = $this->assignBuccalSides($results, $pos);
+
+        // Occlusal upper/lower pair.
+        if (count($occIdx) === 2) {
+            $pair = $this->parseOcclusalPair($responses['occ'] ?? null);
+            if ($pair !== null) {
+                [$o1, $o2] = $occIdx;
+                $results[$o1]['slot'] = $pair['image_1'];
+                $results[$o2]['slot'] = $pair['image_2'];
+                $results[$o1]['confidence'] = max($results[$o1]['confidence'], 0.9);
+                $results[$o2]['confidence'] = max($results[$o2]['confidence'], 0.9);
+                $results[$o1]['reason'] = 'occlusal pair: '.$pair['why'];
+                $results[$o2]['reason'] = 'occlusal pair: '.$pair['why'];
+            }
         }
 
         return $results;
     }
 
     /**
-     * @param  array<int, string>  $validSlots
-     * @return array{image_1:string, image_2:string, why:string}|null
-     */
-    private function classifyPair(string $dataUri1, string $dataUri2, string $prompt, array $validSlots, ?string $model = null, array $refs = []): ?array
-    {
-        try {
-            // When labelled reference examples are supplied, put them FIRST (left ref,
-            // then right ref) so the two patient images become the 3rd and 4th images.
-            $content = [['type' => 'text', 'text' => $prompt]];
-            if (! empty($refs['left']) && ! empty($refs['right'])) {
-                $content[] = ['type' => 'image_url', 'image_url' => ['url' => $refs['left']]];
-                $content[] = ['type' => 'image_url', 'image_url' => ['url' => $refs['right']]];
-            }
-            $content[] = ['type' => 'image_url', 'image_url' => ['url' => $dataUri1]];
-            $content[] = ['type' => 'image_url', 'image_url' => ['url' => $dataUri2]];
-
-            $resp = Http::withToken($this->key)
-                ->withOptions(['version' => 1.1])
-                ->timeout(90)
-                ->post(self::ENDPOINT, [
-                    'model' => $model ?? $this->model,
-                    'temperature' => 0,
-                    'messages' => [
-                        ['role' => 'user', 'content' => $content],
-                    ],
-                ]);
-
-            if (! $resp->successful()) {
-                return null;
-            }
-            $json = $this->extractJson((string) data_get($resp->json(), 'choices.0.message.content'));
-            $s1 = $this->normalizeSlot((string) ($json['image_1'] ?? ''));
-            $s2 = $this->normalizeSlot((string) ($json['image_2'] ?? ''));
-            if (! in_array($s1, $validSlots, true) || ! in_array($s2, $validSlots, true)) {
-                return null;
-            }
-
-            return ['image_1' => $s1, 'image_2' => $s2, 'why' => (string) ($json['why'] ?? '')];
-        } catch (Throwable $e) {
-            Log::warning('ImageClassifier classifyPair failed: '.$e->getMessage());
-
-            return null;
-        }
-    }
-
-    /**
-     * Assign Left/Right to every buccal image by reading the FRONT-teeth vs BACK-molar
-     * horizontal position in the frame (one parallel call per buccal image), never by
-     * asking the model for the clinical side. Rule: front teeth left of the molars =>
-     * Left Buccal; front teeth right of the molars => Right Buccal.
+     * Turn parsed buccal positions into Left/Right slots. Rule: front teeth left of the
+     * molars => Left Buccal; right of the molars => Right Buccal. For the clean two-buccal
+     * case they must be opposite, so if both read the same side, force opposite by relative
+     * front position (and lower confidence so the pair gets a human glance).
      *
-     * @param  array<int, array{index:int, data_uri:string}>  $images
      * @param  array<int, array{index:int, slot:string, confidence:float, reason:string}>  $results  keyed by index
+     * @param  array<int, array{front:float, back:float, sep:float, why:string}>  $pos  keyed by buccal index
      * @return array<int, array{index:int, slot:string, confidence:float, reason:string}>  keyed by index
      */
-    private function resolveBuccalSides(array $images, array $results): array
+    private function assignBuccalSides(array $results, array $pos): array
     {
-        $buccalIdx = [];
-        foreach ($results as $idx => $r) {
-            if (str_contains($r['slot'], 'Buccal')) {
-                $buccalIdx[] = $idx;
-            }
-        }
-        if (empty($buccalIdx)) {
+        if (empty($pos)) {
             return $results;
         }
-
-        $byIndex = [];
-        foreach ($images as $img) {
-            $byIndex[$img['index']] = $img['data_uri'];
-        }
-
-        // One position read per buccal image, in parallel.
-        $responses = Http::pool(fn ($pool) => array_map(fn ($idx) => $pool->as((string) $idx)
-            ->withToken($this->key)
-            ->withOptions(['version' => 1.1])
-            ->timeout(90)
-            ->post(self::ENDPOINT, [
-                'model' => $this->model,
-                'temperature' => 0,
-                'messages' => [['role' => 'user', 'content' => [
-                    ['type' => 'text', 'text' => self::PROMPT_BUCCAL_POS],
-                    ['type' => 'image_url', 'image_url' => ['url' => $byIndex[$idx]]],
-                ]]],
-            ]), $buccalIdx));
-
-        // Parse the two positions for each buccal image.
-        $pos = []; // idx => ['front' => float, 'back' => float, 'sep' => float]
-        foreach ($buccalIdx as $idx) {
-            $p = $this->parseBuccalPosition($responses[(string) $idx] ?? null);
-            if ($p !== null) {
-                $pos[$idx] = $p;
-            }
-        }
-
-        // Turn a parsed position into a side + confidence, and write it back.
+        $sideOf = fn (array $p) => $p['front'] < $p['back'] ? 'Left Buccal' : 'Right Buccal';
         $apply = function (int $idx, string $side, float $conf, string $why) use (&$results) {
             $results[$idx]['slot'] = $side;
             $results[$idx]['confidence'] = $conf;
             $results[$idx]['reason'] = 'buccal position: '.$why;
         };
-        $sideOf = fn (array $p) => $p['front'] < $p['back'] ? 'Left Buccal' : 'Right Buccal';
+        $idxs = array_keys($pos);
 
-        // The common, reliable case: exactly two buccals. They must be opposite sides, so
-        // reconcile if the position reads happen to agree (or one failed to parse).
-        if (count($buccalIdx) === 2 && isset($pos[$buccalIdx[0]], $pos[$buccalIdx[1]])) {
-            [$a, $b] = $buccalIdx;
+        if (count($idxs) === 2) {
+            [$a, $b] = $idxs;
             $pa = $pos[$a];
             $pb = $pos[$b];
             $sa = $sideOf($pa);
             $sb = $sideOf($pb);
             if ($sa !== $sb) {
-                // Opposite as expected — trust each read.
                 $apply($a, $sa, $pa['sep'] >= 15 ? 0.9 : 0.6, $pa['why']);
                 $apply($b, $sb, $pb['sep'] >= 15 ? 0.9 : 0.6, $pb['why']);
+            } elseif ($pa['front'] <= $pb['front']) {
+                $apply($a, 'Left Buccal', 0.55, 'relative: front teeth further left');
+                $apply($b, 'Right Buccal', 0.55, 'relative: front teeth further right');
             } else {
-                // Both read the same side: force opposite using the RELATIVE front position
-                // (front teeth further left => the Left Buccal). Lower confidence so the
-                // pair is flagged for a quick human glance.
-                if ($pa['front'] <= $pb['front']) {
-                    $apply($a, 'Left Buccal', 0.55, 'relative: front teeth further left');
-                    $apply($b, 'Right Buccal', 0.55, 'relative: front teeth further right');
-                } else {
-                    $apply($a, 'Right Buccal', 0.55, 'relative: front teeth further right');
-                    $apply($b, 'Left Buccal', 0.55, 'relative: front teeth further left');
-                }
+                $apply($a, 'Right Buccal', 0.55, 'relative: front teeth further right');
+                $apply($b, 'Left Buccal', 0.55, 'relative: front teeth further left');
             }
 
             return $results;
         }
 
-        // Fallback: any other count (1, or 3+). Decide each image on its own read.
-        foreach ($buccalIdx as $idx) {
-            if (! isset($pos[$idx])) {
-                continue; // keep whatever pass 1 said
-            }
-            $p = $pos[$idx];
+        foreach ($pos as $idx => $p) {
             $apply($idx, $sideOf($p), $p['sep'] >= 15 ? 0.9 : 0.6, $p['why']);
         }
 
@@ -509,167 +454,61 @@ TXT;
     }
 
     /**
-     * Parse a PROMPT_BUCCAL_POS reply into front/back positions.
+     * Parse a PROMPT_BITEVIEW_POS reply: Frontal-vs-Buccal plus (for buccals) front/back
+     * frame positions.
      *
-     * @return array{front:float, back:float, sep:float, why:string}|null
+     * @return array{type:string, front:float, back:float, why:string}|null
      */
-    private function parseBuccalPosition($response): ?array
+    private function parseBiteView($response): ?array
     {
         try {
             if (! $response || ! method_exists($response, 'successful') || ! $response->successful()) {
                 return null;
             }
             $json = $this->extractJson((string) data_get($response->json(), 'choices.0.message.content'));
-            if ($json === null || ! isset($json['front_x']) || ! isset($json['back_x'])) {
+            if ($json === null || ! isset($json['type'])) {
                 return null;
             }
-            $front = (float) $json['front_x'];
-            $back = (float) $json['back_x'];
+            $type = str_contains(strtolower((string) $json['type']), 'frontal') ? 'frontal' : 'buccal';
 
             return [
-                'front' => $front,
-                'back' => $back,
-                'sep' => abs($front - $back),
+                'type' => $type,
+                'front' => (float) ($json['front_x'] ?? 50),
+                'back' => (float) ($json['back_x'] ?? 50),
                 'why' => (string) ($json['why'] ?? ''),
             ];
         } catch (Throwable $e) {
-            Log::warning('ImageClassifier parseBuccalPosition failed: '.$e->getMessage());
+            Log::warning('ImageClassifier parseBiteView failed: '.$e->getMessage());
 
             return null;
         }
     }
 
     /**
-     * Match every intraoral bite view (Frontal / Left Buccal / Right Buccal) against the
-     * three labelled reference photos, one parallel call per candidate. This resolves the
-     * Frontal-vs-Buccal confusion and the Left/Right flip together.
+     * Parse a PROMPT_C occlusal-pair reply into the two upper/lower slots.
      *
-     * @param  array<int, array{index:int, data_uri:string}>  $images
-     * @param  array<int, array{index:int, slot:string, confidence:float, reason:string}>  $results  keyed by index
-     * @param  array{frontal:string, left:string, right:string}  $refs
-     * @return array<int, array{index:int, slot:string, confidence:float, reason:string}>  keyed by index
+     * @return array{image_1:string, image_2:string, why:string}|null
      */
-    private function refineBiteViews(array $images, array $results, array $refs): array
+    private function parseOcclusalPair($response): ?array
     {
-        $family = ['Frontal (Intraoral)', 'Left Buccal', 'Right Buccal'];
-        $candidates = [];
-        foreach ($results as $idx => $r) {
-            if (in_array($r['slot'], $family, true)) {
-                $candidates[] = $idx;
+        try {
+            if (! $response || ! method_exists($response, 'successful') || ! $response->successful()) {
+                return null;
             }
-        }
-        if (empty($candidates)) {
-            return $results;
-        }
-
-        $byIndex = [];
-        foreach ($images as $img) {
-            $byIndex[$img['index']] = $img['data_uri'];
-        }
-
-        // Per-image: decide Frontal vs Buccal against the frontal + one buccal reference.
-        // (Left/Right is NOT decided here - per-image L/R is unreliable; the buccal PAIR
-        // comparison that runs afterwards assigns the sides.)
-        $responses = Http::pool(fn ($pool) => array_map(fn ($idx) => $pool->as((string) $idx)
-            ->withToken($this->key)
-            ->withOptions(['version' => 1.1])
-            ->timeout(90)
-            ->post(self::ENDPOINT, [
-                'model' => $this->fallbackModel,
-                'temperature' => 0,
-                'messages' => [['role' => 'user', 'content' => [
-                    ['type' => 'text', 'text' => self::PROMPT_BITEVIEW],
-                    ['type' => 'image_url', 'image_url' => ['url' => $refs['frontal']]],
-                    ['type' => 'image_url', 'image_url' => ['url' => $refs['left']]],
-                    ['type' => 'image_url', 'image_url' => ['url' => $byIndex[$idx]]],
-                ]]],
-            ]), $candidates));
-
-        foreach ($candidates as $idx) {
-            $resp = $responses[(string) $idx] ?? null;
-            try {
-                if (! $resp || ! method_exists($resp, 'successful') || ! $resp->successful()) {
-                    continue;
-                }
-                $json = $this->extractJson((string) data_get($resp->json(), 'choices.0.message.content'));
-                $type = strtolower(trim((string) ($json['type'] ?? '')));
-                if (str_contains($type, 'frontal')) {
-                    $results[$idx]['slot'] = 'Frontal (Intraoral)';
-                    $results[$idx]['confidence'] = max((float) ($json['confidence'] ?? 0), 0.9);
-                    $results[$idx]['reason'] = 'bite-view: frontal';
-                } elseif (str_contains($type, 'buccal') || str_contains($type, 'side')) {
-                    // Mark as buccal (placeholder side); the pair pass assigns Left/Right.
-                    $results[$idx]['slot'] = 'Left Buccal';
-                    $results[$idx]['confidence'] = max((float) ($json['confidence'] ?? 0), 0.9);
-                    $results[$idx]['reason'] = 'bite-view: buccal (side pending pair)';
-                }
-            } catch (Throwable $e) {
-                Log::warning('ImageClassifier refineBiteViews failed: '.$e->getMessage());
+            $json = $this->extractJson((string) data_get($response->json(), 'choices.0.message.content'));
+            $s1 = $this->normalizeSlot((string) ($json['image_1'] ?? ''));
+            $s2 = $this->normalizeSlot((string) ($json['image_2'] ?? ''));
+            $valid = ['Upper Occlusal', 'Lower Occlusal'];
+            if (! in_array($s1, $valid, true) || ! in_array($s2, $valid, true)) {
+                return null;
             }
+
+            return ['image_1' => $s1, 'image_2' => $s2, 'why' => (string) ($json['why'] ?? '')];
+        } catch (Throwable $e) {
+            Log::warning('ImageClassifier parseOcclusalPair failed: '.$e->getMessage());
+
+            return null;
         }
-
-        return $results;
-    }
-
-    /**
-     * Load the three bite-view references (frontal + left/right buccal) if all exist.
-     *
-     * @return array{frontal:string, left:string, right:string}|array{}
-     */
-    private function loadBiteViewReferences(): array
-    {
-        $f = (string) config('services.openrouter.ref_frontal');
-        $l = (string) config('services.openrouter.buccal_ref_left');
-        $r = (string) config('services.openrouter.buccal_ref_right');
-        if ($f === '' || $l === '' || $r === '' || ! is_file($f) || ! is_file($l) || ! is_file($r)) {
-            return [];
-        }
-        $fu = $this->fileToDataUri($f);
-        $lu = $this->fileToDataUri($l);
-        $ru = $this->fileToDataUri($r);
-
-        return ($fu && $lu && $ru) ? ['frontal' => $fu, 'left' => $lu, 'right' => $ru] : [];
-    }
-
-    /**
-     * Read an image file and return it as a base64 data URI, resized to <=768px (GD)
-     * to keep the request small. Falls back to the raw bytes if GD can't handle it.
-     */
-    private function fileToDataUri(string $path, int $max = 768): ?string
-    {
-        $info = @getimagesize($path);
-        $mime = $info['mime'] ?? 'image/jpeg';
-
-        if (function_exists('imagecreatetruecolor')) {
-            $src = null;
-            if ($mime === 'image/jpeg') {
-                $src = @imagecreatefromjpeg($path);
-            } elseif ($mime === 'image/png') {
-                $src = @imagecreatefrompng($path);
-            } elseif ($mime === 'image/webp') {
-                $src = @imagecreatefromwebp($path);
-            }
-            if ($src) {
-                $w = imagesx($src);
-                $h = imagesy($src);
-                $scale = min(1, $max / max($w, $h));
-                $nw = max(1, (int) round($w * $scale));
-                $nh = max(1, (int) round($h * $scale));
-                $dst = imagecreatetruecolor($nw, $nh);
-                imagecopyresampled($dst, $src, 0, 0, 0, 0, $nw, $nh, $w, $h);
-                ob_start();
-                imagejpeg($dst, null, 80);
-                $bytes = ob_get_clean();
-                imagedestroy($src);
-                imagedestroy($dst);
-
-                return 'data:image/jpeg;base64,'.base64_encode((string) $bytes);
-            }
-        }
-
-        $raw = @file_get_contents($path);
-
-        return $raw === false ? null : 'data:'.$mime.';base64,'.base64_encode($raw);
     }
 
     /**
