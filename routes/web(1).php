@@ -45,7 +45,7 @@ Route::get('/test', [App\Http\Controllers\HomeController::class, 'testNemotech']
 
 Route::get('/file/{filename}', function ($filename) {
     $path = storage_path('app/public/attachments/' . $filename);
-    
+
     if (!File::exists($path)) {
         abort(404);
     }
@@ -65,9 +65,9 @@ Route::get('/dev/query', function () {
 //   Artisan::call('route:cache');
 //   Artisan::call('view:cache');
     //return view("meshlab");
-    
+
     //     DB::table('test_cron')->insert([
-    //         "created_at" => date("Y-m-d H:i:s"),    
+    //         "created_at" => date("Y-m-d H:i:s"),
     //     ]);
     // return response()->json(["status" => "ok"]);
     // try {
