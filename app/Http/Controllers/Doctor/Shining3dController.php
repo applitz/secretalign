@@ -495,11 +495,6 @@ class Shining3dController extends Controller
 
                 if (copy($upperArch, $upperFilePath)) {
                     $uploadedFiles['upper_arch'] = $upperFileName;
-                    Log::info("Upper arch STL uploaded successfully", [
-                        'patient_id' => $patientId,
-                        'treatment_plan_id' => $treatmentPlanId,
-                        'file' => $upperFileName
-                    ]);
                 } else {
                     $errors[] = 'Failed to upload upper arch STL file';
                 }
@@ -514,11 +509,6 @@ class Shining3dController extends Controller
 
                 if (copy($lowerArch, $lowerFilePath)) {
                     $uploadedFiles['lower_arch'] = $lowerFileName;
-                    Log::info("Lower arch STL uploaded successfully", [
-                        'patient_id' => $patientId,
-                        'treatment_plan_id' => $treatmentPlanId,
-                        'file' => $lowerFileName
-                    ]);
                 } else {
                     $errors[] = 'Failed to upload lower arch STL file';
                 }
@@ -545,12 +535,6 @@ class Shining3dController extends Controller
                 ]);
 
             if ($updateResult) {
-                Log::info("Treatment plan updated with STL files", [
-                    'patient_id' => $patientId,
-                    'treatment_plan_id' => $treatmentPlanId,
-                    'files' => $uploadedFiles
-                ]);
-
                 return [
                     'status' => 'success',
                     'message' => 'STL files uploaded and database updated successfully',

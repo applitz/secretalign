@@ -357,7 +357,7 @@
 
                                                                 // 🔹 If this is RET step → put into a separate group
                                                                 if (strtolower($step) === 'ret') {
-                                                                    Log::info($file->name);
+
                                                                     if (!isset($retGroup[$dir])) {
                                                                         $retGroup[$dir] = [];
                                                                     }

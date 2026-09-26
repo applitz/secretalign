@@ -6,6 +6,89 @@
     <strong>Event:</strong> {{ $getCaseHistory->event }}
 </p>
 
+@php
+    $data = json_decode($getCaseHistory->data);
+    $data2 = json_decode($getCaseHistory->data, true);
+@endphp
+
+@if(!empty($data->dob))
+<p class="text-muted mt-2 mb-0">
+    <strong>DOB:</strong> {{ date('d-m-Y', strtotime($data->dob)) }}
+</p>
+@endif
+
+@if(!empty($data->treatment_type))
+<p class="text-muted mt-2 mb-0">
+    <strong>Treatment Type:</strong> {{ $data->treatment_type }}
+</p>
+@endif
+@if(!empty($data->scan_type))
+<p class="text-muted mt-2 mb-0">
+    <strong>Original bite registration STL File</strong>
+</p>
+@endif
+
+@if(!empty($data->scan_type))
+<table class="table table-bordered mt-2 mb-0 w-100" >
+    <thead>
+        <tr>
+            <th>Scan Type</th>
+            <th>Case ID</th>
+            <th>Upper File</th>
+            <th>Lower File</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ $data->scan_type }}</td>
+            <td>{{ $data->case_id }}</td>
+            <td>
+                <a href="{{ asset('/storage/PatientFiles/Patient' . $getCaseHistory->patient_id . '/' . $data->upper_file) }}" target="_blank" class="cursor-pointer">
+                        Download Upper File
+                </a>
+            </td>
+            <td>
+                <a href="{{ asset('/storage/PatientFiles/Patient' . $getCaseHistory->patient_id . '/' . $data->lower_file) }}" target="_blank" class="cursor-pointer">
+                    Download Lower File
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+@endif
+@if(!empty($data->optional_scan_type))
+    <p class="text-muted mt-2 mb-0">
+        <strong>Mandibular Repositioning STL Files (Optional) </strong>
+    </p>
+@endif
+@if(!empty($data->optional_scan_type))
+<table class="table table-bordered mt-2 mb-0 w-100" >
+    <thead>
+        <tr>
+            <th>Scan Type</th>
+            <th>Case ID</th>
+            <th>Upper File</th>
+            <th>Lower File</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ $data->optional_scan_type }}</td>
+            <td>{{ $data->optional_case_id }}</td>
+            <td>
+                <a href="{{ asset('/storage/PatientFiles/Patient' . $getCaseHistory->patient_id . '/' . $data->optional_upper_file) }}" target="_blank" class="cursor-pointer">
+                    Download Upper File
+                </a>
+            </td>
+            <td>
+                <a href="{{ asset('/storage/PatientFiles/Patient' . $getCaseHistory->patient_id . '/' . $data->optional_lower_file) }}" target="_blank" class="cursor-pointer">
+                    Download Lower File
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+@endif
 <p class="text-muted mt-2 mb-0">
     <strong>From:</strong>
     @if($getCaseHistory->from == 'D')
@@ -33,10 +116,6 @@
     <strong>Date:</strong> {{ $getCaseHistory->created_at->format('d-m-Y h:i:s A') }}
 </p>
 
-@php
-    $data = json_decode($getCaseHistory->data);
-    $data2 = json_decode($getCaseHistory->data, true);
-@endphp
 
 <p class="text-muted mt-2 mb-0">
      @if(!empty($data->comment))

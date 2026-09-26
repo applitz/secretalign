@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Jobs\SendMovixFailMailNotificationJob;
 use App\Http\Services\TaskService;
 use App\Jobs\SendToStaffFromDoctorModificationJob;
+use App\Models\Audittrails;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -193,6 +194,7 @@ class MovixtechController extends Controller
 
     public function processMovix(Request $request)
     {
+        $auditTrailsData = [];
         $patientDetails = Patients::with([
             'treatmentPlans' => function ($query) use ($request) {
                 $query->where('patient_id', $request->patient_id)
@@ -282,6 +284,13 @@ class MovixtechController extends Controller
             $objPatientTreatmentPlan->primary_movixtech_status = 'Processing';
             $objPatientTreatmentPlan->primary_movix_note = null;
             $objPatientTreatmentPlan->primary_case_movix_status = 0;
+
+            $auditTrailsData = [
+                'case_id' => $primaryCaseId,
+                'scan_type' => 'Primary Scan',
+                'upper_file' => $primaryUpperFile,
+                'lower_file' => $primaryLowerFile
+            ];
         }
 
         // ✅ Optional scan data
@@ -331,8 +340,16 @@ class MovixtechController extends Controller
             $objPatientTreatmentPlan->optional_scan_movix_note = null;
             $objPatientTreatmentPlan->optional_movixtech_status = 'Processing';
             $objPatientTreatmentPlan->optional_scan_case_movix_status = 0;
+
+            $auditTrailsData['optional_case_id'] = $optionalCaseId;
+            $auditTrailsData['optional_scan_type'] = 'Optional Scan';
+            $auditTrailsData['optional_upper_file'] = $optionalUpperFile;
+            $auditTrailsData['optional_lower_file'] = $optionalLowerFile;
+
         }
         $objPatientTreatmentPlan->save();
+        $objAudittrails = new Audittrails();
+        $saveAudittrails = $objAudittrails->addAudittrails( $request->patient_id, $request->treatment_plan_id, "Patient Scan Updated", 'D', null, $auditTrailsData);
         return response()->json([
             'status' => true,
             'message' => 'Case created and started successfully',

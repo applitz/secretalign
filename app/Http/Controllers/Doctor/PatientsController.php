@@ -260,12 +260,6 @@ class PatientsController extends Controller
 			$attachedFiles[] = basename($stageFiles['lower']);
 		}
 
-		Log::info('DM smartstls request', [
-			'current_stage' => $currentStage,
-			'files_payload' => $orderData['files'],
-			'attached_files' => $attachedFiles,
-		]);
-
 		$response = $http->post(config('webhook.dm-api-url').'/v2/orders/smartstls');
 
         // cleanup temp stage files

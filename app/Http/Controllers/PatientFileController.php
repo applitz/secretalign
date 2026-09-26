@@ -71,8 +71,6 @@ class PatientFileController extends Controller
 
         curl_close($curl);
         $response = json_decode($response);
-
-        Log::info(json_encode($response));
         $upper_arch_uuid = null;
         $lower_arch_uuid = null;
         $patient_name = null;
@@ -84,7 +82,6 @@ class PatientFileController extends Controller
 
             if(count($response->files) > 0) {
                 foreach ($response->files as $file) {
-                    Log::info($file->name);
 
                     // Lower Arch
                     if (stripos($file->name, 'mandibular') !== false) {
@@ -102,7 +99,6 @@ class PatientFileController extends Controller
                     }
                 }
                 // foreach ($response->files as $file) {
-                //     Log::info($file->name);
 
                 //     if($file->name == "Gallistl_Barbara-LowerJawScan.stl.general.meditMesh") {
                 //         $lower_arch_uuid = $file->uuid;
@@ -268,9 +264,7 @@ class PatientFileController extends Controller
         // $data['first_name']=$name_parts[0];
         // $data['last_name']=$name_parts[0];
 
-          $data['patient_code']=$case->patient_code;
-          Log::info("data");
-          Log::info($data);
+        $data['patient_code']=$case->patient_code;
         return response()->json($data);
     }
 
@@ -291,9 +285,7 @@ class PatientFileController extends Controller
         // $data['first_name']=$name_parts[0];
         // $data['last_name']=$name_parts[0];
 
-          $data['patient_code']=$case->patient_code;
-          Log::info("data");
-          Log::info($data);
+        $data['patient_code']=$case->patient_code;
         return response()->json($data);
     }
     private function ThreeShapeSaveSTL($patient_id, $treatment_plan_id, $column, $caseId, $hash)

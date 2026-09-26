@@ -166,7 +166,6 @@ class PatientOverview extends Controller
             $data = compact("patient", "labs", "comments", "plans", "advisors","treatmentCheck", "clinicalPreference");
             $data['stl_files'] = [];
             $notificationId = @$request->get('notify');
-            Log::info(json_encode($data));
             if (!empty($notificationId)) {
                 if (DB::table('notifications')->where('treatment_plan_id', $phase)->where('user_id', Auth::user()->id)->where('id', $notificationId)->whereNull('read_at')->exists()) {
                     DB::table('notifications')->where('id', $notificationId)->update([

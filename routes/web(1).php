@@ -45,7 +45,7 @@ Route::get('/test', [App\Http\Controllers\HomeController::class, 'testNemotech']
 
 Route::get('/file/{filename}', function ($filename) {
     $path = storage_path('app/public/attachments/' . $filename);
-    Log::info($path);
+    
     if (!File::exists($path)) {
         abort(404);
     }

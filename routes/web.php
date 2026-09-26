@@ -52,8 +52,7 @@ Route::get('/test', [App\Http\Controllers\HomeController::class, 'testNemotech']
 Route::post('movix-webhook', [MovixtechController::class, 'movixWebhook'])->name('movix-webhook');
 
 Route::get('/file/{filename}', function ($filename) {
-    $path = storage_path('app/public/attachments/' . $filename);
-    Log::info($path);
+    $path = storage_path('app/public/attachments/' . $filename);    
     if (!File::exists($path)) {
         abort(404);
     }

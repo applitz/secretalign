@@ -24,7 +24,6 @@ class SentToDoctorForModificatin extends Notification
      */
     public function __construct(array $details)
     {
-        Log::info('✅ Queue is working! Job executed with details: ', $details);
 
         $this->subject      = $details['subject'];
         $this->doctor_name  = $details['doctor_name'];

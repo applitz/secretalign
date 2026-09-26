@@ -129,7 +129,7 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
     public function MeditLinkObtainAuthorizationCode()
     {
        // return redirect()->away("https://".env("MEDIT_LINK_OPENAPI_SERVER")."openapi-auth.meditlink.com/oauth/authorize?client_id=".env("MEDIT_LINK_CLIENT_ID")."&response_type=code&redirect_uri=".env("MEDIT_LINK_REDIRECT_URL")."?me&scope=CASE FILE USER GROUP&state=".\Illuminate\Support\Str::random(24));
-       Log::info("redirected");
+
        return redirect()->away("https://openapi-auth.meditlink.com/oauth/authorize?client_id=".env("MEDIT_LINK_CLIENT_ID")."&response_type=code&redirect_uri=".env("MEDIT_LINK_REDIRECT_URL")."?me&scope=CASE FILE USER GROUP&state=".\Illuminate\Support\Str::random(24));
     }
     public function DisableMeditLinkIntegration()
@@ -151,7 +151,6 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
 
 
     try {
-        Log::info("got back");
 
         if (!Auth::user()->medit_link_access_token || !Auth::user()->medit_link_refresh_token  || !Auth::user()->medit_link_group_uuid) {
             $curl = curl_init();
@@ -181,7 +180,6 @@ private function searchThreeShapeCases($baseUri, $searchString, $accessToken)
 
             curl_close($curl);
             $response = json_decode($response);
-            Log::info("response access " . json_encode($response));
 
             $session_key = 'error';
             $session_msg = 'Unable to integrate with Medit Link';
@@ -243,8 +241,6 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
 
         curl_close($curl);
         $response = json_decode($response);
-
-        Log::info("MeditLink user response: " . json_encode($response));
 
         if ($response->group->uuid) {
             $medit_link_group_uuid = $response->group->uuid;
@@ -317,7 +313,6 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
             curl_close($curl);
 
             $response = json_decode($response);
-            log::info("THis is it".json_encode($response));
             // solved by Tapas Web Solution x dotprogrammers
 
             if(@$response->numberOfElements > 0) {
@@ -366,7 +361,6 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
             curl_close($curl);
 
             $response = json_decode($response);
-            log::info("THis is it".json_encode($response));
             // solved by Tapas Web Solution x dotprogrammers
 
             if(@$response->numberOfElements > 0) {
@@ -443,8 +437,6 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
 
             curl_close($curl);
             $response = json_decode($response);
-            Log::info("access_token:".@$response->access_token);
-            Log::info("refresh_token:".@$response->refresh_token);
             if(@$response->access_token) {
                 DB::table('users')->where('id', Auth::user()->id)->update([
                     "three_shape_access_token" => @$response->access_token,
@@ -592,7 +584,6 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
             }
         } catch (Exception $e) {
         // return response()->json(['error' => $e->getMessage()], 500);
-        Log::info($e->getMessage());
         return redirect('/integrations/3shape-disable')->with('success', 'Session expired');
         }
     }
@@ -626,7 +617,6 @@ private function MeditLinkGetUserInformation($access_token, $refresh_token)
             }
         } catch (Exception $e) {
             // return response()->json(['error' => $e->getMessage()], 500);
-            Log::info($e->getMessage());
             return redirect('/integrations/3shape-disable')->with('success', 'Session expired');
         }
     }

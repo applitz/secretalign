@@ -168,8 +168,6 @@ class RegisterPatient extends Controller
                                     $dataShining3d['orgCode'] = $orgCode;
                                     $dataShining3d['doctorId'] = $userId;
                                     $dataShining3d['orgType'] = $clinic['orgType'];
-
-                                    // Log::info('SHINING 3D connection successful', ['user_id' => Auth::id(), 'clinic' => $clinic, 'shining3d_user_id' => $userId, 'org_code' => $orgCode]);
                                 }
                             }
                             $scanError = 'Failed to find clinic in SHINING 3D.';
@@ -304,8 +302,6 @@ class RegisterPatient extends Controller
                                     $dataShining3d['orgCode'] = $orgCode;
                                     $dataShining3d['doctorId'] = $userId;
                                     $dataShining3d['orgType'] = $clinic['orgType'];
-
-                                    Log::info('SHINING 3D connection successful', ['user_id' => Auth::id(), 'clinic' => $clinic, 'shining3d_user_id' => $userId, 'org_code' => $orgCode]);
                                 }
                             }
                             $scanError = 'Failed to find clinic in SHINING 3D.';
@@ -440,8 +436,6 @@ class RegisterPatient extends Controller
                                     $dataShining3d['orgCode'] = $orgCode;
                                     $dataShining3d['doctorId'] = $userId;
                                     $dataShining3d['orgType'] = $clinic['orgType'];
-
-                                    Log::info('SHINING 3D connection successful', ['user_id' => Auth::id(), 'clinic' => $clinic, 'shining3d_user_id' => $userId, 'org_code' => $orgCode]);
                                 }
                             }
                             $scanError = 'Failed to find clinic in SHINING 3D.';
@@ -654,19 +648,19 @@ class RegisterPatient extends Controller
         DB::table('p_treatment_plans')->where('patient_id', $patient_id)->where('id', $treatment_plan_id)->update([
             "treatment_type" => $treatment_type,
         ]);
-        // $data = $request->all();
-        // unset(
-        //     $data['_token'],
-        //     $data['treatment_plan_id'],
-        //     $data['patient_id']
-        // );
-        // if($data['treatment_type'] == 1) {
-        //     $data['treatment_type'] = 'Aligners Full-Service';
-        // } else {
-        //     $data['treatment_type'] = 'Treatment Planning Service';
-        // }
-        // $objAudittrails = new AuditTrails();
-        // $saveAudittrails = $objAudittrails->addAudittrails( $request->post('patient_id'), $request->post('treatment_plan_id'), "Patient Treatment Type Updated", 'D', null, $data);
+        $data = $request->all();
+        unset(
+            $data['_token'],
+            $data['treatment_plan_id'],
+            $data['patient_id']
+        );
+        if($data['treatment_type'] == 1) {
+            $data['treatment_type'] = 'Aligners Full-Service';
+        } else {
+            $data['treatment_type'] = 'Treatment Planning Service';
+        }
+        $objAudittrails = new AuditTrails();
+        $saveAudittrails = $objAudittrails->addAudittrails( $request->post('patient_id'), $request->post('treatment_plan_id'), "Patient Treatment Type Updated", 'D', null, $data);
     }
 
     public function save_patient_info(Request $request)
@@ -681,14 +675,14 @@ class RegisterPatient extends Controller
             "dob" => $dob,
             "staff_id" => Auth::user()->staff_id,
         ]);
-        // $data = $request->all();
-        // unset(
-        //     $data['_token'],
-        //     $data['treatment_plan_id'],
-        //     $data['patient_id']
-        // );
-        // $objAudittrails = new AuditTrails();
-        // $saveAudittrails = $objAudittrails->addAudittrails( $request->post('patient_id'), $request->post('treatment_plan_id'), "Patient Info Updated", 'D', null, $data);
+        $data = $request->all();
+        unset(
+            $data['_token'],
+            $data['treatment_plan_id'],
+            $data['patient_id']
+        );
+        $objAudittrails = new AuditTrails();
+        $saveAudittrails = $objAudittrails->addAudittrails( $request->post('patient_id'), $request->post('treatment_plan_id'), "Patient Info Updated", 'D', null, $data);
         session(['patient_id' => $id]);
     }
     public function save_scan_data(Request $request)
@@ -704,11 +698,19 @@ class RegisterPatient extends Controller
     }
     public function save_images(Request $request)
     {
-        $id = $request->post('patient_id');
-        $treatment_plan_id = $request->post('treatment_plan_id');
-        DB::table('p_treatment_plans')->where('patient_id', $id)->where('id', $treatment_plan_id)->update([
-            "fl_general_upload_drive_link" => $request->post("hyperlink"),
-        ]);
+        $auditTrailsData = [];
+        if($request->post("hyperlink")){
+            $id = $request->post('patient_id');
+            $treatment_plan_id = $request->post('treatment_plan_id');
+            DB::table('p_treatment_plans')->where('patient_id', $id)->where('id', $treatment_plan_id)->update([
+                "fl_general_upload_drive_link" => $request->post("hyperlink"),
+            ]);
+            $auditTrailsData['fl_general_upload_drive_link'] = $request->post("hyperlink");
+        }
+
+        $objAudittrails = new AuditTrails();
+        $saveAudittrails = $objAudittrails->addAudittrails( $request->post('patient_id'), $request->post('treatment_plan_id'), "Patient Images/X-ray Updated", 'D', null, $auditTrailsData);
+
     }
     public function save_prescription(Request $request)
     {
@@ -811,11 +813,12 @@ class RegisterPatient extends Controller
         $treatment_plan_id = $request->post('treatment_plan_id');
        // dd($data);
         DB::table('p_treatment_plans')->where('patient_id', $id)->where('id', $treatment_plan_id)->update($data);
+        $objAudittrails = new AuditTrails();
+        $saveAudittrails = $objAudittrails->addAudittrails( $request->post('patient_id'), $request->post('treatment_plan_id'), "Patient Prescription Details Updated", 'D', null, $data);
     }
 
     public function save_prescription_old(Request $request)
     {
-        //dd($request->all());
         $data = [];
         $data['treat_upper_arch'] = $request->post('upper_arch');
         $data['treat_lower_arch'] = $request->post('lower_arch');

@@ -24,8 +24,6 @@ class SubmitCaseMailJob implements ShouldQueue
      */
     public function __construct($details)
     {
-        Log::info('✅ Queue is working! Job executed at: ' . now());
-
        $this->details = $details;
     }
 

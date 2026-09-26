@@ -4956,10 +4956,23 @@
                     const hyperlink = $("#general_upload_hyperlink").val();
                     if(hyperlink == '') {
                         $("#submit-images").attr('fn', 1);
-                        // let tabTrigger = new bootstrap.Tab(document.querySelector('#pill-tab-li4'));
-                        // tabTrigger.show();
-                        $("#pill-tab-li4").click();
-                        toastSuccess("Images / X-Rays saved");
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ url('/patient/images/save') }}",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                "treatment_plan_id": "{{ $patient->id }}",
+                                "patient_id": "{{ $patient->patient_id }}"
+                            },
+                        }).done(function(response) {
+                            $("#pill-tab-li4").click();
+                            toastSuccess("Images / X-Rays saved");
+                        }).fail(function(response) {
+                            $("#submit-images").attr('fn', 0);
+                            toastError("Enable to save X-Ray/Images");
+                        });
+
+
                     } else {
                         $.ajax({
                             type: "POST",

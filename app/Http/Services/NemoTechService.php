@@ -32,8 +32,6 @@ class NemoTechService
     }
     public function syncDocuments($patient, $job = null)
     {
-        Log::info("started");
-
         $patientDir = storage_path(
             'PatientFiles/Patient' . $patient->patient_id
         );
@@ -236,7 +234,6 @@ class NemoTechService
                 return true;
             }
         }
-        Log::info("ended");
     }
     public function syncPatient()
     {
