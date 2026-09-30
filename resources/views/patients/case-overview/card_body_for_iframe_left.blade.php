@@ -2866,7 +2866,12 @@
         </div>
     </div>
 
-    @if ($patient->is_submitted != 0 && Auth::user()->role == $patient->case_holder && (Auth::user()->role != 'lab' || DB::table('lab_requests')->where('treatment_plan_id', @$patient->id)->where('user_id', Auth::user()->id)->where('is_canceled', 0)->exists()))
+    {{-- Gate on the authoritative workflow state only. case_holder (+ tp.lab, which the
+         overview/list queries already restrict to Auth::id() for labs) is the single source
+         of truth for "this case is the lab's to act on". Do NOT re-add a lab_requests check
+         here: that side-table drifts out of sync with case_holder and hides the panel from
+         the assigned lab even when the case is theirs. --}}
+    @if ($patient->is_submitted != 0 && Auth::user()->role == $patient->case_holder)
 
         @if ($patient->is_rejected == 1 || $patient->is_cancelled == 1)
             @if ($patient->is_cancelled == 1)
