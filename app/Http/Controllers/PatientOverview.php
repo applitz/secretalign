@@ -51,6 +51,26 @@ class PatientOverview extends Controller
         View::share("hashids", $this->hashids);
     }
 
+    /**
+     * Guarantee a live (non-cancelled) lab_requests row for this treatment plan + lab user.
+     * The lab's submit panel is gated on such a row existing (see card_body_for_iframe_left),
+     * so this must be called on every path that assigns case_holder = 'lab'.
+     */
+    private function ensureLabRequest($treatmentPlanId, $labUserId, $taskId = null)
+    {
+        if (empty($labUserId)) {
+            return;
+        }
+        $values = ["is_canceled" => 0];
+        if (!empty($taskId)) {
+            $values["task_id"] = $taskId;
+        }
+        DB::table('lab_requests')->updateOrInsert(
+            ["treatment_plan_id" => $treatmentPlanId, "user_id" => $labUserId],
+            $values
+        );
+    }
+
     public function sendApproveMail()
     {
         $comment="<p>Approval</p>";
@@ -373,14 +393,8 @@ class PatientOverview extends Controller
                         $task_id = $task->create_task("lab", "Setup " . $treatment_plan->phase, $lab, $comment, "staff", "lab", $attachments); //comment from staff to lab
                     }
                     if ($task_id != false) {
-                        //add lab request
-                        if ($treatment_plan->is_treatment_submitted == 0 && $treatment_plan->is_sent_to_lab == 0) {
-                            DB::table('lab_requests')->insert([
-                                "treatment_plan_id" => $treatment_plan->id,
-                                "user_id" => $lab,
-                                "task_id" => $task_id,
-                            ]);
-                        }
+                        //ensure an active lab request exists for this lab
+                        $this->ensureLabRequest($treatment_plan->id, $lab, $task_id);
                         //sent to lab
                         DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                             "is_sent_to_lab" => 1,
@@ -467,6 +481,8 @@ class PatientOverview extends Controller
                     $routes = DB::table('users')->where('id', Auth::id())->pluck("email")->toArray();
 
                     if ($task_id) {
+                        //ensure an active lab request exists for this lab
+                        $this->ensureLabRequest($treatment_plan->id, $treatment_plan->lab, $task_id);
                         DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                             "is_sent_to_lab" => 1,
                             "is_lab_cancel" => 0,
@@ -545,6 +561,8 @@ class PatientOverview extends Controller
                     $routes = DB::table('users')->where('id', Auth::id())->pluck("email")->toArray();
 
                     if ($task_id) {
+                        //ensure an active lab request exists for this lab
+                        $this->ensureLabRequest($treatment_plan->id, $treatment_plan->lab, $task_id);
                         DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                             "is_sent_to_lab" => 1,
                             "is_lab_cancel" => 0,
@@ -1629,6 +1647,8 @@ class PatientOverview extends Controller
 
 
                 if ($task_id != false) {
+                    //ensure an active lab request exists for this lab
+                    $this->ensureLabRequest($treatment_plan->id, $treatment_plan->lab, $task_id);
                     DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                         "case_holder" => "lab",
                         "previous_case_holder" => "staff"
