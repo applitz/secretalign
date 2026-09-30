@@ -21,3 +21,7 @@ yarn-error.log
 testing
 secretalign
 p7zip-src
+
+# macOS junk
+.DS_Store
+**/.DS_Store
