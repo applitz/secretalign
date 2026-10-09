@@ -287,6 +287,7 @@ class PatientDocumentation extends Controller
                 DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
                     $column => null,
                 ]);
+                resetMovixScanData($treatment_plan_id, $column);
             }
             echo json_encode(1);
         }

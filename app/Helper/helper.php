@@ -4,6 +4,7 @@ use App\Http\Services\NemoTechService;
 use App\Models\PatientTreatmentPlan;
 use App\Http\Controllers\Doctor\MovixtechController;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 function checkForRequestNewPlan($patientId)
 {
@@ -179,6 +180,47 @@ if (!function_exists('createMovixLinkUrl')) {
         }
         $case->update($updateData);
         return $getViewerLink;
+    }
+}
+
+if (!function_exists('resetMovixScanData')) {
+    /**
+     * Clear the Movix viewer link/status for the scan set that one of $columns belongs to.
+     * The case overview shows the stored Movix link instead of the raw STL files, so it
+     * must be dropped whenever the scan files change, or the overview keeps showing the old scan.
+     */
+    function resetMovixScanData($treatment_plan_id, $columns)
+    {
+        $columns = (array) $columns;
+        $updateData = [];
+
+        if (array_intersect($columns, ['fl_upper_arch', 'fl_lower_arch'])) {
+            $updateData += [
+                'primary_case_id' => null,
+                'primary_case_movix_status' => null,
+                'primary_note' => null,
+                'primary_movix_note' => null,
+                'primary_movix_link' => null,
+                'primary_movix_link_expires_at' => null,
+                'primary_movixtech_status' => null,
+            ];
+        }
+
+        if (array_intersect($columns, ['optional_fl_upper_arch', 'optional_fl_lower_arch'])) {
+            $updateData += [
+                'optional_scan_case_id' => null,
+                'optional_scan_case_movix_status' => null,
+                'optional_scan_note' => null,
+                'optional_scan_movix_note' => null,
+                'optional_scan_movix_link' => null,
+                'optional_scan_movix_link_expires_at' => null,
+                'optional_movixtech_status' => null,
+            ];
+        }
+
+        if (!empty($updateData)) {
+            DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update($updateData);
+        }
     }
 }
 

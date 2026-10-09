@@ -663,6 +663,7 @@ class DmWebhookController extends Controller
                     // 'dm_order_details' => null,
                     'updated_at' => now(),
                 ]);
+            resetMovixScanData($treatmentPlanId, 'fl_upper_arch');
 
             if ($updateResult) {
 

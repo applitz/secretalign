@@ -379,6 +379,7 @@ class Shining3dController extends Controller
                     'optional_fl_lower_arch' => $uploadedFiles['lower_arch'],
                     'updated_at' => now(),
                 ]);
+            resetMovixScanData($treatmentPlanId, 'optional_fl_upper_arch');
 
             if ($updateResult) {
 
@@ -533,6 +534,7 @@ class Shining3dController extends Controller
                     'fl_lower_arch' => $uploadedFiles['lower_arch'],
                     'updated_at' => now(),
                 ]);
+            resetMovixScanData($treatmentPlanId, 'fl_upper_arch');
 
             if ($updateResult) {
                 return [

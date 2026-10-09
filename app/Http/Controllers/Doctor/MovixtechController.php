@@ -284,6 +284,9 @@ class MovixtechController extends Controller
             $objPatientTreatmentPlan->primary_movixtech_status = 'Processing';
             $objPatientTreatmentPlan->primary_movix_note = null;
             $objPatientTreatmentPlan->primary_case_movix_status = 0;
+            // New Movix case: drop the old viewer link so the overview stops showing the previous scan
+            $objPatientTreatmentPlan->primary_movix_link = null;
+            $objPatientTreatmentPlan->primary_movix_link_expires_at = null;
 
             $auditTrailsData = [
                 'case_id' => $primaryCaseId,
@@ -340,6 +343,9 @@ class MovixtechController extends Controller
             $objPatientTreatmentPlan->optional_scan_movix_note = null;
             $objPatientTreatmentPlan->optional_movixtech_status = 'Processing';
             $objPatientTreatmentPlan->optional_scan_case_movix_status = 0;
+            // New Movix case: drop the old viewer link so the overview stops showing the previous scan
+            $objPatientTreatmentPlan->optional_scan_movix_link = null;
+            $objPatientTreatmentPlan->optional_scan_movix_link_expires_at = null;
 
             $auditTrailsData['optional_case_id'] = $optionalCaseId;
             $auditTrailsData['optional_scan_type'] = 'Optional Scan';
@@ -449,6 +455,9 @@ class MovixtechController extends Controller
                 $objPatientTreatmentPlan->primary_movixtech_status = 'Processing';
                 $objPatientTreatmentPlan->primary_movix_note = null;
                 $objPatientTreatmentPlan->primary_case_movix_status = 0;
+                // New Movix case: drop the old viewer link so the overview stops showing the previous scan
+                $objPatientTreatmentPlan->primary_movix_link = null;
+                $objPatientTreatmentPlan->primary_movix_link_expires_at = null;
             }
 
             // ✅ Optional scan data
@@ -498,6 +507,9 @@ class MovixtechController extends Controller
                 $objPatientTreatmentPlan->optional_scan_movix_note = null;
                 $objPatientTreatmentPlan->optional_movixtech_status = 'Processing';
                 $objPatientTreatmentPlan->optional_scan_case_movix_status = 0;
+                // New Movix case: drop the old viewer link so the overview stops showing the previous scan
+                $objPatientTreatmentPlan->optional_scan_movix_link = null;
+                $objPatientTreatmentPlan->optional_scan_movix_link_expires_at = null;
             }
             $objPatientTreatmentPlan->save();
 

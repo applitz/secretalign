@@ -242,6 +242,7 @@ class PatientFileController extends Controller
                 DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
                     $column => $filename,
                 ]);
+                resetMovixScanData($treatment_plan_id, $column);
             }
             return $filename;
         }
@@ -341,6 +342,7 @@ class PatientFileController extends Controller
                 DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
                     $column => $filename . ".stl",
                 ]);
+                resetMovixScanData($treatment_plan_id, $column);
                 return  $filename.".stl";
             }
         }
@@ -503,6 +505,7 @@ class PatientFileController extends Controller
                 DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
                     $column => $filename,
                 ]);
+                resetMovixScanData($treatment_plan_id, $column);
             }
 
             return response()->json([
@@ -941,19 +944,6 @@ class PatientFileController extends Controller
         */
 
         $column = $this->getFileColumn($key);
-        if ($key == 1 || $key == 2) {
-            DB::table('p_treatment_plans')
-                ->where('id', $treatment_plan_id)
-                ->update([
-                    'primary_case_id' => null,
-                    'primary_case_movix_status' => null,
-                    'primary_note' => null,
-                    'primary_movix_note' => null,
-                    'primary_movix_link' => null,
-                    'primary_movix_link_expires_at' => null,
-                    'primary_movixtech_status' => null,
-                ]);
-        }
         if ($column) {
 
             DB::table('p_treatment_plans')
@@ -962,6 +952,7 @@ class PatientFileController extends Controller
                 ->update([
                     $column => $filename
                 ]);
+            resetMovixScanData($treatment_plan_id, $column);
         }
 
         /*
@@ -1124,6 +1115,7 @@ class PatientFileController extends Controller
                 DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
                     $column => $filename,
                 ]);
+                resetMovixScanData($treatment_plan_id, $column);
             }
 
             return response()->json([
@@ -1379,6 +1371,7 @@ class PatientFileController extends Controller
                 DB::table('p_treatment_plans')->where('id', $treatment_plan_id)->update([
                     $column => null,
                 ]);
+                resetMovixScanData($treatment_plan_id, $column);
             }
             return response()->json([
                 "status" => "success"
