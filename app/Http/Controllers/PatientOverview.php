@@ -489,6 +489,7 @@ class PatientOverview extends Controller
                             "is_treatment_submitted" => 0,
                             "dr_request_modification" => false,
                             "case_holder" => "lab",
+                            "is_editable" => 0,
                             "previous_case_holder" => "staff",
                             "status" => "Waiting Lab Review",
                         ]);
@@ -569,6 +570,7 @@ class PatientOverview extends Controller
                             "is_treatment_submitted" => 0,
                             "dr_request_modification" => false,
                             "case_holder" => "lab",
+                            "is_editable" => 0,
                             "previous_case_holder" => "staff",
                             "status" => "Quick Setup Approved",
                         ]);
@@ -1651,6 +1653,7 @@ class PatientOverview extends Controller
                     $this->ensureLabRequest($treatment_plan->id, $treatment_plan->lab, $task_id);
                     DB::table('p_treatment_plans')->where('id', $treatment_plan->id)->update([
                         "case_holder" => "lab",
+                        "is_editable" => 0,
                         "previous_case_holder" => "staff"
                     ]);
                 }
