@@ -2901,7 +2901,12 @@
             @endif
         @else
             {{-- 532 --}}
-            @if (($patient->is_completed == 0 || Auth::user()->role == 'staff' || Auth::user()->role == 'lab') && ($patient->is_submitted == 0 || $patient->is_editable == 0))
+            {{-- The lab panel depends ONLY on the authoritative case_holder=='lab' (enforced by
+                 the outer gate above) + is_submitted. is_editable is a doctor-editing flag and
+                 must never gate the lab, or it drifts out of sync with case_holder and hides the
+                 paste-plan fields (same reason the lab_requests check was dropped from the outer
+                 gate). Do NOT re-add any secondary flag to the lab's branch. --}}
+            @if (($patient->is_completed == 0 || Auth::user()->role == 'staff' || Auth::user()->role == 'lab') && ($patient->is_submitted == 0 || $patient->is_editable == 0 || Auth::user()->role == 'lab'))
                 <div class="card" id="panel">
                     <div class="card-body py-4">
                         <div class="mb-3">
